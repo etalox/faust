@@ -20,23 +20,21 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 12px;
-  height: 12px;
-  background-color: white;
+  width: 10px;
+  height: 10px;
+  background-color: white; /* Color inicial */
   border-radius: 50%;
   pointer-events: none;
   z-index: 2147483647;
   opacity: 0;
-  display: none; /* Oculto en mobile */
-  transition: opacity 0.3s ease;
-  mix-blend-mode: difference; /* Se vuelve negro en fondos blancos */
+  display: none;
+  /* Transición suave para el cambio de color y opacidad */
+  transition: background-color 0.25s ease, opacity 0.3s ease;
   will-change: transform;
 }
 
 @media (min-width: 768px) {
-  #custom-cursor {
-    display: block; /* Solo visible en desktop */
-  }
+  #custom-cursor { display: block; }
 }
 
 /* Forzamos que no se vea el cursor real */
@@ -1606,72 +1604,73 @@ if (window.innerWidth < 768) {
 
 <script>
 (function(){
-  // 1. Verificación inicial
+  // 1. Verificación de dispositivo (Solo Desktop con mouse)
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   const cursor = document.getElementById('custom-cursor');
   if (!cursor) return;
 
-  // 2. Configuración de movimiento suave (Lerp)
-  let mouseX = -100, mouseY = -100; // Posición real del mouse
-  let cx = mouseX, cy = mouseY;     // Posición suavizada del cursor
-  const speed = 0.18;               // Suavizado (0-1)
-  const edgeMargin = 15;            // Margen para ocultar en bordes
+  let mouseX = -100, mouseY = -100;
+  let cx = mouseX, cy = mouseY;
+  const speed = 0.18; // Suavizado premium
 
-  // 3. Seguimiento del Mouse
+  // 2. Seguimiento del Mouse
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-
-    // Lógica de ocultación en orillas
-    const isNearEdge = 
-      mouseX < edgeMargin || 
-      mouseY < edgeMargin || 
-      mouseX > (window.innerWidth - edgeMargin) || 
-      mouseY > (window.innerHeight - edgeMargin);
-
-    cursor.style.opacity = isNearEdge ? '0' : '1';
-
-    // Actualizar color solo cuando se mueve el mouse para ahorrar recursos
+    
+    // Eliminamos el 'edgeMargin' de píxeles para que NO se oculte en el Navbar.
+    // La visibilidad se controla ahora por la entrada/salida de la ventana.
+    cursor.style.opacity = '1';
+    
+    // Actualizar color según el fondo bajo el mouse
     updateCursorColor(mouseX, mouseY);
   }, {passive: true});
 
-  // 4. Loop de animación (Para que el movimiento sea "Sticky" y premium)
+  // 3. Loop de movimiento suave (Lerp)
   function loop(){
     cx += (mouseX - cx) * speed;
     cy += (mouseY - cy) * speed;
-    
-    // Aplicamos transform usando Translate3d para aceleración por hardware
+    // Translate3d usa la GPU para evitar lag con Lenis
     cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
     requestAnimationFrame(loop);
   }
   loop();
 
-  // 5. Lógica de Color Inteligente (Luminancia)
+  // 4. Lógica de Color Inteligente (Luminancia)
   function updateCursorColor(x, y){
     const el = document.elementFromPoint(x, y);
     if (!el) return;
     
-    // Función para obtener el color de fondo real (buscando hacia arriba en el DOM)
     const getBgColor = (element) => {
       while (element && element !== document.documentElement) {
         const bg = getComputedStyle(element).backgroundColor;
+        // Ignorar capas transparentes para encontrar el color real de fondo
         if (bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') return bg;
         element = element.parentElement;
       }
-      return 'rgb(4, 5, 5)'; // Fallback a tu color oscuro de fondo
+      return 'rgb(4, 5, 5)'; // Fondo oscuro por defecto
     };
 
-    const rgb = getBgColor(el).match(/\d+/g);
+    const colorStr = getBgColor(el);
+    const rgb = colorStr.match(/\d+/g);
+
     if (rgb) {
+      // Calculamos qué tan claro es el fondo (Luma)
       const brightness = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
-      // Si el fondo es claro (>150), ponemos el cursor negro. Si es oscuro, blanco.
-      cursor.style.background = brightness > 150 ? '#000000' : '#ffffff';
+      
+      // CAMBIO: Si el fondo es claro (>150), punto NEGRO. Si es oscuro, punto BLANCO.
+      if (brightness > 150) {
+        cursor.style.background = '#000000';
+      } else {
+        cursor.style.background = '#ffffff';
+      }
     }
   }
 
-  // 6. Eventos de ventana
-  window.addEventListener('mouseleave', () => cursor.style.opacity = '0');
-  window.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+  // 5. Ocultación nativa en las orillas (Solución definitiva para el Navbar)
+  // El cursor se oculta solo cuando el puntero sale físicamente de la página.
+  document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
 
 })();
 </script>
