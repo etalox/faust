@@ -1037,6 +1037,10 @@
   }
 }
 
+/* Navbar entrance animation (fixed component) */
+#navbar.nav-enter{transform:translateX(-50%) translateY(-80px) !important;opacity:0;transition:transform .6s cubic-bezier(.2,.9,.3,1),opacity .4s ease}
+#navbar.nav-enter.active{transform:translateX(-50%) translateY(0) !important;opacity:1}
+
 /* Custom cursor CSS removed */
 
 </style>
@@ -1433,12 +1437,12 @@ document.querySelectorAll('.hero-reveal').forEach(el => {
 </script>
 
 <!-- Navbar with inline styles for fixed positioning -->
-<div id="navbar" style="
+<div id="navbar" class="nav-enter" style="
   position: fixed; 
   top: 20px; 
   left: 50%; 
   transform: translateX(-50%); 
-  height: 60px;
+  height: 60px; 
   width: auto; /* Opcional, dependiendo de si quieres que crezca */
   background-color: rgba(255, 255, 255, 0.1); 
   backdrop-filter: blur(72px); 
@@ -1474,6 +1478,15 @@ document.querySelectorAll('.hero-reveal').forEach(el => {
   }
 
   requestAnimationFrame(raf);
+
+  // Navbar entrance activation: añade clase active tras carga
+  (function(){
+    const nav = document.getElementById('navbar');
+    if(!nav) return;
+    // Asegura estado inicial y activa la transición
+    nav.classList.add('nav-enter');
+    requestAnimationFrame(()=> setTimeout(()=> nav.classList.add('active'), 120));
+  })();
 </script>
 
 <script>
