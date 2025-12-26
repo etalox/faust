@@ -1610,9 +1610,10 @@ if (window.innerWidth < 768) {
 
   let mouseX = -100, mouseY = -100;
   let cx = mouseX, cy = mouseY;
-  const speed = 0.18;
   
-  // Optimizador: solo revisamos el color cada 50ms, no en cada micro-movimiento
+  // AJUSTE: Subimos de 0.18 a 0.35 para que sea mucho más rápido y reactivo
+  const speed = 0.35; 
+  
   let lastColorUpdate = 0;
 
   document.addEventListener('mousemove', (e) => {
@@ -1620,16 +1621,19 @@ if (window.innerWidth < 768) {
     mouseY = e.clientY;
     cursor.style.opacity = '1';
     
+    // Solo revisamos el color cada 80ms para máxima fluidez de los botones
     const now = Date.now();
-    if (now - lastColorUpdate > 50) { 
+    if (now - lastColorUpdate > 80) { 
       updateCursorColor(mouseX, mouseY);
       lastColorUpdate = now;
     }
   }, {passive: true});
 
   function loop(){
+    // La física del movimiento
     cx += (mouseX - cx) * speed;
     cy += (mouseY - cy) * speed;
+    
     cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
     requestAnimationFrame(loop);
   }
@@ -1639,19 +1643,15 @@ if (window.innerWidth < 768) {
     const el = document.elementFromPoint(x, y);
     if (!el) return;
     
-    // Función optimizada: si el elemento tiene color, lo tomamos, si no, no seguimos buscando infinitamente
-    const cs = window.getComputedStyle(el);
-    let bg = cs.backgroundColor;
-    
-    if (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') {
-        const parentBg = window.getComputedStyle(el.parentElement).backgroundColor;
-        bg = parentBg;
+    let bg = getComputedStyle(el).backgroundColor;
+    if ((bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') && el.parentElement) {
+        bg = getComputedStyle(el.parentElement).backgroundColor;
     }
 
     const rgb = bg.match(/\d+/g);
     if (rgb) {
       const brightness = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
-      cursor.style.background = brightness > 150 ? '#000000' : '#ffffff';
+      cursor.style.background = brightness > 160 ? '#000000' : '#ffffff';
     }
   }
 
