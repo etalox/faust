@@ -13,57 +13,7 @@
 
   <style>
 
-.cursor-dot, .cursor-outline {
-  /* Esto centra el elemento exactamente en las coordenadas X e Y */
-  translate: -50% -50%; 
-}
-
-:root {
-  --cursor-size: 40px; /* Tamaño inicial */
-}
-
-/* Personaliza la selección de texto */
-::selection {
-  background: #0D00FF;
-  color: #FFFFFF;
-}
-::-moz-selection {
-  background: #0D00FF;
-  color: #FFFFFF;
-}
-
-.cursor-outline {
-  /* Usamos la variable para definir el tamaño */
-  width: var(--cursor-size);
-  height: var(--cursor-size);
-  
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  translate: -50% -50%;
-  
-  /* Forzamos la transición de las dimensiones */
-  transition: width 0.25s cubic-bezier(0.23, 1, 0.32, 1), 
-              height 0.25s cubic-bezier(0.23, 1, 0.32, 1), 
-              background-color 0.2s ease;
-  
-  /* Aseguramos que no haya ningún transform heredado */
-  transform: none !important; 
-}
-
-/* Cuando entra el hover, simplemente cambiamos el valor de la variable */
-.cursor-outline.cursor-hover {
-  --cursor-size: 64px; 
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: #ffffff;
-}
-
-    /* Opcional: ocultar el punto central al hacer hover para un look más limpio */
-    .cursor-dot.cursor-hover {
-      opacity: 0;
-    }
+/* Custom cursor removed */
 
         /* Estado inicial de los elementos del Hero */
     .hero-reveal {
@@ -1059,38 +1009,7 @@
   }
 }
 
-/* Ocultar el cursor original en todo el sitio */
-body {
-  cursor: none;
-}
-
-/* El punto central */
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #ffffff;
-  border-radius: 50%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none; /* Importante: permite hacer clic a través del elemento */
-  z-index: 10000;
-}
-
-/* La rueda/círculo que sigue al punto */
-.cursor-outline {
-  width: 40px;
-  height: 40px;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  /* El suavizado se logra con transition */
-  transition: transform 0.15s ease-out;
-}
+/* Custom cursor CSS removed */
 
 </style>
   
@@ -1099,9 +1018,6 @@ body {
   </head>
 
 <body>
-
-  <div class="cursor-dot"></div>
-  <div class="cursor-outline"></div>
 
   <button class="icon-button" aria-label="Menu">
     <img src="../assets/images/img_frame.svg" alt="Menu icon" width="24" height="24">
@@ -1547,67 +1463,7 @@ if (window.innerWidth < 768) {
 }
 </script>
 
-<script>
-/**
- * FaustLabs™ Custom Cursor Logic
- * Implementa un punto central con seguidor (outline) y efecto de escala en hover.
- */
 
-const cursorDot = document.querySelector(".cursor-dot");
-const cursorOutline = document.querySelector(".cursor-outline");
-
-// 1. Seguimiento del ratón
-window.addEventListener("mousemove", (e) => {
-  const posX = e.clientX;
-  const posY = e.clientY;
-
-  /**
-   * Usamos propiedades de posición directa para evitar conflictos con 
-   * las transformaciones de escala (scale) en el CSS.
-   */
-  cursorDot.style.left = `${posX}px`;
-  cursorDot.style.top = `${posY}px`;
-
-  cursorOutline.style.left = `${posX}px`;
-  cursorOutline.style.top = `${posY}px`;
-});
-
-// 2. Lógica de Hover para elementos interactivos
-const setupCursorEvents = () => {
-  // Seleccionamos enlaces, botones y tus tarjetas de servicio
-  const interactiveElements = document.querySelectorAll("a, button, .btn, .service-card, .icon-button");
-
-  interactiveElements.forEach((el) => {
-    // Al entrar al elemento: añade clase de escala
-    el.addEventListener("mouseenter", () => {
-      cursorOutline.classList.add("cursor-hover");
-      cursorDot.classList.add("cursor-hover");
-    });
-    
-    // Al salir del elemento: elimina clase de escala
-    el.addEventListener("mouseleave", () => {
-      cursorOutline.classList.remove("cursor-hover");
-      cursorDot.classList.remove("cursor-hover");
-    });
-  });
-};
-
-// 3. Ejecución y manejo de cambios en el DOM
-setupCursorEvents();
-
-/**
- * Nota: Si añades elementos dinámicamente con JS en el futuro, 
- * deberás volver a llamar a setupCursorEvents().
- */
-
-// 4. Optimización para Mobile
-// Ocultamos el cursor si se detecta una pantalla táctil para evitar artefactos visuales
-if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-  cursorDot.style.display = 'none';
-  cursorOutline.style.display = 'none';
-  document.body.style.cursor = 'default';
-}
-</script>
 
 <script>
   // Actualiza el año del footer al año actual
