@@ -18,21 +18,30 @@
 
 #custom-cursor {
   position: fixed;
-  top: 0; left: 0;
-  width: var(--cursor-size);
-  height: var(--cursor-size);
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  background-color: white;
   border-radius: 50%;
-  background: var(--cursor-color);
-  transform: translate(-50%, -50%) scale(1);
-  transition: background-color 120ms linear, transform 120ms cubic-bezier(.2,.9,.3,1), opacity 150ms ease;
   pointer-events: none;
   z-index: 2147483647;
-  will-change: transform, background-color, opacity;
-  box-shadow: 0 0 0 6px rgba(255,255,255,0.02);
-  
-  /* CAMBIO: Oculto por defecto y en mobile */
   opacity: 0;
-  display: none; 
+  display: none; /* Oculto en mobile */
+  transition: opacity 0.3s ease;
+  mix-blend-mode: difference; /* Se vuelve negro en fondos blancos */
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  #custom-cursor {
+    display: block; /* Solo visible en desktop */
+  }
+}
+
+/* Forzamos que no se vea el cursor real */
+html, body, a, button, * { 
+  cursor: none !important; 
 }
 
 /* CAMBIO: Solo se muestra en desktop (min-width: 768px) */
@@ -1587,8 +1596,6 @@ if (window.innerWidth < 768) {
 }
 </script>
 
-
-
 <script>
   // Actualiza el año del footer al año actual
   (function(){
@@ -1599,122 +1606,74 @@ if (window.innerWidth < 768) {
 
 <script>
 (function(){
-  // Activar solo en dispositivos con puntero 'fine' (escritorio principalmente)
+  // 1. Verificación inicial
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
   const cursor = document.getElementById('custom-cursor');
   if (!cursor) return;
 
-  // Variables de posición
-  let mouseX = -100, mouseY = -100;
-  let cx = mouseX, cy = mouseY;
-  const speed = 0.18; // suavizado (0-1)
+  // 2. Configuración de movimiento suave (Lerp)
+  let mouseX = -100, mouseY = -100; // Posición real del mouse
+  let cx = mouseX, cy = mouseY;     // Posición suavizada del cursor
+  const speed = 0.18;               // Suavizado (0-1)
+  const edgeMargin = 15;            // Margen para ocultar en bordes
 
-  // Parche para evitar que el cursor quede visible en elementos nativos que cambian de foco
-  cursor.style.transition = 'background-color 120ms linear, transform 120ms cubic-bezier(.2,.9,.3,1), opacity 120ms linear';
-
-  function onMouseMove(e){
+  // 3. Seguimiento del Mouse
+  document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-    // Actualiza color según el elemento bajo el puntero
+
+    // Lógica de ocultación en orillas
+    const isNearEdge = 
+      mouseX < edgeMargin || 
+      mouseY < edgeMargin || 
+      mouseX > (window.innerWidth - edgeMargin) || 
+      mouseY > (window.innerHeight - edgeMargin);
+
+    cursor.style.opacity = isNearEdge ? '0' : '1';
+
+    // Actualizar color solo cuando se mueve el mouse para ahorrar recursos
     updateCursorColor(mouseX, mouseY);
-  }
+  }, {passive: true});
 
-  document.addEventListener('mousemove', onMouseMove, {passive:true});
-
-  // Animación suave con requestAnimationFrame
-  let rafId;
+  // 4. Loop de animación (Para que el movimiento sea "Sticky" y premium)
   function loop(){
     cx += (mouseX - cx) * speed;
     cy += (mouseY - cy) * speed;
-    cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-    rafId = requestAnimationFrame(loop);
+    
+    // Aplicamos transform usando Translate3d para aceleración por hardware
+    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
+    requestAnimationFrame(loop);
   }
   loop();
 
-  function parseRGB(str) {
-    if (!str) return null;
-    const m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
-    if (!m) return null;
-    return {r:+m[1], g:+m[2], b:+m[3], a: m[4]===undefined ? 1 : +m[4]};
-  }
-
-  function getEffectiveBgColor(el){
-    while(el && el !== document.documentElement){
-      const cs = getComputedStyle(el);
-      const bg = cs.backgroundColor;
-      const parsed = parseRGB(bg);
-      if (parsed && parsed.a > 0) return parsed;
-      el = el.parentElement;
-    }
-    // fallback a body
-    const bodyCs = getComputedStyle(document.body);
-    return parseRGB(bodyCs.backgroundColor) || {r:255,g:255,b:255,a:1};
-  }
-
-  function luminance(rgb){
-    return (0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b);
-  }
-
-  function updateCursorColor(x,y){
-    const el = document.elementFromPoint(x,y);
+  // 5. Lógica de Color Inteligente (Luminancia)
+  function updateCursorColor(x, y){
+    const el = document.elementFromPoint(x, y);
     if (!el) return;
-    const bg = getEffectiveBgColor(el);
-    const lum = luminance(bg);
-    // Si la luminancia relativa es alta, usar color oscuro para el punto
-    if ((lum / 255) > 0.6) {
-      cursor.style.background = '#000000';
-      cursor.style.boxShadow = '0 0 0 6px rgba(0,0,0,0.05)';
-    } else {
-      cursor.style.background = '#ffffff';
-      cursor.style.boxShadow = '0 0 0 6px rgba(255,255,255,0.03)';
+    
+    // Función para obtener el color de fondo real (buscando hacia arriba en el DOM)
+    const getBgColor = (element) => {
+      while (element && element !== document.documentElement) {
+        const bg = getComputedStyle(element).backgroundColor;
+        if (bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') return bg;
+        element = element.parentElement;
+      }
+      return 'rgb(4, 5, 5)'; // Fallback a tu color oscuro de fondo
+    };
+
+    const rgb = getBgColor(el).match(/\d+/g);
+    if (rgb) {
+      const brightness = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
+      // Si el fondo es claro (>150), ponemos el cursor negro. Si es oscuro, blanco.
+      cursor.style.background = brightness > 150 ? '#000000' : '#ffffff';
     }
   }
 
-  // Ocultar cuando se sale de la ventana para evitar puntos flotantes
-  window.addEventListener('mouseleave', ()=> cursor.style.opacity = '0');
-  window.addEventListener('mouseenter', ()=> cursor.style.opacity = '1');
+  // 6. Eventos de ventana
+  window.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+  window.addEventListener('mouseenter', () => cursor.style.opacity = '1');
 
-  // Respectar prefers-reduced-motion
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    cancelAnimationFrame(rafId);
-    document.removeEventListener('mousemove', onMouseMove);
-    document.addEventListener('mousemove', (e)=> {
-      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-      updateCursorColor(e.clientX, e.clientY);
-    }, {passive:true});
-  }
 })();
-</script>
-
-<script>
-  const cursor = document.getElementById('custom-cursor');
-  
-  // Solo activar la lógica si estamos en una pantalla tipo desktop
-  const isDesktop = window.matchMedia("(min-width: 768px)");
-
-  if (isDesktop.matches) {
-    document.addEventListener('mousemove', (e) => {
-      // Posiciona el cursor
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
-      
-      // Asegura que sea visible al moverse
-      if (cursor.style.opacity === "0") {
-        cursor.style.opacity = "1";
-      }
-    });
-
-    // Ocultar cuando el mouse sale de la ventana del navegador
-    document.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '0';
-    });
-
-    // Mostrar cuando el mouse vuelve a entrar a la ventana
-    document.addEventListener('mouseenter', () => {
-      cursor.style.opacity = '1';
-    });
-  }
 </script>
 
 </body>
