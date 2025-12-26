@@ -1338,7 +1338,7 @@ body {
         <div class="footer-brand-text">
           <span class="bold">faust</span> labs™
         </div>
-        <div class="footer-copyright">Faust Design Lab™ | © 2026</div>
+        <div class="footer-copyright">Faust Design Lab™ | © <span id="year"></span></div>
         <div class="footer-copyright">Some images were obtained from unsplash.com</div>
         <div class="footer-copyright">faustlab.github.io</div>
       </div>
@@ -1587,6 +1587,14 @@ if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
   cursorOutline.style.display = 'none';
   document.body.style.cursor = 'default';
 }
+</script>
+
+<script>
+  // Actualiza el año del footer al año actual
+  (function(){
+    const el = document.getElementById('year');
+    if (el) el.textContent = new Date().getFullYear();
+  })();
 </script>
 
 </body>
