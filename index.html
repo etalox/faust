@@ -34,8 +34,17 @@
     .section{padding:80px 0}
 
     /* Navbar (centrado) */
-    #navbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.08);backdrop-filter:blur(28px);border-radius:34px;padding:8px 24px;display:flex;gap:20px;align-items:center;z-index:9999}
+    /*
+      El navbar es fixed; la animación de entrada se hace relativa a su posición
+      - Clase inicial `nav-enter` mueve el elemento hacia arriba (-80px) y lo oculta
+      - `nav-enter.active` lo trae a su posición natural y muestra con transición
+    */
+    #navbar{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(0);background:rgba(255,255,255,0.08);backdrop-filter:blur(28px);border-radius:34px;padding:8px 24px;display:flex;gap:20px;align-items:center;z-index:9999;will-change:transform,opacity}
     #navbar a{color:var(--white);text-decoration:none;font-weight:500;font-size:14px}
+
+    /* Estados para la animación de entrada */
+    .nav-enter{transform:translateX(-50%) translateY(-80px);opacity:0;transition:transform .6s cubic-bezier(.2,.9,.3,1),opacity .4s ease}
+    .nav-enter.active{transform:translateX(-50%) translateY(0);opacity:1}
 
     /* Icono de menú (mobile) */
     .icon-button{position:fixed;top:20px;right:20px;width:60px;height:60px;border-radius:34px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;z-index:9999}
@@ -93,7 +102,7 @@
 </button>
 
 <!-- Navbar -->
-<nav id="navbar" class="no-select">
+<nav id="navbar" class="no-select nav-enter" aria-hidden="false">
   <a href="#home">Home</a>
   <a href="#projects">Services</a>
   <a href="#portfolio">Portfolio</a>
@@ -344,6 +353,17 @@
       // Si Lenis se carga después, inicializamos en onload
       window.addEventListener('load',()=>{if(window.Lenis){window.lenis=new Lenis({duration:1.2});requestAnimationFrame(function time(t){window.lenis.raf(t);requestAnimationFrame(time)})}});
     }
+
+    // 4b) Navbar entrance animation (fixed component): desde -80px a su posición (top:20px)
+    (function(){
+      const nav = document.getElementById('navbar');
+      if (!nav) return;
+      // Si el navbar tiene la clase 'nav-enter', activamos la transición al cargar
+      if (nav.classList.contains('nav-enter')){
+        // Activamos en el siguiente frame para forzar la transición
+        requestAnimationFrame(()=> setTimeout(()=> nav.classList.add('active'), 120));
+      }
+    })();
 
     // 5) Footer year
     const y = document.getElementById('year'); if(y) y.textContent = new Date().getFullYear();
