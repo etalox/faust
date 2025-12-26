@@ -22,6 +22,16 @@
   --cursor-size: 40px; /* Tamaño inicial */
 }
 
+/* Personaliza la selección de texto */
+::selection {
+  background: #0D00FF;
+  color: #FFFFFF;
+}
+::-moz-selection {
+  background: #0D00FF;
+  color: #FFFFFF;
+}
+
 .cursor-outline {
   /* Usamos la variable para definir el tamaño */
   width: var(--cursor-size);
@@ -107,6 +117,16 @@
       background-color: #040505;
       color: #ffffff;
       line-height: 1.6;
+    }
+
+    /* Personaliza la selección de texto */
+    ::selection {
+      background: #0D00FF;
+      color: #FFFFFF;
+    }
+    ::-moz-selection {
+      background: #0D00FF;
+      color: #FFFFFF;
     }
 
     img {
