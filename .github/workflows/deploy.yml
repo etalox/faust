@@ -1,0 +1,23 @@
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:   # permite desplegar manualmente desde Actions > Run workflow
+  push:
+    branches: [ main ] # también despliega automáticamente al hacer push
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: './'  # cambia a './dist' si tu build genera ahí los archivos
