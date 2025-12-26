@@ -1,422 +1,405 @@
-<!doctype html>
 <html lang="en" translate="no">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google" content="notranslate">
   <title>FaustLabs™ | Home</title>
-  <meta name="description" content="Faust Labs - UX/UI & neuromarketing. +15 empresas impulsadas con +25% conversiones">
-  <meta name="keywords" content="UX design, UI design, neuromarketing, conversion optimization">
-
-  <!-- Open Graph -->
+  <meta name="description" content="Faust Labs delivers world-class UX/UI design and neuromarketing consulting. 15+ companies boosted with 25% increased conversions. Data-driven design solutions for Mexico and USA businesses.">
+  <meta name="keywords" content="UX design, UI design, neuromarketing, design consulting, Mexico, USA, conversion optimization, user experience">
+  
+  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Faust Labs - World-class UX Design">
-  <meta property="og:description" content="Data-driven UX/UI & Neuromarketing. +25% conversiones comprobadas.">
-
-  <!-- Fuentes y favicon -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="assets/Faust_Logo.png" type="image/png">
+  <meta property="og:title" content="Faust Labs - World's Top-Level UX Design Agency">
+  <meta property="og:description" content="Professional UX/UI design agency delivering data-driven solutions with proven 25% conversion increases for 15+ companies.">
 
   <style>
-    /* =========================
-       Estilos base (compactados y explicados)
-       - Comentarios en español para facilitar mantenimiento
-       ========================= */
-    :root{--bg:#040505;--white:#fff;--muted:#ffffffcc;--accent:#0D00FF}
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{width:100%;background:var(--bg);color:var(--white);font-family:'Instrument Sans',system-ui,Arial;overflow-x:hidden}
-    img{max-width:100%;height:auto;display:block}
 
-    /* Layout flexible */
-    .container{max-width:1120px;margin:0 auto;padding:0 16px}
-    .section{padding:80px 0}
+/* Custom cursor removed */
 
-    /* Navbar (centrado) */
-    /*
-      El navbar es fixed; la animación de entrada se hace relativa a su posición
-      - Clase inicial `nav-enter` mueve el elemento hacia arriba (-80px) y lo oculta
-      - `nav-enter.active` lo trae a su posición natural y muestra con transición
-    */
-    #navbar{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(0);background:rgba(255,255,255,0.08);backdrop-filter:blur(28px);border-radius:34px;padding:8px 24px;display:flex;gap:20px;align-items:center;z-index:9999;will-change:transform,opacity}
-    #navbar a{color:var(--white);text-decoration:none;font-weight:500;font-size:14px}
-
-    /* Estados para la animación de entrada */
-    .nav-enter{transform:translateX(-50%) translateY(-80px);opacity:0;transition:transform .6s cubic-bezier(.2,.9,.3,1),opacity .4s ease}
-    .nav-enter.active{transform:translateX(-50%) translateY(0);opacity:1}
-
-    /* Ocultar/mostrar navbar al hacer scroll (para fixed elements) */
-    /* .nav-hidden empuja el navbar hacia arriba fuera de la vista sin cambiar su flujo */
-    .nav-hidden{transform:translateX(-50%) translateY(-120px);opacity:0;transition:transform .35s ease,opacity .2s ease}
-
-    /* Icono de menú (mobile) */
-    .icon-button{position:fixed;top:20px;right:20px;width:60px;height:60px;border-radius:34px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;z-index:9999}
-    @media(min-width:768px){.icon-button{display:none}}
-    @media(max-width:767px){#navbar{display:none}}
-
-    /* Hero */
-    .hero-section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background-image:linear-gradient(180deg,#00000019 0%,#040505 100%),url('https://images.unsplash.com/photo-1500932334442-8761ee4810a7?q=80&w=1470&auto=format&fit=crop');background-size:cover;background-position:center}
-    .hero-content{max-width:1120px;width:100;text-align:left}
-    .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
-    .brand img{width:48px;height:48px}
-    .brand .brand-text{font-size:24px}
-
-    .hero-title{font-family:'Poppins',sans-serif;font-size:64px;line-height:0.95;margin-bottom:24px}
-    .hero-sub{color:var(--muted);margin-bottom:40px;font-size:18px}
-
-    /* Botón principal */
-    .btn{display:inline-flex;align-items:center;gap:10px;padding:18px 28px;border-radius:34px;background:var(--white);color:#000;border:none;text-decoration:none;font-weight:500;cursor:pointer}
-    .btn:hover{background:var(--accent);color:var(--white);transform:translateY(-2px)}
-
-    /* Secciones y tarjetas */
-    .services-grid{display:grid;gap:20px}
-    .service-card{background:#dfe3e3;border-radius:28px;padding:22px;position:relative;transition:transform .25s,box-shadow .25s}
-    .service-card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,.18)}
-
-    /* Stats */
-    .stats-container{display:grid;gap:28px}
-
-    /* Award / team / footer */
-    .award-container{display:grid;gap:40px}
-    .team-avatars{display:flex;gap:12px}
-
-    /* Reveal animations: base pequeña y eficiente */
-    .reveal{opacity:0;transform:translateY(20px);transition:opacity .75s ease,transform .75s ease}
-    .reveal.active{opacity:1;transform:none}
-
-    /* Responsive */
-    @media(min-width:640px){.hero-title{font-size:80px;text-align:center}.hero-content{text-align:center}.brand{justify-content:center}}
-    @media(min-width:1024px){.services-grid{grid-template-columns:repeat(3,1fr)}.stats-container{grid-template-columns:repeat(3,1fr)}.award-container{grid-template-columns:1fr 1fr}}
-  </style>
-
-  <!-- Scripts externos opcionales (se conservan por comportamiento) -->
-  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ffaustlabs1303back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
-  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
-</head>
-<body translate="no" class="notranslate">
-
-<!-- Icono menú mobile (SVG embebido para evitar rutas rotas) -->
-<button class="icon-button" aria-label="Menu">
-  <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-    <rect width="22" height="2" rx="1" fill="#fff"/>
-    <rect y="7" width="22" height="2" rx="1" fill="#fff"/>
-    <rect y="14" width="22" height="2" rx="1" fill="#fff"/>
-  </svg>
-</button>
-
-<!-- Navbar -->
-<nav id="navbar" class="no-select nav-enter" aria-hidden="false">
-  <a href="#home">Home</a>
-  <a href="#projects">Services</a>
-  <a href="#portfolio">Portfolio</a>
-  <a href="#team">Faust Team</a>
-</nav>
-
-<!-- HERO -->
-<section id="home" class="hero-section">
-  <div class="container hero-content">
-    <div class="brand reveal delay-1">
-      <img src="assets/Faust_Flag.svg" alt="faust logo">
-      <div class="brand-text"><strong>faust</strong> labs™</div>
-    </div>
-
-    <h1 class="hero-title reveal delay-2">
-      <span class="hero-heading-mobile">The World's Top-level<br>Design.</span>
-      <span class="hero-heading-desktop" style="display:none;">World-Class Digital Products<br>Engineered for Conversion.</span>
-    </h1>
-
-    <p class="hero-sub reveal delay-3"><strong>The top 1% in Mexico and the USA.</strong> <span style="color:var(--muted)">We are a collective of the best product designers, developers, data analysts and more.</span></p>
-
-    <a href="#projects" class="btn reveal delay-4">Our Services
-      <!-- Flecha sencilla SVG -->
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-        <path d="M5 12h14M13 5l7 7-7 7" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-  </div>
-</section>
-
-<!-- Intro / About -->
-<section class="section content-section">
-  <div class="container">
-    <h2 class="section-title reveal">Have you noticed that the leading companies are already integrating the latest design standards?</h2>
-    <p class="section-text reveal">80% of small businesses fail to take off because they don't understand the importance of a clean and optimized design to maximize conversions.</p>
-
-    <div style="margin-top:28px;display:grid;gap:12px">
-      <!-- Usamos un check inline SVG en lugar de recursos externos rotos -->
-      <div style="display:flex;gap:12px;align-items:center" class="reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="color:var(--muted)">We will design high-value products for your company.</span></div>
-      <div style="display:flex;gap:12px;align-items:center" class="reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="color:var(--muted)">We will increase your conversion rate, 100% guaranteed.</span></div>
-      <div style="display:flex;gap:12px;align-items:center" class="reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="color:var(--muted)">You will receive personalised advice from Faust Design Labs™.</span></div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider" style="border:none;height:1px;background:rgba(255,255,255,.12)">
-
-<!-- Stats -->
-<section class="stats-section">
-  <div class="container">
-    <h2 class="section-title reveal">Results that speak for themselves</h2>
-    <div class="stats-container">
-      <div class="stat-item reveal"><div class="stat-label">COMPANIES</div><div class="stat-number">+15</div><div class="stat-title">companies in America</div><p class="stat-description" style="color:var(--muted)">were driven last year by the development of products based on human cognition.</p></div>
-      <div class="stat-item reveal"><div class="stat-label">INFLUENCE</div><div class="stat-number">+4.9M</div><div class="stat-title">impacted users</div><p class="stat-description" style="color:var(--muted)">were driven last year by the development of products based on human cognition.</p></div>
-      <div class="stat-item reveal"><div class="stat-label">RESULTS</div><div class="stat-number">+25%</div><div class="stat-title">customer conversions</div><p class="stat-description" style="color:var(--muted)">were driven last year by the development of products based on human cognition.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- Services -->
-<section id="projects" class="section">
-  <div class="container">
-    <h2 class="section-title reveal">We build data-driven products</h2>
-    <p class="section-text reveal"><strong style="color:#fff">+15 empresas en México y Estados Unidos</strong> <span style="color:var(--muted)"> fueron impulsadas el último año gracias a la construcción de productos basados en la cognición humana.</span></p>
-
-    <div class="services-grid">
-      <article class="service-card reveal">
-        <h3 class="service-title">UX/UI Business<br>Consulting</h3>
-        <p class="service-projects">12 Completed Projects</p>
-      </article>
-
-      <article class="service-card reveal">
-        <h3 class="service-title">Neuromarketing<br>Consulting</h3>
-        <p class="service-projects">12 Completed Projects</p>
-      </article>
-
-      <article class="service-card reveal">
-        <h3 class="service-title">High-Fidelity<br>Prototyping</h3>
-        <p class="service-projects">12 Completed Projects</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<hr class="divider" style="border:none;height:1px;background:rgba(255,255,255,.12)">
-
-<!-- Award / Team -->
-<section class="award-section section">
-  <div class="container award-container">
-    <div class="award-content reveal">
-      <div class="award-year">2025</div>
-      <img src="assets/Design-Award.svg" alt="i.design Award logo" style="max-width:228px;margin:16px 0">
-      <div class="award-title">Winner</div>
-      <p class="award-quote"><strong>"This is an award-level design work"</strong><br><span style="color:var(--muted)">—i.design Award</span></p>
-    </div>
-
-    <div class="team-content reveal">
-      <div class="team-avatars">
-        <img src="assets/photo1.png" alt="Team" width="70" height="70">
-        <img src="assets/photo2.png" alt="Team" width="70" height="70">
-        <img src="assets/photo3.png" alt="Team" width="70" height="70">
-      </div>
-      <h3 class="team-title">Meet the Team</h3>
-      <p class="team-description" style="color:var(--muted)">Our team will develop the digital strategies your company needs to expand into new horizons.</p>
-      <a href="#team" class="btn">Faust Team</a>
-    </div>
-  </div>
-</section>
-
-<hr class="divider" style="border:none;height:1px;background:rgba(255,255,255,.12)">
-
-<!-- CTA -->
-<section class="cta-section" style="background-image:linear-gradient(180deg,#040505 0%,#04050500 100%),url('https://images.unsplash.com/photo-1605144156698-804de50de0ca?q=80&w=2071&auto=format&fit=crop')">
-  <div class="container cta-content reveal">
-    <img src="assets/Faust_Flag.svg" alt="faust" style="width:96px;height:84px;margin-bottom:8px">
-    <h2 class="cta-title" style="font-size:64px;margin-bottom:12px">Let's grow, together</h2>
-    <p class="cta-sub" style="color:var(--muted);margin-bottom:20px">El mejor momento<br>para tomar acción es hoy.</p>
-    <a href="#contact" class="btn cta-button">Get in touch</a>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="footer section">
-  <div class="container footer-content">
-    <div class="footer-links" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;margin-bottom:40px">
-      <div>
-        <h3 style="font-size:14px;color:var(--muted)">SERVICES</h3>
-        <a href="#ux-design">UX/UI Design</a><br>
-        <a href="#consulting">UX/UI Consulting</a><br>
-        <a href="#neuromarketing">Neuro-Marketing Strategy</a><br>
-        <a href="#frontend">Front-end Engineering</a>
-      </div>
-      <div>
-        <h3 style="font-size:14px;color:var(--muted)">LET'S WORK TOGETHER</h3>
-        <a href="#contact">Contact</a><br>
-        <a href="#support">Support</a>
-      </div>
-      <div>
-        <h3 style="font-size:14px;color:var(--muted)">FOR DESIGNERS</h3>
-        <a href="#join">I Want to Join the Team</a>
-      </div>
-    </div>
-
-    <div style="text-align:center">
-      <img src="assets/Faust_Flag.svg" alt="logo" style="width:32px;height:32px;margin:0 auto 8px">
-      <div style="font-size:20px;margin-bottom:12px"><strong>faust</strong> labs™</div>
-      <div style="color:var(--muted)">Faust Design Lab™ | © <span id="year"></span></div>
-      <div style="color:var(--muted);margin-top:6px">Some images were obtained from unsplash.com</div>
-      <div style="color:var(--muted)"><a href="https://faustlab.netlify.app/" style="color:var(--muted);text-decoration:none">https://faustlab.netlify.app/</a></div>
-    </div>
-  </div>
-</footer>
-
-<!-- =========================
-     JS: compact, seguro y comentado
-     - Consolida observers
-     - Evita variables globales innecesarias
-     ========================= -->
-<script>
-  (function(){
-    'use strict';
-
-    // 1) Smooth anchor scroll: usa Lenis si está disponible, fallback a native
-    function smoothScrollTo(el){
-      const top = el.getBoundingClientRect().top + window.scrollY - 80;
-      if(window.lenis && typeof window.lenis.scrollTo === 'function'){
-        window.lenis.scrollTo(top);
-      }else{
-        window.scrollTo({top,behavior:'smooth'});
-      }
+        /* Estado inicial de los elementos del Hero */
+    .hero-reveal {
+      opacity: 0;
+      transform: translateY(30px); /* Empieza un poco abajo */
+      filter: blur(10px);          /* Empieza borroso */
+      transition: all 1s cubic-bezier(0.2, 1, 0.3, 1); /* "Luxury easing" */
     }
 
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click',function(e){
-        const href = this.getAttribute('href');
-        if(href === '#' || href === '') return;
-        const target = document.querySelector(href);
-        if(target){e.preventDefault();smoothScrollTo(target)}
-      });
-    });
-
-    // 2) Reveal on scroll: agregamos la clase a selectores clave (si falta), excluimos footer
-    const revealSelectors = [
-      '.section-title',
-      '.section-text',
-      '.stats-section .stat-item',
-      '.services-grid .service-card',
-      '.award-section .award-content',
-      '.team-section .team-content',
-      '.cta-section .cta-content',
-      '.hero-section .brand',
-      '.hero-section .hero-title',
-      '.hero-section .hero-sub'
-    ];
-
-    // Añade la clase 'reveal' a los elementos que deberían animarse (si no la tienen)
-    revealSelectors.forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => {
-        if (!el.closest('footer')) el.classList.add('reveal');
-      });
-    });
-
-    // Observer que además crea un ligero 'stagger' para hijos directos
-    const revealObserver = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-
-          // Stagger: aplica retrasos cortos a los hijos directos (si existen)
-          const children = Array.from(el.children || []);
-          if (children.length > 0) {
-            children.forEach((child, i) => {
-              child.style.transitionDelay = `${i * 80}ms`;
-            });
-          }
-
-          // Activa la animación y dejamos de observar
-          el.classList.add('active');
-          obs.unobserve(el);
-        }
-      });
-    }, {threshold: 0.12, rootMargin: '0px 0px -80px 0px'});
-
-    // Observa todos los elementos .reveal que NO estén dentro del footer
-    document.querySelectorAll('.reveal').forEach(el => {
-      if (!el.closest('footer')) revealObserver.observe(el);
-    });
-
-    // 3) Parallax: ligero y eficiente
-    let ticking=false; window.addEventListener('scroll',()=>{ if(!ticking){requestAnimationFrame(()=>{
-      document.querySelectorAll('.hero-section, .cta-section').forEach(section=>{
-        const rect = section.getBoundingClientRect();
-        const speed = window.innerWidth<768?0.3:0.5;
-        if(rect.top < window.innerHeight && rect.bottom > 0){
-          const y = Math.round((window.scrollY - section.offsetTop) * speed);
-          section.style.backgroundPosition = `center 0px, center ${y}px`;
-        }
-      });
-      ticking=false;
-    });ticking=true;}},{passive:true});
-
-    // 4) Lenis init (cuando esté disponible en DOM)
-    if(window.Lenis){
-      window.lenis = new Lenis({duration:1.2,easing: t=>Math.min(1,1.001-Math.pow(2,-10*t))});
-      function raf(time){window.lenis.raf(time);requestAnimationFrame(raf)}
-      requestAnimationFrame(raf);
-    } else {
-      // Si Lenis se carga después, inicializamos en onload
-      window.addEventListener('load',()=>{if(window.Lenis){window.lenis=new Lenis({duration:1.2});requestAnimationFrame(function time(t){window.lenis.raf(t);requestAnimationFrame(time)})}});
+    /* Estado activo (cuando JS lo activa) */
+    .hero-reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
     }
 
-    // 4b) Navbar entrance animation (fixed component): desde -80px a su posición (top:20px)
-    (function(){
-      const nav = document.getElementById('navbar');
-      if (!nav) return;
-      // Si el navbar tiene la clase 'nav-enter', activamos la transición al cargar
-      if (nav.classList.contains('nav-enter')){
-        // Activamos en el siguiente frame para forzar la transición
-        requestAnimationFrame(()=> setTimeout(()=> nav.classList.add('active'), 120));
-      }
+    /* Retrasos escalonados (Stagger) */
+    .delay-1 { transition-delay: 0.1s; } /* Logo/Marca */
+    .delay-2 { transition-delay: 0.3s; } /* Título */
+    .delay-3 { transition-delay: 0.5s; } /* Subtítulo */
+    .delay-4 { transition-delay: 0.7s; } /* Botón */
 
-      // Ocultar/mostrar navbar según la dirección del scroll
-      let lastY = window.scrollY || 0;
-      let ticking = false;
-      const delta = 10; // umbral mínimo para evitar micro-jerks
+    /* Scroll reveal animations (aparecer mientras se desliza) */
+    .reveal-when-visible {
+      opacity: 0;
+      transform: translateY(30px);
+      filter: blur(8px);
+      transition: opacity 0.9s cubic-bezier(0.2, 1, 0.3, 1), transform 0.9s cubic-bezier(0.2, 1, 0.3, 1), filter 0.9s ease;
+      will-change: opacity, transform;
+    }
 
-      function onScroll(){
-        const y = window.scrollY || 0;
-        if (!ticking){
-          window.requestAnimationFrame(()=>{
-            if (y - lastY > delta && y > 100) {
-              // Scroll hacia abajo -> ocultar
-              nav.classList.add('nav-hidden');
-              nav.setAttribute('aria-hidden','true');
-            } else if (lastY - y > delta || y < 80) {
-              // Scroll hacia arriba o cerca del top -> mostrar
-              nav.classList.remove('nav-hidden');
-              nav.setAttribute('aria-hidden','false');
-            }
-            lastY = y;
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }
+    .reveal-when-visible.active {
+      opacity: 1;
+      transform: translateY(0);
+      filter: none;
+    }
 
-      window.addEventListener('scroll', onScroll, {passive: true});
+    /* Stagger: aplica un ligero retraso a los hijos si existen */
+    .reveal-when-visible > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
 
-      // En caso de que Lenis maneje scroll, también reaccionamos a su raf
-      if (window.lenis && typeof window.lenis.on === 'function'){
-        // Lenis v1 no expone un event por defecto; si lo tuvieras, vincula aquí.
-        // Mantenemos el listener de scroll como fallback fiable.
-      }
+    .reveal-when-visible.active > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-      // Mostrar navbar al enfocar elementos (mejora accesibilidad)
-      document.addEventListener('focusin', ()=> nav.classList.remove('nav-hidden'));
+    .hero-heading-desktop {
+      display: none;
+    }
 
-    })();
+    .hero-heading-mobile {
+      display: inline;
+    }
 
-    // 5) Footer year
-    const y = document.getElementById('year'); if(y) y.textContent = new Date().getFullYear();
+    .no-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* Internet Explorer 10 y 11 */
+    user-select: none;         /* Estándar (Chrome, Edge, Firefox) */
+    }
 
-  })();
-</script>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<!-- Cargamos Lenis desde CDN (se mantiene) -->
-<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
 
-</body>
-</html>
+    body {
+      font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #040505;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+
+    /* Personaliza la selección de texto */
+    ::selection {
+      background: #0D00FF;
+      color: #FFFFFF;
+    }
+    ::-moz-selection {
+      background: #0D00FF;
+      color: #FFFFFF;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Layout components */
+    .hero-section {
+      background-image: linear-gradient(180deg, #00000019 0%, #040505 100%), url("https://images.unsplash.com/photo-1500932334442-8761ee4810a7?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .section {
+      padding: 40px 0;
+      width: 100%;
+    }
+
+    .flex-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .flex-row {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .justify-center {
+      justify-content: center;
+    }
+
+    .align-center {
+      align-items: center;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .gap-16 {
+      gap: 16px;
+    }
+
+    .gap-24 {
+      gap: 24px;
+    }
+
+    .gap-32 {
+      gap: 32px;
+    }
+
+    /* Icon Button - Fixed positioning on screen */
+    .icon-button {
+      width: 60px;
+
+      /* Navbar - Fixed positioning with blur backdrop */
+.navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(100px);
+  border-radius: 34px;
+  padding: 12px 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+.navbar-content {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.navbar-content a {
+  color: #ffffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.4s ease;
+}
+
+.navbar-content a:hover {
+  color: #404040;
+}
+      height: 70px;
+      border-radius: 34px;
+      background-color: #ffffff19;
+      backdrop-filter: blur(100px);
+      -webkit-backdrop-filter: blur(100px);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+
+    .icon-button:hover {
+      background-color: #ffffff80;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transform: scale(1.05);
+    }
+
+    /* Brand Logo */
+    .brand-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+
+    .brand-logo img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .brand-text {
+      font-size: 24px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 400;
+      line-height: 100%;
+      color: #ffffff;
+      margin-top: -2px;
+    }
+
+    .brand-text .bold {
+      font-weight: 600;
+    }
+
+    /* Hero Content */
+    .hero-content {
+      min-width: 360px;
+      max-width: 1120px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .hero-title {
+      font-size: 72px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      line-height: 100%;
+      color: #ffffff;
+      margin-bottom: 32px;
+      text-align: left;
+      font-feature-settings: "ss01" 1;
+      letter-spacing: -0.04em; 
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 25px;
+      color: #ffffff;
+      margin-bottom: 48px;
+      max-width: 100%;
+      text-align: left;
+    }
+
+    .hero-subtitle .bold {
+      font-weight: 600;
+    }
+
+    .hero-subtitle .muted {
+      color: #ffffffcc;
+      font-weight: 400;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 22px 34px;
+      background-color: #ffffffff;
+      color: #000000ff;
+      font-size: 16px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 100%;
+      border: none;
+      border-radius: 34px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      text-decoration: none;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none;     /* Internet Explorer 10 y 11 */
+      user-select: none;         /* Estándar (Chrome, Edge, Firefox) */
+    }
+
+    .btn:hover {
+      background-color: #0D00FF;
+      color: #ffffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:hover .btn-icon {
+      color: #ffffff;
+      filter: brightness(0) invert(1);
+    }
+
+    .btn-icon {
+      width: 10px;
+      height: 10px;
+      color: #000000ff;
+    }
+
+    /* Content Sections */
+    .content-section {
+      padding: 80px 0;
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 120%;
+      color: #ffffff;
+      margin-bottom: 40px;
+        text-align: left;
+    }
+
+    .section-text {
+      font-size: 18px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 400;
+      line-height: 25px;
+      color: #ffffffcc;
+      margin-bottom: 32px;
+        text-align: left;
+    }
+
+    /* About Section Title */
+    .about-title {
+      font-size: 72px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      line-height: 85%;
+      color: #ffffff;
+      margin-bottom: 40px;
+    }
+
+    /* Divider Line */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #ffffff20;
+      margin: 0px 0;
+    }
+
+    /* Stats Section */
+    .stats-section {
+      padding: 160px 0;
+      width: 100%;
+          background-color: #0b0b0bff;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
     .stat-item {
       text-align: left;
     }
@@ -464,15 +447,14 @@
       margin: 0px 0;
     }
 
-    @keyframes serviceCardViewAnimation {
-      from {
-        background-color: #d3d3d6;
-      }
-      to {
-        background-color: #ffffff;
-      }
-    }
-
+@keyframes serviceCardViewAnimation {
+  from {
+    background-color: #d3d3d6;
+  }
+  to {
+    background-color: #ffffff;
+  }
+}
     .service-card {
       background-color: #d3d7d6;
       border-radius: 54px;
@@ -482,19 +464,19 @@
       transition: all 0.3s ease;
     }
 
-    @media (min-width: 768px) {
-          .service-card:hover {
-            background-color: #ffffffff;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-          }
-          }
-
-    @media (max-width: 767px) {
-      .service-card.animate {
-        animation: serviceCardViewAnimation 0.8s ease forwards;
+@media (min-width: 768px) {
+      .service-card:hover {
+        background-color: #ffffffff;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       }
-    }
+      }
+
+@media (max-width: 767px) {
+  .service-card.animate {
+    animation: serviceCardViewAnimation 0.8s ease forwards;
+  }
+}
       
     .service-content {
       display: flex;
@@ -1055,6 +1037,8 @@
   }
 }
 
+/* Custom cursor CSS removed */
+
 </style>
   
   <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ffaustlabs1303back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
@@ -1070,7 +1054,7 @@
 <!-- Hero Section -->
   <section class="hero-section">
     
-  <!-- Hero Content -->
+    <!-- Hero Content -->
 <div class="hero-content">
   
   <!-- Logo con delay 1 -->
