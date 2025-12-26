@@ -46,6 +46,10 @@
     .nav-enter{transform:translateX(-50%) translateY(-80px);opacity:0;transition:transform .6s cubic-bezier(.2,.9,.3,1),opacity .4s ease}
     .nav-enter.active{transform:translateX(-50%) translateY(0);opacity:1}
 
+    /* Ocultar/mostrar navbar al hacer scroll (para fixed elements) */
+    /* .nav-hidden empuja el navbar hacia arriba fuera de la vista sin cambiar su flujo */
+    .nav-hidden{transform:translateX(-50%) translateY(-120px);opacity:0;transition:transform .35s ease,opacity .2s ease}
+
     /* Icono de menú (mobile) */
     .icon-button{position:fixed;top:20px;right:20px;width:60px;height:60px;border-radius:34px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;z-index:9999}
     @media(min-width:768px){.icon-button{display:none}}
@@ -363,6 +367,43 @@
         // Activamos en el siguiente frame para forzar la transición
         requestAnimationFrame(()=> setTimeout(()=> nav.classList.add('active'), 120));
       }
+
+      // Ocultar/mostrar navbar según la dirección del scroll
+      let lastY = window.scrollY || 0;
+      let ticking = false;
+      const delta = 10; // umbral mínimo para evitar micro-jerks
+
+      function onScroll(){
+        const y = window.scrollY || 0;
+        if (!ticking){
+          window.requestAnimationFrame(()=>{
+            if (y - lastY > delta && y > 100) {
+              // Scroll hacia abajo -> ocultar
+              nav.classList.add('nav-hidden');
+              nav.setAttribute('aria-hidden','true');
+            } else if (lastY - y > delta || y < 80) {
+              // Scroll hacia arriba o cerca del top -> mostrar
+              nav.classList.remove('nav-hidden');
+              nav.setAttribute('aria-hidden','false');
+            }
+            lastY = y;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, {passive: true});
+
+      // En caso de que Lenis maneje scroll, también reaccionamos a su raf
+      if (window.lenis && typeof window.lenis.on === 'function'){
+        // Lenis v1 no expone un event por defecto; si lo tuvieras, vincula aquí.
+        // Mantenemos el listener de scroll como fallback fiable.
+      }
+
+      // Mostrar navbar al enfocar elementos (mejora accesibilidad)
+      document.addEventListener('focusin', ()=> nav.classList.remove('nav-hidden'));
+
     })();
 
     // 5) Footer year
