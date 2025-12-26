@@ -14,9 +14,8 @@
 
   <style>
 
-/* Custom cursor: oculta el cursor nativo y añade un punto personalizado */
-:root { --cursor-size: 12px; --cursor-color: #ffffff; --cursor-contrast-color: #000000; }
-html, body, * { cursor: none !important; }
+/* Modificación en el CSS de la sección <style> */
+
 #custom-cursor {
   position: fixed;
   top: 0; left: 0;
@@ -25,12 +24,22 @@ html, body, * { cursor: none !important; }
   border-radius: 50%;
   background: var(--cursor-color);
   transform: translate(-50%, -50%) scale(1);
-  transition: background-color 120ms linear, transform 120ms cubic-bezier(.2,.9,.3,1), opacity 120ms linear;
+  transition: background-color 120ms linear, transform 120ms cubic-bezier(.2,.9,.3,1), opacity 150ms ease;
   pointer-events: none;
-  z-index: 2147483647; /* Muy por encima de todo */
+  z-index: 2147483647;
   will-change: transform, background-color, opacity;
   box-shadow: 0 0 0 6px rgba(255,255,255,0.02);
-  opacity: 1;
+  
+  /* CAMBIO: Oculto por defecto y en mobile */
+  opacity: 0;
+  display: none; 
+}
+
+/* CAMBIO: Solo se muestra en desktop (min-width: 768px) */
+@media (min-width: 768px) {
+  #custom-cursor {
+    display: block;
+  }
 }
 
         /* Estado inicial de los elementos del Hero */
@@ -1676,6 +1685,36 @@ if (window.innerWidth < 768) {
     }, {passive:true});
   }
 })();
+</script>
+
+<script>
+  const cursor = document.getElementById('custom-cursor');
+  
+  // Solo activar la lógica si estamos en una pantalla tipo desktop
+  const isDesktop = window.matchMedia("(min-width: 768px)");
+
+  if (isDesktop.matches) {
+    document.addEventListener('mousemove', (e) => {
+      // Posiciona el cursor
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      
+      // Asegura que sea visible al moverse
+      if (cursor.style.opacity === "0") {
+        cursor.style.opacity = "1";
+      }
+    });
+
+    // Ocultar cuando el mouse sale de la ventana del navegador
+    document.addEventListener('mouseleave', () => {
+      cursor.style.opacity = '0';
+    });
+
+    // Mostrar cuando el mouse vuelve a entrar a la ventana
+    document.addEventListener('mouseenter', () => {
+      cursor.style.opacity = '1';
+    });
+  }
 </script>
 
 </body>
