@@ -14,7 +14,24 @@
 
   <style>
 
-/* Custom cursor removed */
+/* Custom cursor: oculta el cursor nativo y añade un punto personalizado */
+:root { --cursor-size: 12px; --cursor-color: #ffffff; --cursor-contrast-color: #000000; }
+html, body, * { cursor: none !important; }
+#custom-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  border-radius: 50%;
+  background: var(--cursor-color);
+  transform: translate(-50%, -50%) scale(1);
+  transition: background-color 120ms linear, transform 120ms cubic-bezier(.2,.9,.3,1), opacity 120ms linear;
+  pointer-events: none;
+  z-index: 2147483647; /* Muy por encima de todo */
+  will-change: transform, background-color, opacity;
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.02);
+  opacity: 1;
+}
 
         /* Estado inicial de los elementos del Hero */
     .hero-reveal {
@@ -1041,7 +1058,7 @@
 #navbar.nav-enter{transform:translateX(-50%) translateY(-80px) !important;opacity:0;transition:transform .6s cubic-bezier(.2,.9,.3,1),opacity .4s ease}
 #navbar.nav-enter.active{transform:translateX(-50%) translateY(0) !important;opacity:1}
 
-/* Custom cursor CSS removed */
+/* Custom cursor applied in head (see above) */
 
 </style>
   
@@ -1054,6 +1071,8 @@
   <button class="icon-button" aria-label="Menu">
     <img src="../assets/images/img_frame.svg" alt="Menu icon" width="24" height="24">
   </button>
+
+  <div id="custom-cursor" aria-hidden="true"></div>
 
 <!-- Hero Section -->
   <section class="hero-section">
@@ -1185,7 +1204,7 @@
     <div class="container">
       <div style="max-width: 1120px; margin: 0 auto;">
         <h2 class="section-title">We build data-driven products</h2>
-        <p style="font-size: 20px; font-family: 'Instrument Sans', sans-serif; line-height: 25px; color: #ffffff; margin-bottom: 40px;">
+        <p class="section-text reveal-when-visible" style="font-size: 20px; font-family: 'Instrument Sans', sans-serif; line-height: 25px; color: #ffffff; margin-bottom: 40px;">
           <span style="font-weight: 600;">+15 empresas en México y Estados Unidos</span>
           <span style="color: #ffffffcc; font-weight: 400;"> fueron impulsadas el último año gracias a la construcción de productos basados en la cognición humana.</span>
         </p>
@@ -1567,6 +1586,96 @@ if (window.innerWidth < 768) {
     const el = document.getElementById('year');
     if (el) el.textContent = new Date().getFullYear();
   })();
+</script>
+
+<script>
+(function(){
+  // Activar solo en dispositivos con puntero 'fine' (escritorio principalmente)
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  const cursor = document.getElementById('custom-cursor');
+  if (!cursor) return;
+
+  // Variables de posición
+  let mouseX = -100, mouseY = -100;
+  let cx = mouseX, cy = mouseY;
+  const speed = 0.18; // suavizado (0-1)
+
+  // Parche para evitar que el cursor quede visible en elementos nativos que cambian de foco
+  cursor.style.transition = 'background-color 120ms linear, transform 120ms cubic-bezier(.2,.9,.3,1), opacity 120ms linear';
+
+  function onMouseMove(e){
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    // Actualiza color según el elemento bajo el puntero
+    updateCursorColor(mouseX, mouseY);
+  }
+
+  document.addEventListener('mousemove', onMouseMove, {passive:true});
+
+  // Animación suave con requestAnimationFrame
+  let rafId;
+  function loop(){
+    cx += (mouseX - cx) * speed;
+    cy += (mouseY - cy) * speed;
+    cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+    rafId = requestAnimationFrame(loop);
+  }
+  loop();
+
+  function parseRGB(str) {
+    if (!str) return null;
+    const m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
+    if (!m) return null;
+    return {r:+m[1], g:+m[2], b:+m[3], a: m[4]===undefined ? 1 : +m[4]};
+  }
+
+  function getEffectiveBgColor(el){
+    while(el && el !== document.documentElement){
+      const cs = getComputedStyle(el);
+      const bg = cs.backgroundColor;
+      const parsed = parseRGB(bg);
+      if (parsed && parsed.a > 0) return parsed;
+      el = el.parentElement;
+    }
+    // fallback a body
+    const bodyCs = getComputedStyle(document.body);
+    return parseRGB(bodyCs.backgroundColor) || {r:255,g:255,b:255,a:1};
+  }
+
+  function luminance(rgb){
+    return (0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b);
+  }
+
+  function updateCursorColor(x,y){
+    const el = document.elementFromPoint(x,y);
+    if (!el) return;
+    const bg = getEffectiveBgColor(el);
+    const lum = luminance(bg);
+    // Si la luminancia relativa es alta, usar color oscuro para el punto
+    if ((lum / 255) > 0.6) {
+      cursor.style.background = '#000000';
+      cursor.style.boxShadow = '0 0 0 6px rgba(0,0,0,0.05)';
+    } else {
+      cursor.style.background = '#ffffff';
+      cursor.style.boxShadow = '0 0 0 6px rgba(255,255,255,0.03)';
+    }
+  }
+
+  // Ocultar cuando se sale de la ventana para evitar puntos flotantes
+  window.addEventListener('mouseleave', ()=> cursor.style.opacity = '0');
+  window.addEventListener('mouseenter', ()=> cursor.style.opacity = '1');
+
+  // Respectar prefers-reduced-motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cancelAnimationFrame(rafId);
+    document.removeEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousemove', (e)=> {
+      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+      updateCursorColor(e.clientX, e.clientY);
+    }, {passive:true});
+  }
+})();
 </script>
 
 </body>
