@@ -1,0 +1,1475 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="google" content="notranslate">
+  <title>FaustLabs™ | Home</title>
+  <meta name="description" content="Faust Labs - UX/UI & neuromarketing. +15 empresas impulsadas con +25% conversiones">
+  <meta name="keywords" content="UX design, UI design, neuromarketing, conversion optimization">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Faust Labs - World-class UX Design">
+  <meta property="og:description" content="Data-driven UX/UI & Neuromarketing. +25% conversiones comprobadas.">
+
+  <!-- Fuentes y favicon -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/Faust_Logo.png" type="image/png">
+
+  <style>
+    /* =========================
+       Estilos base (compactados y explicados)
+       - Comentarios en español para facilitar mantenimiento
+       ========================= */
+    :root{--bg:#040505;--white:#fff;--muted:#ffffffcc;--accent:#0D00FF}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;background:var(--bg);color:var(--white);font-family:'Instrument Sans',system-ui,Arial;overflow-x:hidden}
+    img{max-width:100%;height:auto;display:block}
+
+    /* Layout flexible */
+    .container{max-width:1120px;margin:0 auto;padding:0 16px}
+    .section{padding:80px 0}
+
+    /* Navbar (centrado) */
+    #navbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.08);backdrop-filter:blur(28px);border-radius:34px;padding:8px 24px;display:flex;gap:20px;align-items:center;z-index:9999}
+    #navbar a{color:var(--white);text-decoration:none;font-weight:500;font-size:14px}
+
+    /* Icono de menú (mobile) */
+    .icon-button{position:fixed;top:20px;right:20px;width:60px;height:60px;border-radius:34px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;z-index:9999}
+    @media(min-width:768px){.icon-button{display:none}}
+    @media(max-width:767px){#navbar{display:none}}
+
+    /* Hero */
+    .hero-section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background-image:linear-gradient(180deg,#00000019 0%,#040505 100%),url('https://images.unsplash.com/photo-1500932334442-8761ee4810a7?q=80&w=1470&auto=format&fit=crop');background-size:cover;background-position:center}
+    .hero-content{max-width:1120px;width:100;text-align:left}
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+    .brand img{width:48px;height:48px}
+    .brand .brand-text{font-size:24px}
+
+    .hero-title{font-family:'Poppins',sans-serif;font-size:64px;line-height:0.95;margin-bottom:24px}
+    .hero-sub{color:var(--muted);margin-bottom:40px;font-size:18px}
+
+    /* Botón principal */
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:18px 28px;border-radius:34px;background:var(--white);color:#000;border:none;text-decoration:none;font-weight:500;cursor:pointer}
+    .btn:hover{background:var(--accent);color:var(--white);transform:translateY(-2px)}
+
+    /* Secciones y tarjetas */
+    .services-grid{display:grid;gap:20px}
+    .service-card{background:#dfe3e3;border-radius:28px;padding:22px;position:relative;transition:transform .25s,box-shadow .25s}
+    .service-card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+
+    /* Stats */
+    .stats-container{display:grid;gap:28px}
+
+    /* Award / team / footer */
+    .award-container{display:grid;gap:40px}
+    .team-avatars{display:flex;gap:12px}
+
+    /* Reveal animations: base pequeña y eficiente */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .75s ease,transform .75s ease}
+    .reveal.active{opacity:1;transform:none}
+
+    /* Responsive */
+    @media(min-width:640px){.hero-title{font-size:80px;text-align:center}.hero-content{text-align:center}.brand{justify-content:center}}
+    @media(min-width:1024px){.services-grid{grid-template-columns:repeat(3,1fr)}.stats-container{grid-template-columns:repeat(3,1fr)}.award-container{grid-template-columns:1fr 1fr}}
+  </style>
+
+  <!-- Scripts externos opcionales (se conservan por comportamiento) -->
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ffaustlabs1303back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+</head>
+<body translate="no" class="notranslate">
+
+<!-- Icono menú mobile (SVG embebido para evitar rutas rotas) -->
+<button class="icon-button" aria-label="Menu">
+  <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+    <rect width="22" height="2" rx="1" fill="#fff"/>
+    <rect y="7" width="22" height="2" rx="1" fill="#fff"/>
+    <rect y="14" width="22" height="2" rx="1" fill="#fff"/>
+  </svg>
+</button>
+
+<!-- Navbar -->
+<nav id="navbar" class="no-select">
+  <a href="#home">Home</a>
+  <a href="#projects">Services</a>
+  <a href="#portfolio">Portfolio</a>
+  <a href="#team">Faust Team</a>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero-section">
+  <div class="container hero-content">
+    <div class="brand reveal delay-1">
+      <img src="assets/Faust_Flag.svg" alt="faust logo">
+      <div class="brand-text"><strong>faust</strong> labs™</div>
+    </div>
+
+    <h1 class="hero-title reveal delay-2">
+      <span class="hero-heading-mobile">The World's Top-level<br>Design.</span>
+      <span class="hero-heading-desktop" style="display:none;">World-Class Digital Products<br>Engineered for Conversion.</span>
+    </h1>
+
+    <p class="hero-sub reveal delay-3"><strong>The top 1% in Mexico and the USA.</strong> <span style="color:var(--muted)">We are a collective of the best product designers, developers, data analysts and more.</span></p>
+
+    <a href="#projects" class="btn reveal delay-4">Our Services
+      <!-- Flecha sencilla SVG -->
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <path d="M5 12h14M13 5l7 7-7 7" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<!-- Intro / About -->
+<section class="section content-section">
+  <div class="container">
+    <h2 class="section-title reveal">Have you noticed that the leading companies are already integrating the latest design standards?</h2>
+    <p class="section-text reveal">80% of small businesses fail to take off because they don't understand the importance of a clean and optimized design to maximize conversions.</p>
+
+    <div style="margin-top:28px;display:grid;gap:12px">
+      <!-- Usamos un check inline SVG en lugar de recursos externos rotos -->
+      <div style="display:flex;gap:12px;align-items:center" class="reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="color:var(--muted)">We will design high-value products for your company.</span></div>
+      <div style="display:flex;gap:12px;align-items:center" class="reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="color:var(--muted)">We will increase your conversion rate, 100% guaranteed.</span></div>
+      <div style="display:flex;gap:12px;align-items:center" class="reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="color:var(--muted)">You will receive personalised advice from Faust Design Labs™.</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" style="border:none;height:1px;background:rgba(255,255,255,.12)">
+
+<!-- Stats -->
+<section class="stats-section">
+  <div class="container">
+    <h2 class="section-title reveal">Results that speak for themselves</h2>
+    <div class="stats-container">
+      <div class="stat-item reveal"><div class="stat-label">COMPANIES</div><div class="stat-number">+15</div><div class="stat-title">companies in America</div><p class="stat-description" style="color:var(--muted)">were driven last year by the development of products based on human cognition.</p></div>
+      <div class="stat-item reveal"><div class="stat-label">INFLUENCE</div><div class="stat-number">+4.9M</div><div class="stat-title">impacted users</div><p class="stat-description" style="color:var(--muted)">were driven last year by the development of products based on human cognition.</p></div>
+      <div class="stat-item reveal"><div class="stat-label">RESULTS</div><div class="stat-number">+25%</div><div class="stat-title">customer conversions</div><p class="stat-description" style="color:var(--muted)">were driven last year by the development of products based on human cognition.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="projects" class="section">
+  <div class="container">
+    <h2 class="section-title reveal">We build data-driven products</h2>
+    <p class="section-text reveal"><strong style="color:#fff">+15 empresas en México y Estados Unidos</strong> <span style="color:var(--muted)"> fueron impulsadas el último año gracias a la construcción de productos basados en la cognición humana.</span></p>
+
+    <div class="services-grid">
+      <article class="service-card reveal">
+        <h3 class="service-title">UX/UI Business<br>Consulting</h3>
+        <p class="service-projects">12 Completed Projects</p>
+      </article>
+
+      <article class="service-card reveal">
+        <h3 class="service-title">Neuromarketing<br>Consulting</h3>
+        <p class="service-projects">12 Completed Projects</p>
+      </article>
+
+      <article class="service-card reveal">
+        <h3 class="service-title">High-Fidelity<br>Prototyping</h3>
+        <p class="service-projects">12 Completed Projects</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" style="border:none;height:1px;background:rgba(255,255,255,.12)">
+
+<!-- Award / Team -->
+<section class="award-section section">
+  <div class="container award-container">
+    <div class="award-content reveal">
+      <div class="award-year">2025</div>
+      <img src="assets/Design-Award.svg" alt="i.design Award logo" style="max-width:228px;margin:16px 0">
+      <div class="award-title">Winner</div>
+      <p class="award-quote"><strong>"This is an award-level design work"</strong><br><span style="color:var(--muted)">—i.design Award</span></p>
+    </div>
+
+    <div class="team-content reveal">
+      <div class="team-avatars">
+        <img src="assets/photo1.png" alt="Team" width="70" height="70">
+        <img src="assets/photo2.png" alt="Team" width="70" height="70">
+        <img src="assets/photo3.png" alt="Team" width="70" height="70">
+      </div>
+      <h3 class="team-title">Meet the Team</h3>
+      <p class="team-description" style="color:var(--muted)">Our team will develop the digital strategies your company needs to expand into new horizons.</p>
+      <a href="#team" class="btn">Faust Team</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" style="border:none;height:1px;background:rgba(255,255,255,.12)">
+
+<!-- CTA -->
+<section class="cta-section" style="background-image:linear-gradient(180deg,#040505 0%,#04050500 100%),url('https://images.unsplash.com/photo-1605144156698-804de50de0ca?q=80&w=2071&auto=format&fit=crop')">
+  <div class="container cta-content reveal">
+    <img src="assets/Faust_Flag.svg" alt="faust" style="width:96px;height:84px;margin-bottom:8px">
+    <h2 class="cta-title" style="font-size:64px;margin-bottom:12px">Let's grow, together</h2>
+    <p class="cta-sub" style="color:var(--muted);margin-bottom:20px">El mejor momento<br>para tomar acción es hoy.</p>
+    <a href="#contact" class="btn cta-button">Get in touch</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer section">
+  <div class="container footer-content">
+    <div class="footer-links" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;margin-bottom:40px">
+      <div>
+        <h3 style="font-size:14px;color:var(--muted)">SERVICES</h3>
+        <a href="#ux-design">UX/UI Design</a><br>
+        <a href="#consulting">UX/UI Consulting</a><br>
+        <a href="#neuromarketing">Neuro-Marketing Strategy</a><br>
+        <a href="#frontend">Front-end Engineering</a>
+      </div>
+      <div>
+        <h3 style="font-size:14px;color:var(--muted)">LET'S WORK TOGETHER</h3>
+        <a href="#contact">Contact</a><br>
+        <a href="#support">Support</a>
+      </div>
+      <div>
+        <h3 style="font-size:14px;color:var(--muted)">FOR DESIGNERS</h3>
+        <a href="#join">I Want to Join the Team</a>
+      </div>
+    </div>
+
+    <div style="text-align:center">
+      <img src="assets/Faust_Flag.svg" alt="logo" style="width:32px;height:32px;margin:0 auto 8px">
+      <div style="font-size:20px;margin-bottom:12px"><strong>faust</strong> labs™</div>
+      <div style="color:var(--muted)">Faust Design Lab™ | © <span id="year"></span></div>
+      <div style="color:var(--muted);margin-top:6px">Some images were obtained from unsplash.com</div>
+      <div style="color:var(--muted)"><a href="https://faustlab.netlify.app/" style="color:var(--muted);text-decoration:none">https://faustlab.netlify.app/</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- =========================
+     JS: compact, seguro y comentado
+     - Consolida observers
+     - Evita variables globales innecesarias
+     ========================= -->
+<script>
+  (function(){
+    'use strict';
+
+    // 1) Smooth anchor scroll: usa Lenis si está disponible, fallback a native
+    function smoothScrollTo(el){
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      if(window.lenis && typeof window.lenis.scrollTo === 'function'){
+        window.lenis.scrollTo(top);
+      }else{
+        window.scrollTo({top,behavior:'smooth'});
+      }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',function(e){
+        const href = this.getAttribute('href');
+        if(href === '#' || href === '') return;
+        const target = document.querySelector(href);
+        if(target){e.preventDefault();smoothScrollTo(target)}
+      });
+    });
+
+    // 2) Reveal on scroll: un solo observer para todo
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('active');
+          obs.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.12,rootMargin:'0px 0px -80px 0px'});
+
+    document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+    // 3) Parallax: ligero y eficiente
+    let ticking=false; window.addEventListener('scroll',()=>{ if(!ticking){requestAnimationFrame(()=>{
+      document.querySelectorAll('.hero-section, .cta-section').forEach(section=>{
+        const rect = section.getBoundingClientRect();
+        const speed = window.innerWidth<768?0.3:0.5;
+        if(rect.top < window.innerHeight && rect.bottom > 0){
+          const y = Math.round((window.scrollY - section.offsetTop) * speed);
+          section.style.backgroundPosition = `center 0px, center ${y}px`;
+        }
+      });
+      ticking=false;
+    });ticking=true;}},{passive:true});
+
+    // 4) Lenis init (cuando esté disponible en DOM)
+    if(window.Lenis){
+      window.lenis = new Lenis({duration:1.2,easing: t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+      function raf(time){window.lenis.raf(time);requestAnimationFrame(raf)}
+      requestAnimationFrame(raf);
+    } else {
+      // Si Lenis se carga después, inicializamos en onload
+      window.addEventListener('load',()=>{if(window.Lenis){window.lenis=new Lenis({duration:1.2});requestAnimationFrame(function time(t){window.lenis.raf(t);requestAnimationFrame(time)})}});
+    }
+
+    // 5) Footer year
+    const y = document.getElementById('year'); if(y) y.textContent = new Date().getFullYear();
+
+  })();
+</script>
+
+<!-- Cargamos Lenis desde CDN (se mantiene) -->
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+</body>
+</html>
+    .stat-item {
+      text-align: left;
+    }
+
+    .stat-label {
+      font-size: 16px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 20px;
+      color: #ffffff7f;
+      margin-bottom: 20px;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      line-height: 49px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .stat-title {
+      font-size: 20px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 30px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .stat-description {
+      font-size: 16px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 400;
+      line-height: 20px;
+      color: #ffffffcc;
+    }
+
+    /* Service Cards */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin: 0px 0;
+    }
+
+    @keyframes serviceCardViewAnimation {
+      from {
+        background-color: #d3d3d6;
+      }
+      to {
+        background-color: #ffffff;
+      }
+    }
+
+    .service-card {
+      background-color: #d3d7d6;
+      border-radius: 54px;
+      padding: 20px;
+      position: relative;
+      min-height: 206px;
+      transition: all 0.3s ease;
+    }
+
+    @media (min-width: 768px) {
+          .service-card:hover {
+            background-color: #ffffffff;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          }
+          }
+
+    @media (max-width: 767px) {
+      .service-card.animate {
+        animation: serviceCardViewAnimation 0.8s ease forwards;
+      }
+    }
+      
+    .service-content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      margin: 20px;
+      height: auto;
+    }
+
+    .service-title {
+      font-size: 18px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 20px;
+      color: #000000;
+      font-feature-settings: "ss07" 1;
+    }
+
+    .service-projects {
+      font-size: 16px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 400;
+      line-height: 20px;
+      color: #000000cc;
+    }
+
+    .service-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 70px;
+      height: 70px;
+      background-color: #00000033;
+      border-radius: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Award Section */
+    .award-section {
+      padding: 80px 0;
+      width: 100%;
+        position: relative;
+    }
+
+    .award-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .award-content {
+      text-align: center;
+      padding: 56px 4px 60px 4px;
+    }
+
+    .award-year {
+      font-size: 32px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      line-height: 49px;
+      color: #ffffff;
+      margin-bottom: 0px;
+    }
+
+    .award-logo {
+      width: 100%;
+      max-width: 228px;
+      height: auto;
+      margin: 24px 0;
+    }
+
+    .award-title {
+      font-size: 32px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      line-height: 49px;
+      color: #ffffff;
+      margin-bottom: 32px;
+    }
+
+    .award-quote {
+      font-size: 18px;
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 24px;
+      color: #ffffff;
+    }
+
+    .award-quote .bold {
+      font-weight: 600;
+    }
+
+    .award-quote .muted {
+      color: #ffffffcc;
+      font-weight: 500;
+    }
+
+    /* Team Section */
+    .team-section {
+      position: relative;
+    }
+
+    .team-divider {
+      width: 1px;
+      height: 601.13px;
+      background-color: #ffffff20;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      display: none;
+    }
+
+    .team-content {
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 0;
+    }
+
+    .team-avatars {
+      display: flex;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .team-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 34px;
+      margin-left: -20px;
+    }
+
+    .team-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .team-title {
+      font-size: 28px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 40px;
+      color: #ffffff;
+      margin-bottom: 26px;
+      margin-right: 0;
+    }
+
+    .team-description {
+      font-size: 18px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 400;
+      line-height: 25px;
+      color: #ffffffcc;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    /* CTA Section - Mobile First */
+    .cta-section {
+      background-image: linear-gradient(180deg, #040505 0%, #04050500 100%), url("https://images.unsplash.com/photo-1605144156698-804de50de0ca?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 80px 20px;
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .cta-content {
+      text-align: left;
+      max-width: 718px;
+      width: 100%;
+    }
+
+    .cta-logo {
+      width: 96px;
+      height: 84px;
+      margin: 0 0 8px 0;
+    }
+
+    .cta-title {
+      font-size: 72px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      line-height: 100%;
+      color: #ffffff;
+      margin-bottom: 24px;
+      text-align: left;
+      font-feature-settings: "ss01" 1;
+      letter-spacing: -0.04em; 
+    }
+
+    .cta-subtitle {
+      font-size: 18px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 25px;
+      color: #ffffffcc;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      background-color: #ffffff;
+      color: #292828;
+      padding: 22px 34px;
+      line-height: 100%;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 80px 56px;
+      width: 100%;
+    }
+
+    .footer-content {
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 70px;
+    }
+
+    .footer-column h3 {
+      font-size: 16px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 20px;
+      color: #ffffff7f;
+      margin-bottom: 16px;
+    }
+
+    .footer-column a {
+      display: block;
+      font-size: 18px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 25px;
+      color: #ffffff;
+      text-decoration: none;
+      margin-bottom: 16px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-column a:hover {
+      color: #858585;
+    }
+
+    .footer-divider {
+      width: 100%;
+      height: 1px;
+      background-color: #ffffff19;
+      margin: 70px 0 78px;
+    }
+
+    .footer-brand {
+      text-align: center;
+    }
+
+    .footer-logo {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 8px;
+    }
+
+    .footer-brand-text {
+      font-size: 20px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 400;
+      line-height: 30px;
+      color: #ffffff;
+      margin-bottom: 24px;
+    }
+
+    .footer-brand-text .bold {
+      font-weight: 600;
+    }
+
+    .footer-copyright {
+      font-size: 14px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 500;
+      line-height: 18px;
+      color: #ffffff7f;
+      text-align: center;
+    }
+
+    /* Responsive media queries */
+    @media (min-width: 640px) {
+      .hero-title {
+        font-size: 80px;
+        text-align: center;
+        line-height: 100%;
+      }
+
+      .hero-content {
+        text-align: center;
+      }
+
+      .brand-logo {
+        align-items: center;
+      }
+
+      .hero-subtitle {
+        max-width: 66%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .brand-text {
+        font-size: 30px;
+        line-height: 100%;
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding: 0 24px;
+      }
+
+      .hero-title {
+        font-size: 80px;
+        text-align: center;
+        line-height: 100%;
+      }
+
+      .hero-subtitle {
+        font-size: 20px;
+      }
+
+      .section-title {
+        font-size: 40px;
+      }
+
+      .section-text {
+        font-size: 20px;
+      }
+
+      .stat-number {
+        font-size: 40px;
+      }
+
+      .stat-title {
+        font-size: 24px;
+      }
+
+      .award-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 160px;
+      }
+
+      .team-divider {
+        display: block;
+      }
+
+      .team-content {
+        padding-left: 0;       /* Eliminamos el padding izquierdo excesivo */
+        align-items: center;   /* Forzamos que avatares, título y botón estén al centro */
+        margin-right: 0;       /* Eliminamos el margen derecho que aplastaba */
+        width: 100%;           /* Aseguramos que ocupe el ancho disponible */
+      }
+
+      .team-title {
+        margin-right: 0;       /* Eliminamos el margen que movía solo el título */
+        text-align: center;    /* Aseguramos que el texto esté centrado */
+      }
+
+      /* CTA Section - Desktop: center alignment and 1080px height */
+      .cta-section {
+        min-height: 1080px;
+        justify-content: center;
+      }
+
+      .cta-content {
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      .cta-logo {
+        margin: 0 auto 8px;
+      }
+
+      .cta-title {
+        font-size: 80px;
+        text-align: center;
+        line-height: 100%;
+      }
+
+      .footer-links {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        padding: 0 32px;
+      }
+
+      .hero-title {
+        font-size: 80px;
+        text-align: center;
+        line-height: 100%;
+      }
+
+      .hero-heading-desktop {
+        display: inline;
+      }
+
+      .hero-heading-mobile {
+        display: none;
+      }
+
+      .brand-text {
+        font-size: 36px;
+        line-height: 100%;
+      }
+
+      .brand-text {
+        font-size: 36px;
+        line-height: 100%;
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .award-year,
+      .award-title {
+        font-size: 40px;
+      }
+
+      .award-quote {
+        font-size: 20px;
+      }
+
+      .team-title {
+        font-size: 32px;
+      }
+
+      .team-description {
+        font-size: 20px;
+      }
+
+      .cta-title {
+        font-size: 80px;
+        line-height: 100%;
+      }
+
+      .cta-subtitle {
+        font-size: 20px;
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .hero-content {
+        margin: 0 340px;
+      }
+
+      .stats-section .container {
+        padding: 0 160px 0 56px;
+      }
+
+      .award-container {
+    max-width: 1024px; /* Limita el ancho máximo para que no se estire demasiado */
+    margin: 0 auto;    /* Lo centra automáticamente */
+      }
+    }
+
+    /* Interactive states */
+    .service-card:hover .service-icon {
+      background-color: #00000050;
+      transform: scale(1.1);
+    }
+
+    .team-avatar:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    a:focus {
+      outline: 2px solid #ffffffff;
+      outline-offset: 2px;
+    }
+
+    button:focus {
+      outline: 2px solid #0D00FF;
+      outline-offset: 2px;
+    }
+
+    html.lenis, html.lenis body {
+      height: auto;
+    }
+
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important; /* Desactiva el nativo para que Lenis tome el control */
+    }
+
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+
+    .hero-section,
+    .cta-section {
+      background-position: center 0px; /* Empezamos en 0px */
+      background-attachment: scroll;   /* Dejamos que scrollee normal por defecto */
+      background-size: cover;
+      will-change: background-position; /* Optimización para que no parpadee */
+    }
+
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link rel="icon" type="image/png" href="assets/Faust_Logo.png">
+  <style>
+  @media (max-width: 767px) {
+        #navbar {
+      display: none !important;
+    }
+  }
+
+  /* Ocultar icon-button en desktop (>= 768px) */
+  @media (min-width: 768px) {
+  .icon-button {
+    display: none !important;
+  }
+}
+
+</style>
+  
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ffaustlabs1303back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+  </head>
+
+<body translate="no" class="notranslate">
+
+  <button class="icon-button" aria-label="Menu">
+    <img src="../assets/images/img_frame.svg" alt="Menu icon" width="24" height="24">
+  </button>
+
+<!-- Hero Section -->
+  <section class="hero-section">
+    
+  <!-- Hero Content -->
+<div class="hero-content">
+  
+  <!-- Logo con delay 1 -->
+  <div class="brand-logo no-select hero-reveal delay-1">
+    <div class="footer-brand">
+      <img src="assets/Faust_Flag.svg" alt="Faust Labs logo" width="34" height="34">
+      <div class="brand-text">
+      <span class="bold">faust</span> labs™
+      </div>
+    </div>
+  </div>
+  
+  <!-- Título con delay 2 -->
+  <h1 class="hero-title hero-reveal delay-2">
+    <span class="hero-heading-mobile">The World's Top-level<br>Design.</span>
+    <span class="hero-heading-desktop">World-Class Digital Products<br>Engineered for Conversion.</span>
+  </h1>
+  
+  <!-- Subtítulo con delay 3 -->
+  <p class="hero-subtitle hero-reveal delay-3">
+    <span class="bold">The top 1% in Mexico and the USA.</span>
+    <span class="muted"> We are a collective of the best product designers, developers, data analysts and more.</span>
+  </p>
+  
+  <!-- Botón con delay 4 -->
+  <a href="#projects" class="btn hero-reveal delay-4">
+    Our Services
+    <img src="../assets/images/img_vector.svg" alt="" class="btn-icon" width="10" height="10">
+  </a>
+
+</div>
+
+  </section>
+
+  <!-- Content Section 1 -->
+  <section class="content-section">
+    <div class="container">
+      <div style="max-width: 1120px; margin: 0 auto; text-align: center;">
+        <h2 class="section-title">Have you noticed that the leading companies are already integrating the latest design standards?</h2>
+        <p class="section-text">80% of small businesses fail to take off because they don't understand the importance of a clean and optimized design to maximize conversions.</p>
+      </div>
+    </div>
+  </section>
+
+<div class="divider"></div>
+
+<!-- About Section -->
+  <section class="content-section">
+    <div class="container">
+      <div style="max-width: 1120px; margin: 0 auto; text-align: left;">
+        <div style="padding: 0 0px;">
+          <div class="brand-logo">
+            <div class="footer-brand">
+            <img src="assets/Faust_Flag.svg" alt="Faust Labs logo" width="34" height="34">
+          <div class="brand-text">
+          <span class="bold">faust</span> labs™
+          </div>
+        </div>
+            </div>
+          </div>
+          
+          <h2 class="about-title">We are Faust Design Lab</h2>
+
+          <p style="font-size: 20px; font-family: 'Instrument Sans', sans-serif; line-height: 25px; color: #ffffff; margin-bottom: 40px;">
+          <span style="font-weight: 600;">Hello!</span>
+          <span style="color: #ffffffcc; font-weight: 400;"> We are a digital product consulting firm that combines neuromarketing and data science with high-fidelity design. We don't just make your product look good; we use behavioral analysis to build interfaces that predictably convert users into customers.</span>
+          </p>
+
+          <div class="flex-row justify-center" style="gap: 20px; flex-wrap: wrap;">
+          <div class="flex-row align-center" style="gap: 10px; flex: 1; min-width: 346px;">
+            <img src="../assets/images/img_frame_white_a700.svg" alt="Check icon" width="24" height="24">
+            <span style="font-size: 18px; color: #ffffffcc;">We will design high-value products for your company.</span>
+          </div>
+          <div class="flex-row align-center" style="gap: 10px; flex: 1; min-width: 346px;">
+            <img src="../assets/images/img_frame_white_a700.svg" alt="Check icon" width="24" height="24">
+            <span style="font-size: 18px; color: #ffffffcc;">We will increase your conversion rate, 100% guaranteed.</span>
+          </div>
+          <div class="flex-row align-center" style="gap: 10px; flex: 1; min-width: 346px;">
+            <img src="../assets/images/img_frame_white_a700.svg" alt="Check icon" width="24" height="24">
+            <span style="font-size: 18px; color: #ffffffcc;">You will receive personalised advice from Faust Design Labs™.</span>
+
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container" style="max-width: 1120px; margin: 0 auto;">
+      <h2 class="section-title" style="margin-bottom: 40px;">Results that speak for themselves</h2>
+      
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="stat-label">COMPANIES</div>
+          <div class="stat-number">+15</div>
+          <div class="stat-title">companies in America</div>
+          <div class="stat-description">were driven last year by the development of products based on human cognition.</div>
+          <div style="width: 320px; height: 1px; background-color: #ffffff28; margin-top: 32px;"></div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">INFLUENCE</div>
+          <div class="stat-number">+4.9M</div>
+          <div class="stat-title">impacted users</div>
+          <div class="stat-description" style="margin-top: 8px;">were driven last year by the development of products based on human cognition.</div>
+          <div style="width: 320px; height: 1px; background-color: #ffffff28; margin: 32px auto 0;"></div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">RESULTS</div>
+          <div class="stat-number">+25%</div>
+          <div class="stat-title">customer conversions</div>
+          <div class="stat-description">were driven last year by the development of products based on human cognition.</div>
+          <div style="width: 320px; height: 1px; background-color: #ffffff28; margin-top: 32px; margin-left: auto;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Services Section -->
+  <section class="content-section" id="projects">
+    <div class="container">
+      <div style="max-width: 1120px; margin: 0 auto;">
+        <h2 class="section-title">We build data-driven products</h2>
+        <p style="font-size: 20px; font-family: 'Instrument Sans', sans-serif; line-height: 25px; color: #ffffff; margin-bottom: 40px;">
+          <span style="font-weight: 600;">+15 empresas en México y Estados Unidos</span>
+          <span style="color: #ffffffcc; font-weight: 400;"> fueron impulsadas el último año gracias a la construcción de productos basados en la cognición humana.</span>
+        </p>
+        
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-content">
+              <div class="service-title">UX/UI Business<br>Consulting</div>
+              <div class="service-projects">12 Completed Projects</div>
+            </div>
+            <div class="service-icon">
+              <img src="../assets/images/img_frame_85.svg" alt="Service icon" width="12" height="12">
+            </div>
+          </div>
+          
+          <div class="service-card">
+            <div class="service-content">
+              <div class="service-title">Neuromarketing<br>Consulting</div>
+              <div class="service-projects">12 Completed Projects</div>
+            </div>
+            <div class="service-icon">
+              <img src="../assets/images/img_frame_85.svg" alt="Service icon" width="12" height="12">
+            </div>
+          </div>
+          
+          <div class="service-card">
+            <div class="service-content">
+              <div class="service-title">High-Fidelity<br>Prototyping</div>
+              <div class="service-projects">12 Completed Projects</div>
+            </div>
+            <div class="service-icon">
+              <img src="../assets/images/img_frame_85.svg" alt="Service icon" width="12" height="12">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Award and Team Section -->
+  <section class="award-section">
+    <div class="container">
+      <div class="award-container">
+        <div class="award-content">
+          <div class="award-year">2025</div>
+          <img src="assets/Design-Award.svg" alt="i.design Award logo" class="award-logo" width="228" height="100">
+          <div class="award-title">Winner</div>
+          <p class="award-quote">
+            <span class="bold">"This is an award-level design work"</span><br>
+            <span class="muted">—i.design Award</span>
+          </p>
+        </div>
+        
+        <div class="team-divider"></div>
+
+        <div class="team-section">
+          <div class="team-content">
+            <div class="team-avatars">
+              <img src="assets/photo1.png" alt="Team member" class="team-avatar" width="70" height="70">
+              <img src="assets/photo2.png" alt="Team member" class="team-avatar" width="70" height="70">
+              <img src="assets/photo3.png" alt="Team member" class="team-avatar" width="70" height="70">
+            </div>
+            <h3 class="team-title">Meet the Team</h3>
+            <p class="team-description">Our team will develop the digital strategies your company needs to expand into new horizons.</p>
+            <a href="#team" class="btn">
+              Faust Team
+              <img src="../assets/images/img_vector.svg" alt="" class="btn-icon" width="10" height="10">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+<!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <img src="assets/Faust_Flag.svg" alt="Faust Labs logo" class="cta-logo" width="96" height="84">
+      <h2 class="cta-title">Let's grow, together</h2>
+      <p class="cta-subtitle">El mejor momento<br>para tomar acción es hoy.</p>
+      <a href="#contact" class="btn cta-button">Get in touch</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <div class="footer-column">
+          <h3>SERVICES</h3>
+          <a href="#ux-design">UX/UI Design</a>
+          <a href="#consulting">UX/UI Consulting</a>
+          <a href="#neuromarketing">Neuro-Marketing Strategy</a>
+          <a href="#frontend">Front-end Engineering</a>
+        </div>
+        
+        <div class="footer-column">
+          <h3>LET'S WORK TOGETHER</h3>
+          <a href="#contact">Contact</a>
+          <a href="#support">Support</a>
+        </div>
+
+        <div class="footer-column">
+          <h3>FOR DESIGNERS</h3>
+          <a href="#join">I Want to Join the Team</a>
+        </div>
+
+      </div>
+      
+      <div class="footer-divider"></div>
+      
+      <div class="footer-brand no-select">
+        <img src="assets/Faust_Flag.svg" alt="Faust Labs logo" class="footer-logo" width="32" height="32">
+        <div class="footer-brand-text">
+          <span class="bold">faust</span> labs™
+        </div>
+        <div class="footer-copyright">Faust Design Lab™ | © <span id="year"></span></div>
+        <div class="footer-copyright">Some images were obtained from unsplash.com</div>
+        <div class="footer-copyright">https://faustlab.netlify.app/</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+const offsetTop = target.getBoundingClientRect().top + window.scrollY - 80;
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'smooth'
+            });
+        }
+      });
+    });
+
+    // Add hover effects to service cards
+    document.querySelectorAll('.service-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px)';
+        this.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.2)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = 'none';
+      });
+    });
+
+    // Add click handlers for buttons
+    document.querySelectorAll('.btn').forEach(button => {
+      button.addEventListener('click', function(e) {
+        // Add click animation
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 150);
+      });
+    });
+
+    // Add intersection observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+// Observer específico para los elementos internos del Hero
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Añadimos la clase 'active' que dispara la transición CSS
+      entry.target.classList.add('active');
+      // Dejamos de observar una vez animado
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+// Seleccionamos todos los elementos con la clase .hero-reveal
+document.querySelectorAll('.hero-reveal').forEach(el => {
+  revealObserver.observe(el);
+});
+
+// -------------------------
+// Scroll reveal: animaciones al hacer scroll para el contenido (omitir Hero)
+// -------------------------
+(function(){
+  const selectors = [
+    '.content-section .section-title',
+    '.content-section .section-text',
+    '.stats-section .stat-item',
+    '.services-grid .service-card',
+    '.award-section .award-content',
+    '.team-section .team-content',
+    '.cta-section .cta-content',
+    '.footer .footer-brand',
+    '.footer .footer-column'
+  ];
+
+  // Añadimos la clase base a los elementos seleccionados
+  const els = document.querySelectorAll(selectors.join(','));
+  els.forEach(el => {
+    if (!el.closest('.hero-section') && !el.classList.contains('hero-reveal')) {
+      el.classList.add('reveal-when-visible');
+    }
+  });
+
+  const scrollRevealObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+
+        // Si tiene hijos, aplicamos retrasos en cascada para stagger
+        const children = Array.from(el.children || []);
+        if (children.length > 0) {
+          children.forEach((child, i) => {
+            child.style.transitionDelay = `${i * 80}ms`;
+          });
+        }
+
+        // Activamos la animación del elemento (y por herencia, de sus hijos)
+        el.classList.add('active');
+
+        // Dejamos de observar
+        obs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+  // Observamos todos los elementos con la clase base
+  document.querySelectorAll('.reveal-when-visible').forEach(el => scrollRevealObserver.observe(el));
+})();
+</script>
+
+<!-- Navbar with inline styles for fixed positioning -->
+<div id="navbar" style="
+  position: fixed; 
+  top: 20px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  height: 60px;
+  width: auto; /* Opcional, dependiendo de si quieres que crezca */
+  background-color: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(72px); 
+  border-radius: 34px; 
+  padding: 0 40px; /* Padding vertical a 0 para respetar los 60px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  z-index: 9999; 
+  display: flex; 
+  gap: 24px; 
+  align-items: center; 
+  box-sizing: border-box; /* Asegura que el padding no sume al ancho total */
+">
+  <a href="#home" class="no-select" style="color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">Home</a>
+  <a href="#services" class="no-select" style="color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">Services</a>
+  <a href="#portfolio" class="no-select" style="color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">Portfolio</a>
+  <a href="#team" class="no-select" style="color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">Faust Team</a>
+</div>
+
+<!-- Importar librería Lenis desde CDN -->
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script> 
+
+<script>
+  // Inicializar Lenis
+  const lenis = new Lenis({
+    duration: 1.2, // Duración de la animación (más alto = más suave)
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) // Función de suavizado
+  });
+
+  // Loop de animación (necesario para que funcione)
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf);
+</script>
+
+<script>
+  // Script de Efecto Parallax Universal (Mobile + Desktop)
+  
+  // Usamos requestAnimationFrame para que sea ultra suave en celulares
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  function updateParallax() {
+    const scrolled = window.scrollY;
+    const parallaxSections = document.querySelectorAll('.hero-section, .cta-section');
+    
+    parallaxSections.forEach(section => {
+      // En mobile reducimos un poco la velocidad (0.3) para que no maree
+      // En desktop mantenemos 0.5
+      const isMobile = window.innerWidth < 768;
+      const speed = isMobile ? 0.3 : 0.5;
+      
+      const offsetTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const windowHeight = window.innerHeight;
+
+      // Solo calculamos si la sección está visible (mejora rendimiento en batería de cel)
+      if (scrolled + windowHeight > offsetTop && scrolled < offsetTop + sectionHeight) {
+         
+         // Cálculo de posición (Mismo que te gustó: Positivo)
+         const yPos = (scrolled - offsetTop) * speed;
+         
+         // Aplicamos
+         section.style.backgroundPosition = `center 0px, center ${yPos}px`;
+      }
+    });
+
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", function() {
+    lastScrollY = window.scrollY;
+    if (!ticking) {
+      window.requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true }); // 'passive: true' es CLAVE para que el scroll no se trabe en móviles
+</script>
+
+<script>
+// Intersection Observer para animaciones de service cards en mobile
+if (window.innerWidth < 768) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.5
+  });
+
+  const serviceCards = document.querySelectorAll('.service-card');
+  serviceCards.forEach((card) => {
+    observer.observe(card);
+  });
+}
+</script>
+
+
+
+<script>
+  // Actualiza el año del footer al año actual
+  (function(){
+    const el = document.getElementById('year');
+    if (el) el.textContent = new Date().getFullYear();
+  })();
+</script>
+
+</body>
+</html>
