@@ -22,15 +22,15 @@
   left: 0;
   width: 10px;
   height: 10px;
-  background-color: white; /* Color inicial */
+  background-color: white;
   border-radius: 50%;
   pointer-events: none;
   z-index: 2147483647;
   opacity: 0;
   display: none;
-  /* Transición suave para el cambio de color y opacidad */
-  transition: background-color 0.25s ease, opacity 0.3s ease;
-  will-change: transform;
+  /* Transición suave para color, opacidad y TAMAÑO */
+  transition: background-color 0.25s ease, opacity 0.3s ease, width 0.2s ease, height 0.2s ease;
+  will-change: transform, width, height;
 }
 
 @media (min-width: 768px) {
@@ -1610,10 +1610,7 @@ if (window.innerWidth < 768) {
 
   let mouseX = -100, mouseY = -100;
   let cx = mouseX, cy = mouseY;
-  
-  // AJUSTE: Subimos de 0.18 a 0.35 para que sea mucho más rápido y reactivo
-  const speed = 0.35; 
-  
+  const speed = 0.35; // Smoothing reducido para mayor velocidad
   let lastColorUpdate = 0;
 
   document.addEventListener('mousemove', (e) => {
@@ -1621,7 +1618,6 @@ if (window.innerWidth < 768) {
     mouseY = e.clientY;
     cursor.style.opacity = '1';
     
-    // Solo revisamos el color cada 80ms para máxima fluidez de los botones
     const now = Date.now();
     if (now - lastColorUpdate > 80) { 
       updateCursorColor(mouseX, mouseY);
@@ -1630,10 +1626,8 @@ if (window.innerWidth < 768) {
   }, {passive: true});
 
   function loop(){
-    // La física del movimiento
     cx += (mouseX - cx) * speed;
     cy += (mouseY - cy) * speed;
-    
     cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
     requestAnimationFrame(loop);
   }
@@ -1642,6 +1636,12 @@ if (window.innerWidth < 768) {
   function updateCursorColor(x, y){
     const el = document.elementFromPoint(x, y);
     if (!el) return;
+
+    // REGLA NAVBAR: Si el elemento está dentro del Navbar, forzar blanco
+    if (el.closest('#navbar')) {
+      cursor.style.backgroundColor = '#ffffff';
+      return;
+    }
     
     let bg = getComputedStyle(el).backgroundColor;
     if ((bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') && el.parentElement) {
@@ -1651,9 +1651,22 @@ if (window.innerWidth < 768) {
     const rgb = bg.match(/\d+/g);
     if (rgb) {
       const brightness = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
-      cursor.style.background = brightness > 160 ? '#000000' : '#ffffff';
+      cursor.style.backgroundColor = brightness > 160 ? '#000000' : '#ffffff';
     }
   }
+
+  // Lógica de Escalado (Hover)
+  const hoverElements = document.querySelectorAll('a, button, .service-card, .btn');
+  hoverElements.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+    });
+  });
 
   document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
   document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
