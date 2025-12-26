@@ -1390,8 +1390,13 @@ document.querySelectorAll('.hero-reveal').forEach(el => {
 // -------------------------
 (function(){
   const selectors = [
+    // Incluir selectores más genéricos para cubrir secciones que usan la clase `section`
     '.content-section .section-title',
     '.content-section .section-text',
+    '.section .section-title',
+    '.section .section-text',
+    '#projects .section-title',
+    '#projects .section-text',
     '.stats-section .stat-item',
     '.services-grid .service-card',
     '.award-section .award-content',
