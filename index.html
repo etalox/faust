@@ -1604,27 +1604,36 @@ if (window.innerWidth < 768) {
 
 <script>
 (function(){
+  // 1. GESTIÓN DE BOTONES (Optimizado para evitar conflictos de transform)
+  document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('mousedown', function() {
+      this.style.transform = 'scale(0.96)';
+    });
+    button.addEventListener('mouseup', function() {
+      this.style.transform = '';
+    });
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = '';
+    });
+  });
+
+  // 2. CONFIGURACIÓN DEL CURSOR
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   const cursor = document.getElementById('custom-cursor');
   if (!cursor) return;
 
-  let mouseX = -100, mouseY = -100;
-  let cx = mouseX, cy = mouseY;
-  const speed = 0.35; // Smoothing reducido para mayor velocidad
-  let lastColorUpdate = 0;
+  let mouseX = -100, mouseY = -100, cx = -100, cy = -100;
+  const speed = 0.45; // Ultra reactivo
+  let isOverInteractive = false;
 
+  // Seguimiento del mouse
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
     cursor.style.opacity = '1';
-    
-    const now = Date.now();
-    if (now - lastColorUpdate > 80) { 
-      updateCursorColor(mouseX, mouseY);
-      lastColorUpdate = now;
-    }
   }, {passive: true});
 
+  // 3. LOOP DE ANIMACIÓN (Aislado para máximo rendimiento)
   function loop(){
     cx += (mouseX - cx) * speed;
     cy += (mouseY - cy) * speed;
@@ -1633,41 +1642,35 @@ if (window.innerWidth < 768) {
   }
   loop();
 
-  function updateCursorColor(x, y){
-    const el = document.elementFromPoint(x, y);
+  // 4. DETECCIÓN DE INTERACCIÓN Y COLOR (Delegación de eventos eficiente)
+  // Usamos un intervalo lento para el color, liberando a los botones
+  setInterval(() => {
+    const el = document.elementFromPoint(mouseX, mouseY);
     if (!el) return;
 
-    // REGLA NAVBAR: Si el elemento está dentro del Navbar, forzar blanco
-    if (el.closest('#navbar')) {
-      cursor.style.backgroundColor = '#ffffff';
-      return;
-    }
+    // ¿Es un elemento interactivo?
+    const interactive = el.closest('a, button, .btn, .service-card');
     
-    let bg = getComputedStyle(el).backgroundColor;
-    if ((bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') && el.parentElement) {
-        bg = getComputedStyle(el.parentElement).backgroundColor;
+    if (interactive) {
+      cursor.classList.add('grow');
+      cursor.style.backgroundColor = '#ffffff'; // Blanco en botones para no fallar
+    } else {
+      cursor.classList.remove('grow');
+      
+      // Solo calculamos luminancia si NO estamos sobre un botón
+      let bg = window.getComputedStyle(el).backgroundColor;
+      if (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') {
+          bg = window.getComputedStyle(el.parentElement).backgroundColor;
+      }
+      const rgb = bg.match(/\d+/g);
+      if (rgb) {
+        const brightness = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
+        cursor.style.backgroundColor = brightness > 160 ? '#000000' : '#ffffff';
+      }
     }
+  }, 100); // Solo 10 veces por segundo es suficiente para el color
 
-    const rgb = bg.match(/\d+/g);
-    if (rgb) {
-      const brightness = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
-      cursor.style.backgroundColor = brightness > 160 ? '#000000' : '#ffffff';
-    }
-  }
-
-  // Lógica de Escalado (Hover)
-  const hoverElements = document.querySelectorAll('a, button, .service-card, .btn');
-  hoverElements.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '12px';
-      cursor.style.height = '12px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '10px';
-      cursor.style.height = '10px';
-    });
-  });
-
+  // Ocultar al salir
   document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
   document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
 })();
