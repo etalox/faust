@@ -16,25 +16,37 @@
 
 /* Modificación en el CSS de la sección <style> */
 
+/* Configuración del Cursor */
 #custom-cursor {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  background-color: white;
+  top: 0; left: 0;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 2147483647;
-  opacity: 0;
-  display: none;
-  /* Transición suave para color, opacidad y TAMAÑO */
-  transition: background-color 0.25s ease, opacity 0.3s ease, width 0.2s ease, height 0.2s ease;
-  will-change: transform, width, height;
+  z-index: 99999;
+  opacity: 0; /* Empieza oculto */
+  transition: opacity 0.3s ease, transform 0.1s ease-out;
 }
 
+/* Ocultar cursor nativo solo en Desktop */
 @media (min-width: 768px) {
-  #custom-cursor { display: block; }
+  html, body, * { cursor: none !important; }
+}
+
+/* Deshabilitar cursor personalizado en Mobile */
+@media (max-width: 767px) {
+  #custom-cursor { display: none !important; }
+  html, body, * { cursor: auto !important; }
+}
+
+/* Suavizado para el magnetismo de los botones */
+.btn, .icon-button, .service-card {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  display: inline-block;
+  will-change: transform;
 }
 
 /* Forzamos que no se vea el cursor real */
@@ -1671,6 +1683,51 @@ if (window.innerWidth < 768) {
   document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
   document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
 })();
+</script>
+
+<script>
+  const cursor = document.getElementById('custom-cursor');
+  const magneticElements = document.querySelectorAll('.btn, .icon-button');
+
+  // 1. Seguimiento del ratón y Visibilidad
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.opacity = "1";
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  document.addEventListener('mouseleave', () => {
+    cursor.style.opacity = "0";
+  });
+
+  document.addEventListener('mouseenter', () => {
+    cursor.style.opacity = "1";
+  });
+
+  // 2. Efecto de Magnetismo
+  if (window.innerWidth >= 768) { // Solo en Desktop
+    magneticElements.forEach(el => {
+      el.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        
+        // Calculamos el centro del botón
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        // Distancia entre el mouse y el centro
+        const moveX = (e.clientX - centerX) * 0.4; // 0.4 es la fuerza del imán
+        const moveY = (e.clientY - centerY) * 0.4;
+
+        this.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        cursor.style.transform = `translate(-50%, -50%) scale(2.5)`; // El punto se agranda al tocar
+      });
+
+      el.addEventListener('mouseleave', function() {
+        this.style.transform = `translate(0px, 0px)`;
+        cursor.style.transform = `translate(-50%, -50%) scale(1)`;
+      });
+    });
+  }
 </script>
 
 </body>
