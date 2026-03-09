@@ -1735,6 +1735,74 @@
   // Estado inicial (por si el usuario entra con scroll ya aplicado, p. ej. anclas)
   handleScroll();
 })();
+
+(function() {
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
+  function setupAbFlowAnimations() {
+    if (!isMobile()) return;
+
+    var abFlowCard   = document.querySelector('.ab-flow-card');
+    var abFlowCanvas = document.querySelector('.ab-flow-canvas');
+    if (!abFlowCard) return;
+
+    // Transiciones contenedor
+    abFlowCard.style.transition = 'background-color 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
+
+    // Transiciones y estado base del canvas (opacidad + blur)
+    if (abFlowCanvas) {
+      abFlowCanvas.style.transition = 'opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), filter 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
+      abFlowCanvas.style.opacity    = '0.45';
+      abFlowCanvas.style.filter     = 'blur(4px)';
+    }
+
+    var baseBg       = '#0A0A0A';
+    var focusBg      = '#101010';
+    var baseOpacity  = '0.9';
+    var focusOpacity = '1';
+    var baseBlur     = '6px';
+    var focusBlur    = '0px';
+
+    function onScrollAbFlow() {
+      var rect      = abFlowCard.getBoundingClientRect();
+      var viewportH = window.innerHeight;
+      var centerY   = viewportH / 2;
+
+      var centerInside =
+        centerY >= rect.top &&
+        centerY <= rect.bottom;
+
+      if (centerInside) {
+        // Iluminado: fondo más claro, más opaco, sin blur
+        abFlowCard.style.backgroundColor = focusBg;
+        if (abFlowCanvas) {
+          abFlowCanvas.style.opacity = focusOpacity;
+          abFlowCanvas.style.filter  = 'blur(' + focusBlur + ')';
+        }
+      } else {
+        // Estado base: fondo oscuro, opacidad baja y desenfoque
+        abFlowCard.style.backgroundColor = baseBg;
+        if (abFlowCanvas) {
+          abFlowCanvas.style.opacity = baseOpacity;
+          abFlowCanvas.style.filter  = 'blur(' + baseBlur + ')';
+        }
+      }
+    }
+
+    window.addEventListener('scroll', onScrollAbFlow);
+    // Ejecutar una vez al cargar
+    onScrollAbFlow();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupAbFlowAnimations);
+  } else {
+    setupAbFlowAnimations();
+  }
+})();
+
 </script>
 
 </body>
