@@ -1741,29 +1741,39 @@
     return window.innerWidth <= 768;
   }
 
-  function setupAbFlowAnimations() {
+  function setupAbFlowCanvasSize() {
     if (!isMobile()) return;
 
     var abFlowCard   = document.querySelector('.ab-flow-card');
     var abFlowCanvas = document.querySelector('.ab-flow-canvas');
-    if (!abFlowCard) return;
+    if (!abFlowCard || !abFlowCanvas) return;
 
-    // Transiciones contenedor
+    // Fondo del contenedor
     abFlowCard.style.transition = 'background-color 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
 
-    // Transiciones y estado base del canvas (opacidad + blur)
-    if (abFlowCanvas) {
-      abFlowCanvas.style.transition = 'opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), filter 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
-      abFlowCanvas.style.opacity    = '0.45';
-      abFlowCanvas.style.filter     = 'blur(4px)';
-    }
+    // Transiciones del canvas: altura + opacidad + blur
+    abFlowCanvas.style.transition =
+      'height 0.8s cubic-bezier(0.2, 1, 0.3, 1), ' +
+      'opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), ' +
+      'filter 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
+    abFlowCanvas.style.overflow = 'hidden'; // recorta contenido dentro del canvas
 
-    var baseBg       = '#0A0A0A';
+    // Valores base vs foco
+    var baseBg       = '#080808';
     var focusBg      = '#101010';
-    var baseOpacity  = '0.9';
+    var baseOpacity  = '0.45';
     var focusOpacity = '1';
     var baseBlur     = '6px';
     var focusBlur    = '0px';
+    var baseHeight   = 260; // canvas compacto
+    var focusHeight  = 400; // altura original del canvas [file:1]
+
+    // Estado inicial: canvas reducido
+    abFlowCanvas.style.height   = baseHeight + 'px';
+    abFlowCanvas.style.opacity  = baseOpacity;
+    abFlowCanvas.style.filter   = 'blur(' + baseBlur + ')';
+
+    var hasBeenFocused = false;
 
     function onScrollAbFlow() {
       var rect      = abFlowCard.getBoundingClientRect();
@@ -1775,31 +1785,39 @@
         centerY <= rect.bottom;
 
       if (centerInside) {
-        // Iluminado: fondo más claro, más opaco, sin blur
+        hasBeenFocused = true;
+
+        // En foco: fondo más claro, canvas a altura completa, sin blur
         abFlowCard.style.backgroundColor = focusBg;
-        if (abFlowCanvas) {
-          abFlowCanvas.style.opacity = focusOpacity;
-          abFlowCanvas.style.filter  = 'blur(' + focusBlur + ')';
-        }
+        abFlowCanvas.style.height   = focusHeight + 'px';
+        abFlowCanvas.style.opacity  = focusOpacity;
+        abFlowCanvas.style.filter   = 'blur(' + focusBlur + ')';
       } else {
-        // Estado base: fondo oscuro, opacidad baja y desenfoque
+        // Fuera de foco
         abFlowCard.style.backgroundColor = baseBg;
-        if (abFlowCanvas) {
-          abFlowCanvas.style.opacity = baseOpacity;
-          abFlowCanvas.style.filter  = 'blur(' + baseBlur + ')';
+
+        if (!hasBeenFocused) {
+          // Antes de ser enfocado por primera vez: compacto y desenfocado
+          abFlowCanvas.style.height   = baseHeight + 'px';
+          abFlowCanvas.style.opacity  = baseOpacity;
+          abFlowCanvas.style.filter   = 'blur(' + baseBlur + ')';
+        } else {
+          // Una vez enfocado: se queda extendido y nítido para no alterar el scroll
+          abFlowCanvas.style.height   = focusHeight + 'px';
+          abFlowCanvas.style.opacity  = focusOpacity;
+          abFlowCanvas.style.filter   = 'blur(' + focusBlur + ')';
         }
       }
     }
 
-    window.addEventListener('scroll', onScrollAbFlow);
-    // Ejecutar una vez al cargar
+    window.addEventListener('scroll', onScrollAbFlow, { passive: true });
     onScrollAbFlow();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupAbFlowAnimations);
+    document.addEventListener('DOMContentLoaded', setupAbFlowCanvasSize);
   } else {
-    setupAbFlowAnimations();
+    setupAbFlowCanvasSize();
   }
 })();
 
