@@ -2148,7 +2148,7 @@ function onScroll() {
                 const rawTarget = el.dataset.target || "0";
                 const target = parseFloat(rawTarget.replace(/[^\d.]/g, "")) || 0;
 
-                await animateMetric(el, target, 1200, format, originalText);
+                await animateMetric(el, target, 1600, format, originalText);
               }
             })().catch(() => {});
 
