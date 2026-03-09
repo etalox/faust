@@ -75,10 +75,16 @@
       max-width: 1920px;
     }
 
+    .poppins-alt {
+    font-family: "Poppins", sans-serif;
+    font-feature-settings: "ss01" on;
+    }
+
+
     .poppins-ss01,
     .figma-stage [style*="font-family: Poppins"] {
       font-family: "Poppins", sans-serif !important;
-      font-feature-settings: "ss01" 1 !important;
+      font-feature-settings: "ss01" on !important;
     }
 
     .figma-stage > div {
@@ -153,7 +159,7 @@
       width: auto !important;
       max-width: 100%;
       white-space: nowrap;
-      color: #1a1a1a;
+      color: #ffffff;
     }
 
     .hero-cta-label {
@@ -257,7 +263,7 @@
     }
 
     .hero-cta-btn:hover {
-      background: #0030ff !important;
+      background: #0025cb !important;
       color: #fff;
     }
 
@@ -909,7 +915,7 @@
 
   .figma-stage [style*="height: 1080px"] {
     height: auto !important;
-    min-height: 78vh !important;
+    min-height: 100vh !important;
   }
 
   .figma-stage [style*="font-size: 64px"] {
@@ -1069,7 +1075,7 @@
   </style>
 </head>
 <body>
-  <main class="figma-page">
+  <main class="figma-page poppins-alt">
     <div id="figma-stage" class="figma-stage">
 <div style="width: 1920px; height: 5308px; position: relative; background: #050505; overflow: hidden">
   <div style="width: 1920px; left: 0px; top: 0px; position: absolute; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
@@ -1083,13 +1089,13 @@
             </div>
           </div>
           <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
-            <div class="hero-reveal delay-2 no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 64px; word-wrap: break-word">Nuestros partners añadieron $150k a su MRR este trimestre.</div>
-            <div class="hero-reveal delay-3 no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 20px; font-family: Instrument Sans; font-weight: 400; line-height: 28px; word-wrap: break-word">Te otorgamos ingeniería de crecimiento basada en datos. Sin cuotas fijas.</div>
+            <div class="hero-reveal delay-2 no-select poppins-alt" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 64px; word-wrap: break-word">Nuestros partners añadieron $150k a su MRR este trimestre.</div>
+            <div class="hero-reveal delay-3 no-select poppins-alt" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 20px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 28px; word-wrap: break-word">Te otorgamos ingeniería de crecimiento basada en datos. Sin cuotas fijas.</div>
           </div>
           <div class="hero-cta-wrap hero-reveal delay-4" style="gap: 20px;">
             <div class="hero-cta-shell" data-propiedad-1="Predeterminado" style="width: 378px; height: 64px; position: relative">
-              <div class="hero-cta-btn magnetic-cta" style="height: 64px; padding-left: 60px; padding-right: 60px; padding-top: 26px; padding-bottom: 26px; left: -39.50px; top: 0px; position: absolute; background: white; overflow: hidden; border-radius: 40px; justify-content: center; align-items: flex-end; gap: 10px; display: inline-flex">
-                <div class="hero-cta-label" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: #1A1A1A; font-size: 20px; font-family: Instrument Sans; font-weight: 500; line-height: 28px; word-wrap: break-word"><span class="hero-cta-desktop-text">Aplica para recibir hasta MX $125k</span><span class="hero-cta-mobile-text">Aplicar a la lista de espera</span></div>
+              <div class="hero-cta-btn magnetic-cta" style="height: 64px; padding-left: 60px; padding-right: 60px; padding-top: 26px; padding-bottom: 26px; left: -39.50px; top: 0px; position: absolute; background: #0030ff; overflow: hidden; border-radius: 40px; justify-content: center; align-items: flex-end; gap: 10px; display: inline-flex">
+                <div class="hero-cta-label" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: #ffffff; font-size: 20px; font-family: Instrument Sans; font-weight: 500; line-height: 28px; word-wrap: break-word"><span class="hero-cta-desktop-text">Aplica para recibir hasta MX $125k</span><span class="hero-cta-mobile-text">Aplicar a la lista de espera</span></div>
                 <span class="icon-open" aria-hidden="true"></span>
               </div>
             </div>
@@ -1195,34 +1201,33 @@
             <div class="stats-card-mobile" style="flex: 1 1 0; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: inline-flex">
               <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">EMPRESAS</div>
               <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 600; line-height: 40px; word-wrap: break-word">4</div>
-                <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">empresas en México<br/>y Estados Unidos</div>
-                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">fueron impulsadas el año pasado por el desarrollo de productos basados en la cognición humana.</div>
+                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 600; line-height: 40px; word-wrap: break-word">2</div>
+                <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">empresas en México y Estados Unidos</div>
+                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">asociadas con nosotros para el desarrollo de productos basados en la cognición humana.</div>
               </div>
-              <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.16) solid; outline-offset: -0.50px"></div>
+              <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
             </div>
             <div class="stats-card-mobile" style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
               <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">INFLUENCIA</div>
               <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 600; line-height: 40px; word-wrap: break-word">650k</div>
+                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 600; line-height: 40px; word-wrap: break-word">710k</div>
                 <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">usuarios impactados</div>
                 <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">fueron impulsados el año pasado por el desarrollo de productos basados en la cognición humana.</div>
               </div>
-              <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.16) solid; outline-offset: -0.50px"></div>
+              <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
             </div>
             <div class="stats-card-mobile" style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
               <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">RESULTADOS</div>
               <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 600; line-height: 40px; word-wrap: break-word">+5%</div>
+                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 600; line-height: 40px; word-wrap: break-word">+11.5%</div>
                 <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">conversiones de clientes</div>
-                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">fueron impulsadas el año pasado por el desarrollo de productos basados en la cognición humana.</div>
+                <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">Proveemos resultados cuantificables a nuestras empresas asociadas.</div>
               </div>
-              <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.16) solid; outline-offset: -0.50px"></div>
+              <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
             </div>
           </div>
         </div>
       </div>
-      <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.10) solid; outline-offset: -0.50px"></div>
       <div style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
         <div style="width: 100%; max-width: 800px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
           <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
@@ -1289,7 +1294,7 @@
           </div>
         </div>
       </div>
-      <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.10) solid; outline-offset: -0.50px"></div>
+      <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -0.50px"></div>
       <div style="align-self: stretch; padding-left: 80px; padding-right: 80px; justify-content: center; align-items: center; gap: 160px; display: inline-flex">
         <div style="flex: 1 1 0; max-width: 640px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: inline-flex">
           <div style="justify-content: flex-start; align-items: center; display: inline-flex">
@@ -1305,7 +1310,7 @@
           </div>
         </div>
       </div>
-      <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.10) solid; outline-offset: -0.50px"></div>
+      <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -0.50px"></div>
       <div style="width: 100%; max-width: 1440px; padding-left: 80px; padding-right: 80px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
         <div style="flex: 1 1 0; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: justify; justify-content: flex-end; display: flex; flex-direction: column"><span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">Faust Partners conserva la titularidad exclusiva de la propiedad intelectual, archivos fuente y sistemas de diseño (Design Systems) creados. Se otorga al Cliente una Licencia de Uso No Exclusiva, cuya vigencia está estrictamente condicionada al cumplimiento del esquema de Revenue Share acordado. El cese de los pagos del Revenue Share revocará automáticamente el derecho de explotación y uso de las interfaces por parte del Cliente.<br/></span><span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word"><br/></span><span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">El derecho de Faust Partners a percibir el porcentaje de ingresos por la explotación comercial de sus interfaces es independiente de la prestación de servicios de mantenimiento o nuevas iteraciones. En caso de que Faust Partners cese su participación activa en el desarrollo (UX/UI o Marketing), la tasa de Revenue Share se ajustará, otorgando al Cliente el 90% del margen de ingreso incremental, mientras que el 10% restante se mantendrá como regalía por el uso continuo de la propiedad intelectual.<br/></span><span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word"><br/></span><span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">La propiedad patrimonial de los productos podrá ser transferida al Cliente únicamente mediante un acuerdo de compra (Buy-out) explícito y posterior negociación comercial. Hasta que dicha transferencia se formalice por escrito y se liquide el pago correspondiente, el Cliente operará bajo el modelo de licencia aquí descrito. Faust Partners se reserva el derecho de modificar estos términos en cualquier momento, sin previo aviso.</span></div>
       </div>
@@ -1330,7 +1335,7 @@
                   <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">I Want to Join the Team</div>
                 </div>
               </div>
-              <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.10) solid; outline-offset: -0.50px"></div>
+              <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -0.50px"></div>
               <div class="footer-brand-block" style="align-self: stretch; padding-left: 80px; padding-right: 80px; border-radius: 10px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
                 <div style="flex-direction: column; justify-content: flex-start; align-items: center; gap: 16px; display: flex">
                   <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync" src="./assets/logo.svg" alt="Faust Logo" style="width: 33.20px; height: 25.30px; object-fit: contain; display: block" />
