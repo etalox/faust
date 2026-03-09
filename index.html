@@ -1337,9 +1337,14 @@
                   </button>
                 </div>
               </div>
-              <div class="magnetic-cta" style="align-self: center; width: auto; height: 64px; padding-left: 60px; padding-right: 60px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
-                <div id="plan-cta-text" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Obtener plan por $0</div>
+              <div id="whatsapp-plan-cta"
+              class="magnetic-cta hero-cta-btn"
+              style="align-self: center; width: auto; height: 64px; padding-left: 60px; padding-right: 60px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
+              <div id="plan-cta-text"
+                  style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Obtener plan por $0
               </div>
+             </div>
             </div>
           </div>
         </div>
@@ -1419,7 +1424,7 @@
         <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Contacto</div>
       </div>
       <a class="subtle-gray-btn navbar-talk-btn" href="mailto:admin@faust.mx" data-propiedad-1="Predeterminado" style="height: 60px; padding-left: 40px; padding-right: 40px; padding-top: 10px; padding-bottom: 10px; right: 10px; top: 10px; position: absolute; background: rgba(77.73, 77.73, 77.73, 0.10); overflow: hidden; border-radius: 8px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 10px; display: inline-flex; text-decoration: none">
-        <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 16px; word-wrap: break-word">Let’s Talk</div>
+        <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 16px; word-wrap: break-word">Unirme</div>
         <span class="icon-open" aria-hidden="true" style="color: white;"></span>
       </a>
     </div>
@@ -1508,7 +1513,7 @@
           return sum + parseMoney(card.getAttribute("data-price"));
         }, 0);
 
-        ctaText.textContent = total > 0 ? "Inscribirme a Max™" : "Obtener plan por $0";
+        ctaText.textContent = total > 0 ? "Unirme a Max™" : "Obtener plan por $0";
       }
 
       function reorderWithinSections() {
@@ -1741,55 +1746,85 @@
   </script>
 
   <script>
-(function() {
-  // Selecciona el navbar Figma-exportado
-  const navbar = document.querySelector(
-    '.figma-stage > div > div:first-child > div:last-child'
+  
+(function () {
+  var whatsappButton = document.getElementById("whatsapp-plan-cta");
+  if (!whatsappButton) return;
+
+  var services = Array.prototype.slice.call(
+    document.querySelectorAll(".plan-service")
   );
-  if (!navbar) return;
+  var incomeInput = document.getElementById("monthly-income");
 
-  let lastScrollY = window.scrollY || window.pageYOffset;
-  let scrollThreshold = 160; // px de scroll desde el top antes de mostrarlo
-
-  function updateThreshold() {
-    // Si quieres ajustar por tamaño, aquí puedes variar el threshold
-    scrollThreshold = window.innerWidth <= 768 ? 160 : 200;
+  function parseMoney(raw) {
+    var digits = String(raw || "").replace(/\D/g, "");
+    return digits ? Number(digits) : 0;
   }
 
-  updateThreshold();
-  window.addEventListener('resize', updateThreshold);
-
-  function handleScroll() {
-    const currentY = window.scrollY || window.pageYOffset;
-
-    // Solo empezamos a mostrar el navbar después del threshold
-    if (currentY > scrollThreshold) {
-      navbar.classList.add('navbar-visible');
+  function buildServicesText(selectedServices) {
+    if (selectedServices.length === 0) {
+      return "los servicios básicos de Faust";
+    } else if (selectedServices.length === 1) {
+      return selectedServices[0];
+    } else if (selectedServices.length === 2) {
+      return selectedServices[0] + " y " + selectedServices[1];
     } else {
-      navbar.classList.remove('navbar-visible');
+      var allButLast = selectedServices.slice(0, -1).join(", ");
+      var last = selectedServices[selectedServices.length - 1];
+      return allButLast + " y " + last;
     }
-
-    lastScrollY = currentY;
   }
 
-  // Throttle con requestAnimationFrame para no disparar demasiados cálculos
-  let ticking = false;
-  window.addEventListener(
-    'scroll',
-    function() {
-      if (!ticking) {
-        window.requestAnimationFrame(function() {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    },
-    { passive: true }
-  );
+  function buildWhatsappMessage() {
+    var selectedServicesLabels = services
+      .filter(function (card) {
+        return card.getAttribute("data-selected") === "true";
+      })
+      .map(function (card) {
+        // aquí asumo que el nombre está en .plan-title
+        var label = card.querySelector(".plan-title");
+        return label
+          ? label.textContent.trim()
+          : card.getAttribute("data-plan-id") || "";
+      })
+      .filter(Boolean);
 
-  // Estado inicial (por si el usuario entra con scroll ya aplicado, p. ej. anclas)
-  handleScroll();
+    var servicesText = buildServicesText(selectedServicesLabels);
+
+    var amountNumber = incomeInput ? parseMoney(incomeInput.value) : 0;
+    var incomeText = amountNumber
+      ? amountNumber.toLocaleString("es-MX")
+      : "N";
+
+    var faustMaxSelected = services.some(function (card) {
+      return (
+        card.getAttribute("data-plan-id") === "faust-max" &&
+        card.getAttribute("data-selected") === "true"
+      );
+    });
+
+    var maxLine = faustMaxSelected
+      ? "También, me gustaría aplicar al plan Max™."
+      : "Por el momento, no quiero aplicar al plan Max™.";
+
+    var message =
+      "¡Hola! Quiero aplicar para recibir auditoría de faust.mx\n\n" +
+      "Requiero los servicios de " + servicesText + ".\n" +
+      "Mi empresa tiene un ingreso mensual de MX $" + incomeText + ".\n" +
+      maxLine + "\n" +
+      "Mi empresa es ";
+
+    return message;
+  }
+
+  whatsappButton.addEventListener("click", function () {
+    var phone = "524428767130"; // tu número sin +
+    var message = buildWhatsappMessage();
+    var encoded = encodeURIComponent(message); // recomendado para wa.me [web:44][web:53]
+    var url = "https://wa.me/" + phone + "?text=" + encoded;
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  });
 })();
 
 (function() {
