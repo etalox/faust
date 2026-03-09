@@ -1109,7 +1109,7 @@
           <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
               <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">Implementación</div>
-              <div style="width: 100%; max-width: 640px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 36px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 36px; word-wrap: break-word">Implementamos Mejoras con un              sistema iterativo libre de riegos.</div>
+              <div style="width: 100%; max-width: 640px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 36px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 36px; word-wrap: break-word">Implementamos Mejoras con un              sistema iterativo libre de riesgos.</div>
               <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Redirigimos tu tráfico gradualmente entre tu sitio web actual y la interfaz experimental.               Si nuestra interfaz experimental genera conversiones consistentemente mayores  durante un periodo de tiempo, aumenta el alcance automáticamente.</div>
             </div>
             <div class="ab-flow-card">
@@ -1741,39 +1741,29 @@
     return window.innerWidth <= 768;
   }
 
-  function setupAbFlowCanvasSize() {
+  function setupAbFlowAnimations() {
     if (!isMobile()) return;
 
     var abFlowCard   = document.querySelector('.ab-flow-card');
     var abFlowCanvas = document.querySelector('.ab-flow-canvas');
-    if (!abFlowCard || !abFlowCanvas) return;
+    if (!abFlowCard) return;
 
-    // Fondo del contenedor
+    // Transiciones contenedor
     abFlowCard.style.transition = 'background-color 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
 
-    // Transiciones del canvas: altura + opacidad + blur
-    abFlowCanvas.style.transition =
-      'height 0.8s cubic-bezier(0.2, 1, 0.3, 1), ' +
-      'opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), ' +
-      'filter 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
-    abFlowCanvas.style.overflow = 'hidden'; // recorta contenido dentro del canvas
+    // Transiciones y estado base del canvas (opacidad + blur)
+    if (abFlowCanvas) {
+      abFlowCanvas.style.transition = 'opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), filter 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
+      abFlowCanvas.style.opacity    = '0.45';
+      abFlowCanvas.style.filter     = 'blur(4px)';
+    }
 
-    // Valores base vs foco
-    var baseBg       = '#080808';
+    var baseBg       = '#0A0A0A';
     var focusBg      = '#101010';
-    var baseOpacity  = '0.45';
+    var baseOpacity  = '0.9';
     var focusOpacity = '1';
     var baseBlur     = '6px';
     var focusBlur    = '0px';
-    var baseHeight   = 260; // canvas compacto
-    var focusHeight  = 400; // altura original del canvas [file:1]
-
-    // Estado inicial: canvas reducido
-    abFlowCanvas.style.height   = baseHeight + 'px';
-    abFlowCanvas.style.opacity  = baseOpacity;
-    abFlowCanvas.style.filter   = 'blur(' + baseBlur + ')';
-
-    var hasBeenFocused = false;
 
     function onScrollAbFlow() {
       var rect      = abFlowCard.getBoundingClientRect();
@@ -1785,39 +1775,31 @@
         centerY <= rect.bottom;
 
       if (centerInside) {
-        hasBeenFocused = true;
-
-        // En foco: fondo más claro, canvas a altura completa, sin blur
+        // Iluminado: fondo más claro, más opaco, sin blur
         abFlowCard.style.backgroundColor = focusBg;
-        abFlowCanvas.style.height   = focusHeight + 'px';
-        abFlowCanvas.style.opacity  = focusOpacity;
-        abFlowCanvas.style.filter   = 'blur(' + focusBlur + ')';
+        if (abFlowCanvas) {
+          abFlowCanvas.style.opacity = focusOpacity;
+          abFlowCanvas.style.filter  = 'blur(' + focusBlur + ')';
+        }
       } else {
-        // Fuera de foco
+        // Estado base: fondo oscuro, opacidad baja y desenfoque
         abFlowCard.style.backgroundColor = baseBg;
-
-        if (!hasBeenFocused) {
-          // Antes de ser enfocado por primera vez: compacto y desenfocado
-          abFlowCanvas.style.height   = baseHeight + 'px';
-          abFlowCanvas.style.opacity  = baseOpacity;
-          abFlowCanvas.style.filter   = 'blur(' + baseBlur + ')';
-        } else {
-          // Una vez enfocado: se queda extendido y nítido para no alterar el scroll
-          abFlowCanvas.style.height   = focusHeight + 'px';
-          abFlowCanvas.style.opacity  = focusOpacity;
-          abFlowCanvas.style.filter   = 'blur(' + focusBlur + ')';
+        if (abFlowCanvas) {
+          abFlowCanvas.style.opacity = baseOpacity;
+          abFlowCanvas.style.filter  = 'blur(' + baseBlur + ')';
         }
       }
     }
 
-    window.addEventListener('scroll', onScrollAbFlow, { passive: true });
+    window.addEventListener('scroll', onScrollAbFlow);
+    // Ejecutar una vez al cargar
     onScrollAbFlow();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupAbFlowCanvasSize);
+    document.addEventListener('DOMContentLoaded', setupAbFlowAnimations);
   } else {
-    setupAbFlowCanvasSize();
+    setupAbFlowAnimations();
   }
 })();
 
