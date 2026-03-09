@@ -1803,6 +1803,232 @@
   }
 })();
 
+(function() {
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
+  function setupAbFlowScrollHijack() {
+    if (!isMobile()) return;
+
+    var abFlowSection = document.querySelector('.ab-flow-card');
+    var abFlowMain    = document.querySelector('.ab-flow-main');
+    if (!abFlowSection || !abFlowMain) return;
+
+    var hijackDone   = false;  // solo una vez
+    var isHijacking  = false;
+    var anchorScrollY = 0;     // scrollY fijo mientras dura el hijack
+    var maxScrollX   = 0;
+
+    var currentX     = 0;      // posición actual
+    var targetX      = 0;      // posición objetivo
+    var animating    = false;
+
+    function updateMaxScrollX() {
+      maxScrollX = abFlowMain.scrollWidth - abFlowMain.clientWidth;
+      if (maxScrollX < 0) maxScrollX = 0;
+    }
+
+    updateMaxScrollX();
+    window.addEventListener('resize', updateMaxScrollX);
+
+    function animate() {
+      if (!animating) return;
+      // Interpolación suave tipo “lerp”
+      var speed = 0.15; // más alto = más rápido
+      currentX += (targetX - currentX) * speed;
+
+      // Snap muy pequeño cuando estamos muy cerca
+      if (Math.abs(targetX - currentX) < 0.5) {
+        currentX = targetX;
+      }
+
+      abFlowMain.scrollLeft = currentX;
+
+      if (currentX !== targetX) {
+        requestAnimationFrame(animate);
+      } else {
+        animating = false;
+
+        // Al terminar de recorrer todo, liberamos
+        if (hijackDone) {
+          document.body.style.overflow = '';
+        }
+      }
+    }
+
+    function onScroll() {
+      if (hijackDone) return;
+
+      var rect          = abFlowSection.getBoundingClientRect();
+      var viewportH     = window.innerHeight;
+      var viewportCenterY = viewportH / 2;
+      var sectionCenterY  = rect.top + rect.height / 2;
+
+      // Diferencia entre ambos centros
+      var diff = sectionCenterY - viewportCenterY;
+
+      // Entrar al hijack cuando el centro del bloque cruza cerca del centro del viewport
+      if (!isHijacking && Math.abs(diff) < 40) { // 40px de tolerancia
+        isHijacking   = true;
+
+        // Ajustamos el scroll para alinear centros
+        // scrollY actual + diferencia
+        var newScrollY = window.scrollY + diff;
+        window.scrollTo(window.scrollX, newScrollY);
+
+        anchorScrollY = newScrollY;
+
+        // Bloquear scroll del body
+        document.body.style.overflow = 'hidden';
+      }
+
+      if (!isHijacking) return;
+
+      // Mientras hijack está activo, mantenemos “anclado” el body en anchorScrollY
+      if (!hijackDone) {
+        window.scrollTo(window.scrollX, anchorScrollY);
+      }
+    }
+
+
+    function onWheel(e) {
+      if (!isHijacking || hijackDone) return;
+
+      e.preventDefault();
+
+      // Delta positivo = scroll hacia abajo → avanza horizontal
+      var delta = e.deltaY || e.deltaX || 0;
+      targetX = Math.min(Math.max(targetX + delta, 0), maxScrollX);
+
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(animate);
+      }
+
+      // Si llegamos al final, marcamos como hecho y liberamos el scroll vertical
+      if (targetX >= maxScrollX - 1) {
+        hijackDone  = true;
+        isHijacking = false;
+        // Dejamos que el body vuelva a scrollear, pero con una ligera pausa
+        setTimeout(function() {
+          document.body.style.overflow = '';
+        }, 80);
+      }
+    }
+
+    // Soporte para touch (mobile real)
+    var touchStartY = 0;
+    function onTouchStart(e) {
+      if (!isHijacking || hijackDone) return;
+      touchStartY = e.touches[0].clientY;
+    }
+
+    function onTouchMove(e) {
+      if (!isHijacking || hijackDone) return;
+
+      var currentY = e.touches[0].clientY;
+      var delta    = touchStartY - currentY; // arrastrar hacia arriba = delta positivo
+      touchStartY  = currentY;
+
+      targetX = Math.min(Math.max(targetX + delta, 0), maxScrollX);
+
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(animate);
+      }
+
+      // Bloquear scroll vertical
+      e.preventDefault();
+      window.scrollTo(window.scrollX, anchorScrollY);
+
+      if (targetX >= maxScrollX - 1) {
+        hijackDone  = true;
+        isHijacking = false;
+        setTimeout(function() {
+          document.body.style.overflow = '';
+        }, 80);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('touchstart', onTouchStart, { passive: false });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupAbFlowScrollHijack);
+  } else {
+    setupAbFlowScrollHijack();
+  }
+})();
+
+(function() {
+  function setupButtonVisibilityHighlight() {
+    // Seleccionamos:
+    // - CTA principal del hero
+    // - Botón de navbar "Let's Talk"
+    // - Botones de plan (magnetic-cta) que no sean Faust Team
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(
+      '.hero-cta-btn, .navbar-talk-btn, .magnetic-cta'
+    ));
+
+    if (!buttons.length) return;
+
+    // Filtramos el botón Faust Team para NO aplicarle esto
+    buttons = buttons.filter(function(btn) {
+      var text = (btn.textContent || '').toLowerCase();
+      return text.indexOf('faust team') === -1;
+    });
+
+    // Estilos base (grises) y azules: aprovechamos clases existentes
+    // hero-cta-btn ya es blanco/azul, navbar-talk-btn usa sutil-gray-btn, etc. [file:1]
+    // Aquí solo manipulamos background y color directamente para que el efecto sea consistente.
+    function setButtonActive(btn, active) {
+      if (active) {
+        // Azul activo para todos los botones controlados por scroll
+        btn.style.backgroundColor = '#0030ff';
+        btn.style.color = '#ffffff';
+      } else {
+        // Estado gris base para todos (incluido el hero), independiente del hover
+        btn.style.backgroundColor = '#1A1A1A';
+        btn.style.color = '#ffffff';
+      }
+    }
+
+    // Inicializamos transición suave
+    buttons.forEach(function(btn) {
+      btn.style.transition = 'background-color 1.6s cubic-bezier(0.2, 1, 0.3, 1), color 0.6s cubic-bezier(0.2, 1, 0.3, 1)';
+    });
+
+    function updateButtonsOnScroll() {
+      var viewportH = window.innerHeight;
+      var minBand = viewportH * 0.3;
+      var maxBand = viewportH * 0.94;
+
+      buttons.forEach(function(btn) {
+        var rect = btn.getBoundingClientRect();
+        var btnCenter = rect.top + rect.height / 2;
+
+        var insideBand = btnCenter >= minBand && btnCenter <= maxBand;
+        setButtonActive(btn, insideBand);
+      });
+    }
+
+    window.addEventListener('scroll', updateButtonsOnScroll, { passive: true });
+    window.addEventListener('resize', updateButtonsOnScroll);
+    // Ejecutar al cargar
+    updateButtonsOnScroll();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupButtonVisibilityHighlight);
+  } else {
+    setupButtonVisibilityHighlight();
+  }
+})();
+
 </script>
 
 </body>
