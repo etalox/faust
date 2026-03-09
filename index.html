@@ -861,199 +861,210 @@
     }
 
     @media (max-width: 768px) {
-      .figma-stage > div > div:first-child > div:last-child {
-        height: 64px !important;
-        top: 10px !important;
-      }
+  /* NAVBAR: solo mobile, oculto al inicio y animado */
+  .figma-stage > div > div:first-child > div:last-child {
+    height: 64px !important;
+    top: 10px !important;
+    transform: translateX(-50%) translateY(-100px) !important;
+    opacity: 0 !important;
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1),
+                opacity 0.2s ease !important;
+  }
 
-      .figma-stage > div > div:first-child > div:last-child > div:nth-child(2) {
-        display: none !important;
-      }
+  .figma-stage > div > div:first-child > div:last-child > div:nth-child(2) {
+    display: none !important;
+  }
 
-      .figma-stage > div > div:first-child > div:last-child > div:nth-child(3) {
-        height: 44px !important;
-        padding: 0 18px !important;
-      }
+  .figma-stage > div > div:first-child > div:last-child > div:nth-child(3) {
+    height: 44px !important;
+    padding: 0 18px !important;
+  }
 
-      .figma-stage > div > div:first-child > div:last-child > a.navbar-talk-btn {
-        height: 44px !important;
-        padding: 0 14px !important;
-        border-radius: 8px !important;
-        gap: 8px !important;
-      }
+  .figma-stage > div > div:first-child > div:last-child > a.navbar-talk-btn {
+    height: 44px !important;
+    padding: 0 14px !important;
+    border-radius: 8px !important;
+    gap: 8px !important;
+  }
 
-      .figma-stage > div > div:first-child > div:last-child > a.navbar-talk-btn > div {
-        font-size: 14px !important;
-        line-height: 14px !important;
-      }
+  .figma-stage > div > div:first-child > div:last-child > a.navbar-talk-btn > div {
+    font-size: 14px !important;
+    line-height: 14px !important;
+  }
 
-      .figma-stage > div > div:first-child > div:first-child {
-        padding-top: 0;
-      }
+  /* Estado visible del navbar en mobile (cuando JS añade .navbar-visible) */
+  .figma-stage > div > div:first-child > div:last-child.navbar-visible {
+    transform: translateX(-50%) translateY(0) !important;
+    opacity: 1 !important;
+  }
 
-      .hero-viewport {
-        height: 100dvh !important;
-        min-height: 100dvh !important;
-      }
+  .figma-stage > div > div:first-child > div:first-child {
+    padding-top: 0;
+  }
 
-      .figma-stage [style*="height: 1080px"] {
-        height: auto !important;
-        min-height: 78vh !important;
-      }
+  .hero-viewport {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+  }
 
-      .figma-stage [style*="font-size: 64px"] {
-        font-size: 34px !important;
-      }
+  .figma-stage [style*="height: 1080px"] {
+    height: auto !important;
+    min-height: 78vh !important;
+  }
 
-      .figma-stage [style*="font-size: 36px"] {
-        font-size: 28px !important;
-        line-height: 1.15 !important;
-      }
+  .figma-stage [style*="font-size: 64px"] {
+    font-size: 34px !important;
+  }
 
-      .figma-stage [style*="font-size: 24px"] {
-        font-size: 20px !important;
-        line-height: 1.2 !important;
-      }
+  .figma-stage [style*="font-size: 36px"] {
+    font-size: 28px !important;
+    line-height: 1.15 !important;
+  }
 
-      .figma-stage [style*="font-size: 20px"] {
-        font-size: 16px !important;
-        line-height: 1.35 !important;
-      }
+  .figma-stage [style*="font-size: 24px"] {
+    font-size: 20px !important;
+    line-height: 1.2 !important;
+  }
 
-      .team-title-fix {
-        white-space: normal;
-        max-width: 12ch;
-        margin-inline: auto;
-      }
+  .figma-stage [style*="font-size: 20px"] {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
 
-      .hero-cta-btn {
-        height: 56px;
-        padding: 0 22px;
-        gap: 10px !important;
-      }
+  .team-title-fix {
+    white-space: normal;
+    max-width: 12ch;
+    margin-inline: auto;
+  }
 
-      .hero-cta-label {
-        font-size: 16px !important;
-        line-height: 1 !important;
-      }
+  .hero-cta-btn {
+    height: 56px;
+    padding: 0 22px;
+    gap: 10px !important;
+  }
 
-      .hero-cta-desktop-text {
-        display: none;
-      }
+  .hero-cta-label {
+    font-size: 16px !important;
+    line-height: 1 !important;
+  }
 
-      .hero-cta-mobile-text {
-        display: inline;
-      }
+  .hero-cta-desktop-text {
+    display: none;
+  }
 
-      .ab-flow-card {
-        padding: 28px 16px 18px;
-      }
+  .hero-cta-mobile-text {
+    display: inline;
+  }
 
-      .ab-rule-box {
-        font-size: 16px;
-      }
+  .ab-flow-card {
+    padding: 28px 16px 18px;
+  }
 
-      .ab-scroll-indicator {
-        display: block;
-      }
+  .ab-rule-box {
+    font-size: 16px;
+  }
 
-      .ab-flow-note {
-        text-align: left;
-        padding-inline: 0;
-      }
+  .ab-scroll-indicator {
+    display: block;
+  }
 
-      .stats-grid-mobile {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 40px !important;
-      }
+  .ab-flow-note {
+    text-align: left;
+    padding-inline: 0;
+  }
 
-      .stats-card-mobile {
-        max-width: 100% !important;
-        min-width: 0 !important;
-        width: 100% !important;
-        height: auto !important;
-        justify-content: flex-start !important;
-        gap: 40px !important;
-      }
+  .stats-grid-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 40px !important;
+  }
 
-      .stats-card-mobile [style*="width: 400px"] {
-        width: 100% !important;
-      }
+  .stats-card-mobile {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    justify-content: flex-start !important;
+    gap: 40px !important;
+  }
 
-      .stats-card-mobile > div:nth-of-type(2) {
-        gap: 20px !important;
-      }
+  .stats-card-mobile [style*="width: 400px"] {
+    width: 100% !important;
+  }
 
-      .stats-card-mobile [style*="font-size: 40px"] {
-        font-size: 40px !important;
-        line-height: 40px !important;
-        display: block !important;
-      }
+  .stats-card-mobile > div:nth-of-type(2) {
+    gap: 20px !important;
+  }
 
-      .stats-card-mobile [style*="font-size: 24px"] {
-        font-size: 24px !important;
-        line-height: 30px !important;
-        display: block !important;
-      }
+  .stats-card-mobile [style*="font-size: 40px"] {
+    font-size: 40px !important;
+    line-height: 40px !important;
+    display: block !important;
+  }
 
-      .plan-card {
-        padding: 24px 20px;
-        gap: 20px;
-      }
+  .stats-card-mobile [style*="font-size: 24px"] {
+    font-size: 24px !important;
+    line-height: 30px !important;
+    display: block !important;
+  }
 
-      .plan-card-body {
-        gap: 20px;
-      }
+  .plan-card {
+    padding: 24px 20px;
+    gap: 20px;
+  }
 
-      .plan-content {
-        min-width: 0;
-      }
+  .plan-card-body {
+    gap: 20px;
+  }
 
-      .plan-card .plan-card-body {
-        flex-basis: 100%;
-      }
+  .plan-content {
+    min-width: 0;
+  }
 
-      .plan-card .plan-price {
-        order: 2;
-      }
+  .plan-card .plan-card-body {
+    flex-basis: 100%;
+  }
 
-      .plan-card .plan-toggle {
-        order: 3;
-        margin-left: auto;
-      }
+  .plan-card .plan-price {
+    order: 2;
+  }
 
-      .footer-content-wrap {
-        padding: 56px 32px !important;
-        gap: 56px !important;
-      }
+  .plan-card .plan-toggle {
+    order: 3;
+    margin-left: auto;
+  }
 
-      .footer-grid-wrap {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        gap: 56px !important;
-      }
+  .footer-content-wrap {
+    padding: 56px 32px !important;
+    gap: 56px !important;
+  }
 
-      .footer-links-grid {
-        flex-direction: column !important;
-        flex-wrap: nowrap !important;
-        gap: 40px !important;
-        padding-left: 16px !important;
-        padding-right: 16px !important;
-      }
+  .footer-grid-wrap {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 56px !important;
+  }
 
-      .footer-links-column {
-        width: 100% !important;
-        min-width: 100% !important;
-        flex: 1 1 100% !important;
-      }
+  .footer-links-grid {
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    gap: 40px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
 
-      .footer-brand-block {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        gap: 24px !important;
-      }
+  .footer-links-column {
+    width: 100% !important;
+    min-width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+
+  .footer-brand-block {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 24px !important;
+  }
     }
   </style>
 </head>
@@ -1667,5 +1678,59 @@
       });
     })();
   </script>
+
+  <script>
+(function() {
+  // Selecciona el navbar Figma-exportado
+  const navbar = document.querySelector(
+    '.figma-stage > div > div:first-child > div:last-child'
+  );
+  if (!navbar) return;
+
+  let lastScrollY = window.scrollY || window.pageYOffset;
+  let scrollThreshold = 160; // px de scroll desde el top antes de mostrarlo
+
+  function updateThreshold() {
+    // Si quieres ajustar por tamaño, aquí puedes variar el threshold
+    scrollThreshold = window.innerWidth <= 768 ? 160 : 200;
+  }
+
+  updateThreshold();
+  window.addEventListener('resize', updateThreshold);
+
+  function handleScroll() {
+    const currentY = window.scrollY || window.pageYOffset;
+
+    // Solo empezamos a mostrar el navbar después del threshold
+    if (currentY > scrollThreshold) {
+      navbar.classList.add('navbar-visible');
+    } else {
+      navbar.classList.remove('navbar-visible');
+    }
+
+    lastScrollY = currentY;
+  }
+
+  // Throttle con requestAnimationFrame para no disparar demasiados cálculos
+  let ticking = false;
+  window.addEventListener(
+    'scroll',
+    function() {
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
+
+  // Estado inicial (por si el usuario entra con scroll ya aplicado, p. ej. anclas)
+  handleScroll();
+})();
+</script>
+
 </body>
 </html>
