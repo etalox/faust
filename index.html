@@ -273,12 +273,18 @@
       transition: background-color 300ms ease;
     }
 
+    .navbar-menu-link,
+    .footer-link,
+    .footer-meta-link,
     .navbar-talk-btn {
-      transition: outline-color 300ms ease, background-color 300ms ease;
+      transition: opacity 300ms ease;
     }
 
+    .navbar-menu-link:hover,
+    .footer-link:hover,
+    .footer-meta-link:hover,
     .navbar-talk-btn:hover {
-      outline: 1px rgba(255, 255, 255, 1) solid !important;
+      opacity: 0.72;
     }
 
     .team-blue-hover:hover {
@@ -828,6 +834,17 @@
         gap: 40px !important;
       }
 
+      .footer-links-grid {
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        gap: 24px !important;
+      }
+
+      .footer-links-column {
+        min-width: 0 !important;
+        flex: 1 1 0 !important;
+      }
+
       .figma-stage [style*="font-size: 64px"] {
         font-size: 42px !important;
         line-height: 1.06 !important;
@@ -1019,9 +1036,17 @@
       }
 
       .footer-links-grid {
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
         gap: 40px !important;
         padding-left: 16px !important;
         padding-right: 16px !important;
+      }
+
+      .footer-links-column {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
       }
 
       .footer-brand-block {
@@ -1067,7 +1092,7 @@
           <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
             <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
               <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">Implementación</div>
-              <div style="width: 100%; max-width: 640px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 36px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 36px; word-wrap: break-word">Implementamos Mejoras con un               Sistema iterativo libre de riegos.</div>
+              <div style="width: 100%; max-width: 640px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 36px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 36px; word-wrap: break-word">Implementamos Mejoras con un              Sistema iterativo libre de riegos.</div>
               <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Redirigimos tu tráfico gradualmente entre tu sitio web actual y la interfaz experimental.               Si nuestra interfaz experimental genera conversiones consistentemente mayores  durante un periodo de tiempo, aumenta el alcance automáticamente.</div>
             </div>
             <div class="ab-flow-card">
@@ -1148,7 +1173,7 @@
               <div class="ab-scroll-indicator" aria-hidden="true">
                 <div class="ab-scroll-thumb"></div>
               </div>
-              <div class="ab-flow-note">Las métricas capturadas determinan automáticamente cuándo B supera consistentemente a A, activando el escalamiento gradual del tráfico</div>
+              <div class="ab-flow-note">Las métricas capturadas determinan automáticamente cuándo B supera consistentemente a A, activando el escalamiento gradual del tráfico.</div>
             </div>
           </div>
         </div>
@@ -1278,20 +1303,20 @@
           <div class="footer-content-wrap" style="align-self: stretch; padding: 80px; overflow: hidden; flex-direction: column; justify-content: center; align-items: flex-start; gap: 80px; display: flex">
             <div class="footer-grid-wrap" style="align-self: stretch; padding-left: 20px; padding-right: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
               <div class="footer-links-grid" style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
-                <div style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
+                <div class="footer-links-column" style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
                   <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">SERVICES</div>
-                  <div class="no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Growth Partnering</div>
-                  <div class="no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Invest Partnering</div>
-                  <div class="no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Consulting</div>
+                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Growth Partnering</div>
+                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Invest Partnering</div>
+                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Consulting</div>
                 </div>
-                <div style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
+                <div class="footer-links-column" style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
                   <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">LET’S WORK TOGETHER</div>
-                  <div class="no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Contact</div>
-                  <div class="no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Support</div>
+                  <a class="no-select footer-link" href="mailto:admin@faust.mx" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word; text-decoration: none">Contact</a>
+                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Support</div>
                 </div>
-                <div style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
+                <div class="footer-links-column" style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
                   <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">FOR DESIGNERS</div>
-                  <div class="no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">I Want to Join the Team</div>
+                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">I Want to Join the Team</div>
                 </div>
               </div>
               <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.10) solid; outline-offset: -0.50px"></div>
@@ -1302,8 +1327,8 @@
                 </div>
                 <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 0px; display: flex">
                   <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">Faust Partners™ | © 2026</div>
-                  <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">Let's growth together admin@faust.mx</div>
-                  <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">https://faust.mx</div>
+                  <div class="footer-meta-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">Let's grow together.</div>
+                  <div class="footer-meta-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">https://faust.mx</div>
                 </div>
               </div>
             </div>
@@ -1316,10 +1341,10 @@
         <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync" src="./assets/logo.svg" alt="Faust Logo" style="width: 32px; height: 24px; object-fit: contain; display: block" />
       </div>
       <div style="height: 60px; padding-left: 40px; padding-right: 40px; padding-top: 10px; padding-bottom: 10px; left: 357px; top: 10px; position: absolute; overflow: hidden; border-radius: 55px; justify-content: center; align-items: center; gap: 48px; display: inline-flex">
-        <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Software</div>
-        <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Estrategia</div>
-        <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Sobre Nosotros</div>
-        <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Contacto</div>
+        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Software</div>
+        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Estrategia</div>
+        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Sobre Nosotros</div>
+        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Contacto</div>
       </div>
       <a class="subtle-gray-btn navbar-talk-btn" href="mailto:admin@faust.mx" data-propiedad-1="Predeterminado" style="height: 60px; padding-left: 40px; padding-right: 40px; padding-top: 10px; padding-bottom: 10px; right: 10px; top: 10px; position: absolute; background: rgba(77.73, 77.73, 77.73, 0.10); overflow: hidden; border-radius: 8px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 10px; display: inline-flex; text-decoration: none">
         <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 16px; word-wrap: break-word">Let’s Talk</div>
