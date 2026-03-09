@@ -934,7 +934,7 @@
 
   .figma-stage [style*="height: 1080px"] {
     height: auto !important;
-    min-height: 100vh !important;
+    min-height: 96vh !important;
   }
 
   .figma-stage [style*="font-size: 64px"] {
@@ -2063,7 +2063,7 @@ function onScroll() {
 
     function updateButtonsOnScroll() {
       var viewportH = window.innerHeight;
-      var minBand = viewportH * 0.4;
+      var minBand = viewportH * 0.25;
       var maxBand = viewportH * 0.98;
 
       buttons.forEach(function(btn) {
