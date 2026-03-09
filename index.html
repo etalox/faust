@@ -10,6 +10,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    .metric {
+      opacity: 0.3;
+      transition: opacity 300ms ease;
+    }
+
+    .metric.metric-final {
+      opacity: 1;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -544,7 +553,7 @@
 
     .ab-rule-box {
       padding: 32px;
-      background: #111111;
+      background: #1a1a1a;
       border-radius: 10px;
       outline: 1px rgba(255, 255, 255, 0.02) solid;
       outline-offset: -1px;
@@ -1216,7 +1225,7 @@
         class="metric"
         data-target="2"
         data-format="int"
-      >2</div>
+      >0</div>
       <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">empresas en México y USA</div>
       <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">asociadas con nosotros para el desarrollo de productos basados en la cognición humana.</div>
     </div>
@@ -1230,7 +1239,7 @@
         class="metric"
         data-target="710000"
         data-format="short"
-      >710k</div>
+      >0k</div>
       <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">usuarios impactados</div>
       <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">fueron impulsados el año pasado por el desarrollo de productos basados en la cognición humana.</div>
     </div>
@@ -1244,8 +1253,8 @@
         class="metric"
         data-target="11.5"
         data-format="percent"
-      >+11.5%</div>
-      <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">conversiones de clientes</div>
+      >+0%</div>
+      <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">conversiones de click</div>
       <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">Proveemos resultados cuantificables a nuestras empresas asociadas.</div>
               </div>
               <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
@@ -2049,13 +2058,13 @@ function onScroll() {
 
     // Inicializamos transición suave
     buttons.forEach(function(btn) {
-      btn.style.transition = 'background-color 1.6s cubic-bezier(0.2, 1, 0.3, 1), color 0.6s cubic-bezier(0.2, 1, 0.3, 1)';
+      btn.style.transition = 'background-color 1.6s cubic-bezier(0.2, 1, 0.3, 1), color 0.4s cubic-bezier(0.2, 1, 0.3, 1)';
     });
 
     function updateButtonsOnScroll() {
       var viewportH = window.innerHeight;
       var minBand = viewportH * 0.4;
-      var maxBand = viewportH * 0.94;
+      var maxBand = viewportH * 0.98;
 
       buttons.forEach(function(btn) {
         var rect = btn.getBoundingClientRect();
@@ -2103,28 +2112,33 @@ function onScroll() {
     return Math.round(value).toString();
   }
 
-  function animateMetric(el, target, duration, format, originalText) {
-    const start = 0;
-    const startTime = performance.now();
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
 
-    return new Promise((resolve) => {
-      function update(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const current = start + (target - start) * progress;
+function animateMetric(el, target, duration, format, originalText) {
+  const start = 0;
+  const startTime = performance.now();
 
-        el.textContent = formatMetric(current, format, originalText);
+  return new Promise((resolve) => {
+    function update(now) {
+      const elapsed = now - startTime;
+      const linearProgress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutCubic(linearProgress);
+      const current = start + (target - start) * easedProgress;
 
-        if (progress < 1) {
-          requestAnimationFrame(update);
-        } else {
-          resolve();
-        }
+      el.textContent = formatMetric(current, format, originalText);
+
+      if (linearProgress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        resolve();
       }
+    }
 
-      requestAnimationFrame(update);
-    });
-  }
+    requestAnimationFrame(update);
+  });
+}
 
   document.addEventListener("DOMContentLoaded", () => {
     const section = document.getElementById("stats-section");
@@ -2147,8 +2161,11 @@ function onScroll() {
                 const originalText = el.textContent || "";
                 const rawTarget = el.dataset.target || "0";
                 const target = parseFloat(rawTarget.replace(/[^\d.]/g, "")) || 0;
+                
+                el.classList.remove("metric-final");
+                el.textContent = formatMetric(0, format, originalText);
 
-                await animateMetric(el, target, 1600, format, originalText);
+                await animateMetric(el, target, 2400, format, originalText);
               }
             })().catch(() => {});
 
