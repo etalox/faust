@@ -1202,7 +1202,7 @@
               <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">EMPRESAS</div>
               <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
                 <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 600; line-height: 40px; word-wrap: break-word">2</div>
-                <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">empresas en México y Estados Unidos</div>
+                <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">empresas en México y USA</div>
                 <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">asociadas con nosotros para el desarrollo de productos basados en la cognición humana.</div>
               </div>
               <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
@@ -1857,39 +1857,58 @@
       }
     }
 
-    function onScroll() {
-      if (hijackDone) return;
+var LOCK_MARGIN = 20; // distancia final entre el top de la sección y Y=74
 
-      var rect          = abFlowSection.getBoundingClientRect();
-      var viewportH     = window.innerHeight;
-      var viewportCenterY = viewportH / 2;
-      var sectionCenterY  = rect.top + rect.height / 2;
+function onScroll() {
+  if (hijackDone) return;
 
-      // Diferencia entre ambos centros
-      var diff = sectionCenterY - viewportCenterY;
+  var rect = abFlowSection.getBoundingClientRect();
 
-      // Entrar al hijack cuando el centro del bloque cruza cerca del centro del viewport
-      if (!isHijacking && Math.abs(diff) < 40) { // 40px de tolerancia
-        isHijacking   = true;
+  // Borde inferior del navbar: Y fija 74px
+  var navbarBottomY = 74;
 
-        // Ajustamos el scroll para alinear centros
-        // scrollY actual + diferencia
-        var newScrollY = window.scrollY + diff;
-        window.scrollTo(window.scrollX, newScrollY);
+  // Distancia actual entre top de la sección y bottom del navbar
+  var distance = rect.top - navbarBottomY;
 
-        anchorScrollY = newScrollY;
+  // Queremos que, al bloquear, distance = LOCK_MARGIN
+  // Disparamos cuando la sección ya está por debajo de ese margen
+  if (!isHijacking && distance <= LOCK_MARGIN) {
+    isHijacking = true;
 
-        // Bloquear scroll del body
+    var startY = window.scrollY;
+    var deltaY = distance - LOCK_MARGIN;
+    var targetY = startY + deltaY;
+    anchorScrollY = targetY;
+
+    var duration = 260; // ms
+    var startTime = null;
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var elapsed = timestamp - startTime;
+      var t = Math.min(elapsed / duration, 1);
+      var ease = 1 - Math.pow(1 - t, 3); // ease-out
+
+      var currentY = startY + (targetY - startY) * ease;
+      window.scrollTo(window.scrollX, currentY);
+
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        window.scrollTo(window.scrollX, targetY);
         document.body.style.overflow = 'hidden';
       }
-
-      if (!isHijacking) return;
-
-      // Mientras hijack está activo, mantenemos “anclado” el body en anchorScrollY
-      if (!hijackDone) {
-        window.scrollTo(window.scrollX, anchorScrollY);
-      }
     }
+
+    requestAnimationFrame(step);
+  }
+
+  if (!isHijacking) return;
+
+  if (!hijackDone) {
+    window.scrollTo(window.scrollX, anchorScrollY);
+  }
+}
 
 
     function onWheel(e) {
