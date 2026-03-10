@@ -17,6 +17,23 @@
   <meta property="og:site_name" content="Faust Partners™">
   <style>
 
+    /* portátiles y pantallas más bajas */
+    @media (max-height: 1000px) {
+      .hero-cta {
+        padding-block: 2rem;
+      }
+      .hero-title {
+        font-size: clamp(1.8rem, 2.5vw + 1rem, 3rem);
+      }
+    }
+
+    /* monitores grandes */
+    @media (min-width: 1600px) and (min-height: 900px) {
+      .hero-title {
+        font-size: clamp(2.5rem, 3vw + 1rem, 4.5rem);
+      }
+    }
+
     @font-face {
       font-family: "Aeternum";
       src:
@@ -1156,7 +1173,7 @@
   <div style="width: 1920px; left: 0px; top: 0px; position: absolute; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
     <div style="align-self: stretch; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
       <div class="hero-viewport" style="align-self: stretch; height: 1080px; padding-left: 40px; padding-right: 40px; overflow: hidden; flex-direction: column; justify-content: center; align-items: center; gap: 10px; display: flex">
-        <div style="width: 100%; max-width: 1080px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
+        <div style="width: 100%; padding-top: 40px; max-width: 1080px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
           <div class="hero-reveal delay-1" style="justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
             <div style="flex-direction: column; justify-content: flex-start; align-items: center; gap: 10.50px; display: inline-flex; padding-top: 80px">
               <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync" src="./assets/logo.svg" alt="Faust Logo" style="width: 42px; height: 32px; object-fit: contain; display: block" />
@@ -1164,7 +1181,7 @@
             </div>
           </div>
           <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: flex">
-            <div class="hero-reveal delay-2 no-select poppins-alt" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 64px; word-wrap: break-word">Nuestros partners añadieron $150k a su MRR este trimestre.</div>
+            <div class="hero-title hero-reveal delay-2 no-select poppins-alt" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 64px; word-wrap: break-word">Nuestros partners añadieron $150k a su MRR este trimestre.</div>
             <div class="hero-reveal delay-3 no-select poppins-alt" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 28px; word-wrap: break-word">Te otorgamos ingeniería de crecimiento basada en datos. Sin cuotas fijas.</div>
           </div>
           <div class="hero-cta-wrap hero-reveal delay-4" style="gap: 20px;">
@@ -1185,7 +1202,7 @@
               </div>
             </div>
           </div>
-          <div style="align-self: stretch; padding-top: 80px; padding-bottom: 0px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
+          <div style="align-self: stretch; padding-top: 40px; padding-bottom: 80px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
         <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 400; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">APOYADO POR
           </div>
             <div class="partners-wrap" style="align-self: stretch; justify-content: center; align-items: center; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
@@ -1326,7 +1343,7 @@
       <div
         style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 40px; word-wrap: break-word"
         class="metric"
-        data-target="11.5"
+        data-target="19.8"
         data-format="percent"
       >+0%</div>
       <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">Conversiones de click</div>
@@ -1339,8 +1356,8 @@
       </div>
       <div style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
         <div style="width: 100%; max-width: 800px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
-            <div style="width: 600px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Instrument Sans; font-weight: 500; line-height: 40px; word-wrap: break-word">Configura tu plan</div>
+          <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 40px; display: flex">
+            <div style="width: auto; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Poppins; font-weight: 400; line-height: 40px; word-wrap: break-word">Comienza aquí</div>
             <div class="plan-builder">
               <div class="plan-stack plan-sortable">
                 <div class="plan-card plan-income">
