@@ -1305,7 +1305,7 @@
         class="metric"
         data-target="710000"
         data-format="short"
-      >MX $0</div>
+      >$0</div>
       <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">Generados este año</div>
       <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">Proveemos resultados cuantificables a nuestras empresas asociadas.</div>
     </div>
@@ -2261,10 +2261,10 @@ function onScroll() {
 <script>
   function formatShort(value) {
     if (value >= 1_000_000) {
-      return "MX $" + (value / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+      return "$" + (value / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
     }
     if (value >= 1_000) {
-      return "MX $" + (value / 1_000).toFixed(0) + "k";
+      return "$" + (value / 1_000).toFixed(0) + "k";
     }
     return Math.round(value).toString();
   }
