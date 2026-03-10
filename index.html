@@ -1277,7 +1277,7 @@
     <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">EMPRESAS</div>
     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
       <div
-        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: 'Aeternum'; font-weight: 600; line-height: 40px; word-wrap: break-word"
+        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 45px; word-wrap: break-word"
         class="metric"
         data-target="2"
         data-format="int"
@@ -1291,7 +1291,7 @@
     <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">ALCANCE</div>
     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
       <div
-        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: 'Aeternum'; font-weight: 600; line-height: 40px; word-wrap: break-word"
+        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 40px; word-wrap: break-word"
         class="metric"
         data-target="710000"
         data-format="short"
@@ -1305,7 +1305,7 @@
     <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">RESULTADOS</div>
     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
       <div
-        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: 'Aeternum'; font-weight: 600; line-height: 40px; word-wrap: break-word"
+        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 40px; word-wrap: break-word"
         class="metric"
         data-target="11.5"
         data-format="percent"
@@ -1881,21 +1881,26 @@
     return window.innerWidth <= 768;
   }
 
-  function setupAbFlowAnimations() {
-    if (!isMobile()) return;
+function setupAbFlowAnimations() {
+    var abFlowCards = document.querySelectorAll('.ab-flow-card');
+    if (abFlowCards.length === 0) return;
 
-    var abFlowCard   = document.querySelector('.ab-flow-card');
-    var abFlowCanvas = document.querySelector('.ab-flow-canvas');
-    if (!abFlowCard) return;
-
-    // Transiciones contenedor
-    abFlowCard.style.transition = 'background-color 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
-
-    // Transiciones y estado base del canvas (opacidad + blur)
-    if (abFlowCanvas) {
-      abFlowCanvas.style.transition = 'opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), filter 0.8s cubic-bezier(0.2, 1, 0.3, 1)';
-      abFlowCanvas.style.opacity    = '0.45';
-      abFlowCanvas.style.filter     = 'blur(4px)';
+    // Inyectamos solo la transición, eliminamos el !important de la opacidad fija
+    if (!document.getElementById('ab-flow-spotlight-styles')) {
+        var style = document.createElement('style');
+        style.id = 'ab-flow-spotlight-styles';
+        style.innerHTML = `
+            .ab-flow-card {
+                transition: background-color 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            }
+            .ab-flow-canvas {
+                transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), filter 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            }
+            .spotlight-transition {
+                transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1) !important;
+            }
+        `;
+        document.head.appendChild(style);
     }
 
     var baseBg       = '#0D0D0D';
@@ -1905,36 +1910,92 @@
     var baseBlur     = '1px';
     var focusBlur    = '0px';
 
+    Array.prototype.slice.call(abFlowCards).forEach(function(card) {
+        card.style.backgroundColor = baseBg;
+        var canvas = card.querySelector('.ab-flow-canvas');
+        if (canvas) {
+            canvas.style.opacity = baseOpacity;
+            canvas.style.filter  = 'blur(' + baseBlur + ')';
+        }
+    });
+
+    var currentFocusedCard = null;
+
     function onScrollAbFlow() {
-      var rect      = abFlowCard.getBoundingClientRect();
-      var viewportH = window.innerHeight;
-      var centerY   = viewportH * 0.64;
+        var viewportH = window.innerHeight;
+        var centerY   = viewportH * 0.64;
+        var foundFocus = null;
 
-      var centerInside =
-        centerY >= rect.top &&
-        centerY <= rect.bottom;
+        Array.prototype.slice.call(abFlowCards).forEach(function(card) {
+            var rect = card.getBoundingClientRect();
+            if (centerY >= rect.top && centerY <= rect.bottom) {
+                foundFocus = card;
+            }
+        });
 
-      if (centerInside) {
-        // Iluminado: fondo más claro, más opaco, sin blur
-        abFlowCard.style.backgroundColor = focusBg;
-        if (abFlowCanvas) {
-          abFlowCanvas.style.opacity = focusOpacity;
-          abFlowCanvas.style.filter  = 'blur(' + focusBlur + ')';
+        if (foundFocus !== currentFocusedCard) {
+            
+            if (currentFocusedCard) {
+                currentFocusedCard.style.backgroundColor = baseBg;
+                var oldCanvas = currentFocusedCard.querySelector('.ab-flow-canvas');
+                if (oldCanvas) {
+                    oldCanvas.style.opacity = baseOpacity;
+                    oldCanvas.style.filter  = 'blur(' + baseBlur + ')';
+                }
+            }
+
+            // 1. Restaurar el DOM a sus valores reales y limpiar marcadores
+            var dimmedElements = document.querySelectorAll('.spotlight-dimmed');
+            Array.prototype.slice.call(dimmedElements).forEach(function(el) {
+                // Al devolver su valor inline original (o cadena vacía), el navegador
+                // vuelve a respetar las clases CSS base (ej. tu .muted { opacity: 0.5 })
+                el.style.opacity = el.getAttribute('data-orig-inline') || '';
+                el.classList.remove('spotlight-dimmed');
+            });
+
+            if (foundFocus) {
+                foundFocus.style.backgroundColor = focusBg;
+                var newCanvas = foundFocus.querySelector('.ab-flow-canvas');
+                if (newCanvas) {
+                    newCanvas.style.opacity = focusOpacity;
+                    newCanvas.style.filter  = 'blur(' + focusBlur + ')';
+                }
+
+                // 2. Escalar por el DOM calculando opacidades relativas
+                var current = foundFocus;
+                while (current && current.tagName !== 'BODY' && current.tagName !== 'HTML') {
+                    var siblings = current.parentNode.children;
+                    for (var i = 0; i < siblings.length; i++) {
+                        var sibling = siblings[i];
+                        if (sibling !== current && sibling.nodeType === 1) { 
+                            
+                            // Guardamos su estado base en caché solo la primera vez que lo tocamos
+                            if (!sibling.hasAttribute('data-orig-inline')) {
+                                sibling.setAttribute('data-orig-inline', sibling.style.opacity || '');
+                                // getComputedStyle nos da el valor real final sin importar de qué clase provenga
+                                var compOpacity = window.getComputedStyle(sibling).opacity;
+                                sibling.setAttribute('data-comp-opacity', compOpacity);
+                            }
+                            
+                            var orig = parseFloat(sibling.getAttribute('data-comp-opacity')) || 1;
+                            
+                            sibling.classList.add('spotlight-transition');
+                            sibling.classList.add('spotlight-dimmed');
+                            
+                            // Cálculo relativo: multiplica su propia opacidad base por 0.8
+                            sibling.style.opacity = (orig * 0.4).toFixed(3);
+                        }
+                    }
+                    current = current.parentNode;
+                }
+            }
+            currentFocusedCard = foundFocus;
         }
-      } else {
-        // Estado base: fondo oscuro, opacidad baja y desenfoque
-        abFlowCard.style.backgroundColor = baseBg;
-        if (abFlowCanvas) {
-          abFlowCanvas.style.opacity = baseOpacity;
-          abFlowCanvas.style.filter  = 'blur(' + baseBlur + ')';
-        }
-      }
     }
 
-    window.addEventListener('scroll', onScrollAbFlow);
-    // Ejecutar una vez al cargar
-    onScrollAbFlow();
-  }
+    window.addEventListener('scroll', onScrollAbFlow, { passive: true });
+    onScrollAbFlow(); 
+}
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupAbFlowAnimations);
