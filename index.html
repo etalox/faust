@@ -2279,8 +2279,8 @@ function onScroll() {
 
     function updateButtonsOnScroll() {
       var viewportH = window.innerHeight;
-      var minBand = viewportH * 0.25;
-      var maxBand = viewportH * 0.98;
+      var minBand = viewportH * 0.1;
+      var maxBand = viewportH * 1.2;
 
       buttons.forEach(function(btn) {
         var rect = btn.getBoundingClientRect();
