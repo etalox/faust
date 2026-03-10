@@ -16,6 +16,47 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Faust Partners™">
   <style>
+
+    /* Desktop */
+    .partners-wrap {
+      gap: 64px;
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .partners-wrap {
+        gap: 24px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+      }
+    }
+
+    .partner-logo {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.8;
+      transition: opacity 0.4s ease;
+    }
+
+    .partner-logo:hover {
+      opacity: 0.4;
+    }
+
+    @media (max-width: 768px) {
+      .partner-logo {
+        height: 36px !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .partner-logo {
+        height: 30px !important;
+      }
+    }
+
     .metric {
       opacity: 0.3;
       transition: opacity 300ms ease;
@@ -940,7 +981,7 @@
 
   .figma-stage [style*="height: 1080px"] {
     height: auto !important;
-    min-height: 96vh !important;
+    min-height: 100vh !important;
   }
 
   .figma-stage [style*="font-size: 64px"] {
@@ -1138,14 +1179,6 @@
         </div>
       </div>
     </div>
-    <div style="align-self: stretch; padding-bottom: 80px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: inline-flex">
-  <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 400; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">APOYADO POR</div>
-  <div style="align-self: stretch; padding-left: 20px; padding-right: 20px; justify-content: center; align-items: flex-start; gap: 20px; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
-    <img style="width: 116.10px; height: 35.87px" src="/assets/finsus.png" />
-    <img style="width: 120.60px; height: 36px" src="/assets/herdez.png" />
-    <img style="width: 45.45px; height: 36px" src="/assets/mc.png" />
-  </div>
-</div>
     <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
       <div style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
         <div style="width: 100%; max-width: 1360px; border-radius: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
@@ -1286,6 +1319,15 @@
           </div>
         </div>
       </div>
+      <div style="align-self: stretch; padding-top: 40px; padding-bottom: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
+        <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 400; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">APOYADO POR</div>
+          <div class="partners-wrap" style="align-self: stretch; justify-content: center; align-items: center; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
+            <!-- Quitamos el width/height fijo y agregamos la clase -->
+            <img class="partner-logo" src="/assets/finsus.png" />
+            <img class="partner-logo" src="/assets/herdez.png" />
+            <img class="partner-logo" src="/assets/mc.png" />
+          </div>
+        </div>
       <div style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
         <div style="width: 100%; max-width: 800px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
           <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
