@@ -1434,10 +1434,10 @@
                     <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/dash.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
                     <div class="plan-content">
                       <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
-                      <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y mejoras iterativas de la plataforma web.</div>
+                      <div class="plan-subtitle plan-description">Retén el 90% de ingresos incrementales de forma permanente, con un equipo de optimización dedicado exclusivamente a tu plataforma.</div>
                     </div>
                   </div>
-                  <div class="plan-price">MXN 265,000</div>
+                  <div class="plan-price">Pago único de $265,000</div>
                   <button class="plan-toggle" type="button" aria-label="Añadir servicio">
                     <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/plus.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
                   </button>
@@ -2146,7 +2146,11 @@ function onScroll() {
       var ease = 1 - Math.pow(1 - t, 3); // ease-out
 
       var currentY = startY + (targetY - startY) * ease;
-      window.scrollTo(window.scrollX, currentY);
+
+      var elementsToAnimate = document.querySelectorAll('.section:not(.navbar)');
+      elementsToAnimate.forEach(function(element) {
+        element.style.opacity = 1 - t; // Opacidad que disminuye
+      });
 
       if (t < 1) {
         requestAnimationFrame(step);
