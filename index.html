@@ -1177,6 +1177,17 @@
         display: none;
       }
 
+      /* Entrance Animation Exclusion */
+      .side-panel .reveal-when-visible,
+      .side-panel .reveal,
+      .side-panel .hero-reveal,
+      .side-panel [class*="reveal"] {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
       .pushed-layout .side-panel {
         transform: translateX(-450px);
       }
