@@ -1169,6 +1169,12 @@
         flex-direction: column;
         gap: 24px;
         padding-bottom: 80px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .side-panel::-webkit-scrollbar {
+        display: none;
       }
 
       .pushed-layout .side-panel {
@@ -1179,6 +1185,15 @@
         margin-right: 450px !important;
         width: calc(100% - 450px) !important;
         overflow: hidden !important;
+      }
+
+      /* Navbar shifting on desktop */
+      .pushed-layout .figma-stage > div > div:first-child > div:last-child {
+        left: 10px !important;
+        right: 460px !important;
+        width: auto !important;
+        transform: none !important;
+        transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
       }
 
       .figma-stage,
@@ -1777,13 +1792,13 @@
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
                         </button>
                       </div>
-                  </div>
-                    </div>
-                    <div id="whatsapp-plan-cta" class="magnetic-cta hero-cta-btn"
-                      style="align-self: center; width: auto; height: 64px; padding-left: 48px; padding-right: 48px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
-                      <div id="plan-cta-text"
-                        style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
-                        Obtener plan por $0
+                        <div id="whatsapp-plan-cta" class="magnetic-cta hero-cta-btn"
+                          style="align-self: center; width: auto; height: 64px; padding-left: 48px; padding-right: 48px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
+                          <div id="plan-cta-text"
+                            style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                            Obtener plan por $0
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
