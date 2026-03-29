@@ -2920,11 +2920,10 @@
         if (!navbar) return;
         var isPushed = document.body.classList.contains('pushed-layout');
         if (isPushed) {
-          // Get the visible stage width
-          var stageEl = document.getElementById('figma-stage');
-          var stageW = stageEl ? stageEl.offsetWidth : window.innerWidth;
-          var navW = Math.min(1240, stageW - 40); // 20px margin each side
-          var navLeft = (stageW - navW) / 2;
+          // Visible area = viewport minus the 450px sidebar
+          var visibleW = window.innerWidth - 450;
+          var navW = Math.min(1240, visibleW - 40); // 20px margin each side
+          var navLeft = (visibleW - navW) / 2;
           navbar.style.left = navLeft + 'px';
           navbar.style.width = navW + 'px';
         } else {
