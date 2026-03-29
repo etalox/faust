@@ -1187,13 +1187,16 @@
         overflow: hidden !important;
       }
 
-      /* Navbar shifting on desktop */
-      .pushed-layout .figma-stage > div > div:first-child > div:last-child {
+      /* Navbar shifting on desktop (Perfect Transition) */
+      #desktop-navbar {
+        transition: left 0.6s cubic-bezier(0.2, 1, 0.3, 1), right 0.6s cubic-bezier(0.2, 1, 0.3, 1), width 0.6s cubic-bezier(0.2, 1, 0.3, 1), transform 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
+      }
+
+      .pushed-layout #desktop-navbar {
         left: 20px !important;
         right: 470px !important;
         width: auto !important;
         transform: none !important;
-        transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
       }
 
       .figma-stage,
@@ -1252,7 +1255,7 @@
       }
 
       .side-panel .plan-income {
-        border-radius: 20px !important;
+        border-radius: 10px !important;
       }
 
       .side-panel .plan-income-input-wrap {
@@ -2185,6 +2188,7 @@
 
       function isRevealTarget(el) {
         if (!el || !(el instanceof HTMLElement)) return false;
+        if (el.id === 'side-panel' || el.closest('#side-panel')) return false;
         if (el.matches("script,style,br")) return false;
         if (el.closest(".hero-viewport")) return false;
         if (el.closest(".ab-flow-grid")) return false;
@@ -2469,7 +2473,7 @@
                 var siblings = current.parentNode.children;
                 for (var i = 0; i < siblings.length; i++) {
                   var sibling = siblings[i];
-                  if (sibling !== current && sibling.nodeType === 1 && sibling.id !== 'desktop-navbar') {
+                  if (sibling !== current && sibling.nodeType === 1 && sibling.id !== 'desktop-navbar' && sibling.id !== 'side-panel' && !sibling.closest('#side-panel')) {
 
                     // Guardamos su estado base en caché solo la primera vez que lo tocamos
                     if (!sibling.hasAttribute('data-orig-inline')) {
