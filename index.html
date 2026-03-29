@@ -911,16 +911,30 @@
     }
 
     .plan-income-input-wrap {
+      position: relative;
       height: 52px;
       padding: 0 20px;
       background: rgba(141, 141, 141, 0.1);
-      border-radius: 5px;
+      border-radius: 10px;
       border: 0;
-      border-bottom: 1px solid white;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       min-width: 176px;
+    }
+
+    .plan-income-input-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease;
+      pointer-events: none;
+    }
+
+    .plan-income-input-wrap:focus-within::after {
+      border-color: white;
     }
 
     .plan-income-prefix {
@@ -1545,7 +1559,7 @@
                         <label class="plan-income-input-wrap" for="monthly-income">
                           <span class="plan-income-prefix">MXN</span>
                           <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric"
-                            autocomplete="off" value="Escribe aquí..." />
+                            autocomplete="off" placeholder="1,000,000" />
                         </label>
                       </div>
                       <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true"
@@ -1746,7 +1760,7 @@
               </div>
             </div>
           </div>
-          <div
+          <div id="desktop-navbar"
             style="width: 1240px; height: 80px; left: 340px; top: 20px; position: absolute; background: rgba(255, 255, 255, 0.04); border-radius: 10px; outline: 1px rgba(255, 255, 255, 0.02) solid; outline-offset: -1px; backdrop-filter: blur(60px)">
             <div
               style="width: 33.20px; padding-left: 20px; padding-right: 20px; left: 10px; top: 27.65px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
@@ -2267,7 +2281,7 @@
                 var siblings = current.parentNode.children;
                 for (var i = 0; i < siblings.length; i++) {
                   var sibling = siblings[i];
-                  if (sibling !== current && sibling.nodeType === 1) {
+                  if (sibling !== current && sibling.nodeType === 1 && sibling.id !== 'desktop-navbar') {
 
                     // Guardamos su estado base en caché solo la primera vez que lo tocamos
                     if (!sibling.hasAttribute('data-orig-inline')) {
