@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,14 +9,45 @@
   <link rel="shortcut icon" type="image/png" href="assets/AB%20Test%20Flow/tab_icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
   <meta property="og:title" content="Faust Partners™ | Home">
-  <meta property="og:description" content="Somos una firma de capital de riesgo enfocada en invertir en startups de tecnología en etapas tempranas.">
+  <meta property="og:description"
+    content="Somos una firma de capital de riesgo enfocada en invertir en startups de tecnología en etapas tempranas.">
   <meta property="og:image" content="https://faust.mx/assets/banner.jpg">
   <meta property="og:url" content="https://faust.mx">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Faust Partners™">
   <style>
+    @font-face {
+      font-family: "Poppins";
+      src: url("./assets/poppins/Poppins-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Poppins";
+      src: url("./assets/poppins/Poppins-Medium.ttf") format("truetype");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Poppins";
+      src: url("./assets/poppins/Poppins-SemiBold.ttf") format("truetype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Poppins";
+      src: url("./assets/poppins/Poppins-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
 
     .hero-cta-btn {
       text-decoration: none;
@@ -51,6 +83,7 @@
       .hero-cta {
         padding-block: 2rem;
       }
+
       .hero-title {
         font-size: clamp(1.8rem, 2.5vw + 1rem, 3rem);
       }
@@ -74,7 +107,7 @@
 
     /* Desktop */
     .partners-wrap {
-      gap: 32px;
+      gap: 64px;
       padding-left: 40px;
       padding-right: 40px;
     }
@@ -187,8 +220,8 @@
     }
 
     .poppins-alt {
-    font-family: "Poppins", sans-serif;
-    font-feature-settings: "ss01" on;
+      font-family: "Poppins", sans-serif;
+      font-feature-settings: "ss01" on;
     }
 
 
@@ -198,7 +231,22 @@
       font-feature-settings: "ss01" on !important;
     }
 
-    .figma-stage > div {
+    /* letter-spacing sólo para los títulos grandes */
+    .hero-title,
+    .team-title-fix,
+    .figma-stage [style*="font-size: 40px"],
+    .figma-stage [style*="font-size: 48px"],
+    .figma-stage [style*="font-size: 56px"],
+    .figma-stage [style*="font-size: 64px"],
+    .figma-stage [style*="font-size: 72px"],
+    .figma-stage [style*="font-size: 80px"],
+    .figma-stage [style*="font-size: 96px"],
+    .figma-stage [style*="font-size: 100px"] {
+      letter-spacing: -0.04em !important;
+      font-feature-settings: "ss02" 1, "ss01" 1 !important;
+    }
+
+    .figma-stage>div {
       width: 100% !important;
       height: auto !important;
       min-height: 100vh;
@@ -206,14 +254,14 @@
       position: relative !important;
     }
 
-    .figma-stage > div > div:first-child {
+    .figma-stage>div>div:first-child {
       width: 100% !important;
       position: relative !important;
       left: auto !important;
       top: auto !important;
     }
 
-    .figma-stage > div > div:first-child > div:last-child {
+    .figma-stage>div>div:first-child>div:last-child {
       position: fixed !important;
       top: 16px !important;
       left: 50% !important;
@@ -227,15 +275,15 @@
       padding: 10px 12px !important;
     }
 
-    .figma-stage > div > div:first-child > div:last-child > div {
+    .figma-stage>div>div:first-child>div:last-child>div {
       position: static !important;
     }
 
-    .figma-stage > div > div:first-child > div:last-child > div:nth-child(2) {
+    .figma-stage>div>div:first-child>div:last-child>div:nth-child(2) {
       margin-inline: auto;
     }
 
-    .figma-stage > div > div:first-child > div:first-child {
+    .figma-stage>div>div:first-child>div:first-child {
       padding-top: 0;
     }
 
@@ -323,10 +371,21 @@
       filter: blur(0);
     }
 
-    .delay-1 { transition-delay: 0.1s; }
-    .delay-2 { transition-delay: 0.3s; }
-    .delay-3 { transition-delay: 0.5s; }
-    .delay-4 { transition-delay: 0.7s; }
+    .delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .delay-2 {
+      transition-delay: 0.3s;
+    }
+
+    .delay-3 {
+      transition-delay: 0.5s;
+    }
+
+    .delay-4 {
+      transition-delay: 0.7s;
+    }
 
     .reveal-when-visible {
       --reveal-base-y: 0px;
@@ -352,6 +411,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
+
       .hero-reveal,
       .reveal-when-visible,
       .reveal-when-visible.active {
@@ -851,16 +911,30 @@
     }
 
     .plan-income-input-wrap {
+      position: relative;
       height: 52px;
       padding: 0 20px;
       background: rgba(141, 141, 141, 0.1);
-      border-radius: 5px;
+      border-radius: 10px;
       border: 0;
-      border-bottom: 1px solid white;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       min-width: 176px;
+    }
+
+    .plan-income-input-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease;
+      pointer-events: none;
+    }
+
+    .plan-income-input-wrap:focus-within::after {
+      border-color: white;
     }
 
     .plan-income-prefix {
@@ -913,6 +987,7 @@
     }
 
     @media (max-width: 1200px) {
+
       .figma-stage [style*="width: 1360px"],
       .figma-stage [style*="width: 1240px"],
       .figma-stage [style*="width: 600px"],
@@ -978,564 +1053,746 @@
     }
 
     @media (max-width: 768px) {
-    /* NAVBAR: solo mobile, oculto al inicio y animado */
-    .figma-stage > div > div:first-child > div:last-child {
-      height: 64px !important;
-      top: 10px !important;
-      transform: translateX(-50%) translateY(-100px) !important;
-      opacity: 0 !important;
-      transition: transform 1.2s cubic-bezier(0.2, 1, 0.3, 1),
-      opacity 0.2s ease !important;
+
+      /* NAVBAR: solo mobile, oculto al inicio y animado */
+      .figma-stage>div>div:first-child>div:last-child {
+        height: 64px !important;
+        top: 10px !important;
+        transform: translateX(-50%) translateY(-100px) !important;
+        opacity: 0 !important;
+        transition: transform 1.2s cubic-bezier(0.2, 1, 0.3, 1),
+          opacity 0.2s ease !important;
+      }
+
+      /* Oculta TODOS los subtítulos en mobile por defecto */
+      .plan-description {
+        display: none !important;
+      }
+
+      /* Muestra los subtítulos SOLO dentro de "Opciones recomendadas" */
+      .plan-recommend .plan-description {
+        display: block !important;
+      }
+
+      .figma-stage>div>div:first-child>div:last-child>div:nth-child(2) {
+        display: none !important;
+      }
+
+      .figma-stage>div>div:first-child>div:last-child>div:nth-child(3) {
+        height: 44px !important;
+        padding: 0 18px !important;
+      }
+
+      .figma-stage>div>div:first-child>div:last-child>a.navbar-talk-btn {
+        height: 44px !important;
+        padding: 0 14px !important;
+        border-radius: 8px !important;
+        gap: 8px !important;
+      }
+
+      .figma-stage>div>div:first-child>div:last-child>a.navbar-talk-btn>div {
+        font-size: 14px !important;
+        line-height: 14px !important;
+      }
+
+      /* Estado visible del navbar en mobile (cuando JS añade .navbar-visible) */
+      .figma-stage>div>div:first-child>div:last-child.navbar-visible {
+        transform: translateX(-50%) translateY(0) !important;
+        opacity: 1 !important;
+      }
+
+      .figma-stage>div>div:first-child>div:first-child {
+        padding-top: 0;
+      }
+
+      .hero-viewport {
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+      }
+
+      .figma-stage [style*="height: 1080px"] {
+        height: auto !important;
+        min-height: 120vh !important;
+      }
+
+      .figma-stage [style*="font-size: 64px"] {
+        font-size: 34px !important;
+      }
+
+      .figma-stage [style*="font-size: 36px"] {
+        font-size: 28px !important;
+        line-height: 1.15 !important;
+      }
+
+      .figma-stage [style*="font-size: 24px"] {
+        font-size: 20px !important;
+        line-height: 1.2 !important;
+      }
+
+      .figma-stage [style*="font-size: 20px"] {
+        font-size: 16px !important;
+        line-height: 1.35 !important;
+      }
+
+      .team-title-fix {
+        white-space: normal;
+        max-width: 12ch;
+        margin-inline: auto;
+      }
+
+      .hero-cta-btn {
+        height: 56px;
+        padding: 0 22px;
+        gap: 10px !important;
+      }
+
+      .hero-cta-label {
+        font-size: 16px !important;
+        line-height: 1 !important;
+      }
+
+      .hero-cta-desktop-text {
+        display: none;
+      }
+
+      .hero-cta-mobile-text {
+        display: inline;
+      }
+
+      .ab-flow-card {
+        padding: 28px 16px 18px;
+      }
+
+      .ab-rule-box {
+        font-size: 16px;
+      }
+
+      .ab-scroll-indicator {
+        display: block;
+      }
+
+      .ab-flow-note {
+        text-align: left;
+        padding-inline: 0;
+      }
+
+      .stats-grid-mobile {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 40px !important;
+      }
+
+      .stats-card-mobile {
+        max-width: 100% !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        justify-content: flex-start !important;
+        gap: 40px !important;
+      }
+
+      .stats-card-mobile [style*="width: 400px"] {
+        width: 100% !important;
+      }
+
+      .stats-card-mobile>div:nth-of-type(2) {
+        gap: 20px !important;
+      }
+
+      .stats-card-mobile [style*="font-size: 40px"] {
+        font-size: 40px !important;
+        line-height: 40px !important;
+        display: block !important;
+      }
+
+      .stats-card-mobile [style*="font-size: 24px"] {
+        font-size: 24px !important;
+        line-height: 30px !important;
+        display: block !important;
+      }
+
+      .plan-card {
+        padding: 24px 20px;
+        gap: 20px;
+      }
+
+      .plan-card-body {
+        gap: 20px;
+      }
+
+      .plan-content {
+        min-width: 0;
+      }
+
+      .plan-card .plan-card-body {
+        flex-basis: 100%;
+      }
+
+      .plan-card .plan-price {
+        order: 2;
+      }
+
+      .plan-card .plan-toggle {
+        order: 3;
+        margin-left: auto;
+      }
+
+      .footer-content-wrap {
+        padding: 56px 32px !important;
+        gap: 56px !important;
+      }
+
+      .footer-grid-wrap {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        gap: 56px !important;
+      }
+
+      .footer-links-grid {
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        gap: 40px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+
+      .footer-links-column {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
+      }
+
+      .footer-brand-block {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        gap: 24px !important;
+      }
     }
-
-    /* Oculta TODOS los subtítulos en mobile por defecto */
-    .plan-description {
-      display: none !important;
-    }
-
-    /* Muestra los subtítulos SOLO dentro de "Opciones recomendadas" */
-    .plan-recommend .plan-description {
-      display: block !important;
-    }
-
-  .figma-stage > div > div:first-child > div:last-child > div:nth-child(2) {
-    display: none !important;
-  }
-
-  .figma-stage > div > div:first-child > div:last-child > div:nth-child(3) {
-    height: 44px !important;
-    padding: 0 18px !important;
-  }
-
-  .figma-stage > div > div:first-child > div:last-child > a.navbar-talk-btn {
-    height: 44px !important;
-    padding: 0 14px !important;
-    border-radius: 8px !important;
-    gap: 8px !important;
-  }
-
-  .figma-stage > div > div:first-child > div:last-child > a.navbar-talk-btn > div {
-    font-size: 14px !important;
-    line-height: 14px !important;
-  }
-
-  /* Estado visible del navbar en mobile (cuando JS añade .navbar-visible) */
-  .figma-stage > div > div:first-child > div:last-child.navbar-visible {
-    transform: translateX(-50%) translateY(0) !important;
-    opacity: 1 !important;
-  }
-
-  .figma-stage > div > div:first-child > div:first-child {
-    padding-top: 0;
-  }
-
-  .hero-viewport {
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-  }
-
-  .figma-stage [style*="height: 1080px"] {
-    height: auto !important;
-    min-height: 120vh !important;
-  }
-
-  .figma-stage [style*="font-size: 64px"] {
-    font-size: 34px !important;
-  }
-
-  .figma-stage [style*="font-size: 36px"] {
-    font-size: 28px !important;
-    line-height: 1.15 !important;
-  }
-
-  .figma-stage [style*="font-size: 24px"] {
-    font-size: 20px !important;
-    line-height: 1.2 !important;
-  }
-
-  .figma-stage [style*="font-size: 20px"] {
-    font-size: 16px !important;
-    line-height: 1.35 !important;
-  }
-
-  .team-title-fix {
-    white-space: normal;
-    max-width: 12ch;
-    margin-inline: auto;
-  }
-
-  .hero-cta-btn {
-    height: 56px;
-    padding: 0 22px;
-    gap: 10px !important;
-  }
-
-  .hero-cta-label {
-    font-size: 16px !important;
-    line-height: 1 !important;
-  }
-
-  .hero-cta-desktop-text {
-    display: none;
-  }
-
-  .hero-cta-mobile-text {
-    display: inline;
-  }
-
-  .ab-flow-card {
-    padding: 28px 16px 18px;
-  }
-
-  .ab-rule-box {
-    font-size: 16px;
-  }
-
-  .ab-scroll-indicator {
-    display: block;
-  }
-
-  .ab-flow-note {
-    text-align: left;
-    padding-inline: 0;
-  }
-
-  .stats-grid-mobile {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 40px !important;
-  }
-
-  .stats-card-mobile {
-    max-width: 100% !important;
-    min-width: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-    justify-content: flex-start !important;
-    gap: 40px !important;
-  }
-
-  .stats-card-mobile [style*="width: 400px"] {
-    width: 100% !important;
-  }
-
-  .stats-card-mobile > div:nth-of-type(2) {
-    gap: 20px !important;
-  }
-
-  .stats-card-mobile [style*="font-size: 40px"] {
-    font-size: 40px !important;
-    line-height: 40px !important;
-    display: block !important;
-  }
-
-  .stats-card-mobile [style*="font-size: 24px"] {
-    font-size: 24px !important;
-    line-height: 30px !important;
-    display: block !important;
-  }
-
-  .plan-card {
-    padding: 24px 20px;
-    gap: 20px;
-  }
-
-  .plan-card-body {
-    gap: 20px;
-  }
-
-  .plan-content {
-    min-width: 0;
-  }
-
-  .plan-card .plan-card-body {
-    flex-basis: 100%;
-  }
-
-  .plan-card .plan-price {
-    order: 2;
-  }
-
-  .plan-card .plan-toggle {
-    order: 3;
-    margin-left: auto;
-  }
-
-  .footer-content-wrap {
-    padding: 56px 32px !important;
-    gap: 56px !important;
-  }
-
-  .footer-grid-wrap {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    gap: 56px !important;
-  }
-
-  .footer-links-grid {
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-    gap: 40px !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-
-  .footer-links-column {
-    width: 100% !important;
-    min-width: 100% !important;
-    flex: 1 1 100% !important;
-  }
-
-  .footer-brand-block {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    gap: 24px !important;
-  }
-  }
   </style>
 </head>
+
 <body>
   <video id="hero-bg-video" class="hero-video-bg" loop muted playsinline preload="none"></video>
   <main class="figma-page poppins-alt">
-<div id="figma-stage" class="figma-stage">
-<div style="width: 1920px; height: 5308px; position: relative; background: transparent; overflow: hidden">
-  <div style="width: 1920px; left: 0px; top: 0px; position: absolute; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
-    <div style="align-self: stretch; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-      <div class="hero-viewport" style="align-self: stretch; height: 1080px; padding-left: 40px; padding-right: 40px; overflow: hidden; flex-direction: column; justify-content: center; align-items: center; gap: 10px; display: flex">
-        <div style="width: 100%; padding-top: 40px; max-width: 1080px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
-          <div class="hero-reveal delay-1" style="justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
-            <div style="flex-direction: column; justify-content: flex-start; align-items: center; gap: 10.50px; display: inline-flex; padding-top: 80px">
-              <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync" src="./assets/logo.svg" alt="Faust Logo" style="width: 42px; height: 32px; object-fit: contain; display: block" />
-              <div class="no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic"><span style="color: white; font-size: 20px; font-family: Instrument Sans; font-weight: 400; line-height: 28px; word-wrap: break-word"> Faust Partners™</span></div>
-            </div>
-          </div>
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: flex">
-            <div class="hero-title hero-reveal delay-2 no-select poppins-alt" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 48px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 48px; word-wrap: break-word">Nuestros partners añadieron $150k a su MRR este trimestre.</div>
-            <div class="hero-reveal delay-3 no-select poppins-alt" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 28px; word-wrap: break-word">Te otorgamos ingeniería de crecimiento basada en datos. Sin cuotas fijas.</div>
-          </div>
-          <div class="hero-cta-wrap hero-reveal delay-4" style="gap: 20px;">
-            <div class="hero-cta-shell" data-propiedad-1="Predeterminado" style="width: 378px; height: 64px; position: relative">
-              <a
-                href="https://wa.me/524428767130?text=Hola%2C%20quiero%20ser%20socio%20de%20faust.mx"
-                class="hero-cta-btn magnetic-cta hero-cta-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                role="button"
-                aria-label="Abrir chat de WhatsApp para aplicar a inversión hasta $125k"
-                style="height: 64px; padding-left: 60px; padding-right: 60px; padding-top: 26px; padding-bottom: 26px; left: -39.50px; top: 0px; position: absolute; background: #0030ff; overflow: hidden; border-radius: 40px; justify-content: center; align-items: flex-end; gap: 10px; display: inline-flex"
-              >
-                <div class="hero-cta-label" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: #ffffff; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 28px; word-wrap: break-word">
-                  <span class="hero-cta-desktop-text">Aplica por hasta $125k de inversión</span>
-                  <span class="hero-cta-mobile-text">Aplicar a la lista de espera</span>
+    <div id="figma-stage" class="figma-stage">
+      <div style="width: 1920px; height: 5308px; position: relative; background: transparent; overflow: hidden">
+        <div
+          style="width: 1920px; left: 0px; top: 0px; position: absolute; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
+          <div
+            style="align-self: stretch; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
+            <div class="hero-viewport"
+              style="align-self: stretch; height: 1080px; padding-left: 40px; padding-right: 40px; overflow: hidden; flex-direction: column; justify-content: center; align-items: center; gap: 10px; display: flex">
+              <div
+                style="width: 100%; padding-top: 40px; max-width: 1080px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
+                <div class="hero-reveal delay-1"
+                  style="justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
+                  <div
+                    style="flex-direction: column; justify-content: flex-start; align-items: center; gap: 10.50px; display: inline-flex; padding-top: 80px">
+                    <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high"
+                      decoding="sync" src="./assets/logo.svg" alt="Faust Logo"
+                      style="width: 42px; height: 32px; object-fit: contain; display: block" />
+                    <div class="no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic"><span
+                        style="color: white; font-size: 20px; font-family: Instrument Sans; font-weight: 400; line-height: 28px; word-wrap: break-word">
+                        Faust Partners™</span></div>
+                  </div>
                 </div>
-                <span class="icon-open" aria-hidden="true"></span>
-              </a>
-            </div>
-          </div>
-          <div class="hero-reveal delay-4" style="align-self: stretch; padding-top: 40px; padding-bottom: 80px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
-            <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">APOYADO POR</div>
-            <div class="partners-wrap" style="align-self: stretch; justify-content: center; align-items: center; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
-              <img class="partner-logo" src="./assets/fincluyente.svg" alt="Fincluyente" loading="eager"/>
-              <img class="partner-logo" src="./assets/line.svg" alt="Fincluyente" loading="eager"/>
-              <img class="partner-logo" src="./assets/herdez.svg" alt="Herdez" loading="eager"/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
-      <div style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
-        <div style="width: 100%; max-width: 1360px; border-radius: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
-            <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
-              <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">Implementación</div>
-              <div style="width: 100%; max-width: 640px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 36px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 36px; word-wrap: break-word">Optimizamos tu plataforma con un              sistema iterativo libre de riesgos.</div>
-              <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Redirigimos tu tráfico gradualmente entre tu sitio web actual y la interfaz experimental.               Si nuestra interfaz experimental genera conversiones consistentemente mayores  durante un periodo de tiempo, aumenta el alcance automáticamente.</div>
-            </div>
-            <div class="ab-flow-card">
-              <div class="ab-flow-main">
-              <div class="ab-flow-canvas">
-              <div class="ab-flow-grid">
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                <div
+                  style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: flex">
+                  <div class="hero-title hero-reveal delay-2 no-select poppins-alt"
+                    style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 48px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 48px; word-wrap: break-word">
+                    Nuestros partners añadieron $150k a su MRR este trimestre.</div>
+                  <div class="hero-reveal delay-3 no-select poppins-alt"
+                    style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 28px; word-wrap: break-word">
+                    Te otorgamos ingeniería de crecimiento basada en datos. Sin cuotas fijas.</div>
+                </div>
+                <div class="hero-cta-wrap hero-reveal delay-4" style="gap: 20px;">
+                  <div class="hero-cta-shell" data-propiedad-1="Predeterminado"
+                    style="width: 378px; height: 64px; position: relative">
+                    <a href="https://wa.me/524428767130?text=Hola%2C%20quiero%20ser%20socio%20de%20faust.mx"
+                      class="hero-cta-btn magnetic-cta hero-cta-link" target="_blank" rel="noopener noreferrer"
+                      role="button" aria-label="Abrir chat de WhatsApp para aplicar a inversión hasta $125k"
+                      style="height: 64px; padding-left: 60px; padding-right: 60px; padding-top: 26px; padding-bottom: 26px; left: -39.50px; top: 0px; position: absolute; background: #0030ff; overflow: hidden; border-radius: 40px; justify-content: center; align-items: flex-end; gap: 10px; display: inline-flex">
+                      <div class="hero-cta-label"
+                        style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: #ffffff; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 28px; word-wrap: break-word">
+                        <span class="hero-cta-desktop-text">Aplica por hasta $125k de inversión</span>
+                        <span class="hero-cta-mobile-text">Aplicar a la lista de espera</span>
+                      </div>
+                      <span class="icon-open" aria-hidden="true"></span>
+                    </a>
+                  </div>
+                </div>
+                <div class="hero-reveal delay-4"
+                  style="align-self: stretch; padding-top: 40px; padding-bottom: 80px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
+                  <div
+                    style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 400; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">
+                    APOYADO POR</div>
+                  <div class="partners-wrap"
+                    style="align-self: stretch; justify-content: center; align-items: center; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
+                    <img class="partner-logo" src="./assets/finsus.svg" alt="Finsus" loading="eager" />
+                    <img class="partner-logo" src="./assets/herdez.svg" alt="Herdez" loading="eager" />
+                    <img class="partner-logo" src="./assets/mc.svg" alt="McCormick" loading="eager" />
+                  </div>
+                </div>
               </div>
-                <div class="ab-flow-row">
-                  <div style="justify-content: flex-start; align-items: flex-start; display: flex">
-                    <div class="ab-node-col ab-traffic-col">
-                      <div class="ab-node-circle">
-                        <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/Usersnew.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Tráfico" />
-                      </div>
-                      <div class="ab-node-label">Tráfico</div>
-                    </div>
-                    <div class="ab-split-wrap">
-                      <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/SVG1new.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                      <div class="ab-badge top">90%</div>
-                      <div class="ab-badge bottom">10%</div>
-                    </div>
+            </div>
+          </div>
+          <div
+            style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
+            <div
+              style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
+              <div
+                style="width: 100%; max-width: 1360px; border-radius: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
+                <div
+                  style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
+                  <div
+                    style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: flex">
+                    <div
+                      style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">
+                      Implementación</div>
+                    <div
+                      style="width: 100%; max-width: 640px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 36px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 36px; word-wrap: break-word">
+                      Optimizamos tu plataforma con un sistema iterativo libre de riesgos.</div>
+                    <div
+                      style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 22.40px; word-wrap: break-word">
+                      Redirigimos tu tráfico gradualmente entre tu sitio web actual y la interfaz experimental. Si
+                      nuestra interfaz experimental genera conversiones consistentemente mayores durante un periodo de
+                      tiempo, aumenta el alcance automáticamente.</div>
                   </div>
-                  <div class="ab-variants">
-                    <div class="ab-variant">
-                      <div class="ab-variant-box">
-                        <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/Cubenew.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                        <span>A</span>
-                      </div>
-                      <div class="ab-variant-label">Anterior</div>
-                    </div>
-                    <div class="ab-variant">
-                      <div class="ab-variant-box experimental">
-                        <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/Cubenew.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                        <span>B</span>
-                      </div>
-                      <div class="ab-variant-label">Experimental</div>
-                    </div>
-                  </div>
-                  <div style="justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <img class="ab-join-svg" decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/SVG2new.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
-                    <div style="justify-content: flex-start; align-items: center; display: inline-flex">
-                      <div class="ab-node-col ab-metrics-col">
-                        <div class="ab-node-circle light">
-                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/Databasenew.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Métricas" />
+                  <div class="ab-flow-card">
+                    <div class="ab-flow-main">
+                      <div class="ab-flow-canvas">
+                        <div class="ab-flow-grid">
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/bg_line.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
                         </div>
-                        <div class="ab-node-label">Métricas<br />almacenadas</div>
+                        <div class="ab-flow-row">
+                          <div style="justify-content: flex-start; align-items: flex-start; display: flex">
+                            <div class="ab-node-col ab-traffic-col">
+                              <div class="ab-node-circle">
+                                <img decoding="async" fetchpriority="low"
+                                  data-svg-src="./assets/AB Test Flow/Usersnew.svg"
+                                  src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Tráfico" />
+                              </div>
+                              <div class="ab-node-label">Tráfico</div>
+                            </div>
+                            <div class="ab-split-wrap">
+                              <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/SVG1new.svg"
+                                src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                              <div class="ab-badge top">90%</div>
+                              <div class="ab-badge bottom">10%</div>
+                            </div>
+                          </div>
+                          <div class="ab-variants">
+                            <div class="ab-variant">
+                              <div class="ab-variant-box">
+                                <img decoding="async" fetchpriority="low"
+                                  data-svg-src="./assets/AB Test Flow/Cubenew.svg"
+                                  src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                                <span>A</span>
+                              </div>
+                              <div class="ab-variant-label">Anterior</div>
+                            </div>
+                            <div class="ab-variant">
+                              <div class="ab-variant-box experimental">
+                                <img decoding="async" fetchpriority="low"
+                                  data-svg-src="./assets/AB Test Flow/Cubenew.svg"
+                                  src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                                <span>B</span>
+                              </div>
+                              <div class="ab-variant-label">Experimental</div>
+                            </div>
+                          </div>
+                          <div style="justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                            <img class="ab-join-svg" decoding="async" fetchpriority="low"
+                              data-svg-src="./assets/AB Test Flow/SVG2new.svg"
+                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                            <div style="justify-content: flex-start; align-items: center; display: inline-flex">
+                              <div class="ab-node-col ab-metrics-col">
+                                <div class="ab-node-circle light">
+                                  <img decoding="async" fetchpriority="low"
+                                    data-svg-src="./assets/AB Test Flow/Databasenew.svg"
+                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Métricas" />
+                                </div>
+                                <div class="ab-node-label">Métricas<br />almacenadas</div>
+                              </div>
+                              <img class="ab-arrow-svg" decoding="async" fetchpriority="low"
+                                data-svg-src="./assets/AB Test Flow/SVG3new.svg"
+                                src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
+                            </div>
+                            <div class="ab-rule-col">
+                              <div class="ab-rule-box">
+                                <span>Si B convierte mejor que A</span>
+                                <span class="muted"> durante 30 días, </span>
+                                <span>+10% de tráfico</span>
+                                <span class="muted"> visualiza B</span>
+                              </div>
+                              <div class="ab-rule-caption">Usamos las métricas para ajustar %</div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <img class="ab-arrow-svg" decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/SVG3new.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" />
                     </div>
-                    <div class="ab-rule-col">
-                      <div class="ab-rule-box">
-                        <span>Si B convierte mejor que A</span>
-                        <span class="muted"> durante 30 días, </span>
-                        <span>+10% de tráfico</span>
-                        <span class="muted"> visualiza B</span>
+                    <div class="ab-scroll-indicator" aria-hidden="true">
+                      <div class="ab-scroll-thumb"></div>
+                    </div>
+                    <div class="ab-flow-note">Las métricas capturadas determinan el nivel de éxito en la iteración,
+                      activando el escalamiento gradual del tráfico.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex"
+              id="metricas-faust">
+              <div
+                style="width: 100%; max-width: 1360px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 80px; display: flex">
+                <div id="stats-section" class="stats-grid-mobile"
+                  style="width: 100%; max-width: 1360px; justify-content: flex-start; align-items: flex-start; gap: 80px; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
+                  <div class="stats-card-mobile"
+                    style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
+                    <div
+                      style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">
+                      EMPRESAS</div>
+                    <div
+                      style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 45px; word-wrap: break-word"
+                        class="metric" data-target="2" data-format="int">0</div>
+                      <div
+                        style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">
+                        Empresas en México y USA</div>
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">
+                        asociadas con nosotros para el desarrollo de productos basados en la cognición humana.</div>
+                    </div>
+                    <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
+                  </div>
+                  <div class="stats-card-mobile"
+                    style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
+                    <div
+                      style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">
+                      ALCANCE</div>
+                    <div
+                      style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 40px; word-wrap: break-word"
+                        class="metric" data-target="710000" data-format="short">$0</div>
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">
+                        Generados este año</div>
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">
+                        Proveemos resultados cuantificables a nuestras empresas asociadas.</div>
+                    </div>
+                    <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
+                  </div>
+                  <div class="stats-card-mobile"
+                    style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
+                    <div
+                      style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">
+                      RESULTADOS</div>
+                    <div
+                      style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 40px; word-wrap: break-word"
+                        class="metric" data-target="19.8" data-format="percent">+0%</div>
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">
+                        Conversiones de click</div>
+                      <div
+                        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">
+                        Mediante optimización de experiencias basada en comportamiento humano.</div>
+                    </div>
+                    <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
+              <div
+                style="width: 100%; max-width: 800px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
+                <div
+                  style="align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 40px; display: flex">
+                  <div
+                    style="width: auto; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Poppins; font-weight: 400; line-height: 40px; word-wrap: break-word">
+                    Comienza aquí</div>
+                  <div class="plan-builder">
+                    <div class="plan-stack plan-sortable">
+                      <div class="plan-card plan-income">
+                        <div
+                          style="flex: 1 1 0; min-width: 240px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 10px; display: inline-flex">
+                          <div class="plan-title">Ingreso neto mensual de su empresa (aprox.)</div>
+                          <div class="plan-subtitle">Min. MX 900k </div>
+                        </div>
+                        <label class="plan-income-input-wrap" for="monthly-income">
+                          <span class="plan-income-prefix">MXN</span>
+                          <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric"
+                            autocomplete="off" placeholder="1,000,000" />
+                        </label>
                       </div>
-                      <div class="ab-rule-caption">Usamos las métricas para ajustar %</div>
+                      <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true"
+                        data-price="0">
+                        <div class="plan-card-body">
+                          <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
+                              data-svg-src="./assets/AB Test Flow/check.svg"
+                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
+                          <div class="plan-content">
+                            <div class="plan-title">Prototipado y desarrollo web</div>
+                            <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y
+                              desarrollo/actualización de la plataforma web</div>
+                          </div>
+                        </div>
+                        <div class="plan-price">Sin costo</div>
+                        <button class="plan-toggle" type="button" aria-label="Excluir servicio">
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
+                        </button>
+                      </div>
+                      <div class="plan-card is-selected plan-service" data-plan-id="marketing" data-selected="true"
+                        data-price="0">
+                        <div class="plan-card-body">
+                          <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
+                              data-svg-src="./assets/AB Test Flow/check.svg"
+                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
+                          <div class="plan-content">
+                            <div class="plan-title">Gestión de marketing</div>
+                            <div class="plan-subtitle plan-description">Gestión de estrategias de marketing digital
+                              basadas en profunda comprensión del comportamiento humano.</div>
+                          </div>
+                        </div>
+                        <div class="plan-price">Sin costo</div>
+                        <button class="plan-toggle" type="button" aria-label="Excluir servicio">
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
+                        </button>
+                      </div>
+                    </div>
+                    <div class="plan-recommend plan-sortable">
+                      <div class="plan-recommend-title">Disponible para incluir</div>
+                      <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false"
+                        data-price="265000">
+                        <div class="plan-card-body">
+                          <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
+                              data-svg-src="./assets/AB Test Flow/dash.svg"
+                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
+                          <div class="plan-content">
+                            <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
+                            <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y
+                              mejoras iterativas de la plataforma web.</div>
+                          </div>
+                        </div>
+                        <div class="plan-price">MXN 265,000</div>
+                        <button class="plan-toggle" type="button" aria-label="Añadir servicio">
+                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/plus.svg"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
+                        </button>
+                      </div>
+                    </div>
+                    <div id="whatsapp-plan-cta" class="magnetic-cta hero-cta-btn"
+                      style="align-self: center; width: auto; height: 64px; padding-left: 48px; padding-right: 48px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
+                      <div id="plan-cta-text"
+                        style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                        Obtener plan por $0
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              </div>
-              <div class="ab-scroll-indicator" aria-hidden="true">
-                <div class="ab-scroll-thumb"></div>
-              </div>
-              <div class="ab-flow-note">Las métricas capturadas determinan el nivel de éxito en la iteración, activando el escalamiento gradual del tráfico.</div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex" id="metricas-faust">
-        <div style="width: 100%; max-width: 1360px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 80px; display: flex">
-          <div id="stats-section" class="stats-grid-mobile" style="width: 100%; max-width: 1360px; justify-content: flex-start; align-items: flex-start; gap: 80px; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
-  <div class="stats-card-mobile" style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
-    <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">EMPRESAS</div>
-    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-      <div
-        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 45px; word-wrap: break-word"
-        class="metric"
-        data-target="2"
-        data-format="int"
-      >0</div>
-      <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">Empresas en México y USA</div>
-      <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">asociadas con nosotros para el desarrollo de productos basados en la cognición humana.</div>
-    </div>
-    <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
-  </div>
-  <div class="stats-card-mobile" style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
-    <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">ALCANCE</div>
-    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-      <div
-        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 40px; word-wrap: break-word"
-        class="metric"
-        data-target="710000"
-        data-format="short"
-      >$0</div>
-      <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">Generados este año</div>
-      <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">Proveemos resultados cuantificables a nuestras empresas asociadas.</div>
-    </div>
-    <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
-  </div>
-  <div class="stats-card-mobile" style="flex: 1 1 0; height: 240px; max-width: 480px; min-width: 360px; flex-direction: column; justify-content: space-between; align-items: flex-start; display: inline-flex">
-    <div style="width: 400px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">RESULTADOS</div>
-    <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-      <div
-        style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px !important; font-family: 'Aeternum'; font-weight: 500; line-height: 40px; word-wrap: break-word"
-        class="metric"
-        data-target="19.8"
-        data-format="percent"
-      >+0%</div>
-      <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 24px; font-family: Instrument Sans; font-weight: 500; line-height: 30px; word-wrap: break-word">Conversiones de click</div>
-      <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.60); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">Mediante optimización de experiencias basada en comportamiento humano.</div>
-              </div>
-              <div style="align-self: stretch; height: 0px; outline: 1px rgba(255, 255, 255, 0.1) solid; outline-offset: -0.50px"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="align-self: stretch; padding-left: 40px; padding-right: 40px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 160px; display: flex">
-        <div style="width: 100%; max-width: 800px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
-          <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: center; gap: 40px; display: flex">
-            <div style="width: auto; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Poppins; font-weight: 400; line-height: 40px; word-wrap: break-word">Comienza aquí</div>
-            <div class="plan-builder">
-              <div class="plan-stack plan-sortable">
-                <div class="plan-card plan-income">
-                  <div style="flex: 1 1 0; min-width: 240px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 10px; display: inline-flex">
-                    <div class="plan-title">Ingreso neto mensual de su empresa (aprox.)</div>
-                    <div class="plan-subtitle">Min. MX 900k </div>
-                  </div>
-                  <label class="plan-income-input-wrap" for="monthly-income">
-                    <span class="plan-income-prefix">MXN</span>
-                    <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric" autocomplete="off" value="Escribe aquí..." />
-                  </label>
-                </div>
-                <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true" data-price="0">
-                  <div class="plan-card-body">
-                    <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/check.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
-                    <div class="plan-content">
-                      <div class="plan-title">Prototipado y desarrollo web</div>
-                      <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y desarrollo/actualización de la plataforma web</div>
-                    </div>
-                  </div>
-                  <div class="plan-price">Sin costo</div>
-                  <button class="plan-toggle" type="button" aria-label="Excluir servicio">
-                    <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
-                  </button>
-                </div>
-                <div class="plan-card is-selected plan-service" data-plan-id="marketing" data-selected="true" data-price="0">
-                  <div class="plan-card-body">
-                    <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/check.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
-                    <div class="plan-content">
-                      <div class="plan-title">Gestión de marketing</div>
-                      <div class="plan-subtitle plan-description">Gestión de estrategias de marketing digital basadas en profunda comprensión del comportamiento humano.</div>
-                    </div>
-                  </div>
-                  <div class="plan-price">Sin costo</div>
-                  <button class="plan-toggle" type="button" aria-label="Excluir servicio">
-                    <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
-                  </button>
-                </div>
-              </div>
-              <div class="plan-recommend plan-sortable">
-                <div class="plan-recommend-title">Disponible para incluir</div>
-                <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false" data-price="265000">
-                  <div class="plan-card-body">
-                    <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/dash.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
-                    <div class="plan-content">
-                      <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
-                      <div class="plan-subtitle plan-description">Retén el 90% de ingresos incrementales de forma permanente, con un equipo de optimización dedicado exclusivamente a tu plataforma.</div>
-                    </div>
-                  </div>
-                  <div class="plan-price">Pago único de $265,000</div>
-                  <button class="plan-toggle" type="button" aria-label="Añadir servicio">
-                    <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/plus.svg" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
-                  </button>
-                </div>
-              </div>
-              <div id="whatsapp-plan-cta"
-              class="magnetic-cta hero-cta-btn"
-              style="align-self: center; width: auto; height: 64px; padding-left: 48px; padding-right: 48px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
-              <div id="plan-cta-text"
-                  style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
-                Obtener plan por $0
-              </div>
-             </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -0.50px"></div>
-      <div style="align-self: stretch; padding-left: 80px; padding-right: 80px; justify-content: center; align-items: center; gap: 160px; display: inline-flex">
+            <img src="./assets/divider.svg" style="width: 1360px; height: 1px; object-fit: cover;" alt="divider" />
+            <div style="align-self: stretch; width: 100%; padding-left: 80px; padding-right: 80px; justify-content: center; align-items: center; gap: 160px; display: inline-flex">
         <div style="flex: 1 1 0; max-width: 640px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: inline-flex">
-          <div style="justify-content: flex-start; align-items: center; display: inline-flex">
-            <img style="width: 100px; height: 100px; position: relative; border-radius: 100px; z-index: 1; object-fit: cover" src="./assets/photo1.png" alt="Team avatar 1" />
-            <img style="width: 100px; height: 100px; position: relative; border-radius: 100px; margin-left: -20px; z-index: 2; object-fit: cover" src="./assets/photo2.png" alt="Team avatar 2" />
-            <img style="width: 100px; height: 100px; position: relative; border-radius: 100px; margin-left: -20px; z-index: 3; object-fit: cover" src="./assets/photo3.png" alt="Team avatar 3" />
-          </div>
-          <div class="team-title-fix no-select" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: Poppins; font-feature-settings: 'ss01' 1; font-weight: 400; line-height: 64px; word-wrap: break-word">Conoce Faust Team</div>
-          <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Nuestro equipo se encargará de desarrollar las estrategias digitales que tu empresa necesita para expandirse a nuevos horizontes.</div>
-          <div class="subtle-gray-btn team-blue-hover magnetic-cta" style="height: 64px; padding-left: 48px; padding-right: 48px; padding-top: 24px; padding-bottom: 24px; background: #1A1A1A; overflow: hidden; border-radius: 35px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-            <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 24px; word-wrap: break-word">Faust Team</div>
+          
+          <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; text-transform: uppercase; line-height: 16.80px; word-wrap: break-word">EXPERT NETWORK</div>
+          
+          <!-- Recuerda cambiar este enlace por la imagen final -->
+          <img style="width: 260px; height: 100px; object-fit: cover;" src="./assets/experts.png" alt="Expert Network" />
+          
+          <div class="team-title-fix no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 64px; font-family: Poppins; font-weight: 400; line-height: 64px; word-wrap: break-word">Conoce nuestra red<br/>de expertos</div>
+          
+          <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.80); font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 22.40px; word-wrap: break-word">Orquestamos equipos completos que se encargarán de desarrollar las estrategias digitales que tu empresa necesita para expandirse a nuevos horizontes.</div>
+          
+          <div class="subtle-gray-btn team-blue-hover magnetic-cta" style="height: 64px; padding-left: 48px; padding-right: 48px; padding-top: 24px; padding-bottom: 24px; background: #1A1A1A; overflow: hidden; border-radius: 35px; justify-content: center; align-items: center; gap: 10px; display: inline-flex; cursor: pointer;">
+            <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 24px; word-wrap: break-word">Ir a la red de Expertos</div>
             <span class="icon-open" aria-hidden="true" style="color: white;"></span>
           </div>
+          
         </div>
       </div>
-      <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -0.50px"></div>
-      <div style="width: 100%; max-width: 1440px; padding-left: 80px; padding-right: 80px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
-        <div style="flex: 1 1 0; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: justify; justify-content: flex-end; display: flex; flex-direction: column">
-          <span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">Faust Partners conserva la titularidad exclusiva de la propiedad intelectual, archivos fuente y sistemas de diseño (Design Systems) creados. Se otorga al Cliente una Licencia de Uso No Exclusiva, cuya vigencia está estrictamente condicionada al cumplimiento del esquema de Revenue Share acordado. El cese de los pagos del Revenue Share revocará automáticamente el derecho de explotación y uso de las interfaces por parte del Cliente.<br/></span>
-          <span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word"><br/></span>
-          <span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">El derecho de Faust Partners a percibir el porcentaje de ingresos por la explotación comercial de sus interfaces es independiente de la prestación de servicios de mantenimiento o nuevas iteraciones. En caso de que Faust Partners cese su participación activa en el desarrollo (UX/UI o Marketing) después de al menos 6 meses de operación, la tasa de Revenue Share se ajustará, otorgando al Cliente el 90% del margen de ingreso incremental, mientras que el 10% restante se mantendrá como regalía por el uso continuo de la propiedad intelectual.<br/></span>
-          <span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word"><br/></span>
-          <span style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">La propiedad patrimonial de los productos podrá ser transferida al Cliente únicamente mediante un acuerdo de compra (Buy-out) explícito y posterior negociación comercial. Hasta que dicha transferencia se formalice por escrito y se liquide el pago correspondiente, el Cliente operará bajo el modelo de licencia aquí descrito. Faust Partners se reserva el derecho de modificar estos términos en cualquier momento, sin previo aviso.</span>
-        </div>
-      </div>
-      <div style="align-self: stretch; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-        <div style="width: 100%; max-width: 1440px; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-          <div class="footer-content-wrap" style="align-self: stretch; padding: 80px; overflow: hidden; flex-direction: column; justify-content: center; align-items: flex-start; gap: 80px; display: flex">
-            <div class="footer-grid-wrap" style="align-self: stretch; padding-left: 20px; padding-right: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
-              <div class="footer-links-grid" style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
-                <div class="footer-links-column" style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
-                  <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">SERVICES</div>
-                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Growth Partnering</div>
-                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Invest Partnering</div>
-                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Consulting</div>
-                </div>
-                <div class="footer-links-column" style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
-                  <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">LET’S WORK TOGETHER</div>
-                  <a class="no-select footer-link" href="mailto:admin@faust.mx" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word; text-decoration: none">Contact</a>
-                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">Support</div>
-                </div>
-                <div class="footer-links-column" style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
-                  <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">FOR DESIGNERS</div>
-                  <div class="no-select footer-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">I Want to Join the Team</div>
-                </div>
+            <img src="./assets/divider.svg" style="width: 1360px; height: 1px; object-fit: cover;" alt="divider" />
+            <div
+              style="width: 100%; max-width: 1440px; padding-left: 80px; padding-right: 80px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+              <div
+                style="flex: 1 1 0; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: justify; justify-content: flex-end; display: flex; flex-direction: column">
+                <span
+                  style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">Faust
+                  Partners conserva la titularidad exclusiva de la propiedad intelectual, archivos fuente y sistemas de
+                  diseño (Design Systems) creados. Se otorga al Cliente una Licencia de Uso No Exclusiva, cuya vigencia
+                  está estrictamente condicionada al cumplimiento del esquema de Revenue Share acordado. El cese de los
+                  pagos del Revenue Share revocará automáticamente el derecho de explotación y uso de las interfaces por
+                  parte del Cliente.<br /></span>
+                <span
+                  style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word"><br /></span>
+                <span
+                  style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">El
+                  derecho de Faust Partners a percibir el porcentaje de ingresos por la explotación comercial de sus
+                  interfaces es independiente de la prestación de servicios de mantenimiento o nuevas iteraciones. En
+                  caso de que Faust Partners cese su participación activa en el desarrollo (UX/UI o Marketing) después
+                  de al menos 6 meses de operación, la tasa de Revenue Share se ajustará, otorgando al Cliente el 90%
+                  del margen de ingreso incremental, mientras que el 10% restante se mantendrá como regalía por el uso
+                  continuo de la propiedad intelectual.<br /></span>
+                <span
+                  style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word"><br /></span>
+                <span
+                  style="color: rgba(211, 215, 214, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 16.80px; word-wrap: break-word">La
+                  propiedad patrimonial de los productos podrá ser transferida al Cliente únicamente mediante un acuerdo
+                  de compra (Buy-out) explícito y posterior negociación comercial. Hasta que dicha transferencia se
+                  formalice por escrito y se liquide el pago correspondiente, el Cliente operará bajo el modelo de
+                  licencia aquí descrito. Faust Partners se reserva el derecho de modificar estos términos en cualquier
+                  momento, sin previo aviso.</span>
               </div>
-              <div style="width: 1360px; height: 0px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -0.50px"></div>
-              <div class="footer-brand-block" style="align-self: stretch; padding-left: 80px; padding-right: 80px; border-radius: 10px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: center; gap: 12px; display: flex">
-                  <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync" src="./assets/logo.svg" alt="Faust Logo" style="width: 33.20px; height: 25.30px; object-fit: contain; display: block" />
-                  <div class="no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic"><span style="color: white; font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 28px; word-wrap: break-word">Faust Partners™</span></div>
-                </div>
-                <div style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 0px; display: flex">
-                  <div style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">Faust Partners™ | © 2026</div>
-                  <div class="footer-meta-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">Let's grow together.</div>
-                  <div class="footer-meta-link" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">https://faust.mx</div>
+            </div>
+            <div
+              style="align-self: stretch; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
+              <div
+                style="width: 100%; max-width: 1440px; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
+                <div class="footer-content-wrap"
+                  style="align-self: stretch; padding: 80px; overflow: hidden; flex-direction: column; justify-content: center; align-items: flex-start; gap: 80px; display: flex">
+                  <div class="footer-grid-wrap"
+                    style="align-self: stretch; padding-left: 20px; padding-right: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 80px; display: flex">
+                    <div class="footer-links-grid"
+                      style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
+                      <div class="footer-links-column"
+                        style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
+                        <div
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">
+                          SERVICES</div>
+                        <div class="no-select footer-link"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">
+                          Growth Partnering</div>
+                        <div class="no-select footer-link"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">
+                          Invest Partnering</div>
+                        <div class="no-select footer-link"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">
+                          Consulting</div>
+                      </div>
+                      <div class="footer-links-column"
+                        style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
+                        <div
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">
+                          LET’S WORK TOGETHER</div>
+                        <a class="no-select footer-link" href="mailto:admin@faust.mx"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word; text-decoration: none">Contact</a>
+                        <div class="no-select footer-link"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">
+                          Support</div>
+                      </div>
+                      <div class="footer-links-column"
+                        style="flex: 1 1 0; min-width: 320px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 30px; display: inline-flex">
+                        <div
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 20px; word-wrap: break-word">
+                          FOR DESIGNERS</div>
+                        <div class="no-select footer-link"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: flex-end; display: flex; flex-direction: column; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 25px; word-wrap: break-word">
+                          I Want to Join the Team</div>
+                      </div>
+                    </div>
+                    <img src="./assets/divider.svg" style="width: 1360px; height: 1px; object-fit: cover;" alt="divider" />
+                    <div class="footer-brand-block"
+                      style="align-self: stretch; padding-left: 80px; padding-right: 80px; border-radius: 10px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 40px; display: flex">
+                      <div
+                        style="flex-direction: column; justify-content: flex-start; align-items: center; gap: 12px; display: flex">
+                        <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high"
+                          decoding="sync" src="./assets/logo.svg" alt="Faust Logo"
+                          style="width: 33.20px; height: 25.30px; object-fit: contain; display: block" />
+                        <div class="no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic"><span
+                            style="color: white; font-size: 14px; font-family: Instrument Sans; font-weight: 400; line-height: 28px; word-wrap: break-word">Faust
+                            Partners™</span></div>
+                      </div>
+                      <div
+                        style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 0px; display: flex">
+                        <div
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">
+                          Faust Partners™ | © 2026</div>
+                        <div class="footer-meta-link"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">
+                          Let's grow together.</div>
+                        <div class="footer-meta-link"
+                          style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">
+                          https://faust.mx</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div id="desktop-navbar"
+            style="width: 1240px; height: 80px; left: 340px; top: 20px; position: absolute; background: rgba(255, 255, 255, 0.04); border-radius: 10px; outline: 1px rgba(255, 255, 255, 0.02) solid; outline-offset: -1px; backdrop-filter: blur(60px)">
+            <div
+              style="width: 33.20px; padding-left: 20px; padding-right: 20px; left: 10px; top: 27.65px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
+              <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync"
+                src="./assets/logo.svg" alt="Faust Logo"
+                style="width: 32px; height: 24px; object-fit: contain; display: block" />
+            </div>
+            <div
+              style="height: 60px; padding-left: 40px; padding-right: 40px; padding-top: 10px; padding-bottom: 10px; left: 357px; top: 10px; position: absolute; overflow: hidden; border-radius: 55px; justify-content: center; align-items: center; gap: 48px; display: inline-flex">
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Software</div>
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Estrategia</div>
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Sobre Nosotros</div>
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Contacto</div>
+            </div>
+            <a class="subtle-gray-btn navbar-talk-btn" href="mailto:admin@faust.mx" data-propiedad-1="Predeterminado"
+              style="height: 60px; padding-left: 48px; padding-right: 48px; padding-top: 10px; padding-bottom: 10px; right: 10px; top: 10px; position: absolute; background: rgba(77.73, 77.73, 77.73, 0.10); overflow: hidden; border-radius: 8px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 10px; display: inline-flex; text-decoration: none">
+              <div
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 16px; word-wrap: break-word">
+                Aplicar</div>
+              <span class="icon-open" aria-hidden="true" style="color: white;"></span>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <div style="width: 1240px; height: 80px; left: 340px; top: 20px; position: absolute; background: rgba(255, 255, 255, 0.04); border-radius: 10px; outline: 1px rgba(255, 255, 255, 0.02) solid; outline-offset: -1px; backdrop-filter: blur(60px)">
-      <div style="width: 33.20px; padding-left: 20px; padding-right: 20px; left: 10px; top: 27.65px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
-        <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync" src="./assets/logo.svg" alt="Faust Logo" style="width: 32px; height: 24px; object-fit: contain; display: block" />
-      </div>
-      <div style="height: 60px; padding-left: 40px; padding-right: 40px; padding-top: 10px; padding-bottom: 10px; left: 357px; top: 10px; position: absolute; overflow: hidden; border-radius: 55px; justify-content: center; align-items: center; gap: 48px; display: inline-flex">
-        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Software</div>
-        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Estrategia</div>
-        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Sobre Nosotros</div>
-        <div class="navbar-menu-link no-select" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">Contacto</div>
-      </div>
-      <a class="subtle-gray-btn navbar-talk-btn" href="mailto:admin@faust.mx" data-propiedad-1="Predeterminado" style="height: 60px; padding-left: 48px; padding-right: 48px; padding-top: 10px; padding-bottom: 10px; right: 10px; top: 10px; position: absolute; background: rgba(77.73, 77.73, 77.73, 0.10); overflow: hidden; border-radius: 8px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 10px; display: inline-flex; text-decoration: none">
-        <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 16px; word-wrap: break-word">Aplicar</div>
-        <span class="icon-open" aria-hidden="true" style="color: white;"></span>
-      </a>
-    </div>
-  </div>
-</div>
     </div>
   </main>
   <script>
@@ -1852,101 +2109,101 @@
   </script>
 
   <script>
-  
-(function () {
-  var whatsappButton = document.getElementById("whatsapp-plan-cta");
-  if (!whatsappButton) return;
 
-  var services = Array.prototype.slice.call(
-    document.querySelectorAll(".plan-service")
-  );
-  var incomeInput = document.getElementById("monthly-income");
+    (function () {
+      var whatsappButton = document.getElementById("whatsapp-plan-cta");
+      if (!whatsappButton) return;
 
-  function parseMoney(raw) {
-    var digits = String(raw || "").replace(/\D/g, "");
-    return digits ? Number(digits) : 0;
-  }
-
-  function buildServicesText(selectedServices) {
-    if (selectedServices.length === 0) {
-      return "los servicios básicos de Faust";
-    } else if (selectedServices.length === 1) {
-      return selectedServices[0];
-    } else if (selectedServices.length === 2) {
-      return selectedServices[0] + " y " + selectedServices[1];
-    } else {
-      var allButLast = selectedServices.slice(0, -1).join(", ");
-      var last = selectedServices[selectedServices.length - 1];
-      return allButLast + " y " + last;
-    }
-  }
-
-  function buildWhatsappMessage() {
-    var selectedServicesLabels = services
-      .filter(function (card) {
-        return card.getAttribute("data-selected") === "true";
-      })
-      .map(function (card) {
-        // aquí asumo que el nombre está en .plan-title
-        var label = card.querySelector(".plan-title");
-        return label
-          ? label.textContent.trim()
-          : card.getAttribute("data-plan-id") || "";
-      })
-      .filter(Boolean);
-
-    var servicesText = buildServicesText(selectedServicesLabels);
-
-    var amountNumber = incomeInput ? parseMoney(incomeInput.value) : 0;
-    var incomeText = amountNumber
-      ? amountNumber.toLocaleString("es-MX")
-      : "N";
-
-    var faustMaxSelected = services.some(function (card) {
-      return (
-        card.getAttribute("data-plan-id") === "faust-max" &&
-        card.getAttribute("data-selected") === "true"
+      var services = Array.prototype.slice.call(
+        document.querySelectorAll(".plan-service")
       );
-    });
+      var incomeInput = document.getElementById("monthly-income");
 
-    var maxLine = faustMaxSelected
-      ? "También, me gustaría aplicar al plan Max™."
-      : "Por el momento, no quiero aplicar al plan Max™.";
+      function parseMoney(raw) {
+        var digits = String(raw || "").replace(/\D/g, "");
+        return digits ? Number(digits) : 0;
+      }
 
-    var message =
-      "¡Hola! Quiero aplicar para recibir auditoría de faust.mx\n\n" +
-      "Requiero los servicios de " + servicesText + ".\n" +
-      "Mi empresa tiene un ingreso neto mensual de MX $" + incomeText + ".\n" +
-      maxLine + "\n" +
-      "Mi empresa es ";
+      function buildServicesText(selectedServices) {
+        if (selectedServices.length === 0) {
+          return "los servicios básicos de Faust";
+        } else if (selectedServices.length === 1) {
+          return selectedServices[0];
+        } else if (selectedServices.length === 2) {
+          return selectedServices[0] + " y " + selectedServices[1];
+        } else {
+          var allButLast = selectedServices.slice(0, -1).join(", ");
+          var last = selectedServices[selectedServices.length - 1];
+          return allButLast + " y " + last;
+        }
+      }
 
-    return message;
-  }
+      function buildWhatsappMessage() {
+        var selectedServicesLabels = services
+          .filter(function (card) {
+            return card.getAttribute("data-selected") === "true";
+          })
+          .map(function (card) {
+            // aquí asumo que el nombre está en .plan-title
+            var label = card.querySelector(".plan-title");
+            return label
+              ? label.textContent.trim()
+              : card.getAttribute("data-plan-id") || "";
+          })
+          .filter(Boolean);
 
-  whatsappButton.addEventListener("click", function () {
-    var phone = "524428767130"; // tu número sin +
-    var message = buildWhatsappMessage();
-    var encoded = encodeURIComponent(message); // recomendado para wa.me [web:44][web:53]
-    var url = "https://wa.me/" + phone + "?text=" + encoded;
+        var servicesText = buildServicesText(selectedServicesLabels);
 
-    window.open(url, "_blank", "noopener,noreferrer");
-  });
-})();
+        var amountNumber = incomeInput ? parseMoney(incomeInput.value) : 0;
+        var incomeText = amountNumber
+          ? amountNumber.toLocaleString("es-MX")
+          : "N";
 
-(function() {
-  function isMobile() {
-    return window.innerWidth <= 768;
-  }
+        var faustMaxSelected = services.some(function (card) {
+          return (
+            card.getAttribute("data-plan-id") === "faust-max" &&
+            card.getAttribute("data-selected") === "true"
+          );
+        });
 
-function setupAbFlowAnimations() {
-    var abFlowCards = document.querySelectorAll('.ab-flow-card');
-    if (abFlowCards.length === 0) return;
+        var maxLine = faustMaxSelected
+          ? "También, me gustaría aplicar al plan Max™."
+          : "Por el momento, no quiero aplicar al plan Max™.";
 
-    // Inyectamos solo la transición, eliminamos el !important de la opacidad fija
-    if (!document.getElementById('ab-flow-spotlight-styles')) {
-        var style = document.createElement('style');
-        style.id = 'ab-flow-spotlight-styles';
-        style.innerHTML = `
+        var message =
+          "¡Hola! Quiero aplicar para recibir auditoría de faust.mx\n\n" +
+          "Requiero los servicios de " + servicesText + ".\n" +
+          "Mi empresa tiene un ingreso neto mensual de MX $" + incomeText + ".\n" +
+          maxLine + "\n" +
+          "Mi empresa es ";
+
+        return message;
+      }
+
+      whatsappButton.addEventListener("click", function () {
+        var phone = "524428767130"; // tu número sin +
+        var message = buildWhatsappMessage();
+        var encoded = encodeURIComponent(message); // recomendado para wa.me [web:44][web:53]
+        var url = "https://wa.me/" + phone + "?text=" + encoded;
+
+        window.open(url, "_blank", "noopener,noreferrer");
+      });
+    })();
+
+    (function () {
+      function isMobile() {
+        return window.innerWidth <= 768;
+      }
+
+      function setupAbFlowAnimations() {
+        var abFlowCards = document.querySelectorAll('.ab-flow-card');
+        if (abFlowCards.length === 0) return;
+
+        // Inyectamos solo la transición, eliminamos el !important de la opacidad fija
+        if (!document.getElementById('ab-flow-spotlight-styles')) {
+          var style = document.createElement('style');
+          style.id = 'ab-flow-spotlight-styles';
+          style.innerHTML = `
             .ab-flow-card {
                 transition: background-color 0.8s cubic-bezier(0.2, 1, 0.3, 1);
             }
@@ -1957,501 +2214,499 @@ function setupAbFlowAnimations() {
                 transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1) !important;
             }
         `;
-        document.head.appendChild(style);
-    }
-
-    var baseBg       = '#0D0D0D';
-    var focusBg      = '#101010';
-    var baseOpacity  = '0.3';
-    var focusOpacity = '1';
-    var baseBlur     = '1px';
-    var focusBlur    = '0px';
-
-    Array.prototype.slice.call(abFlowCards).forEach(function(card) {
-        card.style.backgroundColor = baseBg;
-        var canvas = card.querySelector('.ab-flow-canvas');
-        if (canvas) {
-            canvas.style.opacity = baseOpacity;
-            canvas.style.filter  = 'blur(' + baseBlur + ')';
+          document.head.appendChild(style);
         }
-    });
 
-    var currentFocusedCard = null;
+        var baseBg = '#0D0D0D';
+        var focusBg = '#101010';
+        var baseOpacity = '0.3';
+        var focusOpacity = '1';
+        var baseBlur = '1px';
+        var focusBlur = '0px';
 
-    function onScrollAbFlow() {
-        var viewportH = window.innerHeight;
-        var centerY   = viewportH * 0.64;
-        var foundFocus = null;
-
-        Array.prototype.slice.call(abFlowCards).forEach(function(card) {
-            var rect = card.getBoundingClientRect();
-            if (centerY >= rect.top && centerY <= rect.bottom) {
-                foundFocus = card;
-            }
+        Array.prototype.slice.call(abFlowCards).forEach(function (card) {
+          card.style.backgroundColor = baseBg;
+          var canvas = card.querySelector('.ab-flow-canvas');
+          if (canvas) {
+            canvas.style.opacity = baseOpacity;
+            canvas.style.filter = 'blur(' + baseBlur + ')';
+          }
         });
 
-        if (foundFocus !== currentFocusedCard) {
-            
+        var currentFocusedCard = null;
+
+        function onScrollAbFlow() {
+          var viewportH = window.innerHeight;
+          var centerY = viewportH * 0.64;
+          var foundFocus = null;
+
+          Array.prototype.slice.call(abFlowCards).forEach(function (card) {
+            var rect = card.getBoundingClientRect();
+            if (centerY >= rect.top && centerY <= rect.bottom) {
+              foundFocus = card;
+            }
+          });
+
+          if (foundFocus !== currentFocusedCard) {
+
             if (currentFocusedCard) {
-                currentFocusedCard.style.backgroundColor = baseBg;
-                var oldCanvas = currentFocusedCard.querySelector('.ab-flow-canvas');
-                if (oldCanvas) {
-                    oldCanvas.style.opacity = baseOpacity;
-                    oldCanvas.style.filter  = 'blur(' + baseBlur + ')';
-                }
+              currentFocusedCard.style.backgroundColor = baseBg;
+              var oldCanvas = currentFocusedCard.querySelector('.ab-flow-canvas');
+              if (oldCanvas) {
+                oldCanvas.style.opacity = baseOpacity;
+                oldCanvas.style.filter = 'blur(' + baseBlur + ')';
+              }
             }
 
             // 1. Restaurar el DOM a sus valores reales y limpiar marcadores
             var dimmedElements = document.querySelectorAll('.spotlight-dimmed');
-            Array.prototype.slice.call(dimmedElements).forEach(function(el) {
-                // Al devolver su valor inline original (o cadena vacía), el navegador
-                // vuelve a respetar las clases CSS base (ej. tu .muted { opacity: 0.5 })
-                el.style.opacity = el.getAttribute('data-orig-inline') || '';
-                el.classList.remove('spotlight-dimmed');
+            Array.prototype.slice.call(dimmedElements).forEach(function (el) {
+              // Al devolver su valor inline original (o cadena vacía), el navegador
+              // vuelve a respetar las clases CSS base (ej. tu .muted { opacity: 0.5 })
+              el.style.opacity = el.getAttribute('data-orig-inline') || '';
+              el.classList.remove('spotlight-dimmed');
             });
 
             if (foundFocus) {
-                foundFocus.style.backgroundColor = focusBg;
-                var newCanvas = foundFocus.querySelector('.ab-flow-canvas');
-                if (newCanvas) {
-                    newCanvas.style.opacity = focusOpacity;
-                    newCanvas.style.filter  = 'blur(' + focusBlur + ')';
-                }
+              foundFocus.style.backgroundColor = focusBg;
+              var newCanvas = foundFocus.querySelector('.ab-flow-canvas');
+              if (newCanvas) {
+                newCanvas.style.opacity = focusOpacity;
+                newCanvas.style.filter = 'blur(' + focusBlur + ')';
+              }
 
-                // 2. Escalar por el DOM calculando opacidades relativas
-                var current = foundFocus;
-                while (current && current.tagName !== 'BODY' && current.tagName !== 'HTML') {
-                    var siblings = current.parentNode.children;
-                    for (var i = 0; i < siblings.length; i++) {
-                        var sibling = siblings[i];
-                        if (sibling !== current && sibling.nodeType === 1) { 
-                            
-                            // Guardamos su estado base en caché solo la primera vez que lo tocamos
-                            if (!sibling.hasAttribute('data-orig-inline')) {
-                                sibling.setAttribute('data-orig-inline', sibling.style.opacity || '');
-                                // getComputedStyle nos da el valor real final sin importar de qué clase provenga
-                                var compOpacity = window.getComputedStyle(sibling).opacity;
-                                sibling.setAttribute('data-comp-opacity', compOpacity);
-                            }
-                            
-                            var orig = parseFloat(sibling.getAttribute('data-comp-opacity')) || 1;
-                            
-                            sibling.classList.add('spotlight-transition');
-                            sibling.classList.add('spotlight-dimmed');
-                            sibling.style.opacity = (orig * 0.4).toFixed(3);
-                        }
+              // 2. Escalar por el DOM calculando opacidades relativas
+              var current = foundFocus;
+              while (current && current.tagName !== 'BODY' && current.tagName !== 'HTML') {
+                var siblings = current.parentNode.children;
+                for (var i = 0; i < siblings.length; i++) {
+                  var sibling = siblings[i];
+                  if (sibling !== current && sibling.nodeType === 1 && sibling.id !== 'desktop-navbar') {
+
+                    // Guardamos su estado base en caché solo la primera vez que lo tocamos
+                    if (!sibling.hasAttribute('data-orig-inline')) {
+                      sibling.setAttribute('data-orig-inline', sibling.style.opacity || '');
+                      // getComputedStyle nos da el valor real final sin importar de qué clase provenga
+                      var compOpacity = window.getComputedStyle(sibling).opacity;
+                      sibling.setAttribute('data-comp-opacity', compOpacity);
                     }
-                    current = current.parentNode;
+
+                    var orig = parseFloat(sibling.getAttribute('data-comp-opacity')) || 1;
+
+                    sibling.classList.add('spotlight-transition');
+                    sibling.classList.add('spotlight-dimmed');
+                    sibling.style.opacity = (orig * 0.4).toFixed(3);
+                  }
                 }
+                current = current.parentNode;
+              }
             }
             currentFocusedCard = foundFocus;
-        }
-    }
-
-    window.addEventListener('scroll', onScrollAbFlow, { passive: true });
-    onScrollAbFlow(); 
-}
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupAbFlowAnimations);
-  } else {
-    setupAbFlowAnimations();
-  }
-})();
-
-(function() {
-  function isMobile() {
-    return window.innerWidth <= 768;
-  }
-
-  function setupAbFlowScrollHijack() {
-    if (!isMobile()) return;
-
-    var abFlowSection = document.querySelector('.ab-flow-card');
-    var abFlowMain    = document.querySelector('.ab-flow-main');
-    if (!abFlowSection || !abFlowMain) return;
-
-    var hijackDone   = false;  // solo una vez
-    var isHijacking  = false;
-    var anchorScrollY = 0;     // scrollY fijo mientras dura el hijack
-    var maxScrollX   = 0;
-
-    var currentX     = 0;      // posición actual
-    var targetX      = 0;      // posición objetivo
-    var animating    = false;
-
-    function updateMaxScrollX() {
-      maxScrollX = abFlowMain.scrollWidth - abFlowMain.clientWidth;
-      if (maxScrollX < 0) maxScrollX = 0;
-    }
-
-    updateMaxScrollX();
-    window.addEventListener('resize', updateMaxScrollX);
-
-    function animate() {
-      if (!animating) return;
-      // Interpolación suave tipo “lerp”
-      var speed = 0.15; // más alto = más rápido
-      currentX += (targetX - currentX) * speed;
-
-      // Snap muy pequeño cuando estamos muy cerca
-      if (Math.abs(targetX - currentX) < 0.5) {
-        currentX = targetX;
-      }
-
-      abFlowMain.scrollLeft = currentX;
-
-      if (currentX !== targetX) {
-        requestAnimationFrame(animate);
-      } else {
-        animating = false;
-
-        // Al terminar de recorrer todo, liberamos
-        if (hijackDone) {
-          document.body.style.overflow = '';
-        }
-      }
-    }
-
-var LOCK_MARGIN = 20; // distancia final entre el top de la sección y Y=74
-
-function onScroll() {
-  if (hijackDone) return;
-
-  var rect = abFlowSection.getBoundingClientRect();
-
-  // Borde inferior del navbar: Y fija 74px
-  var navbarBottomY = 74;
-
-  // Distancia actual entre top de la sección y bottom del navbar
-  var distance = rect.top - navbarBottomY;
-
-  // Queremos que, al bloquear, distance = LOCK_MARGIN
-  // Disparamos cuando la sección ya está por debajo de ese margen
-  if (!isHijacking && distance <= LOCK_MARGIN) {
-    isHijacking = true;
-
-    var startY = window.scrollY;
-    var deltaY = distance - LOCK_MARGIN;
-    var targetY = startY + deltaY;
-    anchorScrollY = targetY;
-
-    var duration = 260; // ms
-    var startTime = null;
-
-    function step(timestamp) {
-      if (!startTime) startTime = timestamp;
-      var elapsed = timestamp - startTime;
-      var t = Math.min(elapsed / duration, 1);
-      var ease = 1 - Math.pow(1 - t, 3); // ease-out
-
-      var currentY = startY + (targetY - startY) * ease;
-
-      var elementsToAnimate = document.querySelectorAll('.section:not(.navbar)');
-      elementsToAnimate.forEach(function(element) {
-        element.style.opacity = 1 - t; // Opacidad que disminuye
-      });
-
-      if (t < 1) {
-        requestAnimationFrame(step);
-      } else {
-        window.scrollTo(window.scrollX, targetY);
-        document.body.style.overflow = 'hidden';
-      }
-    }
-
-    requestAnimationFrame(step);
-  }
-
-  if (!isHijacking) return;
-
-  if (!hijackDone) {
-    window.scrollTo(window.scrollX, anchorScrollY);
-  }
-}
-
-
-    function onWheel(e) {
-      if (!isHijacking || hijackDone) return;
-
-      e.preventDefault();
-
-      // Delta positivo = scroll hacia abajo → avanza horizontal
-      var delta = e.deltaY || e.deltaX || 0;
-      targetX = Math.min(Math.max(targetX + delta, 0), maxScrollX);
-
-      if (!animating) {
-        animating = true;
-        requestAnimationFrame(animate);
-      }
-
-      // Si llegamos al final, marcamos como hecho y liberamos el scroll vertical
-      if (targetX >= maxScrollX - 1) {
-        hijackDone  = true;
-        isHijacking = false;
-        // Dejamos que el body vuelva a scrollear, pero con una ligera pausa
-        setTimeout(function() {
-          document.body.style.overflow = '';
-        }, 80);
-      }
-    }
-
-    // Soporte para touch (mobile real)
-    var touchStartY = 0;
-    function onTouchStart(e) {
-      if (!isHijacking || hijackDone) return;
-      touchStartY = e.touches[0].clientY;
-    }
-
-    function onTouchMove(e) {
-      if (!isHijacking || hijackDone) return;
-
-      var currentY = e.touches[0].clientY;
-      var delta    = touchStartY - currentY; // arrastrar hacia arriba = delta positivo
-      touchStartY  = currentY;
-
-      targetX = Math.min(Math.max(targetX + delta, 0), maxScrollX);
-
-      if (!animating) {
-        animating = true;
-        requestAnimationFrame(animate);
-      }
-
-      // Bloquear scroll vertical
-      e.preventDefault();
-      window.scrollTo(window.scrollX, anchorScrollY);
-
-      if (targetX >= maxScrollX - 1) {
-        hijackDone  = true;
-        isHijacking = false;
-        setTimeout(function() {
-          document.body.style.overflow = '';
-        }, 80);
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: false });
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupAbFlowScrollHijack);
-  } else {
-    setupAbFlowScrollHijack();
-  }
-})();
-
-(function() {
-  function setupButtonVisibilityHighlight() {
-    // Seleccionamos:
-    // - CTA principal del hero
-    // - Botón de navbar "Let's Talk"
-    // - Botones de plan (magnetic-cta) que no sean Faust Team
-    var buttons = Array.prototype.slice.call(document.querySelectorAll(
-      '.hero-cta-btn, .magnetic-cta'
-    ));
-
-    if (!buttons.length) return;
-
-    // Filtramos el botón Faust Team para NO aplicarle esto
-    buttons = buttons.filter(function(btn) {
-      var text = (btn.textContent || '').toLowerCase();
-      return text.indexOf('faust team') === -1;
-    });
-
-    // Estilos base (grises) y azules: aprovechamos clases existentes
-    // hero-cta-btn ya es blanco/azul, navbar-talk-btn usa sutil-gray-btn, etc. [file:1]
-    // Aquí solo manipulamos background y color directamente para que el efecto sea consistente.
-    function setButtonActive(btn, active) {
-      if (active) {
-        // Azul activo para todos los botones controlados por scroll
-        btn.style.backgroundColor = '#0030ff';
-        btn.style.color = '#ffffff';
-      } else {
-        // Estado gris base para todos (incluido el hero), independiente del hover
-        btn.style.backgroundColor = '#1A1A1A';
-        btn.style.color = '#ffffff';
-      }
-    }
-
-    // Inicializamos transición suave
-    buttons.forEach(function(btn) {
-      btn.style.transition = 'background-color 1.6s cubic-bezier(0.2, 1, 0.3, 1), color 0.4s cubic-bezier(0.2, 1, 0.3, 1)';
-    });
-
-    function updateButtonsOnScroll() {
-      var viewportH = window.innerHeight;
-      var minBand = viewportH * 0.1;
-      var maxBand = viewportH * 1.2;
-
-      buttons.forEach(function(btn) {
-        var rect = btn.getBoundingClientRect();
-        var btnCenter = rect.top + rect.height / 2;
-
-        var insideBand = btnCenter >= minBand && btnCenter <= maxBand;
-        setButtonActive(btn, insideBand);
-      });
-    }
-
-    window.addEventListener('scroll', updateButtonsOnScroll, { passive: true });
-    window.addEventListener('resize', updateButtonsOnScroll);
-    // Ejecutar al cargar
-    updateButtonsOnScroll();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupButtonVisibilityHighlight);
-  } else {
-    setupButtonVisibilityHighlight();
-  }
-})();
-</script>
-
-<script>
-  function formatShort(value) {
-    if (value >= 1_000_000) {
-      return "$" + (value / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-    }
-    if (value >= 1_000) {
-      return "$" + (value / 1_000).toFixed(0) + "k";
-    }
-    return Math.round(value).toString();
-  }
-
-  function formatMetric(value, format, originalText) {
-    if (format === "percent") {
-      const sign = originalText.trim().startsWith("+") ? "+" : "";
-      return sign + value.toFixed(1) + "%";
-    }
-    if (format === "short") {
-      return formatShort(value);
-    }
-    // int por defecto
-    return Math.round(value).toString();
-  }
-
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
-
-function animateMetric(el, target, duration, format, originalText) {
-  const start = 0;
-  const startTime = performance.now();
-
-  return new Promise((resolve) => {
-    function update(now) {
-      const elapsed = now - startTime;
-      const linearProgress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutCubic(linearProgress);
-      const current = start + (target - start) * easedProgress;
-
-      el.textContent = formatMetric(current, format, originalText);
-
-      if (linearProgress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        resolve();
-      }
-    }
-
-    requestAnimationFrame(update);
-  });
-}
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const section = document.getElementById("stats-section");
-    if (!section) return;
-
-    const metrics = Array.from(section.querySelectorAll(".metric"));
-    if (!metrics.length) return;
-
-    let hasAnimatedStats = false;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimatedStats) {
-            hasAnimatedStats = true;
-
-            (async () => {
-              for (const el of metrics) {
-                const format = el.dataset.format || "int";
-                const originalText = el.textContent || "";
-                const rawTarget = el.dataset.target || "0";
-                const target = parseFloat(rawTarget.replace(/[^\d.]/g, "")) || 0;
-                
-                el.classList.remove("metric-final");
-                el.textContent = formatMetric(0, format, originalText);
-
-                await animateMetric(el, target, 2400, format, originalText);
-              }
-            })().catch(() => {});
-
-            observer.disconnect();
           }
+        }
+
+        window.addEventListener('scroll', onScrollAbFlow, { passive: true });
+        onScrollAbFlow();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupAbFlowAnimations);
+      } else {
+        setupAbFlowAnimations();
+      }
+    })();
+
+    (function () {
+      function isMobile() {
+        return window.innerWidth <= 768;
+      }
+
+      function setupAbFlowScrollHijack() {
+        return; // Scroll hijack removido a petición
+        if (!isMobile()) return;
+
+        var abFlowSection = document.querySelector('.ab-flow-card');
+        var abFlowMain = document.querySelector('.ab-flow-main');
+        if (!abFlowSection || !abFlowMain) return;
+
+        var hijackDone = false;  // solo una vez
+        var isHijacking = false;
+        var anchorScrollY = 0;     // scrollY fijo mientras dura el hijack
+        var maxScrollX = 0;
+
+        var currentX = 0;      // posición actual
+        var targetX = 0;      // posición objetivo
+        var animating = false;
+
+        function updateMaxScrollX() {
+          maxScrollX = abFlowMain.scrollWidth - abFlowMain.clientWidth;
+          if (maxScrollX < 0) maxScrollX = 0;
+        }
+
+        updateMaxScrollX();
+        window.addEventListener('resize', updateMaxScrollX);
+
+        function animate() {
+          if (!animating) return;
+          // Interpolación suave tipo “lerp”
+          var speed = 0.15; // más alto = más rápido
+          currentX += (targetX - currentX) * speed;
+
+          // Snap muy pequeño cuando estamos muy cerca
+          if (Math.abs(targetX - currentX) < 0.5) {
+            currentX = targetX;
+          }
+
+          abFlowMain.scrollLeft = currentX;
+
+          if (currentX !== targetX) {
+            requestAnimationFrame(animate);
+          } else {
+            animating = false;
+
+            // Al terminar de recorrer todo, liberamos
+            if (hijackDone) {
+              document.body.style.overflow = '';
+            }
+          }
+        }
+
+        var LOCK_MARGIN = 20; // distancia final entre el top de la sección y Y=74
+
+        function onScroll() {
+          if (hijackDone) return;
+
+          var rect = abFlowSection.getBoundingClientRect();
+
+          // Borde inferior del navbar: Y fija 74px
+          var navbarBottomY = 74;
+
+          // Distancia actual entre top de la sección y bottom del navbar
+          var distance = rect.top - navbarBottomY;
+
+          // Queremos que, al bloquear, distance = LOCK_MARGIN
+          // Disparamos cuando la sección ya está por debajo de ese margen
+          if (!isHijacking && distance <= LOCK_MARGIN) {
+            isHijacking = true;
+
+            var startY = window.scrollY;
+            var deltaY = distance - LOCK_MARGIN;
+            var targetY = startY + deltaY;
+            anchorScrollY = targetY;
+
+            var duration = 260; // ms
+            var startTime = null;
+
+            function step(timestamp) {
+              if (!startTime) startTime = timestamp;
+              var elapsed = timestamp - startTime;
+              var t = Math.min(elapsed / duration, 1);
+              var ease = 1 - Math.pow(1 - t, 3); // ease-out
+
+              var currentY = startY + (targetY - startY) * ease;
+              window.scrollTo(window.scrollX, currentY);
+
+              if (t < 1) {
+                requestAnimationFrame(step);
+              } else {
+                window.scrollTo(window.scrollX, targetY);
+                document.body.style.overflow = 'hidden';
+              }
+            }
+
+            requestAnimationFrame(step);
+          }
+
+          if (!isHijacking) return;
+
+          if (!hijackDone) {
+            window.scrollTo(window.scrollX, anchorScrollY);
+          }
+        }
+
+
+        function onWheel(e) {
+          if (!isHijacking || hijackDone) return;
+
+          e.preventDefault();
+
+          // Delta positivo = scroll hacia abajo → avanza horizontal
+          var delta = e.deltaY || e.deltaX || 0;
+          targetX = Math.min(Math.max(targetX + delta, 0), maxScrollX);
+
+          if (!animating) {
+            animating = true;
+            requestAnimationFrame(animate);
+          }
+
+          // Si llegamos al final, marcamos como hecho y liberamos el scroll vertical
+          if (targetX >= maxScrollX - 1) {
+            hijackDone = true;
+            isHijacking = false;
+            // Dejamos que el body vuelva a scrollear, pero con una ligera pausa
+            setTimeout(function () {
+              document.body.style.overflow = '';
+            }, 80);
+          }
+        }
+
+        // Soporte para touch (mobile real)
+        var touchStartY = 0;
+        function onTouchStart(e) {
+          if (!isHijacking || hijackDone) return;
+          touchStartY = e.touches[0].clientY;
+        }
+
+        function onTouchMove(e) {
+          if (!isHijacking || hijackDone) return;
+
+          var currentY = e.touches[0].clientY;
+          var delta = touchStartY - currentY; // arrastrar hacia arriba = delta positivo
+          touchStartY = currentY;
+
+          targetX = Math.min(Math.max(targetX + delta, 0), maxScrollX);
+
+          if (!animating) {
+            animating = true;
+            requestAnimationFrame(animate);
+          }
+
+          // Bloquear scroll vertical
+          e.preventDefault();
+          window.scrollTo(window.scrollX, anchorScrollY);
+
+          if (targetX >= maxScrollX - 1) {
+            hijackDone = true;
+            isHijacking = false;
+            setTimeout(function () {
+              document.body.style.overflow = '';
+            }, 80);
+          }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('wheel', onWheel, { passive: false });
+        window.addEventListener('touchstart', onTouchStart, { passive: false });
+        window.addEventListener('touchmove', onTouchMove, { passive: false });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupAbFlowScrollHijack);
+      } else {
+        setupAbFlowScrollHijack();
+      }
+    })();
+
+    (function () {
+      function setupButtonVisibilityHighlight() {
+        // Seleccionamos:
+        // - CTA principal del hero
+        // - Botón de navbar "Let's Talk"
+        // - Botones de plan (magnetic-cta) que no sean Faust Team
+        var buttons = Array.prototype.slice.call(document.querySelectorAll(
+          '.hero-cta-btn, .magnetic-cta'
+        ));
+
+        if (!buttons.length) return;
+
+        // Filtramos el botón Faust Team y el nuevo de Expertos para NO aplicarles esto
+        buttons = buttons.filter(function (btn) {
+          var text = (btn.textContent || '').toLowerCase();
+          return text.indexOf('faust team') === -1 && text.indexOf('expertos') === -1;
         });
-      },
-      {
-        threshold: 0.4,
+
+        // Estilos base (grises) y azules: aprovechamos clases existentes
+        // hero-cta-btn ya es blanco/azul, navbar-talk-btn usa sutil-gray-btn, etc. [file:1]
+        // Aquí solo manipulamos background y color directamente para que el efecto sea consistente.
+        function setButtonActive(btn, active) {
+          if (active) {
+            // Azul activo para todos los botones controlados por scroll
+            btn.style.backgroundColor = '#0030ff';
+            btn.style.color = '#ffffff';
+          } else {
+            // Estado gris base para todos (incluido el hero), independiente del hover
+            btn.style.backgroundColor = '#1A1A1A';
+            btn.style.color = '#ffffff';
+          }
+        }
+
+        // Inicializamos transición suave
+        buttons.forEach(function (btn) {
+          btn.style.transition = 'background-color 1.6s cubic-bezier(0.2, 1, 0.3, 1), color 0.4s cubic-bezier(0.2, 1, 0.3, 1)';
+        });
+
+        function updateButtonsOnScroll() {
+          var viewportH = window.innerHeight;
+          var minBand = viewportH * 0.1;
+          var maxBand = viewportH * 1.2;
+
+          buttons.forEach(function (btn) {
+            var rect = btn.getBoundingClientRect();
+            var btnCenter = rect.top + rect.height / 2;
+
+            var insideBand = btnCenter >= minBand && btnCenter <= maxBand;
+            setButtonActive(btn, insideBand);
+          });
+        }
+
+        window.addEventListener('scroll', updateButtonsOnScroll, { passive: true });
+        window.addEventListener('resize', updateButtonsOnScroll);
+        // Ejecutar al cargar
+        updateButtonsOnScroll();
       }
-    );
 
-    observer.observe(section);
-  });
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupButtonVisibilityHighlight);
+      } else {
+        setupButtonVisibilityHighlight();
+      }
+    })();
+  </script>
 
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.innerWidth <= 768) {
-    var navbar = document.querySelector('.figma-stage > div > div:first-child > div:last-child');
-    if (navbar) {
-      // Un ligero delay para permitir que las transiciones CSS de entrada se ejecuten suavemente
-      setTimeout(function() {
-        navbar.classList.add('navbar-visible');
-      }, 100);
-    }
-  }
-});
-</script>
-
-<script>
-  window.addEventListener('load', () => {
-    const video = document.getElementById('hero-bg-video');
-    if (!video) {
-      console.warn('No se encontró #hero-bg-video');
-      return;
+  <script>
+    function formatShort(value) {
+      if (value >= 1_000_000) {
+        return "$" + (value / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+      }
+      if (value >= 1_000) {
+        return "$" + (value / 1_000).toFixed(0) + "k";
+      }
+      return Math.round(value).toString();
     }
 
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    video.src = isMobile
-      ? './assets/hero_mobile.mp4'
-      : './assets/hero_desktop.mp4';
+    function formatMetric(value, format, originalText) {
+      if (format === "percent") {
+        const sign = originalText.trim().startsWith("+") ? "+" : "";
+        return sign + value.toFixed(1) + "%";
+      }
+      if (format === "short") {
+        return formatShort(value);
+      }
+      // int por defecto
+      return Math.round(value).toString();
+    }
 
-    // Iniciamos carga
-    video.load();
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
 
-    const showVideo = () => {
-      // Si autoplay falla, al menos hacemos visible el frame cargado
-      video.classList.add('is-ready');
-    };
+    function animateMetric(el, target, duration, format, originalText) {
+      const start = 0;
+      const startTime = performance.now();
 
-    // Si puede reproducirse sin cortes
-    video.addEventListener('canplaythrough', () => {
-      video.play().then(showVideo).catch((err) => {
-        console.warn('Autoplay bloqueado, muestro frame estático:', err);
-        showVideo();
+      return new Promise((resolve) => {
+        function update(now) {
+          const elapsed = now - startTime;
+          const linearProgress = Math.min(elapsed / duration, 1);
+          const easedProgress = easeOutCubic(linearProgress);
+          const current = start + (target - start) * easedProgress;
+
+          el.textContent = formatMetric(current, format, originalText);
+
+          if (linearProgress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            resolve();
+          }
+        }
+
+        requestAnimationFrame(update);
       });
-    }, { once: true });
+    }
 
-    // Fallback: si por alguna razón no dispara canplaythrough, forzamos visibilidad
-    setTimeout(() => {
-      if (!video.classList.contains('is-ready')) {
-        console.warn('Timeout: forzando visibilidad del video');
-        showVideo();
+    document.addEventListener("DOMContentLoaded", () => {
+      const section = document.getElementById("stats-section");
+      if (!section) return;
+
+      const metrics = Array.from(section.querySelectorAll(".metric"));
+      if (!metrics.length) return;
+
+      let hasAnimatedStats = false;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !hasAnimatedStats) {
+              hasAnimatedStats = true;
+
+              (async () => {
+                for (const el of metrics) {
+                  const format = el.dataset.format || "int";
+                  const originalText = el.textContent || "";
+                  const rawTarget = el.dataset.target || "0";
+                  const target = parseFloat(rawTarget.replace(/[^\d.]/g, "")) || 0;
+
+                  el.classList.remove("metric-final");
+                  el.textContent = formatMetric(0, format, originalText);
+
+                  await animateMetric(el, target, 2400, format, originalText);
+                }
+              })().catch(() => { });
+
+              observer.disconnect();
+            }
+          });
+        },
+        {
+          threshold: 0.4,
+        }
+      );
+
+      observer.observe(section);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.innerWidth <= 768) {
+        var navbar = document.querySelector('.figma-stage > div > div:first-child > div:last-child');
+        if (navbar) {
+          // Un ligero delay para permitir que las transiciones CSS de entrada se ejecuten suavemente
+          setTimeout(function () {
+            navbar.classList.add('navbar-visible');
+          }, 100);
+        }
       }
-    }, 4000);
-  });
-</script>
+    });
+  </script>
+
+  <script>
+    window.addEventListener('load', () => {
+      const video = document.getElementById('hero-bg-video');
+      if (!video) {
+        console.warn('No se encontró #hero-bg-video');
+        return;
+      }
+
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      video.src = isMobile
+        ? './assets/hero_mobile.mp4'
+        : './assets/hero_desktop.mp4';
+
+      // Iniciamos carga
+      video.load();
+
+      const showVideo = () => {
+        // Si autoplay falla, al menos hacemos visible el frame cargado
+        video.classList.add('is-ready');
+      };
+
+      // Si puede reproducirse sin cortes
+      video.addEventListener('canplaythrough', () => {
+        video.play().then(showVideo).catch((err) => {
+          console.warn('Autoplay bloqueado, muestro frame estático:', err);
+          showVideo();
+        });
+      }, { once: true });
+
+      // Fallback: si por alguna razón no dispara canplaythrough, forzamos visibilidad
+      setTimeout(() => {
+        if (!video.classList.contains('is-ready')) {
+          console.warn('Timeout: forzando visibilidad del video');
+          showVideo();
+        }
+      }, 4000);
+    });
+  </script>
 
 </body>
+
 </html>
