@@ -1189,8 +1189,8 @@
 
       /* Navbar shifting on desktop */
       .pushed-layout .figma-stage > div > div:first-child > div:last-child {
-        left: 10px !important;
-        right: 460px !important;
+        left: 20px !important;
+        right: 470px !important;
         width: auto !important;
         transform: none !important;
         transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
@@ -1721,83 +1721,83 @@
                     style="width: auto; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Poppins; font-weight: 400; line-height: 40px; word-wrap: break-word">
                     Comienza aquí</div>
                   <div id="plan-builder-mount">
-                    <div class="plan-builder">
-                    <div class="plan-stack plan-sortable">
-                      <div class="plan-card plan-income">
-                        <div
-                          style="flex: 1 1 0; min-width: 240px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 10px; display: inline-flex">
-                          <div class="plan-title">Ingreso neto mensual de su empresa (aprox.)</div>
-                          <div class="plan-subtitle">Min. MX 900k </div>
-                        </div>
-                        <label class="plan-income-input-wrap" for="monthly-income">
-                          <span class="plan-income-prefix">MXN</span>
-                          <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric"
-                            autocomplete="off" placeholder="1,000,000" />
-                        </label>
-                      </div>
-                      <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true"
-                        data-price="0">
-                        <div class="plan-card-body">
-                          <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
-                              data-svg-src="./assets/AB Test Flow/check.svg"
-                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
-                          <div class="plan-content">
-                            <div class="plan-title">Prototipado y desarrollo web</div>
-                            <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y
-                              desarrollo/actualización de la plataforma web</div>
+                    <div class="plan-builder" style="display: flex; flex-direction: column; gap: 40px;">
+                      <div class="plan-stack plan-sortable">
+                        <div class="plan-card plan-income">
+                          <div
+                            style="flex: 1 1 0; min-width: 240px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 10px; display: inline-flex">
+                            <div class="plan-title">Ingreso neto mensual de su empresa (aprox.)</div>
+                            <div class="plan-subtitle">Min. MX 900k </div>
                           </div>
+                          <label class="plan-income-input-wrap" for="monthly-income">
+                            <span class="plan-income-prefix">MXN</span>
+                            <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric"
+                              autocomplete="off" placeholder="1,000,000" />
+                          </label>
                         </div>
-                        <div class="plan-price">Sin costo</div>
-                        <button class="plan-toggle" type="button" aria-label="Excluir servicio">
-                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg"
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
-                        </button>
-                      </div>
-                      <div class="plan-card is-selected plan-service" data-plan-id="marketing" data-selected="true"
-                        data-price="0">
-                        <div class="plan-card-body">
-                          <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
-                              data-svg-src="./assets/AB Test Flow/check.svg"
-                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
-                          <div class="plan-content">
-                            <div class="plan-title">Gestión de marketing</div>
-                            <div class="plan-subtitle plan-description">Gestión de estrategias de marketing digital
-                              basadas en profunda comprensión del comportamiento humano.</div>
+                        <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true"
+                          data-price="0">
+                          <div class="plan-card-body">
+                            <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
+                                data-svg-src="./assets/AB Test Flow/check.svg"
+                                src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
+                            <div class="plan-content">
+                              <div class="plan-title">Prototipado y desarrollo web</div>
+                              <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y
+                                desarrollo/actualización de la plataforma web</div>
+                            </div>
                           </div>
+                          <div class="plan-price">Sin costo</div>
+                          <button class="plan-toggle" type="button" aria-label="Excluir servicio">
+                            <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg"
+                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
+                          </button>
                         </div>
-                        <div class="plan-price">Sin costo</div>
-                        <button class="plan-toggle" type="button" aria-label="Excluir servicio">
-                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg"
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
-                        </button>
-                      </div>
-                    </div>
-                    <div class="plan-recommend plan-sortable">
-                      <div class="plan-recommend-title">Disponible para incluir</div>
-                      <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false"
-                        data-price="265000">
-                        <div class="plan-card-body">
-                          <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
-                              data-svg-src="./assets/AB Test Flow/dash.svg"
-                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
-                          <div class="plan-content">
-                            <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
-                            <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y
-                              mejoras iterativas de la plataforma web.</div>
+                        <div class="plan-card is-selected plan-service" data-plan-id="marketing" data-selected="true"
+                          data-price="0">
+                          <div class="plan-card-body">
+                            <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
+                                data-svg-src="./assets/AB Test Flow/check.svg"
+                                src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
+                            <div class="plan-content">
+                              <div class="plan-title">Gestión de marketing</div>
+                              <div class="plan-subtitle plan-description">Gestión de estrategias de marketing digital
+                                basadas en profunda comprensión del comportamiento humano.</div>
+                            </div>
                           </div>
+                          <div class="plan-price">Sin costo</div>
+                          <button class="plan-toggle" type="button" aria-label="Excluir servicio">
+                            <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/cross.svg"
+                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
+                          </button>
                         </div>
-                        <div class="plan-price">MXN 265,000</div>
-                        <button class="plan-toggle" type="button" aria-label="Añadir servicio">
-                          <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/plus.svg"
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
-                        </button>
                       </div>
-                        <div id="whatsapp-plan-cta" class="magnetic-cta hero-cta-btn"
-                          style="align-self: center; width: auto; height: 64px; padding-left: 48px; padding-right: 48px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
-                          <div id="plan-cta-text"
-                            style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
-                            Obtener plan por $0
+                      <div class="plan-recommend plan-sortable">
+                        <div class="plan-recommend-title">Disponible para incluir</div>
+                        <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false"
+                          data-price="265000">
+                          <div class="plan-card-body">
+                            <span class="plan-left-state" aria-hidden="true"><img decoding="async" fetchpriority="low"
+                                data-svg-src="./assets/AB Test Flow/dash.svg"
+                                src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" /></span>
+                            <div class="plan-content">
+                              <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
+                              <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y
+                                mejoras iterativas de la plataforma web.</div>
+                            </div>
                           </div>
+                          <div class="plan-price">MXN 265,000</div>
+                          <button class="plan-toggle" type="button" aria-label="Añadir servicio">
+                            <img decoding="async" fetchpriority="low" data-svg-src="./assets/AB Test Flow/plus.svg"
+                              src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
+                          </button>
+                        </div>
+                      </div>
+                      <div id="whatsapp-plan-cta" class="magnetic-cta hero-cta-btn"
+                        style="align-self: center; width: auto; height: 64px; padding-left: 48px; padding-right: 48px; background: #0030FF; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex; margin-top: 40px;">
+                        <div id="plan-cta-text"
+                          style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                          Obtener plan por $0
                         </div>
                       </div>
                     </div>
@@ -1805,6 +1805,8 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
             <img src="./assets/divider.svg" style="width: 1360px; height: 1px; object-fit: cover;" alt="divider" />
             <div
               style="align-self: stretch; width: 100%; padding-left: 80px; padding-right: 80px; justify-content: center; align-items: center; gap: 160px; display: inline-flex">
