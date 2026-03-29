@@ -2920,10 +2920,18 @@
         if (!navbar) return;
         var isPushed = document.body.classList.contains('pushed-layout');
         if (isPushed) {
-          // Visible area = viewport minus the 450px sidebar
-          var visibleW = window.innerWidth - 450;
-          var navW = Math.min(1240, visibleW - 40); // 20px margin each side
-          var navLeft = (visibleW - navW) / 2;
+          // The navbar parent keeps its full Figma width (e.g. 1910px)
+          // but the stage is visually clipped to (viewport - 450px).
+          // We need to center within that visible region using the parent's coordinate system.
+          var parentW = navbar.parentElement.offsetWidth; // ~1910px (Figma coords)
+          var visibleViewportW = window.innerWidth - 450; // visible px on screen
+          // Ratio: how many Figma-px per screen-px
+          var ratio = parentW / visibleViewportW;
+          // Desired: 20px screen margin → in Figma coords:
+          var marginInFigma = 20 * ratio;
+          var navW = parentW - (2 * marginInFigma);
+          if (navW > 1240) navW = 1240;
+          var navLeft = (parentW - navW) / 2;
           navbar.style.left = navLeft + 'px';
           navbar.style.width = navW + 'px';
         } else {
