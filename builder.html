@@ -351,6 +351,40 @@
         });
       })();
 
+      // WhatsApp Logic
+      (function () {
+        var cta = document.getElementById("whatsapp-plan-cta");
+        if (!cta) return;
+
+        function buildWhatsappMessage() {
+          var selected = document.querySelectorAll(".plan-service.is-selected");
+          var incomeInput = document.getElementById("monthly-income");
+          
+          var services = [];
+          selected.forEach(function(card) {
+            var title = card.querySelector(".plan-title");
+            if(title) services.push(title.textContent.trim());
+          });
+
+          var incomeStr = incomeInput ? incomeInput.value.trim() : "";
+          var greeting = "¡Hola! Quisiera recibir una auditoría personalizada de faust.mx";
+          var body = "\n\nServicios seleccionados:\n- " + (services.length ? services.join("\n- ") : "Ninguno");
+          if(incomeStr) {
+            body += "\n\nIngreso mensual estimado: MXN " + incomeStr;
+          }
+
+          return greeting + body;
+        }
+
+        cta.addEventListener("click", function (e) {
+          e.preventDefault();
+          var phone = "524428767130";
+          var message = buildWhatsappMessage();
+          var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+          window.open(url, "_blank");
+        });
+      })();
+
       reorderWithinSections();
       updateRecommendedVisibility();
       renderTotal();
