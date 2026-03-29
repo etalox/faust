@@ -160,10 +160,6 @@
       box-sizing: border-box;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     html,
     body {
       margin: 0;
@@ -2755,6 +2751,34 @@
         }
       }, 4000);
     });
+  </script>
+
+  <script>
+    (function () {
+      function smoothScrollTo(targetEl) {
+        if (!targetEl) return;
+        var headerOffset = 20; 
+        var elementPosition = targetEl.getBoundingClientRect().top;
+        var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+
+      document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+        anchor.addEventListener('click', function (e) {
+          var id = this.getAttribute('href');
+          if (id === '#') return;
+          var target = document.querySelector(id);
+          if (target) {
+            e.preventDefault();
+            smoothScrollTo(target);
+          }
+        });
+      });
+    })();
   </script>
 
 </body>
