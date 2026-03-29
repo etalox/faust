@@ -285,13 +285,6 @@
           return sum + (card.getAttribute("data-selected") === "true" ? parseMoney(card.getAttribute("data-price")) : 0);
         }, 0);
         ctaText.textContent = total > 0 ? "Unirme a Max™" : "Obtener plan por $0";
-
-        var ctaBtn = document.getElementById("whatsapp-plan-cta");
-        if(total > 0){
-          ctaBtn.style.backgroundColor = "#0030FF";
-        } else {
-          ctaBtn.style.backgroundColor = "rgba(77, 77, 77, 0.1)";
-        }
       }
 
       function reorderWithinSections() {
