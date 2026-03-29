@@ -1193,27 +1193,26 @@
         transform: translateX(-450px);
       }
 
-      /* Navbar shifting on desktop (Root Viewport Precision) */
+      .pushed-layout .figma-stage {
+        margin-right: 450px !important;
+        width: calc(100% - 450px) !important;
+        overflow: hidden !important;
+      }
+
+      /* Navbar shifting on desktop — only transition + z-index, JS handles position */
       #desktop-navbar {
-        transition: left 0.6s cubic-bezier(0.2, 1, 0.3, 1), 
-                    width 0.6s cubic-bezier(0.2, 1, 0.3, 1),
-                    transform 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
+        z-index: 10002 !important;
+        transition: left 0.6s cubic-bezier(0.2, 1, 0.3, 1),
+                    width 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
       }
 
-      .pushed-layout #desktop-navbar {
-        /* Centering in visible area: default center (50%) shifted left by half side-panel width (225px) */
-        transform: translateX(calc(-50% - 225px)) !important;
-        width: calc(100% - 490px) !important;
-        max-width: 1240px !important;
-      }
-
-      .pushed-layout .figma-page {
-        padding-right: 450px !important;
-        transition: padding 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
-      }
-
-      .figma-page {
-        transition: padding 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
+      .figma-stage,
+      .figma-stage > div,
+      .figma-stage > div > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        left: 0 !important;
+        transition: width 0.6s cubic-bezier(0.2, 1, 0.3, 1), margin 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
       }
 
       .side-panel-header {
@@ -1452,37 +1451,6 @@
         <button class="side-panel-close" aria-label="Cerrar panel">&times;</button>
       </div>
       <div id="side-panel-content"></div>
-    </div>
-    <div id="desktop-navbar"
-      style="width: 1240px; height: 80px; left: 50%; transform: translateX(-50%); top: 20px; position: fixed; background: rgba(255, 255, 255, 0.04); border-radius: 10px; outline: 1px rgba(255, 255, 255, 0.02) solid; outline-offset: -1px; backdrop-filter: blur(60px); z-index: 10002;">
-      <div
-        style="width: 33.20px; padding-left: 20px; padding-right: 20px; left: 10px; top: 27.65px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
-        <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync"
-          src="./assets/logo.svg" alt="Faust Logo"
-          style="width: 32px; height: 24px; object-fit: contain; display: block" />
-      </div>
-      <div
-        style="height: 60px; padding-left: 40px; padding-right: 40px; padding-top: 10px; padding-bottom: 10px; left: 357px; top: 10px; position: absolute; overflow: hidden; border-radius: 55px; justify-content: center; align-items: center; gap: 48px; display: inline-flex">
-        <div class="navbar-menu-link no-select"
-          style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
-          Software</div>
-        <div class="navbar-menu-link no-select"
-          style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
-          Estrategia</div>
-        <div class="navbar-menu-link no-select"
-          style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
-          Sobre Nosotros</div>
-        <div class="navbar-menu-link no-select"
-          style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
-          Contacto</div>
-      </div>
-      <a class="subtle-gray-btn navbar-talk-btn" href="#comienza-aqui" data-propiedad-1="Predeterminado"
-        style="height: 60px; padding-left: 48px; padding-right: 48px; padding-top: 10px; padding-bottom: 10px; right: 10px; top: 10px; position: absolute; background: rgba(77.73, 77.73, 77.73, 0.10); overflow: hidden; border-radius: 8px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 10px; display: inline-flex; text-decoration: none">
-        <div
-          style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 16px; word-wrap: break-word">
-          Let’s talk</div>
-        <span class="icon-open" aria-hidden="true" style="color: white;"></span>
-      </a>
     </div>
     <div id="figma-stage" class="figma-stage">
       <div style="width: 1920px; height: 5308px; position: relative; background: transparent; overflow: hidden">
@@ -1984,15 +1952,46 @@
                           style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Instrument Sans; font-weight: 500; line-height: 17.50px; word-wrap: break-word">
                           https://faust.mx</div>
                       </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <div id="desktop-navbar"
+            style="width: 1240px; height: 80px; left: 340px; top: 20px; position: absolute; background: rgba(255, 255, 255, 0.04); border-radius: 10px; outline: 1px rgba(255, 255, 255, 0.02) solid; outline-offset: -1px; backdrop-filter: blur(60px)">
+            <div
+              style="width: 33.20px; padding-left: 20px; padding-right: 20px; left: 10px; top: 27.65px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
+              <img class="no-select logo-locked" draggable="false" loading="eager" fetchpriority="high" decoding="sync"
+                src="./assets/logo.svg" alt="Faust Logo"
+                style="width: 32px; height: 24px; object-fit: contain; display: block" />
+            </div>
+            <div
+              style="height: 60px; padding-left: 40px; padding-right: 40px; padding-top: 10px; padding-bottom: 10px; left: 357px; top: 10px; position: absolute; overflow: hidden; border-radius: 55px; justify-content: center; align-items: center; gap: 48px; display: inline-flex">
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Software</div>
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Estrategia</div>
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Sobre Nosotros</div>
+              <div class="navbar-menu-link no-select"
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 400; line-height: 16px; word-wrap: break-word">
+                Contacto</div>
+            </div>
+            <a class="subtle-gray-btn navbar-talk-btn" href="#comienza-aqui" data-propiedad-1="Predeterminado"
+              style="height: 60px; padding-left: 48px; padding-right: 48px; padding-top: 10px; padding-bottom: 10px; right: 10px; top: 10px; position: absolute; background: rgba(77.73, 77.73, 77.73, 0.10); overflow: hidden; border-radius: 8px; outline: 1px rgba(255, 255, 255, 0.05) solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 10px; display: inline-flex; text-decoration: none">
+              <div
+                style="text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 16px; font-family: Instrument Sans; font-weight: 500; line-height: 16px; word-wrap: break-word">
+                Let’s talk</div>
+              <span class="icon-open" aria-hidden="true" style="color: white;"></span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </main>
   <script>
     (function () {
@@ -2915,6 +2914,26 @@
       const closeBtn = document.querySelector('.side-panel-close');
       let builder = mount.querySelector('.plan-builder');
 
+      const navbar = document.getElementById('desktop-navbar');
+
+      function positionNavbar() {
+        if (!navbar) return;
+        var isPushed = document.body.classList.contains('pushed-layout');
+        if (isPushed) {
+          // Get the visible stage width
+          var stageEl = document.getElementById('figma-stage');
+          var stageW = stageEl ? stageEl.offsetWidth : window.innerWidth;
+          var navW = Math.min(1240, stageW - 40); // 20px margin each side
+          var navLeft = (stageW - navW) / 2;
+          navbar.style.left = navLeft + 'px';
+          navbar.style.width = navW + 'px';
+        } else {
+          // Restore original Figma coordinates
+          navbar.style.left = '340px';
+          navbar.style.width = '1240px';
+        }
+      }
+
       function syncLayout() {
         const isDesktop = window.innerWidth >= 1024;
         if (isDesktop) {
@@ -2927,13 +2946,15 @@
           }
           document.body.classList.remove('pushed-layout');
         }
+        positionNavbar();
       }
 
       function openSidebar() {
         if (window.innerWidth >= 1024) {
           document.body.classList.add('pushed-layout');
+          // Wait a frame for the stage to resize, then position navbar
+          requestAnimationFrame(positionNavbar);
         } else {
-          // Fallback to smooth scroll on mobile if already in-page
           const target = document.getElementById('comienza-aqui');
           if (target) {
             window.scrollTo({
@@ -2946,6 +2967,7 @@
 
       function closeSidebar() {
         document.body.classList.remove('pushed-layout');
+        positionNavbar();
       }
 
       // Initial sync
