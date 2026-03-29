@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,37 +8,57 @@
   <link rel="icon" type="image/png" href="assets/AB%20Test%20Flow/tab_icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
   <style>
     @font-face {
       font-family: "Poppins";
       src: url("./assets/poppins/Poppins-Regular.ttf") format("truetype");
-      font-weight: 400; font-style: normal; font-display: swap;
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
     }
+
     @font-face {
       font-family: "Poppins";
       src: url("./assets/poppins/Poppins-Medium.ttf") format("truetype");
-      font-weight: 500; font-style: normal; font-display: swap;
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
     }
+
     @font-face {
       font-family: "Poppins";
       src: url("./assets/poppins/Poppins-SemiBold.ttf") format("truetype");
-      font-weight: 600; font-style: normal; font-display: swap;
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
     }
+
     @font-face {
       font-family: "Poppins";
       src: url("./assets/poppins/Poppins-Bold.ttf") format("truetype");
-      font-weight: 700; font-style: normal; font-display: swap;
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
     }
+
     @font-face {
       font-family: "Aeternum";
       src: url("./Aeternum-Medium.ttf") format("truetype");
-      font-weight: 400; font-style: normal; font-display: swap;
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
     }
 
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0; padding: 0;
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
       background: #050505;
       min-height: 100%;
       color: white;
@@ -47,10 +68,23 @@
     }
 
     /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.6); border-radius: 2px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.85); }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.85);
+    }
 
     .container {
       width: 100%;
@@ -93,54 +127,173 @@
     }
 
     /* Form Styles */
-    .plan-builder { align-self: stretch; display: flex; flex-direction: column; gap: 40px; }
-    .plan-stack { display: flex; flex-direction: column; gap: 10px; }
+    .plan-builder {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .plan-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .plan-card {
-      padding: 40px; background: #1a1a1a; border-radius: 10px;
-      display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+      padding: 40px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
       transition: background-color 160ms ease, border-color 160ms ease;
       border: 1px solid transparent;
     }
-    .plan-card.is-selected { border-color: rgba(255, 255, 255, 0.08); background: #1A1A1A; }
-    .plan-card.recommended { background: rgba(26, 26, 26, 0.5); }
-    .plan-card-body { flex: 1 1 0; min-width: 240px; display: flex; align-items: center; gap: 40px; }
-    .plan-content { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
-    .plan-title { font-size: 16px; font-weight: 500; line-height: 1; }
-    .plan-subtitle { color: rgba(255, 255, 255, 0.8); font-size: 14px; line-height: 1.4; }
-    .plan-price { color: rgba(255, 255, 255, 0.8); font-size: 16px; white-space: nowrap; font-family: "Instrument Sans", sans-serif; }
-    .plan-left-state { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .plan-left-state img { width: 16px; height: 16px; object-fit: contain; }
-    
+
+    .plan-card.is-selected {
+      border-color: rgba(255, 255, 255, 0.08);
+      background: #1A1A1A;
+    }
+
+    .plan-card.recommended {
+      background: rgba(26, 26, 26, 0.5);
+    }
+
+    .plan-card-body {
+      flex: 1 1 0;
+      min-width: 240px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .plan-content {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .plan-title {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .plan-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .plan-price {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      white-space: nowrap;
+      font-family: "Instrument Sans", sans-serif;
+    }
+
+    .plan-left-state {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .plan-left-state img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
     .plan-toggle {
-      width: 60px; height: 40px; border: 0; border-radius: 25px;
-      background: rgba(255, 255, 255, 0.1); cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center;
+      width: 60px;
+      height: 40px;
+      border: 0;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: background 0.2s ease, transform 0.1s ease;
     }
-    .plan-toggle:hover { background: rgba(255, 255, 255, 0.16); }
-    .plan-toggle:active { transform: scale(0.96); }
-    .plan-toggle img { width: 12px; height: 12px; }
 
-    .plan-income { justify-content: space-between; }
+    .plan-toggle:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .plan-toggle:active {
+      transform: scale(0.96);
+    }
+
+    .plan-toggle img {
+      width: 12px;
+      height: 12px;
+    }
+
+    .plan-income {
+      justify-content: space-between;
+    }
+
     .plan-income-input-wrap {
-      position: relative; height: 52px; padding: 0 20px;
-      background: rgba(141, 141, 141, 0.1); border-radius: 10px;
-      display: inline-flex; align-items: center; gap: 8px; min-width: 220px;
+      position: relative;
+      height: 52px;
+      padding: 0 20px;
+      background: rgba(141, 141, 141, 0.1);
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 220px;
     }
-    .plan-income-input-wrap::after {
-      content: ""; position: absolute; inset: -4px;
-      border-radius: 14px; border: 1px solid transparent;
-      transition: border-color 0.2s ease; pointer-events: none;
-    }
-    .plan-income-input-wrap:focus-within::after { border-color: white; }
-    .plan-income-prefix { font-weight: 500; font-size: 16px; color: white; }
-    .plan-income-input {
-      width: 100%; min-width: 84px; background: transparent; border: 0; outline: none;
-      color: rgba(255, 255, 255, 0.8); font-size: 16px; font-family: inherit;
-    }
-    .plan-income-input::placeholder { color: rgba(255, 255, 255, 0.4); }
 
-    .plan-recommend { display: flex; flex-direction: column; gap: 10px; }
+    .plan-income-input-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease;
+      pointer-events: none;
+    }
+
+    .plan-income-input-wrap:focus-within::after {
+      border-color: white;
+    }
+
+    .plan-income-prefix {
+      font-weight: 500;
+      font-size: 16px;
+      color: white;
+    }
+
+    .plan-income-input {
+      width: 100%;
+      min-width: 84px;
+      background: transparent;
+      border: 0;
+      outline: none;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    .plan-income-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .plan-recommend {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .plan-recommend-title {
       color: rgba(255, 255, 255, 0.8);
       font-size: 16px;
@@ -149,16 +302,31 @@
       line-height: 19.2px;
       margin-bottom: 10px;
     }
-    .plan-recommend.is-empty .plan-recommend-title { display: none; }
 
-    .cta-shell { align-self: center; margin-top: 20px; }
+    .plan-recommend.is-empty .plan-recommend-title {
+      display: none;
+    }
+
+    .cta-shell {
+      align-self: center;
+      margin-top: 20px;
+    }
+
     .cta-btn {
-      height: 64px; padding: 0 60px;
-      background: #0030FF; color: white; border-radius: 40px;
-      display: inline-flex; align-items: center; justify-content: center;
-      text-decoration: none; font-weight: 500; cursor: pointer;
+      height: 64px;
+      padding: 0 60px;
+      background: #0030FF;
+      color: white;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
       transition: background 0.4s cubic-bezier(0.2, 1, 0.3, 1), transform 0.2s ease;
-      font-size: 16px; gap: 10px;
+      font-size: 16px;
+      gap: 10px;
     }
 
     footer {
@@ -169,16 +337,38 @@
     }
 
     @media (max-width: 768px) {
-      .container { padding: 60px 20px; }
-      .title { font-size: 36px; }
-      .plan-card { padding: 30px 24px; gap: 24px; }
-      .plan-card-body { gap: 20px; }
-      .plan-description { display: none; }
-      .plan-recommend .plan-description { display: block; }
-      .plan-income-input-wrap { width: 100%; }
+      .container {
+        padding: 60px 20px;
+      }
+
+      .title {
+        font-size: 36px;
+      }
+
+      .plan-card {
+        padding: 30px 24px;
+        gap: 24px;
+      }
+
+      .plan-card-body {
+        gap: 20px;
+      }
+
+      .plan-description {
+        display: none;
+      }
+
+      .plan-recommend .plan-description {
+        display: block;
+      }
+
+      .plan-income-input-wrap {
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="brand-header">
@@ -186,7 +376,7 @@
       <div class="brand-name">Faust Partners™</div>
     </div>
 
-    <div class="title">Comienza aquí</div>
+    <div class="title">Configura tu plan</div>
 
     <div class="plan-builder">
       <div class="plan-stack plan-sortable">
@@ -197,16 +387,18 @@
           </div>
           <label class="plan-income-input-wrap" for="monthly-income">
             <span class="plan-income-prefix">MXN</span>
-            <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric" autocomplete="off" placeholder="1,000,000" />
+            <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric" autocomplete="off"
+              placeholder="1,000,000" />
           </label>
         </div>
-        
+
         <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true" data-price="0">
           <div class="plan-card-body">
             <span class="plan-left-state"><img src="./assets/AB Test Flow/check.svg" alt="" /></span>
             <div class="plan-content">
               <div class="plan-title">Prototipado y desarrollo web</div>
-              <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y desarrollo/actualización de la plataforma web</div>
+              <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y desarrollo/actualización de la
+                plataforma web</div>
             </div>
           </div>
           <div class="plan-price">Sin costo</div>
@@ -218,7 +410,8 @@
             <span class="plan-left-state"><img src="./assets/AB Test Flow/check.svg" alt="" /></span>
             <div class="plan-content">
               <div class="plan-title">Gestión de marketing</div>
-              <div class="plan-subtitle plan-description">Gestión de estrategias de marketing digital basadas en comportamiento humano.</div>
+              <div class="plan-subtitle plan-description">Gestión de estrategias de marketing digital basadas en
+                comportamiento humano.</div>
             </div>
           </div>
           <div class="plan-price">Sin costo</div>
@@ -229,12 +422,14 @@
       <div class="plan-recommend plan-sortable">
         <div class="plan-recommend-title">Disponible para incluir</div>
         <!-- Will be populated if cards are deselected -->
-        <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false" data-price="265000">
+        <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false"
+          data-price="265000">
           <div class="plan-card-body">
             <span class="plan-left-state"><img src="./assets/AB Test Flow/dash.svg" alt="" /></span>
             <div class="plan-content">
               <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
-              <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y mejoras iterativas.</div>
+              <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y mejoras
+                iterativas.</div>
             </div>
           </div>
           <div class="plan-price">MXN 265,000</div>
@@ -243,7 +438,8 @@
       </div>
 
       <div class="cta-shell">
-        <a id="whatsapp-plan-cta" class="cta-btn magnetic-cta" href="https://wa.me/524428767130?text=Hola%2C%20quiero%20ser%20socio%20de%20faust.mx">
+        <a id="whatsapp-plan-cta" class="cta-btn magnetic-cta"
+          href="https://wa.me/524428767130?text=Hola%2C%20quiero%20ser%20socio%20de%20faust.mx">
           <div id="plan-cta-text">Obtener plan por $0</div>
         </a>
       </div>
@@ -274,7 +470,7 @@
         var selected = card.getAttribute("data-selected") === "true";
         var left = card.querySelector(".plan-left-state img");
         var toggleIcon = card.querySelector(".plan-toggle img");
-        
+
         card.classList.toggle("is-selected", selected);
         left.src = ASSET_BASE + (selected ? "check.svg" : "dash.svg");
         toggleIcon.src = ASSET_BASE + (selected ? "cross.svg" : "plus.svg");
@@ -336,16 +532,16 @@
       }
 
       // Magnetic Effect
-      (function() {
+      (function () {
         var ctas = document.querySelectorAll(".magnetic-cta");
-        ctas.forEach(function(el) {
-          el.addEventListener("mousemove", function(e) {
+        ctas.forEach(function (el) {
+          el.addEventListener("mousemove", function (e) {
             var rect = el.getBoundingClientRect();
             var x = e.clientX - rect.left - rect.width / 2;
             var y = e.clientY - rect.top - rect.height / 2;
             el.style.transform = "translate3d(" + (x * 0.25) + "px, " + (y * 0.25) + "px, 0)";
           });
-          el.addEventListener("mouseleave", function() {
+          el.addEventListener("mouseleave", function () {
             el.style.transform = "translate3d(0, 0, 0)";
           });
         });
@@ -359,17 +555,17 @@
         function buildWhatsappMessage() {
           var selected = document.querySelectorAll(".plan-service.is-selected");
           var incomeInput = document.getElementById("monthly-income");
-          
+
           var services = [];
-          selected.forEach(function(card) {
+          selected.forEach(function (card) {
             var title = card.querySelector(".plan-title");
-            if(title) services.push(title.textContent.trim());
+            if (title) services.push(title.textContent.trim());
           });
 
           var incomeStr = incomeInput ? incomeInput.value.trim() : "";
-          var greeting = "¡Hola! Quisiera recibir una auditoría personalizada de faust.mx";
+          var greeting = "Buen día. Quisiera recibir una auditoría personalizada de faust.mx";
           var body = "\n\nServicios seleccionados:\n- " + (services.length ? services.join("\n- ") : "Ninguno");
-          if(incomeStr) {
+          if (incomeStr) {
             body += "\n\nIngreso mensual estimado: MXN " + incomeStr;
           }
 
@@ -391,4 +587,5 @@
     })();
   </script>
 </body>
+
 </html>
