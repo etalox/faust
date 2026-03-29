@@ -1150,6 +1150,123 @@
         font-size: 28px !important;
         line-height: 1.15 !important;
       }
+    }
+
+    /* --- Side Panel Styles (Desktop Only) --- */
+    @media (min-width: 1024px) {
+      .side-panel {
+        position: fixed;
+        right: -450px;
+        top: 0;
+        width: 450px;
+        height: 100vh;
+        background: #050505;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 10001;
+        transition: transform 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding-bottom: 80px;
+      }
+
+      .pushed-layout .side-panel {
+        transform: translateX(-450px);
+      }
+
+      .pushed-layout .figma-stage {
+        margin-right: 450px !important;
+        width: calc(100% - 450px) !important;
+        overflow: hidden !important;
+      }
+
+      .figma-stage,
+      .figma-stage > div,
+      .figma-stage > div > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        left: 0 !important;
+        transition: width 0.6s cubic-bezier(0.2, 1, 0.3, 1), margin 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
+      }
+
+      .side-panel-header {
+        padding: 40px 32px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .side-panel-title {
+        color: white;
+        font-family: Poppins;
+        font-size: 22px;
+        line-height: 120%;
+      }
+
+      .side-panel-close {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .side-panel-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .side-panel .plan-builder {
+        padding: 0 32px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .side-panel .plan-card {
+        padding: 24px !important;
+        gap: 16px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+      }
+
+      .side-panel .plan-income {
+        border-radius: 20px !important;
+      }
+
+      .side-panel .plan-income-input-wrap {
+        width: 100% !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+      }
+
+      .side-panel .plan-card-body {
+        gap: 16px !important;
+      }
+
+      .side-panel .plan-title {
+        font-size: 16px !important;
+        line-height: 130% !important;
+      }
+
+      .side-panel .plan-subtitle {
+        font-size: 13px !important;
+      }
+
+      .side-panel #whatsapp-plan-cta {
+        width: 100% !important;
+        margin-top: 20px !important;
+      }
+    }
+
+    @media (max-width: 1200px) {
+
 
       .figma-stage [style*="font-size: 24px"] {
         font-size: 20px !important;
@@ -1302,6 +1419,14 @@
 <body>
   <video id="hero-bg-video" class="hero-video-bg" loop muted playsinline preload="none"></video>
   <main class="figma-page poppins-alt">
+    <!-- Side Panel -->
+    <div id="side-panel" class="side-panel">
+      <div class="side-panel-header">
+        <div class="side-panel-title">Comienza aquí</div>
+        <button class="side-panel-close" aria-label="Cerrar panel">&times;</button>
+      </div>
+      <div id="side-panel-content"></div>
+    </div>
     <div id="figma-stage" class="figma-stage">
       <div style="width: 1920px; height: 5308px; position: relative; background: transparent; overflow: hidden">
         <div
@@ -1580,7 +1705,8 @@
                   <div id="comienza-aqui"
                     style="width: auto; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 40px; font-family: Poppins; font-weight: 400; line-height: 40px; word-wrap: break-word">
                     Comienza aquí</div>
-                  <div class="plan-builder">
+                  <div id="plan-builder-mount">
+                    <div class="plan-builder">
                     <div class="plan-stack plan-sortable">
                       <div class="plan-card plan-income">
                         <div
@@ -1651,6 +1777,7 @@
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="12" height="12" />
                         </button>
                       </div>
+                  </div>
                     </div>
                     <div id="whatsapp-plan-cta" class="magnetic-cta hero-cta-btn"
                       style="align-self: center; width: auto; height: 64px; padding-left: 48px; padding-right: 48px; background: #0030FF; overflow: hidden; border-radius: 40px; justify-content: center; align-items: center; display: inline-flex">
@@ -2755,9 +2882,70 @@
 
   <script>
     (function () {
+      const panel = document.getElementById('side-panel');
+      const panelContent = document.getElementById('side-panel-content');
+      const mount = document.getElementById('plan-builder-mount');
+      const closeBtn = document.querySelector('.side-panel-close');
+      let builder = mount.querySelector('.plan-builder');
+
+      function syncLayout() {
+        const isDesktop = window.innerWidth >= 1024;
+        if (isDesktop) {
+          if (!panelContent.contains(builder)) {
+            panelContent.appendChild(builder);
+          }
+        } else {
+          if (!mount.contains(builder)) {
+            mount.appendChild(builder);
+          }
+          document.body.classList.remove('pushed-layout');
+        }
+      }
+
+      function openSidebar() {
+        if (window.innerWidth >= 1024) {
+          document.body.classList.add('pushed-layout');
+        } else {
+          // Fallback to smooth scroll on mobile if already in-page
+          const target = document.getElementById('comienza-aqui');
+          if (target) {
+            window.scrollTo({
+              top: target.offsetTop - 20,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }
+
+      function closeSidebar() {
+        document.body.classList.remove('pushed-layout');
+      }
+
+      // Initial sync
+      syncLayout();
+      window.addEventListener('resize', syncLayout);
+
+      // Intercept 'Aplicar' clicks
+      document.querySelectorAll('a[href="#comienza-aqui"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          if (window.innerWidth >= 1024) {
+            e.preventDefault();
+            openSidebar();
+          }
+        });
+      });
+
+      closeBtn.addEventListener('click', closeSidebar);
+
+      // Close on ESC
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeSidebar();
+      });
+
+      // Existing smooth scroll for OTHER anchors
       function smoothScrollTo(targetEl) {
         if (!targetEl) return;
-        var headerOffset = 120; 
+        var headerOffset = 120;
         var elementPosition = targetEl.getBoundingClientRect().top;
         var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -2768,6 +2956,7 @@
       }
 
       document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+        if (anchor.getAttribute('href') === '#comienza-aqui') return; // Handled by sidebar on desktop
         anchor.addEventListener('click', function (e) {
           var id = this.getAttribute('href');
           if (id === '#') return;
