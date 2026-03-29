@@ -1199,16 +1199,20 @@
         overflow: hidden !important;
       }
 
-      /* Navbar shifting on desktop (Preserve Original Centering) */
+      /* Navbar shifting on desktop (Adaptive Space Management) */
       #desktop-navbar {
+        z-index: 10002 !important;
+        right: 340px !important; /* Base target for transition */
         transition: left 0.6s cubic-bezier(0.2, 1, 0.3, 1), 
+                    right 0.6s cubic-bezier(0.2, 1, 0.3, 1),
                     width 0.6s cubic-bezier(0.2, 1, 0.3, 1),
                     transform 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
       }
 
       .pushed-layout #desktop-navbar {
         left: 20px !important;
-        width: 1430px !important; /* Fixed width for 1920px stage coordinates */
+        right: 20px !important;
+        width: calc(100% - 40px) !important; /* 40px = 20px (left) + 20px (right) */
         transform: translateX(0) !important;
       }
 
