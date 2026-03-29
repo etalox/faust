@@ -1193,12 +1193,6 @@
         transform: translateX(-450px);
       }
 
-      .pushed-layout .figma-stage {
-        margin-right: 450px !important;
-        width: calc(100% - 450px) !important;
-        overflow: hidden !important;
-      }
-
       /* Navbar shifting on desktop (Root Viewport Precision) */
       #desktop-navbar {
         transition: left 0.6s cubic-bezier(0.2, 1, 0.3, 1), 
@@ -1213,13 +1207,13 @@
         max-width: 1240px !important;
       }
 
-      .figma-stage,
-      .figma-stage > div,
-      .figma-stage > div > div {
-        width: 100% !important;
-        max-width: 100% !important;
-        left: 0 !important;
-        transition: width 0.6s cubic-bezier(0.2, 1, 0.3, 1), margin 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
+      .pushed-layout .figma-page {
+        padding-right: 450px !important;
+        transition: padding 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
+      }
+
+      .figma-page {
+        transition: padding 0.6s cubic-bezier(0.2, 1, 0.3, 1) !important;
       }
 
       .side-panel-header {
