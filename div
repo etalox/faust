@@ -1,0 +1,54 @@
+223:    .figma-stage {
+235:    .figma-stage [style*="font-family: Poppins"] {
+243:    .figma-stage [style*="font-size: 40px"],
+244:    .figma-stage [style*="font-size: 48px"],
+245:    .figma-stage [style*="font-size: 56px"],
+246:    .figma-stage [style*="font-size: 64px"],
+247:    .figma-stage [style*="font-size: 72px"],
+248:    .figma-stage [style*="font-size: 80px"],
+249:    .figma-stage [style*="font-size: 96px"],
+250:    .figma-stage [style*="font-size: 100px"] {
+255:    .figma-stage>div {
+263:    .figma-stage>div>div:first-child {
+270:    .figma-stage>div>div:first-child>div:last-child {
+284:    .figma-stage>div>div:first-child>div:last-child>div {
+288:    .figma-stage>div>div:first-child>div:last-child>div:nth-child(2) {
+292:    .figma-stage>div>div:first-child>div:first-child {
+997:      .figma-stage [style*="width: 1360px"],
+998:      .figma-stage [style*="width: 1240px"],
+999:      .figma-stage [style*="width: 600px"],
+1000:      .figma-stage [style*="width: 400px"] {
+1005:      .figma-stage [style*="min-width: 360px"] {
+1009:      .figma-stage [style*="min-width: 320px"] {
+1013:      .figma-stage [style*="padding-left: 80px; padding-right: 80px"] {
+1018:      .figma-stage [style*="padding-left: 40px; padding-right: 40px"] {
+1023:      .figma-stage [style*="gap: 160px"] {
+1027:      .figma-stage [style*="gap: 100px"] {
+1031:      .figma-stage [style*="gap: 80px"] {
+1046:      .figma-stage [style*="font-size: 64px"] {
+1051:      .figma-stage [style*="font-size: 40px"] {
+1064:      .figma-stage>div>div:first-child>div:last-child {
+1083:      .figma-stage>div>div:first-child>div:last-child>div:nth-child(2) {
+1087:      .figma-stage>div>div:first-child>div:last-child>div:nth-child(3) {
+1092:      .figma-stage>div>div:first-child>div:last-child>a.navbar-talk-btn {
+1099:      .figma-stage>div>div:first-child>div:last-child>a.navbar-talk-btn>div {
+1105:      .figma-stage>div>div:first-child>div:last-child.navbar-visible {
+1110:      .figma-stage>div>div:first-child>div:first-child {
+1119:      .figma-stage [style*="height: 1080px"] {
+1124:      .figma-stage [style*="font-size: 64px"] {
+1128:      .figma-stage [style*="font-size: 36px"] {
+1181:      .pushed-layout .figma-stage {
+1192:      .sidebar-closing .figma-stage {
+1203:      .pushed-layout .figma-stage::-webkit-scrollbar,
+1204:      .sidebar-closing .figma-stage::-webkit-scrollbar {
+1209:      .pushed-layout .figma-stage::-webkit-scrollbar-track,
+1210:      .sidebar-closing .figma-stage::-webkit-scrollbar-track {
+1214:      .pushed-layout .figma-stage::-webkit-scrollbar-thumb,
+1215:      .sidebar-closing .figma-stage::-webkit-scrollbar-thumb {
+1220:      .pushed-layout .figma-stage::-webkit-scrollbar-thumb:hover,
+1221:      .sidebar-closing .figma-stage::-webkit-scrollbar-thumb:hover {
+1238:      .figma-stage,
+1239:      .figma-stage > div,
+1240:      .figma-stage > div > div {
+1325:      .figma-stage [style*="font-size: 24px"] {
+1330:      .figma-stage [style*="font-size: 20px"] {
