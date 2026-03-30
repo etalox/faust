@@ -1139,10 +1139,18 @@
         line-height: 14px !important;
       }
 
-      /* Estado visible del navbar en mobile (cuando JS añade .navbar-visible) */
+      /* Estado visible del navbar en mobile cuando JS añade .navbar-visible */
       .figma-stage>div>div:first-child>div:last-child.navbar-visible {
+        position: fixed !important;
+        /* Fuerza a que se quede anclado a la pantalla */
+        top: 10px !important;
+        /* Distancia desde la parte superior */
+        left: 50% !important;
+        /* Centrado horizontal */
         transform: translateX(-50%) translateY(0) !important;
         opacity: 1 !important;
+        z-index: 10000 !important;
+        /* Asegura que esté por encima de todos los demás elementos */
       }
 
       .figma-stage>div>div:first-child>div:first-child {
