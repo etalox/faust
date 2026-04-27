@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faust Partners - Proyección de Ingresos v6 (UI Update)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --faust-blue: #0000FF;
+            --bg-dark: #000000; /* Fondo negro puro */
+            --panel-bg: #121212; /* Gris oscuro para paneles */
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border-color: #222222;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            /* BDO Grotesk como fuente principal */
+            font-family: 'BDO Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 380px;
+            min-width: 320px;
+            background: var(--panel-bg);
+            padding: 2rem;
+            overflow-y: auto;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            height: 100%;
+            background: var(--bg-dark);
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+            font-weight: 500;
+            color: var(--text-main); /* Títulos blancos */
+        }
+
+        .header-logo {
+            color: var(--faust-blue);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--text-muted); /* Parámetros blancos */
+        }
+
+        input[type="text"].format-number, input[type="number"], input[type="range"] {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.6rem;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        .range-value {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-main); /* Valores de los parámetros en blanco */
+            margin-top: 0.4rem;
+            font-weight: 400;
+        }
+
+        .chart-container {
+            flex: 1;
+            position: relative;
+            min-height: 0;
+            width: 100%;
+            background: var(--panel-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-wrapper {
+            flex: 1;
+            position: relative;
+            min-height: 0;
+            width: 100%;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title-block h2 {
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .chart-title-block p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .view-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .view-switch input[type="checkbox"] {
+            width: 38px;
+            height: 20px;
+            appearance: none;
+            background: var(--border-color);
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid #2c2c2c;
+            transition: background 0.2s ease;
+        }
+
+        .view-switch input[type="checkbox"]::before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s ease;
+        }
+
+        .view-switch input[type="checkbox"]:checked {
+            background: var(--faust-blue);
+        }
+
+        .view-switch input[type="checkbox"]:checked::before {
+            transform: translateX(18px);
+        }
+
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .schemes-grid .control-group {
+            margin-bottom: 0;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            padding: 0;
+            height: 4px;
+            background: var(--border-color);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 24px;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .compact-group {
+            background: var(--bg-dark);
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
+        }
+
+        .compact-group .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 800px) {
+            body {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                overflow-y: visible;
+            }
+            .main-content {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2 style="font-size: 1.2rem; margin-bottom: 1.5rem;">Parámetros del Proyecto</h2>
+
+        <div class="control-group">
+            <label>Facturación Mensual Cliente (MXN)</label>
+            <input type="text" inputmode="numeric" id="monthlyRevenue" class="format-number" value="1,000,000">
+        </div>
+
+        <div class="control-group">
+            <label>Mejora de Conversión Esperada (%)</label>
+            <input type="range" id="conversionLift" min="0" max="100" value="20" step="5" oninput="updateChart()">
+            <div class="range-value"><span id="liftValue">20%</span></div>
+        </div>
+
+        <h3 style="font-size: 1rem; margin-top: 1.2rem; margin-bottom: 1rem;">Ramp-up de Tráfico Experimental</h3>
+        <div class="compact-group">
+            <div class="control-group">
+                <label>Mes 1 Activo (Absoluto Mes 3)</label>
+                <input type="range" id="expGroup1" min="0" max="90" value="25" step="5" oninput="updateChart()">
+                <div class="range-value"><span id="groupValue1">25%</span><span style="color: var(--text-muted); font-size: 0.7rem;">Max 90%</span></div>
+            </div>
+            <div class="control-group">
+                <label>Mes 2 Activo (Absoluto Mes 4)</label>
+                <input type="range" id="expGroup2" min="0" max="90" value="50" step="5" oninput="updateChart()">
+                <div class="range-value"><span id="groupValue2">50%</span><span style="color: var(--text-muted); font-size: 0.7rem;">Max 90%</span></div>
+            </div>
+            <div class="control-group">
+                <label>Mes 3+ Activo (Estabilizado)</label>
+                <input type="range" id="expGroup3" min="0" max="90" value="75" step="5" oninput="updateChart()">
+                <div class="range-value"><span id="groupValue3">75%</span><span style="color: var(--text-muted); font-size: 0.7rem;">Max 90%</span></div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1rem; margin-top: 1.2rem; margin-bottom: 1rem;">Estructura de Costos</h3>
+        <div class="control-group">
+            <label>Costo Operativo Setup Real (MXN)</label>
+            <input type="text" inputmode="numeric" id="setupCost" class="format-number" value="40,000">
+        </div>
+        <div class="control-group">
+            <label>Aportación del Cliente al Setup (MXN)</label>
+            <input type="text" inputmode="numeric" id="clientInvestment" class="format-number" value="40,000">
+        </div>
+        <div class="control-group">
+            <label>Costo Operativo Mensual (MXN)</label>
+            <input type="text" inputmode="numeric" id="monthlyOpCost" class="format-number" value="20,000">
+        </div>
+
+        <h3 style="font-size: 1rem; margin-top: 1.2rem; margin-bottom: 1rem;">Tiempos y Esquemas</h3>
+        <div class="control-group">
+            <label>Meses a Proyectar</label>
+            <input type="range" id="projMonths" min="12" max="48" value="24" step="1" oninput="updateChart()">
+            <div class="range-value"><span id="projMonthsValue">24 meses</span></div>
+        </div>
+        <div class="control-group">
+            <label>Fin del 1er Esquema Activo (Mes Absoluto)</label>
+            <input type="number" id="activeMonths" value="24" min="1" max="48" oninput="updateChart()">
+        </div>
+        <div class="control-group">
+            <label>Frecuencia de Clientes (meses)</label>
+            <input type="number" id="clientFrequency" value="6" min="0" max="48" oninput="updateChart()">
+        </div>
+        <div class="schemes-grid">
+            <div class="control-group">
+                <label>Activo Inicial</label>
+                <input type="number" id="revShare1" value="25" oninput="updateChart()">
+            </div>
+            <div class="control-group">
+                <label>Iteración Cont.</label>
+                <input type="number" id="revShare2" value="20" oninput="updateChart()">
+            </div>
+            <div class="control-group">
+                <label>Pasivo Temp.</label>
+                <input type="number" id="revShare3" value="15" oninput="updateChart()">
+            </div>
+            <div class="control-group">
+                <label>Pasivo Maduro</label>
+                <input type="number" id="revShare4" value="5" oninput="updateChart()">
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title-block">
+                    <h2 id="chartTitle">Flujo de Caja Real Acumulado (Net Profit)</h2>
+                    <p id="chartDescription">
+                        El crecimiento del tráfico (Ramp-up) retrasa el punto de equilibrio. El Mes 4 cobra el ingreso del Mes 3 (con tráfico al 25%). El Mes 5 cobra el tráfico del Mes 4 (50%). El tráfico se estabiliza a partir del Mes 5 (cobrado en el Mes 6).
+                    </p>
+                </div>
+                <label class="view-switch" for="viewModeMonthly">
+                    <span>Acumulado</span>
+                    <input type="checkbox" id="viewModeMonthly" oninput="updateChart()">
+                    <span>Ingreso/Mes</span>
+                </label>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="projectionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let myChart = null;
+
+        document.querySelectorAll('.format-number').forEach(input => {
+            input.addEventListener('input', function(e) {
+                let cursor = this.selectionStart;
+                let originalLength = this.value.length;
+                let val = this.value.replace(/,/g, '').replace(/[^\d.]/g, '');
+                if (val !== '') {
+                    let parts = val.split('.');
+                    parts[0] = parseInt(parts[0]).toLocaleString('en-US');
+                    this.value = parts.join('.');
+                } else {
+                    this.value = '';
+                }
+                let newLength = this.value.length;
+                cursor = cursor + (newLength - originalLength);
+                this.setSelectionRange(cursor, cursor);
+                updateChart();
+            });
+        });
+
+        function getNumericValue(id) {
+            return parseFloat(document.getElementById(id).value.replace(/,/g, '')) || 0;
+        }
+
+        function updateChart() {
+            const monthlyRevenue = getNumericValue('monthlyRevenue');
+            const setupCost = getNumericValue('setupCost');
+            const clientInvestment = getNumericValue('clientInvestment');
+            const monthlyOpCost = getNumericValue('monthlyOpCost');
+
+            const conversionLift = parseFloat(document.getElementById('conversionLift').value) / 100 || 0;
+            const expGroup1 = parseFloat(document.getElementById('expGroup1').value) / 100 || 0;
+            const expGroup2 = parseFloat(document.getElementById('expGroup2').value) / 100 || 0;
+            const expGroup3 = parseFloat(document.getElementById('expGroup3').value) / 100 || 0;
+
+            const projMonths = parseInt(document.getElementById('projMonths').value) || 24;
+            const activeMonths = parseInt(document.getElementById('activeMonths').value) || 24;
+            const clientFrequencyRaw = parseInt(document.getElementById('clientFrequency').value);
+            const clientFrequency = Number.isFinite(clientFrequencyRaw) ? clientFrequencyRaw : 6;
+
+            const rs1 = parseFloat(document.getElementById('revShare1').value) / 100 || 0;
+            const rs2 = parseFloat(document.getElementById('revShare2').value) / 100 || 0;
+            const rs3 = parseFloat(document.getElementById('revShare3').value) / 100 || 0;
+            const rs4 = parseFloat(document.getElementById('revShare4').value) / 100 || 0;
+            const isMonthlyMode = document.getElementById('viewModeMonthly').checked;
+
+            document.getElementById('liftValue').innerText = (conversionLift * 100).toFixed(0) + '%';
+            document.getElementById('groupValue1').innerText = (expGroup1 * 100).toFixed(0) + '%';
+            document.getElementById('groupValue2').innerText = (expGroup2 * 100).toFixed(0) + '%';
+            document.getElementById('groupValue3').innerText = (expGroup3 * 100).toFixed(0) + '%';
+            document.getElementById('projMonthsValue').innerText = projMonths + ' meses';
+            document.getElementById('chartTitle').innerText = isMonthlyMode
+                ? 'Ingreso Neto por Mes'
+                : 'Flujo de Caja Real Acumulado (Net Profit)';
+            document.getElementById('chartDescription').innerText = isMonthlyMode
+                ? 'Vista mensual no acumulada. Se muestra el ingreso neto de cada mes con la misma lógica de ramp-up y esquemas.'
+                : 'El crecimiento del tráfico (Ramp-up) retrasa el punto de equilibrio. El Mes 4 cobra el ingreso del Mes 3 (con tráfico al 25%). El Mes 5 cobra el tráfico del Mes 4 (50%). El tráfico se estabiliza a partir del Mes 5 (cobrado en el Mes 6).';
+
+            const labels = [];
+            for (let i = 0; i <= projMonths; i++) {
+                labels.push('Mes ' + i);
+            }
+
+            const seriesLength = projMonths + 1;
+            const dataPathActive = new Array(seriesLength).fill(0);
+            const dataPathMature = new Array(seriesLength).fill(0);
+            const dataPathEarly = new Array(seriesLength).fill(0);
+            const dataPathActiveMonthly = new Array(seriesLength).fill(0);
+            const dataPathMatureMonthly = new Array(seriesLength).fill(0);
+            const dataPathEarlyMonthly = new Array(seriesLength).fill(0);
+            const matureVisible = new Array(seriesLength).fill(false);
+            const earlyVisible = new Array(seriesLength).fill(false);
+
+            const matureBranchMonth = activeMonths;
+            const earlyBranchMonth = 8; 
+            const stabilizedIncremental = monthlyRevenue * expGroup3 * conversionLift;
+
+            const clientStartMonths = [0];
+            if (clientFrequency > 0) {
+                for (let startMonth = clientFrequency; startMonth <= projMonths; startMonth += clientFrequency) {
+                    clientStartMonths.push(startMonth);
+                }
+            }
+
+            for (const startMonth of clientStartMonths) {
+                let capA = 0;
+                let capM = null;
+                let capE = null;
+
+                for (let m = 0; m <= projMonths; m++) {
+                    const relMonth = m - startMonth;
+                    if (relMonth < 0) continue;
+
+                    let currentRsA = 0;
+                    let incA = 0;
+                    let costA = 0;
+
+                    if (relMonth === 0) {
+                        capA = clientInvestment - setupCost;
+                        dataPathActiveMonthly[m] += capA;
+                    } else {
+                        if (relMonth >= 3) costA = monthlyOpCost;
+
+                        if (relMonth >= 4) {
+                            let trafficSplit = 0;
+                            if (relMonth === 4) trafficSplit = expGroup1; 
+                            else if (relMonth === 5) trafficSplit = expGroup2; 
+                            else trafficSplit = expGroup3; 
+
+                            const currentMonthlyIncremental = monthlyRevenue * trafficSplit * conversionLift;
+                            currentRsA = ((relMonth - 1) <= activeMonths) ? rs1 : rs2;
+                            incA = currentMonthlyIncremental * currentRsA;
+                        }
+                        capA += incA - costA;
+                        dataPathActiveMonthly[m] += (incA - costA);
+                    }
+
+                    dataPathActive[m] += capA;
+
+                    if (relMonth === matureBranchMonth) {
+                        capM = capA;
+                        dataPathMature[m] += capM;
+                        matureVisible[m] = true;
+                    } else if (relMonth > matureBranchMonth) {
+                        if (capM === null) capM = capA;
+                        capM += stabilizedIncremental * rs4;
+                        dataPathMature[m] += capM;
+                        matureVisible[m] = true;
+                    }
+                    if (relMonth >= matureBranchMonth) {
+                        dataPathMatureMonthly[m] += stabilizedIncremental * rs4;
+                        matureVisible[m] = true;
+                    }
+
+                    if (relMonth === earlyBranchMonth) {
+                        capE = capA;
+                        dataPathEarly[m] += capE;
+                        earlyVisible[m] = true;
+                    } else if (relMonth > earlyBranchMonth) {
+                        if (capE === null) capE = capA;
+                        capE += stabilizedIncremental * rs3;
+                        dataPathEarly[m] += capE;
+                        earlyVisible[m] = true;
+                    }
+                    if (relMonth >= earlyBranchMonth) {
+                        dataPathEarlyMonthly[m] += stabilizedIncremental * rs3;
+                        earlyVisible[m] = true;
+                    }
+                }
+            }
+
+            const mainSeries = isMonthlyMode ? dataPathActiveMonthly : dataPathActive;
+            const matureSource = isMonthlyMode ? dataPathMatureMonthly : dataPathMature;
+            const earlySource = isMonthlyMode ? dataPathEarlyMonthly : dataPathEarly;
+            const matureSeries = matureSource.map((v, i) => matureVisible[i] ? v : null);
+            const earlySeries = earlySource.map((v, i) => earlyVisible[i] ? v : null);
+
+            const ctx = document.getElementById('projectionChart').getContext('2d');
+            if (myChart) myChart.destroy();
+
+            const zeroLinePlugin = {
+                id: 'zeroLine',
+                beforeDraw: (chart) => {
+                    const yAxis = chart.scales.y;
+                    const yZero = yAxis.getPixelForValue(0);
+                    const ctx = chart.ctx;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(chart.chartArea.left, yZero);
+                    ctx.lineTo(chart.chartArea.right, yZero);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            };
+
+            // Custom font configuration for Chart.js
+            Chart.defaults.font.family = "'BDO Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Camino Principal (Net Profit)',
+                            data: mainSeries,
+                            borderColor: '#0000FF',
+                            backgroundColor: '#0000FF',
+                            borderWidth: 3,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            pointHitRadius: 10,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Salida Madura (Pasivo 5%)',
+                            data: matureSeries,
+                            borderColor: '#FFFFFF',
+                            backgroundColor: '#FFFFFF',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.1,
+                            pointRadius: 0,
+                            pointHitRadius: 10,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Salida Temprana (Pasivo 15%)',
+                            data: earlySeries,
+                            borderColor: '#888888',
+                            backgroundColor: '#888888',
+                            borderWidth: 2,
+                            borderDash: [2, 4],
+                            tension: 0.1,
+                            pointRadius: 0,
+                            pointHitRadius: 10,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#ffffff', padding: 40, font: { size: 12 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(51, 51, 51, 0.5)' },
+                            ticks: { color: '#888888', maxTicksLimit: 12 }
+                        },
+                        y: {
+                            grid: { color: 'rgba(51, 51, 51, 0.5)' },
+                            ticks: {
+                                color: '#888888',
+                                callback: function(value) {
+                                    if (Math.abs(value) >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                                    else if (Math.abs(value) >= 1000) return (value / 1000).toFixed(0) + 'k';
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [zeroLinePlugin]
+            });
+        }
+
+        window.onload = updateChart;
+    </script>
+</body>
+</html>
