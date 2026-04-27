@@ -230,22 +230,99 @@
             margin-bottom: 0;
         }
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         @media (max-width: 800px) {
             body {
                 flex-direction: column;
-                overflow-y: auto;
+                overflow: hidden;
+                height: 100vh;
+                height: 100dvh;
+                display: flex;
             }
-            .sidebar {
+
+            #chartDescription {
+                display: none;
+            }
+
+            .chart-title-block {
                 width: 100%;
-                height: auto;
-                border-right: none;
-                overflow-y: visible;
             }
+
+            .chart-title-block h2 {
+                font-size: 1.1rem;
+                margin-bottom: 0;
+            }
+
+            .chart-header {
+                flex-direction: column; 
+                align-items: flex-start;
+                margin-bottom: 0;
+            }
+
             .main-content {
-                height: 600px;
+                order: 1; 
+                width: 100%;
+                height: 52%; 
+                min-height: 0; 
+                display: flex;
+                flex-direction: column;
+                /* Restaurar el margen oscuro debajo del panel gris para que sea uniforme (1rem en todos los lados) */
+                padding: 1rem; 
+                box-sizing: border-box;
+            }
+
+            .chart-container {
+                flex: 1;
+                min-height: 0; 
+                display: flex;
+                flex-direction: column;
+                padding: 1rem 1rem 3.5rem 1rem; 
+                position: relative; 
+            }
+
+            .chart-wrapper {
+                flex: 1;
+                min-height: 0; 
+                width: 100%;
+                position: relative;
+                margin-top: 0.5rem;
+                margin-bottom: 0; 
+            }
+
+            .view-switch {
+                position: absolute;
+                bottom: 1rem; 
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 10;
+                background-color: var(--panel-bg);
+                padding: 0.4rem 1rem; 
+                border-radius: 20px;
+                border: 1px solid var(--border-color);
+            }
+
+            .sidebar {
+                order: 2; 
+                width: 100%;
+                flex: 1; 
+                height: 48%; 
+                border-right: none;
+                border-top: 1px solid var(--border-color);
+                overflow-y: auto; 
+                padding: 1.5rem 1.5rem 3rem 1.5rem;
+                box-sizing: border-box;
             }
         }
-    </style>
+</style>
 </head>
 <body>
 
@@ -258,9 +335,19 @@
         </div>
 
         <div class="control-group">
-            <label>Mejora de Conversión Esperada (%)</label>
-            <input type="range" id="conversionLift" min="0" max="100" value="20" step="5" oninput="updateChart()">
-            <div class="range-value"><span id="liftValue">20%</span></div>
+            <label>Salto de Conversión Inicial (Mes 1-4) (%)</label>
+            <input type="range" id="upliftInitial" min="0" max="100" value="25" step="1" oninput="updateChart()">
+            <div class="range-value"><span id="upliftInitialValue">25%</span></div>
+        </div>
+        <div class="control-group">
+            <label>Mejora Iterativa Mensual (Mes 5+) (%)</label>
+            <input type="range" id="upliftIterative" min="0" max="20" value="3.5" step="0.1" oninput="updateChart()">
+            <div class="range-value"><span id="upliftIterativeValue">3.5%</span></div>
+        </div>
+        <div class="control-group">
+            <label>Crecimiento Orgánico Mensual Cliente (%)</label>
+            <input type="range" id="organicGrowth" min="0" max="15" value="1.0" step="0.1" oninput="updateChart()">
+            <div class="range-value"><span id="organicGrowthValue">1.0%</span></div>
         </div>
 
         <h3 style="font-size: 1rem; margin-top: 1.2rem; margin-bottom: 1rem;">Ramp-up de Tráfico Experimental</h3>
@@ -383,7 +470,10 @@
             const clientInvestment = getNumericValue('clientInvestment');
             const monthlyOpCost = getNumericValue('monthlyOpCost');
 
-            const conversionLift = parseFloat(document.getElementById('conversionLift').value) / 100 || 0;
+            const upliftInitial = parseFloat(document.getElementById('upliftInitial').value) / 100 || 0;
+            const upliftIterative = parseFloat(document.getElementById('upliftIterative').value) / 100 || 0;
+            const organicGrowth = parseFloat(document.getElementById('organicGrowth').value) / 100 || 0;
+
             const expGroup1 = parseFloat(document.getElementById('expGroup1').value) / 100 || 0;
             const expGroup2 = parseFloat(document.getElementById('expGroup2').value) / 100 || 0;
             const expGroup3 = parseFloat(document.getElementById('expGroup3').value) / 100 || 0;
@@ -399,7 +489,10 @@
             const rs4 = parseFloat(document.getElementById('revShare4').value) / 100 || 0;
             const isMonthlyMode = document.getElementById('viewModeMonthly').checked;
 
-            document.getElementById('liftValue').innerText = (conversionLift * 100).toFixed(0) + '%';
+            document.getElementById('upliftInitialValue').innerText = (upliftInitial * 100).toFixed(1) + '%';
+            document.getElementById('upliftIterativeValue').innerText = (upliftIterative * 100).toFixed(1) + '%';
+            document.getElementById('organicGrowthValue').innerText = (organicGrowth * 100).toFixed(1) + '%';
+
             document.getElementById('groupValue1').innerText = (expGroup1 * 100).toFixed(0) + '%';
             document.getElementById('groupValue2').innerText = (expGroup2 * 100).toFixed(0) + '%';
             document.getElementById('groupValue3').innerText = (expGroup3 * 100).toFixed(0) + '%';
@@ -408,8 +501,8 @@
                 ? 'Ingreso Neto por Mes'
                 : 'Flujo de Caja Real Acumulado (Net Profit)';
             document.getElementById('chartDescription').innerText = isMonthlyMode
-                ? 'Vista mensual no acumulada. Se muestra el ingreso neto de cada mes con la misma lógica de ramp-up y esquemas.'
-                : 'El crecimiento del tráfico (Ramp-up) retrasa el punto de equilibrio. El Mes 4 cobra el ingreso del Mes 3 (con tráfico al 25%). El Mes 5 cobra el tráfico del Mes 4 (50%). El tráfico se estabiliza a partir del Mes 5 (cobrado en el Mes 6).';
+                ? 'Vista mensual no acumulada. Se muestra el ingreso neto de cada mes con lógica de interés compuesto y ramp-up.'
+                : 'Proyección acumulada considerando: salto de conversión inicial (UX Base), iteraciones A/B mensuales, ramp-up de tráfico del grupo de control y crecimiento orgánico natural del cliente.';
 
             const labels = [];
             for (let i = 0; i <= projMonths; i++) {
@@ -428,7 +521,6 @@
 
             const matureBranchMonth = activeMonths;
             const earlyBranchMonth = 8; 
-            const stabilizedIncremental = monthlyRevenue * expGroup3 * conversionLift;
 
             const clientStartMonths = [0];
             if (clientFrequency > 0) {
@@ -442,6 +534,11 @@
                 let capM = null;
                 let capE = null;
 
+                let clientBaseMonthlyRevenue = monthlyRevenue;
+                let activeConversionUplift = 0; 
+                let matureConversionUplift = 0;
+                let earlyConversionUplift = 0;
+
                 for (let m = 0; m <= projMonths; m++) {
                     const relMonth = m - startMonth;
                     if (relMonth < 0) continue;
@@ -449,6 +546,20 @@
                     let currentRsA = 0;
                     let incA = 0;
                     let costA = 0;
+
+                    if (relMonth > 0) {
+                        clientBaseMonthlyRevenue = clientBaseMonthlyRevenue * (1 + organicGrowth);
+                    }
+
+                    if (relMonth === 4) { 
+                        activeConversionUplift = upliftInitial;
+                        matureConversionUplift = upliftInitial;
+                        earlyConversionUplift = upliftInitial;
+                    } else if (relMonth > 4) {
+                        activeConversionUplift = (1 + activeConversionUplift) * (1 + upliftIterative) - 1;
+                        if (relMonth <= matureBranchMonth) matureConversionUplift = (1 + matureConversionUplift) * (1 + upliftIterative) - 1;
+                        if (relMonth <= earlyBranchMonth) earlyConversionUplift = (1 + earlyConversionUplift) * (1 + upliftIterative) - 1;
+                    }
 
                     if (relMonth === 0) {
                         capA = clientInvestment - setupCost;
@@ -462,7 +573,7 @@
                             else if (relMonth === 5) trafficSplit = expGroup2; 
                             else trafficSplit = expGroup3; 
 
-                            const currentMonthlyIncremental = monthlyRevenue * trafficSplit * conversionLift;
+                            const currentMonthlyIncremental = clientBaseMonthlyRevenue * trafficSplit * activeConversionUplift;
                             currentRsA = ((relMonth - 1) <= activeMonths) ? rs1 : rs2;
                             incA = currentMonthlyIncremental * currentRsA;
                         }
@@ -472,34 +583,45 @@
 
                     dataPathActive[m] += capA;
 
-                    if (relMonth === matureBranchMonth) {
-                        capM = capA;
-                        dataPathMature[m] += capM;
+                    
+                    
+                    
+                    // ALways follow the active path until the branch point!
+                    if (relMonth < matureBranchMonth) {
+                        dataPathMature[m] += capA;
+                        dataPathMatureMonthly[m] += (relMonth === 0 ? capA : (incA - costA));
+                    } else if (relMonth === matureBranchMonth) {
+                        capM = capA; // Accumulated starts at exactly capA
+                        dataPathMature[m] += capA; 
                         matureVisible[m] = true;
+                        dataPathMatureMonthly[m] += (relMonth === 0 ? capA : (incA - costA));
                     } else if (relMonth > matureBranchMonth) {
                         if (capM === null) capM = capA;
-                        capM += stabilizedIncremental * rs4;
+                        let trafficSplit = expGroup3;
+                        let incrementalM = clientBaseMonthlyRevenue * trafficSplit * matureConversionUplift;
+                        capM += incrementalM * rs4; // Add passive tail revenue
                         dataPathMature[m] += capM;
                         matureVisible[m] = true;
-                    }
-                    if (relMonth >= matureBranchMonth) {
-                        dataPathMatureMonthly[m] += stabilizedIncremental * rs4;
-                        matureVisible[m] = true;
+                        dataPathMatureMonthly[m] += incrementalM * rs4;
                     }
 
-                    if (relMonth === earlyBranchMonth) {
-                        capE = capA;
-                        dataPathEarly[m] += capE;
+                    // Same for Early
+                    if (relMonth < earlyBranchMonth) {
+                        dataPathEarly[m] += capA;
+                        dataPathEarlyMonthly[m] += (relMonth === 0 ? capA : (incA - costA));
+                    } else if (relMonth === earlyBranchMonth) {
+                        capE = capA; // Accumulated starts at exactly capA
+                        dataPathEarly[m] += capA;
                         earlyVisible[m] = true;
+                        dataPathEarlyMonthly[m] += (relMonth === 0 ? capA : (incA - costA));
                     } else if (relMonth > earlyBranchMonth) {
                         if (capE === null) capE = capA;
-                        capE += stabilizedIncremental * rs3;
+                        let trafficSplit = expGroup3;
+                        let incrementalE = clientBaseMonthlyRevenue * trafficSplit * earlyConversionUplift;
+                        capE += incrementalE * rs3; // Add passive tail revenue
                         dataPathEarly[m] += capE;
                         earlyVisible[m] = true;
-                    }
-                    if (relMonth >= earlyBranchMonth) {
-                        dataPathEarlyMonthly[m] += stabilizedIncremental * rs3;
-                        earlyVisible[m] = true;
+                        dataPathEarlyMonthly[m] += incrementalE * rs3;
                     }
                 }
             }
@@ -517,6 +639,7 @@
                 id: 'zeroLine',
                 beforeDraw: (chart) => {
                     const yAxis = chart.scales.y;
+                    if (!yAxis) return;
                     const yZero = yAxis.getPixelForValue(0);
                     const ctx = chart.ctx;
                     ctx.save();
@@ -530,7 +653,6 @@
                 }
             };
 
-            // Custom font configuration for Chart.js
             Chart.defaults.font.family = "'BDO Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 
             myChart = new Chart(ctx, {
@@ -539,15 +661,15 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Camino Principal (Net Profit)',
+                            label: isMonthlyMode ? 'Camino Principal (Neto/Mes)' : 'Camino Principal (Net Profit)',
                             data: mainSeries,
                             borderColor: '#0000FF',
                             backgroundColor: '#0000FF',
                             borderWidth: 3,
-                            tension: 0.1,
+                            tension: 0.12,
                             pointRadius: 0,
                             pointHitRadius: 10,
-                            pointHoverRadius: 6
+                            pointHoverRadius: 5
                         },
                         {
                             label: 'Salida Madura (Pasivo 5%)',
@@ -556,10 +678,11 @@
                             backgroundColor: '#FFFFFF',
                             borderWidth: 2,
                             borderDash: [5, 5],
-                            tension: 0.1,
+                            tension: 0.12,
                             pointRadius: 0,
                             pointHitRadius: 10,
-                            pointHoverRadius: 6
+                            pointHoverRadius: 5,
+                            spanGaps: false
                         },
                         {
                             label: 'Salida Temprana (Pasivo 15%)',
@@ -568,52 +691,79 @@
                             backgroundColor: '#888888',
                             borderWidth: 2,
                             borderDash: [2, 4],
-                            tension: 0.1,
+                            tension: 0.12,
                             pointRadius: 0,
                             pointHitRadius: 10,
-                            pointHoverRadius: 6
+                            pointHoverRadius: 5,
+                            spanGaps: false
                         }
                     ]
                 },
                 options: {
+                    layout: {
+                        padding: {
+                            bottom: 25, // Forces space below the x-axis for rotated labels
+                            left: 10,
+                            right: 15,
+                            top: 10
+                        }
+                    },
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: false,
                     interaction: {
                         mode: 'index',
-                        intersect: false,
+                        intersect: false
                     },
                     plugins: {
                         legend: {
-                            position: 'bottom',
-                            labels: { color: '#ffffff', padding: 40, font: { size: 12 } }
+                            display: true,
+                            labels: {
+                                color: '#ffffff',
+                                boxWidth: 14,
+                                boxHeight: 14,
+                                usePointStyle: false
+                            }
                         },
                         tooltip: {
+                            backgroundColor: '#121212',
+                            borderColor: '#222222',
+                            borderWidth: 1,
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
                             callbacks: {
                                 label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) label += ': ';
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(context.parsed.y);
-                                    }
-                                    return label;
+                                    const value = context.raw;
+                                    if (value === null || value === undefined) return '';
+                                    return `${context.dataset.label}: ${formatCurrency(value)}`;
                                 }
                             }
                         }
                     },
                     scales: {
                         x: {
-                            grid: { color: 'rgba(51, 51, 51, 0.5)' },
-                            ticks: { color: '#888888', maxTicksLimit: 12 }
+                            ticks: {
+                                color: '#888888'
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.06)'
+                            },
+                            border: {
+                                color: '#222222'
+                            }
                         },
                         y: {
-                            grid: { color: 'rgba(51, 51, 51, 0.5)' },
                             ticks: {
                                 color: '#888888',
                                 callback: function(value) {
-                                    if (Math.abs(value) >= 1000000) return (value / 1000000).toFixed(1) + 'M';
-                                    else if (Math.abs(value) >= 1000) return (value / 1000).toFixed(0) + 'k';
-                                    return value;
+                                    return formatCurrency(value);
                                 }
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.06)'
+                            },
+                            border: {
+                                color: '#222222'
                             }
                         }
                     }
@@ -622,7 +772,20 @@
             });
         }
 
-        window.onload = updateChart;
+        function formatCurrency(value) {
+            const sign = value < 0 ? '-' : '';
+            const abs = Math.abs(value);
+
+            if (abs >= 1000000) {
+                return `${sign}${(abs / 1000000).toFixed(1)}M`;
+            }
+            if (abs >= 1000) {
+                return `${sign}${(abs / 1000).toFixed(0)}k`;
+            }
+            return `${sign}${abs.toFixed(0)}`;
+        }
+
+        updateChart();
     </script>
 </body>
 </html>
