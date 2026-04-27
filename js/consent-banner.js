@@ -122,9 +122,8 @@
       <section class="faust-consent-banner" id="faust-consent-banner" role="dialog" aria-live="polite" aria-label="Preferencias de privacidad y cookies">
         <h2 class="faust-consent-title">Privacidad y uso de datos</h2>
         <p class="faust-consent-description">
-          Usamos cookies y tecnologías similares para operar el sitio y, con tu autorización, medir tráfico con Google Analytics.
-          Un banner de consentimiento informa tus opciones para compartir datos personales.
-          Puedes aceptar, rechazar o cambiar preferencias en cualquier momento.
+          Usamos cookies y tecnologías similares para operar el sitio y, con su autorización, medir tráfico con herramientas de analítica.
+          Puede cambiar sus preferencias en cualquier momento.
         </p>
         <div class="faust-consent-links">
           <a class="faust-consent-link" href="mailto:admin@faust.mx?subject=Aviso%20de%20Privacidad%20Faust%20Partners">Solicitar Aviso de Privacidad</a>
@@ -145,7 +144,7 @@
           </div>
           <div class="faust-consent-row">
             <div>
-              <p class="faust-consent-row-title">Cookies analíticas (Google Analytics)</p>
+              <p class="faust-consent-row-title">Cookies analíticas</p>
               <p class="faust-consent-row-note">Nos ayudan a medir rendimiento y mejorar la experiencia.</p>
             </div>
             <button type="button" class="faust-consent-switch" id="faust-analytics-switch" role="switch" aria-checked="false" aria-label="Activar cookies analíticas"></button>
