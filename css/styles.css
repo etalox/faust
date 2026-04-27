@@ -1,4 +1,20 @@
     @font-face {
+      font-family: "BDO Grotesk";
+      src: local("BDO Grotesk"), local("BDOGrotesk");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "BDO Grotesk";
+      src: local("BDO Grotesk Medium"), local("BDOGrotesk-Medium");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
       font-family: "Poppins";
       src: url("../assets/poppins/Poppins-Regular.ttf") format("truetype");
       font-weight: 400;
@@ -1628,5 +1644,216 @@
         padding-left: 0 !important;
         padding-right: 0 !important;
         gap: 24px !important;
+      }
+    }
+
+    .faust-consent-banner {
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      z-index: 12000;
+      padding: 24px;
+      border-radius: 14px;
+      background: rgba(10, 10, 10, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(16px);
+      display: none;
+      font-family: "BDO Grotesk", "Instrument Sans", "Poppins", sans-serif;
+      color: #ffffff;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .faust-consent-banner.is-visible {
+      display: block;
+    }
+
+    .faust-consent-title {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .faust-consent-description {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 900px;
+    }
+
+    .faust-consent-links {
+      margin-top: 10px;
+      display: inline-flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .faust-consent-link {
+      font-size: 13px;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.86);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .faust-consent-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .faust-consent-btn {
+      border: 0;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+      color: #ffffff;
+      background: #1a1a1a;
+      transition: background-color 180ms ease, opacity 180ms ease;
+    }
+
+    .faust-consent-btn:hover {
+      opacity: 0.9;
+    }
+
+    .faust-consent-btn-primary {
+      background: #0030ff;
+    }
+
+    .faust-consent-btn-ghost {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .faust-consent-customizer {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: none;
+    }
+
+    .faust-consent-customizer.is-open {
+      display: block;
+    }
+
+    .faust-consent-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+    }
+
+    .faust-consent-row-title {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.35;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .faust-consent-row-note {
+      margin: 2px 0 0;
+      font-size: 12px;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .faust-consent-switch {
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #1a1a1a;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .faust-consent-switch::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      transition: transform 180ms ease;
+    }
+
+    .faust-consent-switch.is-on {
+      background: #0030ff;
+      border-color: #0030ff;
+    }
+
+    .faust-consent-switch.is-on::after {
+      transform: translateX(20px);
+    }
+
+    .faust-consent-switch.is-locked {
+      opacity: 0.8;
+    }
+
+    .faust-consent-manage {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 11950;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(10, 10, 10, 0.88);
+      color: #ffffff;
+      padding: 0 16px;
+      font-family: "BDO Grotesk", "Instrument Sans", "Poppins", sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: none;
+      backdrop-filter: blur(10px);
+    }
+
+    .faust-consent-manage.is-visible {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .faust-consent-banner {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 16px;
+        border-radius: 12px;
+      }
+
+      .faust-consent-title {
+        font-size: 16px;
+      }
+
+      .faust-consent-actions {
+        gap: 8px;
+      }
+
+      .faust-consent-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .faust-consent-manage {
+        right: 12px;
+        bottom: 12px;
       }
     }
