@@ -341,8 +341,8 @@
         </div>
         <div class="control-group">
             <label>Mejora Iterativa Mensual (Mes 5+) (%)</label>
-            <input type="range" id="upliftIterative" min="0" max="20" value="3.5" step="0.1" oninput="updateChart()">
-            <div class="range-value"><span id="upliftIterativeValue">3.5%</span></div>
+            <input type="range" id="upliftIterative" min="0" max="20" value="1.5" step="0.1" oninput="updateChart()">
+            <div class="range-value"><span id="upliftIterativeValue">1.5%</span></div>
         </div>
         <div class="control-group">
             <label>Crecimiento Orgánico Mensual Cliente (%)</label>
@@ -380,7 +380,7 @@
         </div>
         <div class="control-group">
             <label>Costo Operativo Mensual (MXN)</label>
-            <input type="text" inputmode="numeric" id="monthlyOpCost" class="format-number" value="20,000">
+            <input type="text" inputmode="numeric" id="monthlyOpCost" class="format-number" value="15,000">
         </div>
 
         <h3 style="font-size: 1rem; margin-top: 1.2rem; margin-bottom: 1rem;">Tiempos y Esquemas</h3>
@@ -391,11 +391,11 @@
         </div>
         <div class="control-group">
             <label>Fin del 1er Esquema Activo (Mes Absoluto)</label>
-            <input type="number" id="activeMonths" value="24" min="1" max="48" oninput="updateChart()">
+            <input type="number" id="activeMonths" value="24" min="6" max="48" oninput="updateChart()">
         </div>
         <div class="control-group">
             <label>Frecuencia de Clientes (meses)</label>
-            <input type="number" id="clientFrequency" value="6" min="0" max="48" oninput="updateChart()">
+            <input type="number" id="clientFrequency" value="0" min="0" max="48" oninput="updateChart()">
         </div>
         <div class="schemes-grid">
             <div class="control-group">
@@ -481,7 +481,7 @@
             const projMonths = parseInt(document.getElementById('projMonths').value) || 24;
             const activeMonths = parseInt(document.getElementById('activeMonths').value) || 24;
             const clientFrequencyRaw = parseInt(document.getElementById('clientFrequency').value);
-            const clientFrequency = Number.isFinite(clientFrequencyRaw) ? clientFrequencyRaw : 6;
+            const clientFrequency = Number.isFinite(clientFrequencyRaw) ? clientFrequencyRaw : 0;
 
             const rs1 = parseFloat(document.getElementById('revShare1').value) / 100 || 0;
             const rs2 = parseFloat(document.getElementById('revShare2').value) / 100 || 0;
