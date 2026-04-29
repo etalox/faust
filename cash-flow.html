@@ -322,12 +322,76 @@
                 box-sizing: border-box;
             }
         }
-</style>
+
+        .chart-container {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .chart-container.fullscreen-mode {
+            position: fixed;
+            z-index: 9999;
+            margin: 0;
+            border-radius: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @media screen and (max-width: 768px) {
+            .chart-container.fullscreen-mode {
+                width: 100vh;
+                height: 100vw;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
+        }
+        @media screen and (min-width: 769px) {
+            .chart-container.fullscreen-mode {
+                width: 100vw;
+                height: 100vh;
+                top: 0;
+                left: 0;
+            }
+        }
+
+        #closeFullscreenBtn {
+            display: none;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: none; outline: none;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            z-index: 10000;
+            transition: background 0.3s ease;
+        }
+        #closeFullscreenBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .chart-container.fullscreen-mode #closeFullscreenBtn {
+            display: block;
+        }
+
+    </style>
 </head>
 <body>
 
     <div class="sidebar">
         <h2 style="font-size: 1.2rem; margin-bottom: 1.5rem;">Parámetros del Proyecto</h2>
+
+        <div class="control-group">
+            <label>Financiación Disponible (Capital Inicial MXN)</label>
+            <input type="text" inputmode="numeric" id="initialFunding" class="format-number" value="15,000">
+            <div id="fundingWarning" style="margin-top: 5px; font-size: 0.8rem; color: #ff9900; display: none;"></div>
+        </div>
 
         <div class="control-group">
             <label>Facturación Mensual Cliente (MXN)</label>
@@ -419,13 +483,14 @@
 
     <div class="main-content">
         <div class="chart-container">
+            <button id="closeFullscreenBtn">Volver</button>
             <div class="chart-header">
                 <div class="chart-title-block">
                     <h2 id="chartTitle">Flujo de Caja Real Acumulado (Net Profit)</h2>
                     <p id="chartDescription">
                         El crecimiento del tráfico (Ramp-up) retrasa el punto de equilibrio. El Mes 4 cobra el ingreso del Mes 3 (con tráfico al 25%). El Mes 5 cobra el tráfico del Mes 4 (50%). El tráfico se estabiliza a partir del Mes 5 (cobrado en el Mes 6).
                     </p>
-                </div>
+                    </div>
                 <label class="view-switch" for="viewModeMonthly">
                     <span>Acumulado</span>
                     <input type="checkbox" id="viewModeMonthly" oninput="updateChart()">
@@ -465,6 +530,7 @@
         }
 
         function updateChart() {
+            const initialFunding = getNumericValue('initialFunding');
             const monthlyRevenue = getNumericValue('monthlyRevenue');
             const setupCost = getNumericValue('setupCost');
             const clientInvestment = getNumericValue('clientInvestment');
@@ -626,11 +692,33 @@
                 }
             }
 
+            
+            // Add initial funding to the cumulative totals across all months
+            for (let m = 0; m <= projMonths; m++) {
+                dataPathActive[m] += initialFunding;
+                dataPathMature[m] += initialFunding;
+                dataPathEarly[m] += initialFunding;
+            }
+
             const mainSeries = isMonthlyMode ? dataPathActiveMonthly : dataPathActive;
             const matureSource = isMonthlyMode ? dataPathMatureMonthly : dataPathMature;
             const earlySource = isMonthlyMode ? dataPathEarlyMonthly : dataPathEarly;
             const matureSeries = matureSource.map((v, i) => matureVisible[i] ? v : null);
             const earlySeries = earlySource.map((v, i) => earlyVisible[i] ? v : null);
+
+            
+            const warningDiv = document.getElementById('fundingWarning');
+            // We check the minimum point of the cumulative active path
+            const minCashFlow = Math.min(...dataPathActive);
+            const baseMinCashFlow = minCashFlow - initialFunding; // Minimo sin la financiacion actual
+            const totalRequired = baseMinCashFlow < 0 ? Math.abs(baseMinCashFlow) : 0;
+
+            if (minCashFlow < 0) {
+                warningDiv.style.display = 'block';
+                warningDiv.innerText = `Requerido: ${formatCurrency(totalRequired)}`;
+            } else {
+                warningDiv.style.display = 'none';
+            }
 
             const ctx = document.getElementById('projectionChart').getContext('2d');
             if (myChart) myChart.destroy();
@@ -784,6 +872,30 @@
             }
             return `${sign}${abs.toFixed(0)}`;
         }
+
+        
+        // Fullscreen logic
+        const chartCanvas = document.getElementById('projectionChart');
+        const chartContainer = document.querySelector('.chart-container');
+        const closeFullscreenBtn = document.getElementById('closeFullscreenBtn');
+
+        chartCanvas.addEventListener('click', () => {
+            if (window.innerWidth <= 768 && !chartContainer.classList.contains('fullscreen-mode')) {
+                chartContainer.classList.add('fullscreen-mode');
+                // Force Chart.js to resize properly
+                setTimeout(() => {
+                    if (myChart) myChart.resize();
+                }, 400); // Wait for transition
+            }
+        });
+
+        closeFullscreenBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            chartContainer.classList.remove('fullscreen-mode');
+            setTimeout(() => {
+                if (myChart) myChart.resize();
+            }, 400);
+        });
 
         updateChart();
     </script>
