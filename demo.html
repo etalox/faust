@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faust Partners™ - Test de Color</title>
+    <title>Faust Partners™ - Test Dinámico de Color</title>
     <style>
         :root {
-            /* Fondo suave, evitando el negro puro (#000000) para eliminar la aberración cromática */
+            /* Fondo suave para evitar aberración cromática */
             --bg-dark: #121212;
             --text-light: #F3F4F6;
 
-            /* Azul original vibrante para pantallas sRGB estándar */
+            /* Azul puro original para pantallas sRGB (tu laptop) */
             --cta-blue: #0000FF;
         }
 
-        /* Corrección de color para pantallas Wide Gamut (P3 / OLED) */
+        /* Corrección de color para pantallas Wide Gamut (P3 / OLED / Celular) */
         @media (color-gamut: p3) {
             :root {
-                /* Inyección de verde para compensar el desvío hacia el morado en hardware moderno */
-                --cta-blue: #0045FF;
+                /* Nuevo valor actualizado para mobile */
+                --cta-blue: #0045FF; 
             }
         }
 
@@ -65,19 +65,62 @@
             border-radius: 8px;
             cursor: pointer;
             transition: transform 0.2s ease, filter 0.2s ease;
+            margin-bottom: 30px;
+            width: 100%;
         }
 
         .cta-button:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
         }
+
+        /* --- SISTEMA DE DETECCIÓN VISUAL --- */
+        .status-box {
+            background-color: #2A2A2A;
+            border: 1px solid #3F3F46;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .status-gamut::before {
+            content: "Gamut detectado: Estándar (sRGB)";
+            display: block;
+            margin-bottom: 8px;
+            color: #F87171; /* Rojo suave */
+        }
+
+        .status-color::before {
+            content: "Renderizando: #0000FF";
+            display: block;
+            font-weight: bold;
+            color: #60A5FA; /* Azul legible en fondo oscuro */
+        }
+
+        /* Actualización dinámica si el dispositivo soporta P3 */
+        @media (color-gamut: p3) {
+            .status-gamut::before {
+                content: "Gamut detectado: Amplio (Display P3)";
+                color: #34D399; /* Verde suave */
+            }
+            .status-color::before {
+                content: "Renderizando: #0045FF";
+            }
+        }
     </style>
 </head>
 <body>
     <div class="card">
         <h1>Faust Partners™</h1>
-        <p>Este botón utiliza la inyección de color P3. En pantallas estándar renderiza <strong>#0000FF</strong> puro. En pantallas modernas (P3/OLED), ajusta a <strong>#0033FF</strong> para mantener el azul intacto y evitar el tono morado.</p>
+        <p>Abre este archivo en tu laptop y luego en tu celular. El panel inferior te confirmará qué espacio de color está detectando el navegador.</p>
+
         <button class="cta-button">Maximizar Ingresos</button>
+
+        <div class="status-box">
+            <div class="status-gamut"></div>
+            <div class="status-color"></div>
+        </div>
     </div>
 </body>
 </html>
