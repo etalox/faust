@@ -6,19 +6,14 @@
     <title>Faust Partners™ - Test Dinámico de Color</title>
     <style>
         :root {
-            /* Fondo suave para evitar aberración cromática */
-            --bg-dark: #121212;
+            --bg-dark: #09090A;
             --text-light: #F3F4F6;
-
-            /* Azul puro original para pantallas sRGB (tu laptop) */
             --cta-blue: #0000FF;
         }
 
-        /* Corrección de color para pantallas Wide Gamut (P3 / OLED / Celular) */
         @media (color-gamut: p3) {
             :root {
-                /* Nuevo valor actualizado para mobile */
-                --cta-blue: #0045FF; 
+                --cta-blue: oklch(55% 0.3 255);
             }
         }
 
