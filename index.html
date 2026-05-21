@@ -27,25 +27,15 @@
     * { box-sizing: border-box; }
     ::selection { background: var(--blue); color: #fff; }
     
-    /* Custom scrollbar – Webkit */
+    /* Custom scrollbar */
     ::-webkit-scrollbar { width: 2px; height: 2px; }
     ::-webkit-scrollbar-track { background: rgba(0,0,0,calc(var(--sb-v) * 0.4)); margin-top: 80px; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,calc(var(--sb-v) * 0.3)); border-radius: 2px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,calc(var(--sb-v) * 0.5)); }
 
-    .btn, .btn-primary, .btn-secondary, .btn-nav {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
+    .btn, .btn-primary, .btn-secondary, .btn-nav { user-select: none; }
 
-    .canvas-outer, .flow-wrapper, .Flow, .Frame1, [data-layer] {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
+    .canvas-outer, .flow-wrapper, .Flow, .Frame1, [data-layer] { user-select: none; }
 
     body {
       background: var(--bg);
@@ -57,11 +47,11 @@
       height: calc(100vh / var(--zoom-factor));
       transition: margin-right .6s cubic-bezier(.2,1,.3,1), opacity 0.25s ease-out;
       
-      opacity: 0; /* 1. Arranca totalmente invisible (en negro absoluto por el fondo) */
+      opacity: 0;
     }
 
     body.is-ready {
-      opacity: 1; /* 2. Al pasar 0.1s, JS activa esta clase y se desvanece suavemente a visible */
+      opacity: 1;
     }
 
     body.pushed-layout { margin-right: 450px; }
@@ -83,7 +73,7 @@
     .btn-secondary { 
       position: relative; 
       background: var(--chip); 
-      border: 0 !important; /* CORRECCIÓN: Eliminamos el borde físico por completo para evitar el desfase */
+      border: 0 !important;
       color: var(--fg); 
       backdrop-filter: blur(20px); 
       transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
@@ -91,7 +81,7 @@
     .btn-secondary::before { 
       content: ''; 
       position: absolute; 
-      inset: 0; /* Al no haber borde físico, se acopla milimétricamente al contorno exterior */
+      inset: 0;
       border-radius: 999px; 
       padding: 1px; 
       background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03)); 
@@ -200,13 +190,13 @@
 
     @media (max-width: 980px) {
       html {
-        overflow-y: auto !important; /* Permite al navegador móvil gestionar el scroll nativo */
+        overflow-y: auto !important;
         height: auto !important;
       }
       body { 
         zoom: 100%; 
-        height: auto !important;      /* <--- CRUCIAL: Elimina el cálculo de altura de escritorio */
-        overflow-y: visible !important; /* <--- CRUCIAL: Libera el scroll interno */
+        height: auto !important;
+        overflow-y: visible !important;
       }
       .wrap { padding: 0 4vw; }
       .wrap-narrow { padding: 0 4vw; }
@@ -219,45 +209,40 @@
       .hide-mobile { display: none; }
       .show-mobile { display: inline; }
 
-      @media (max-width: 980px) {
       /* Contenedor principal del pie de página */
       .footer-bottom {
         display: flex !important;
         flex-direction: column !important;
-        align-items: flex-start !important; /* Alinea por defecto las líneas a la izquierda */
+        align-items: flex-start !important;
         gap: 20px !important;
         width: 100% !important;
       }
 
-      /* Línea 1: Derechos de autor - Alineado a la izquierda */
       .footer-bottom > div:first-child {
         order: 1 !important;
         text-align: left !important;
       }
 
-      /* Línea 2: Enlaces legales (Privacidad...) - Alineado a la izquierda */
       .footer-bottom > div:nth-child(2) {
         order: 2 !important;
         display: flex !important;
         flex-direction: row !important;
-        justify-content: flex-start !important; /* Empuja los links al inicio izquierdo */
+        justify-content: flex-start !important;
         flex-wrap: wrap !important;
         gap: 20px !important;
         width: 100% !important;
       }
 
-      /* Línea 3: Cookies + Lang - Comportamiento Split (Extremos opuestos) */
       .footer-bottom > div:last-child {
         order: 3 !important;
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-between !important; /* <--- CLAVE: Cookies a la izq, Lang a la der */
+        justify-content: space-between !important;
         align-items: center !important;
-        width: 100% !important; /* Ocupa todo el ancho móvil para poder separarse */
+        width: 100% !important;
         gap: 10px !important;
       }
     }
-  }
 
     /* ── Plan Builder ── */
     .plan-builder { align-self: stretch; display: flex; flex-direction: column; gap: 40px; }
@@ -324,7 +309,7 @@
     .plan-recommend { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
     .plan-recommend-title { color: var(--muted); font-size: 16px; font-weight: 500; line-height: 1.2; margin-bottom: 10px; }
     .plan-recommend.is-empty .plan-recommend-title { display: none; }
-    #whatsapp-plan-cta { -webkit-user-select: none; user-select: none; }
+    #whatsapp-plan-cta { user-select: none; }
 
     /* ── Side Panel (base: hidden) ── */
     .side-panel { display: none; }
@@ -807,12 +792,10 @@
       const targets = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6, p'))
         .filter(el => el.querySelector('br'));
 
-      // 1. Initialize: wrap all <br> tags in a helper span
       targets.forEach(el => {
         el.innerHTML = el.innerHTML.replace(/<br\s*\/?>/gi, '<span class="responsive-br"><br></span>');
       });
 
-      // 2. Dynamic check on resize
       function checkWraps() {
         targets.forEach(el => {
           el.classList.remove('no-br');
@@ -821,8 +804,6 @@
           const computedStyle = window.getComputedStyle(el);
           const lineHeight = parseFloat(computedStyle.lineHeight);
           const height = el.clientHeight;
-          
-          // Expected height based on planned break count
           const expectedHeight = lineHeight * (brs.length + 1.2);
           
           if (height > expectedHeight) {
@@ -835,7 +816,7 @@
       window.addEventListener('resize', checkWraps);
     })();
 
-    /* Scroll-driven text lighting up effect (reveal) on .lead .muted (REPARADO, SECUENCIAL Y FLUIDO) */
+    /* Scroll-driven text lighting up effect */
     (() => {
       const leadSpan = document.querySelector('.lead .muted');
       const targetElement = document.querySelector('.lead');
@@ -851,8 +832,8 @@
           const span = document.createElement('span');
           span.className = 'scroll-word';
           span.textContent = chunk + ' '; 
-          span.style.color = '#4A4B4F'; // Color inicial
-          span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)'; // Transición nativa ultra suave por palabra
+          span.style.color = '#4A4B4F';
+          span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
           leadSpan.appendChild(span);
           wordSpans.push(span);
         }
@@ -862,33 +843,25 @@
         const rect = targetElement.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         
-        // Puntos de control en pantalla
-        const start = viewportHeight * 0.65;
+        const start = viewportHeight * 0.60;
         const end = viewportHeight * 0.35;
 
-        // Progreso global de la sección entera (de 0 a 1)
         let globalProgress = (start - rect.top) / (start - end);
         globalProgress = Math.max(0, Math.min(1, globalProgress));
 
         const W = wordSpans.length;
         
-        // Calculamos exactamente cuántas palabras deberían estar 100% encendidas en este punto del scroll
-        // Ejemplo: si el progreso es 0.5 y hay 10 palabras, el objetivo es 5 palabras encendidas.
         const targetWordsLit = globalProgress * W;
 
         wordSpans.forEach((span, i) => {
-          // Determinamos el progreso individual de esta palabra específica en su cola secuencial
           let wordProgress = targetWordsLit - i;
           wordProgress = Math.max(0, Math.min(1, wordProgress));
 
           if (wordProgress === 1) {
-            // Palabra completamente activa
             span.style.color = 'rgb(255, 255, 255)';
           } else if (wordProgress === 0) {
-            // Palabra completamente apagada (tu color #4A4B4F)
             span.style.color = 'rgb(74, 75, 79)';
           } else {
-            // ÚNICAMENTE la palabra actual en transición se interpola matemáticamente
             const r = Math.round(74 + (255 - 74) * wordProgress);
             const g = Math.round(75 + (255 - 75) * wordProgress);
             const b = Math.round(79 + (255 - 79) * wordProgress);
@@ -958,7 +931,7 @@
     if (sp) sp.addEventListener('scroll', onScroll, { passive: true });
   })();
 
-  /* ── Side Panel (REPARADO PARA MÓVIL Y DESKTOP) ── */
+  /* ── Side Pane ── */
   (function() {
     var panel = document.getElementById('side-panel');
     var panelContent = document.getElementById('side-panel-content');
@@ -1011,7 +984,6 @@
     syncLayout();
     window.addEventListener('resize', syncLayout);
 
-    // Captura limpia de clicks previniendo el comportamiento nativo en CUALQUIER resolución
     document.addEventListener('click', function(e) {
       var btn = e.target.closest('.btn-primary, .btn-nav');
       if (!btn) return;
@@ -1019,7 +991,7 @@
       
       var text = btn.textContent.trim().toLowerCase();
       if (text.indexOf('aplicar') === 0) { 
-        e.preventDefault(); // <--- CRUCIAL: Detiene el salto del ancla #contacto en móvil y desktop
+        e.preventDefault();
         openSidebar(); 
       }
     });
@@ -1030,11 +1002,11 @@
 
   /* ── Plan Builder ── */
   (function() {
-    var services = Array.prototype.slice.call(document.querySelectorAll('.plan-service'));
+    var services = Array.from(document.querySelectorAll('.plan-service'));
     if (!services.length) return;
     var ctaText = document.getElementById('plan-cta-text');
     var incomeInput = document.getElementById('monthly-income');
-    var sortableSections = Array.prototype.slice.call(document.querySelectorAll('.plan-sortable'));
+    var sortableSections = Array.from(document.querySelectorAll('.plan-sortable'));
     var selectedSection = document.querySelector('.plan-stack.plan-sortable');
     var recommendedSection = document.querySelector('.plan-recommend.plan-sortable');
     var ASSET_BASE = './assets/Icons/';

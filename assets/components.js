@@ -2,30 +2,23 @@ class FaustNavbar extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
       <style>
-        /* Efecto hover suave para los links del navbar */
         .nav-links a, #nav-contacto {
           transition: opacity 0.2s ease, color 0.2s ease;
         }
         .nav-links a:hover, #nav-contacto:hover {
-          opacity: 0.7;
+          color: #ffffff !important;
         }
 
-        /* ── CONTROL DE TRANSPARENCIA CRONOMETRADO ── */
         .nav {
           --nav-transition-dur: 0.5s;
-
-          /* 1. ESTADO DE NACIMIENTO INQUEBRANTABLE: Negro absoluto y 100% sólido */
           background: rgb(8, 9, 10) !important; 
           backdrop-filter: blur(0px) !important;
-          -webkit-backdrop-filter: blur(0px) !important;
-          
-          /* Preparamos las transiciones de hardware */
+          -webkit-backdrop-filter: blur(0px) !important;     
           transition: background var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1), 
                       backdrop-filter var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1),
                       -webkit-backdrop-filter var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* 2. ESTADO ANIMADO: Se activa suavemente mediante su propia clase interna */
         .nav.is-active {
           background: rgba(9, 10, 11, 0.88) !important; 
           backdrop-filter: blur(20px) !important;
@@ -73,12 +66,9 @@ class FaustNavbar extends HTMLElement {
     const navIcon = this.querySelector('#nav-isotipo');
     const heroLogo = document.getElementById('hero-logo');
     const ctaLogo = document.querySelector('.cta .FaustLogo');
-    
     if (!navIcon) return;
-
     let isHeroIntersecting = false;
     let isCtaIntersecting = false;
-
     const updateLogoColor = () => {
       if (isHeroIntersecting || isCtaIntersecting) {
         navIcon.classList.remove('is-blue');
@@ -127,17 +117,13 @@ class FaustNavbar extends HTMLElement {
     const navRight = this.querySelector('.nav-right');
     const logoText = this.querySelector('#nav-logo-text');
     const navContacto = this.querySelector('#nav-contacto');
-
     if (!nav || !navLinks || !navRight) return;
-
     const checkNavGap = () => {
       const links = Array.from(navLinks.children);
 
-      // 1. Reset all states to measure baseline layout
       nav.classList.remove('nav-contacto-hidden');
       links.forEach(link => link.style.display = '');
 
-      // 2. Hide links one-by-one from right to left if they collide
       for (let i = links.length - 1; i >= 0; i--) {
         const visibleLinks = links.filter(link => link.style.display !== 'none');
         
@@ -155,12 +141,10 @@ class FaustNavbar extends HTMLElement {
         if (gapRight < 30 || gapLeft < 30) {
           rightmostLink.style.display = 'none';
         } else {
-          // No collision, we can stop hiding
           break;
         }
       }
 
-      // 3. Measure gap between Logo Text and Contacto (with links in their final state)
       if (logoText && navContacto) {
         const gapContacto = navContacto.getBoundingClientRect().left - logoText.getBoundingClientRect().right;
         if (gapContacto < 30) {
@@ -172,7 +156,6 @@ class FaustNavbar extends HTMLElement {
     checkNavGap();
     window.addEventListener('resize', checkNavGap);
     
-    // Clean up event listener when element is disconnected
     this._resizeHandler = checkNavGap;
   }
 
@@ -187,7 +170,6 @@ class FaustFooter extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
       <style>
-        /* Mantenemos los hovers específicos para los links de texto sencillos */
         .footer-col a, .footer-bottom a {
           transition: color 0.2s ease, opacity 0.2s ease;
         }
@@ -198,7 +180,6 @@ class FaustFooter extends HTMLElement {
           color: #ffffff !important;
         }
 
-        /* Ajuste de padding balanceado para el botón de idioma */
         .footer-bottom .lang {
           font-size: 14px;
           display: inline-flex;
