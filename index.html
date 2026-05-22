@@ -1315,10 +1315,14 @@
       }, 8000);
     }
 
+    function delayInitHeroVideo() {
+      setTimeout(initHeroVideo, 0);
+    }
+
     if (document.readyState === 'complete') {
-      initHeroVideo();
+      delayInitHeroVideo();
     } else {
-      window.addEventListener('load', initHeroVideo);
+      window.addEventListener('load', delayInitHeroVideo);
     }
   })();
   </script>
