@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Faust Partners™ es el Growth Partner de Optimización CRO #1 en México. Impulsamos el crecimiento de empresas mediante estrategias basadas en la neurociencia conductual y optimización de UX/UI.">
+
+  <!-- Tab -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faust Partners™ | Growth Partner Líder en México</title>
+  <link rel="icon" type="image/png" href="./assets/Icons/tab_icon.png">
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wuwhfucwt0");
+  </script>
+  
+  <script src="./assets/components.js" defer></script>
+  <style>
+    @font-face { font-family: "BDO Grotesk"; src: url("./assets/Fonts/BDOGrotesk-Regular.ttf"); font-weight: 400; }
+    @font-face { font-family: "BDO Grotesk"; src: url("./assets/Fonts/BDOGrotesk-Medium.ttf"); font-weight: 500; }
+    @font-face { font-family: "BDO Grotesk"; src: url("./assets/Fonts/BDOGrotesk-DemiBold.ttf"); font-weight: 600; }
+
+    html {
+      --zoom: 80%;
+      --zoom-factor: 0.8;
+      --bg: #08090a;
+      --fg: #f2f2f2;
+      --muted: #4A4B4F;
+      --blue: #0022ff;
+      --line: rgba(255,255,255,.07);
+      --chip: rgba(253,253,255,.06);
+      --sb-v: 0;
+      --lead-font-size: clamp(32px, 4.2vw, 54px);
+      overflow: hidden;
+      height: 100%;
+    }
+    * { box-sizing: border-box; }
+    ::selection { background: var(--blue); color: #fff; }
+    
+    ::-webkit-scrollbar { width: 2px; height: 2px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,calc(var(--sb-v) * 0.4)); margin-top: 80px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,calc(var(--sb-v) * 0.3)); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,calc(var(--sb-v) * 0.5)); }
+
+    .btn, .btn-primary, .btn-secondary, .btn-nav, .canvas-outer, .flow-wrapper, .Flow, .Frame1, [data-layer] { user-select: none; }
+
+    .logo-lockup,
+    .LogoContainer,
+    .footer-logo {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+    }
+
+    .cta .headline,
+    .FinancingText3 {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "BDO Grotesk", sans-serif;
+      margin: 0;
+      zoom: var(--zoom);
+      overflow-y: auto;
+      height: calc(100vh / var(--zoom-factor));
+      transition: margin-right .6s cubic-bezier(.2,1,.3,1), opacity 0.4s ease-out;
+      
+      opacity: 0;
+    }
+
+    body.is-ready {
+      opacity: 1;
+    }
+
+    body.pushed-layout { margin-right: 450px; }
+    a { color: inherit; text-decoration: none; }
+    h1, h2, h3, h4, h5, h6, p, .lead, .sub, .pill {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+    }
+    .wrap { max-width: 1920px; margin: 0 auto; padding: 0 clamp(4vw, 19.48vw - 151.74px, 160px); }
+    .wrap-narrow { padding: 0 clamp(4vw, 16.26vw - 120.13px, 140px); }
+    .section { border-top: 1px solid var(--line); padding: 110px 0; }
+    .muted { color: var(--muted); }
+    .btn-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .show-mobile { display: none; }
+    .btn { border-radius: 999px; padding: 16px 24px; font-size: 16px; border: 1px solid transparent; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+    .btn-primary { background: var(--fg); color: #161616; font-weight: 600; transition: background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out; }
+    .btn-primary:hover { background: #0022ff; color: #fff; }
+    .btn-primary:hover .arrow { filter: invert(1); }
+    .btn-secondary { 
+      position: relative; 
+      background: var(--chip); 
+      border: 0 !important;
+      color: var(--fg); 
+      backdrop-filter: blur(20px); 
+      transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
+    }
+    .btn-secondary::before { 
+      content: ''; 
+      position: absolute; 
+      inset: 0;
+      border-radius: 999px; 
+      padding: 1px; 
+      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03)); 
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); 
+      -webkit-mask-composite: xor; 
+      mask-composite: exclude; 
+      pointer-events: none; 
+      transition: opacity 180ms ease-out;
+    }
+    .btn-secondary:hover { background: rgba(238, 238, 241, 0.10); color: #fff; }
+    .btn-nav { height: 50px; padding: 18px 20px; font-size: 14px; color: #fff; border-radius: 40px; backdrop-filter: blur(20px); overflow: hidden; }
+    .btn-nav:hover { background: #0022ff; }
+    .btn-secondary::before { transition: opacity 180ms ease-out; }
+    .btn-nav:hover::before { opacity: 0; }
+    .gradient-border { position: relative; }
+    .gradient-border::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(to bottom, var(--border-top, rgba(255,255,255,.08)), var(--border-bottom, rgba(255,255,255,.02))); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+    .gradient-border-blue { --border-top: rgba(255,255,255,.4); --border-bottom: rgba(255,255,255,.1); }
+    .pill { font-size: 16px; color: #8B8D91; margin-bottom: 50px; }
+    .hero { position: relative; overflow: hidden; height: calc(100vh / var(--zoom-factor)); margin-top: calc(-80px / var(--zoom-factor)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+    .hero-video-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-video-container.is-loaded {
+      opacity: 1;
+    }
+    .hero-video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.05;
+      display: block;
+    }
+    .hero h1 { margin: 0 0 50px; font-size: clamp(44px, 7vw, 86px); line-height: 1.02; letter-spacing: -1.8px; font-weight: 400; }
+    .responsive-br br { display: inline; }
+    .no-br .responsive-br br { display: none; }
+    .no-br .responsive-br::after { content: " "; }
+    .hero p { margin: 0 0 50px; font-size: 17px; }
+    .logo-lockup { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 50px; font-size: 14px; letter-spacing: .28px; }
+    .logo-lockup img { width: 34px; height: 20px; }
+    .supported { margin-top: 70px; }
+    .supported .label { font-size: 14px; color: rgba(255,255,255,.7); margin-bottom: 20px; }
+    .supported .logos { display: flex; gap: 40px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .supported .logos img { height: 32px; object-fit: contain; opacity: .8; }
+    .lead { font-size: var(--lead-font-size); line-height: 1.15; letter-spacing: -1.2px; margin: 0 0 50px; font-weight: 300;}
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0px; margin-top: 70px; }
+    .stat { padding: 50px 100px 50px 100px; display: flex; flex-direction: column; gap: 50px; border-left: 1px solid var(--line); }
+    .stat:first-child { border-left: 0; padding-left: 0; }
+    .stat-heading { color: #8B8D91; font-size: 16px; font-weight: 500; text-transform: capitalize; }
+    .stat-number-wrap { display: flex; flex-direction: column; gap: 25px; }
+    .stat-number-wrap h3 { margin: 0; font-size: var(--lead-font-size); font-weight: 400; color: #F2F2F2; }
+    .stat-number-wrap .title { margin: 0; font-size: 17px; font-weight: 400; color: #F2F2F2; }
+    .stat .desc { margin: 0; color: #8B8D91; font-size: 14px; line-height: 1.5; }
+    .centered { text-align: center; }
+    .headline { margin: 0 0 50px; font-weight: 400; font-size: clamp(38px, 5vw, 68px); line-height: 1.08; letter-spacing: -1.6px; }
+    .sub { margin: 0 0 44px; color: rgba(255,255,255,.7); font-size: 17px; }
+    .section.centered .pill,
+    .section.centered .headline,
+    .section.centered .sub { max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .panel { border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(180deg,#0c0d10,#090a0d); padding: 28px; }
+    .flow-img {
+      width: 100%;
+      height: auto;
+      max-height: 560px;
+      border-radius: 14px;
+      display: block;
+      object-fit: contain;
+      margin: 0 auto;
+    }
+    .flow-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 24px;
+      display: flex;
+    }
+    .flow-wrapper::-webkit-scrollbar {
+      height: 6px;
+    }
+    .flow-wrapper::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 99px;
+    }
+    .flow-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 99px;
+    }
+    .flow-wrapper::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    @media (min-width: 981px) {
+      .flow-wrapper::-webkit-scrollbar { display: none; }
+      .flow-wrapper { scrollbar-width: none; }
+    }
+    .canvas-outer { position: relative; border-radius: 24px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.03) 100%); overflow: hidden; }
+    .canvas-legend { margin: 0 auto; padding: 30px 20px 40px; width: 100%; max-width: 1200px; text-align: center; color: rgba(255,255,255,.5); font-size: 14px; font-weight: 400; line-height: 1.4; pointer-events: none; }
+    @media (max-width: 980px) {
+      .canvas-legend { padding: 25px 20px 30px; font-size: 13px; }
+      .canvas-outer { border-radius: 16px; }
+    }
+    .cta { padding: 180px 0; text-align: center; }
+    .cta h2 { margin: 0 0 50px; font-size: clamp(40px, 6vw, 68px); line-height: 1.1; font-weight: 400; letter-spacing: -1.6px; }
+    footer { border-top: 1px solid var(--line); padding: 80px 0 15px; }
+    .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 80px; }
+    .footer-col h4 { margin: 0 0 24px; font-family: "BDO Grotesk", sans-serif; font-weight: 500; font-size: 18px; }
+    .footer-col a { display: block; color: #7c7f84; margin: 10px 0; font-size: 16px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; color: #7c7f84; font-size: 16px; }
+    .lang { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 16px 20px; background: var(--chip); color:white; cursor: pointer; }
+    .lang img { width: 16px; height: 16px; }
+    .nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(20px); background: rgba(9,10,11,.88); border-bottom: 1px solid var(--line); }
+    .nav-logo-icon { transition: filter .45s cubic-bezier(.4,0,.2,1); filter: brightness(0) invert(1); }
+    .nav-logo-icon.is-blue { filter: none; }
+    .nav-inner { height: 80px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+    .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; user-select: none !important; }
+    .nav.nav-contacto-hidden #nav-contacto { display: none; }
+    .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
+    .arrow { width: 14px; height: 10px; transition: filter 240ms ease-out; }
+    .arrow-light { filter: invert(1); }
+    .scroll-word { transition: color 0.1s ease-out; }
+
+    @media (max-width: 980px) {
+      html {
+        overflow-y: auto !important;
+        height: auto !important;
+      }
+      body { 
+        zoom: 100%; 
+        height: auto !important;
+        overflow-y: visible !important;
+      }
+      .wrap { padding: 0 4vw; }
+      .wrap-narrow { padding: 0 4vw; }
+      .stats { grid-template-columns: 1fr; }
+      .stat { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 24px; }
+      .stat:first-child { border-top: 0; padding-top: 0; }
+      .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      .hero { padding-top: 80px; padding-bottom: 60px; height: auto; margin-top: 0; }
+      .hide-mobile { display: none; }
+      .show-mobile { display: inline; }
+      
+      .footer-bottom {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 20px !important;
+        width: 100% !important;
+      }
+
+      .footer-bottom > div:first-child {
+        order: 1 !important;
+        text-align: left !important;
+      }
+
+      .footer-bottom > div:nth-child(2) {
+        order: 2 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+        gap: 20px !important;
+        width: 100% !important;
+      }
+
+      .footer-bottom > div:last-child {
+        order: 3 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 10px !important;
+      }
+    }
+
+    /* ── Plan Builder ── */
+    .plan-builder { align-self: stretch; display: flex; flex-direction: column; gap: 40px; }
+    .plan-stack { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
+    .plan-card {
+      align-self: stretch; padding: 40px; background: var(--chip); border-radius: 14px;
+      display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+      transition: background-color 160ms ease, outline-color 160ms ease;
+      outline: 1px solid transparent; outline-offset: -1px; position: relative;
+    }
+    .plan-card::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+    .plan-card.recommended { background: rgba(253,253,255,.03); }
+    .plan-card.is-selected { outline-color: rgba(255,255,255,.06); background: var(--chip); }
+    .plan-card-body { flex: 1 1 0; min-width: 240px; display: flex; align-items: center; gap: 40px; }
+    .plan-content { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+    .plan-title { color: var(--fg); font-size: 16px; font-weight: 500; line-height: 1.3; }
+    .plan-subtitle { color: #8B8D91; font-size: 14px; font-weight: 400; line-height: 1.5; }
+    .plan-price { color: white; font-size: 16px; font-weight: 400; line-height: 1; white-space: nowrap; }
+    .plan-left-state { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; opacity: .9; }
+    .plan-left-state img { width: 16px; height: 16px; object-fit: contain; display: block; }
+    .plan-toggle {
+      width: 52px; height: 36px; border: 0; border-radius: 999px; background: var(--chip);
+      display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: background-color 150ms ease, transform 120ms ease; flex-shrink: 0; position: relative;
+    }
+    .plan-toggle::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+    .plan-toggle:hover { background: rgba(238,238,241,.10); }
+    .plan-toggle:active { transform: scale(.97); }
+    .plan-toggle img { width: 12px; height: 12px; object-fit: contain; display: block; pointer-events: none; }
+    .plan-income { justify-content: space-between; }
+    .plan-income-input-wrap {
+      position: relative; height: 52px; padding: 0 20px;
+      background: var(--chip); border-radius: 12px; border: 0;
+      display: inline-flex; align-items: center; gap: 8px; min-width: 176px;
+    }
+    .plan-income-input-wrap::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+    .plan-income-input-wrap::after {
+      content: ''; position: absolute; inset: -4px; border-radius: 16px;
+      border: 1px solid transparent; transition: border-color .2s ease; pointer-events: none;
+    }
+    .plan-income-input-wrap:focus-within::after { border-color: var(--fg); }
+    .plan-income-prefix { color: var(--fg); font-size: 16px; font-weight: 500; line-height: 1; white-space: nowrap; }
+    .plan-income-input {
+      width: 100%; min-width: 84px; background: transparent; border: 0; outline: none;
+      color: rgba(255,255,255,.8); font-size: 16px; font-family: "BDO Grotesk", sans-serif;
+      font-weight: 400; line-height: 1;
+    }
+    .plan-income-input::placeholder { color: rgba(255,255,255,.35); }
+    .plan-recommend { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
+    .plan-recommend-title { color: var(--muted); font-size: 16px; font-weight: 500; line-height: 1.2; margin-bottom: 10px; }
+    .plan-recommend.is-empty .plan-recommend-title { display: none; }
+    #whatsapp-plan-cta { user-select: none; }
+
+    /* ── Side Panel (base: hidden) ── */
+    .side-panel { display: none; }
+
+    @media (min-width: 981px) {
+      .desktop-hide-form { display: none !important; }
+      .side-panel {
+        position: fixed; top: 0; bottom: 0; right: 0; width: 450px;
+        background: var(--bg); border-left: 1px solid var(--line); z-index: 100;
+        transform: translateX(100%); transition: transform .6s cubic-bezier(.2,1,.3,1);
+        overflow-y: auto; display: flex; flex-direction: column; gap: 24px;
+        padding-bottom: 80px; scrollbar-width: none; -ms-overflow-style: none;
+      }
+      .side-panel::-webkit-scrollbar { display: none; }
+      .pushed-layout .side-panel { transform: translateX(0); }
+      .side-panel-header { padding: 40px 32px 0; display: flex; justify-content: space-between; align-items: center; }
+      .side-panel-title { color: var(--fg); font-size: 22px; line-height: 1.2; font-weight: 500; }
+      .side-panel-close {
+        width: 40px; height: 40px; background: var(--chip); border: 1px solid var(--line);
+        border-radius: 50%; color: var(--fg); font-size: 20px;
+        display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background .2s;
+      }
+      .side-panel-close:hover { background: rgba(255,255,255,.1); }
+      .side-panel .plan-builder { padding: 0 32px !important; width: 100% !important; max-width: 100% !important; }
+      .side-panel .plan-card { padding: 24px !important; gap: 16px !important; flex-direction: column !important; align-items: flex-start !important; }
+      .side-panel .plan-income { border-radius: 14px !important; }
+      .side-panel .plan-income-input-wrap { width: 100% !important; }
+      .side-panel .plan-card-body { gap: 16px !important; }
+      .side-panel .plan-title { font-size: 16px !important; line-height: 1.3 !important; }
+      .side-panel .plan-subtitle { font-size: 13px !important; }
+      .side-panel #whatsapp-plan-cta { width: 100% !important; margin-top: 20px !important; justify-content: center; }
+      body.pushed-layout .side-panel #side-panel-content { padding-bottom: 100px; }
+      body.pushed-layout h1 .responsive-br br,
+      body.pushed-layout h2 .responsive-br br { display: none; }
+      body.pushed-layout h1 .responsive-br::after,
+      body.pushed-layout h2 .responsive-br::after { content: " "; }
+      body.pushed-layout h1,
+      body.pushed-layout h2 { display: block !important; }
+    }
+
+    @media (max-width: 980px) {
+      .plan-card { padding: 24px 20px; gap: 20px; }
+      .plan-card-body { gap: 20px; }
+      .plan-content { min-width: 0; }
+      .plan-card .plan-card-body { flex-basis: 100%; }
+      .plan-card .plan-price { order: 2; }
+      .plan-card .plan-toggle { order: 3; margin-left: auto; }
+      #whatsapp-plan-cta { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Side Panel -->
+  <div id="side-panel" class="side-panel">
+    <div class="side-panel-header">
+      <div class="side-panel-title">Personalizar plan</div>
+      <button class="side-panel-close" aria-label="Cerrar panel">&times;</button>
+    </div>
+    <div id="side-panel-content"></div>
+  </div>
+
+  <faust-navbar></faust-navbar>
+
+  <main>
+    <section class="hero wrap" id="aplicar">
+      <div class="logo-lockup" id="hero-logo">
+        <img src="./assets/Logotypes/Faust%20Logo.svg" alt="Faust">
+        <span>FaustPartners™</span>
+      </div>
+      <h1>Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
+      <p>Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
+        <a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
+      </div>
+      <div class="supported">
+        <div class="label">Respaldado por</div>
+        <div class="logos">
+          <img src="./assets/Logotypes/finsus.svg" alt="Finsus">
+          <img src="./assets/Logotypes/herdez.svg" alt="Herdez">
+          <img src="./assets/Logotypes/mc.svg" alt="MC">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="pill">/ Gestión</div>
+        <h2 class="lead">
+          <div class="lead-title" style="display: inline;">Optimizamos la conversión de nuestros socios.</div>
+          <div class="muted" style="display: inline;">Usamos el poder de la Neurociencia Conductual y Análisis de Datos para impulsar su MRR. Nuestro equipo se encarga de la implementación.</div>
+        </h2>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
+          <a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
+        </div>
+        <div class="stats">
+          <article class="stat">
+            <div class="stat-heading">Impacto</div>
+            <div class="stat-number-wrap">
+              <h3>710 mil</h3>
+              <p class="title">Usuarios Impactados</p>
+            </div>
+            <p class="desc">fueron impulsados el año pasado por el desarrollo de productos basados en la cognición humana.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-heading">Empresas</div>
+            <div class="stat-number-wrap">
+              <h3>5</h3>
+              <p class="title">Empresas en México</p>
+            </div>
+            <p class="desc">fueron impulsadas el año pasado por el desarrollo de productos basados en la cognición humana.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-heading">Resultados</div>
+            <div class="stat-number-wrap">
+              <h3>+35.9%</h3>
+              <p class="title">CRO (Conversión)</p>
+            </div>
+            <p class="desc">fueron impulsadas el año pasado por el desarrollo de productos basados en la cognición humana.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section centered" id="estrategia">
+      <div class="wrap wrap-narrow">
+        <div class="pill">/ Gestión</div>
+        <h2 class="headline">Desarrollamos arquitectura que escala volumen de conversión.</h2>
+        <p class="sub">Optimizamos las plataformas de empresas de todo el país para aumentar sus ventas mediante decisiones basadas en datos.</p>
+        <div class="canvas-outer gradient-border">
+          <div class="flow-wrapper">
+            <div data-layer="Flow" class="Flow" style="width: 1640px; height: 450px; position: relative; flex-shrink: 0; margin: 0 auto;">
+              <div data-layer="Frame 1" class="Frame1" style="width: 1360px; height: 320px; left: 140px; top: 80px; position: absolute">
+              <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
+                <svg width="1361" height="320" viewBox="0 0 1361 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4" d="M0.5 320L0.5 0M80.5 320V0M160.5 320V0M240.5 320V0M320.5 320V0M400.5 320V0M480.5 320V0M560.5 320V0M640.5 320V0M720.5 320V0M800.5 320V0M880.5 320V0M960.5 320V0M1040.5 320V0M1120.5 320V0M1200.5 320V0M1280.5 320V0M1360.5 320V0" stroke="url(#paint0_linear_1302_753)"/>
+                <defs>
+                <linearGradient id="paint0_linear_1302_753" x1="1361.44" y1="1.49776e-06" x2="1361.44" y2="320" gradientUnits="userSpaceOnUse">
+                <stop stop-color="white" stop-opacity="0.1"/>
+                <stop offset="0.4" stop-color="white" stop-opacity="0.15"/>
+                <stop offset="1" stop-color="white" stop-opacity="0.05"/>
+                </linearGradient>
+                </defs>
+                </svg>
+              </div>
+              <div data-layer="Label" class="Label" style="width: 400px; left: 240px; top: 224px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center"><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Tu empresa proporciona el Sitio </span><span style="color: white; font-size: 14px; font-family: BDO Grotesk; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Web Original </span></div>
+              <div data-layer="Label" class="Label" style="width: 400px; left: 720px; top: 224px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center"><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Faust crea una </span><span style="color: white; font-size: 14px; font-family: BDO Grotesk; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Versión Optimizada</span><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word"> específicamente para aumentar la conversión (%)</span></div>
+              <div data-layer="Content Row" class="ContentRow" style="width: 880px; left: 240px; top: 110px; position: absolute; justify-content: center; align-items: center; gap: 8px; display: inline-flex">
+                <div data-layer="Frame 13" class="Frame13" style="width: 152px; height: 80px; position: relative">
+                  <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
+                    <div data-layer="Frame" class="Frame" style="width: 80px; height: 80px; position: relative; background: #D3D7D6; overflow: hidden; border-radius: 40px">
+                      <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 29.25px; top: 29.25px; position: absolute">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4.68517 19.8344C4.98086 18.8502 5.58591 17.9876 6.41057 17.3745C7.23522 16.7614 8.23554 16.4305 9.26313 16.4308H14.0418C15.0707 16.4304 16.0723 16.7622 16.8975 17.3767C17.7228 17.9912 18.3276 18.8557 18.6222 19.8415M22.404 11.6519C22.404 17.5901 17.5902 22.4039 11.652 22.4039C5.71386 22.4039 0.900024 17.5901 0.900024 11.6519C0.900024 5.71374 5.71386 0.899902 11.652 0.899902C17.5902 0.899902 22.404 5.71374 22.404 11.6519ZM15.2352 9.26251C15.2352 11.2419 13.6306 12.8465 11.6512 12.8465C9.67182 12.8465 8.0672 11.2419 8.0672 9.26251C8.0672 7.28312 9.67182 5.67851 11.6512 5.67851C13.6306 5.67851 15.2352 7.28312 15.2352 9.26251Z" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div data-svg-wrapper data-layer="SVG100" class="Svg100" style="left: 80px; top: 40px; position: absolute">
+                    <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112ZM0 7.36401V8.36401H72V7.36401V6.36401H0V7.36401Z" fill="url(#paint0_linear_1067_4179)"/>
+                    <defs>
+                    <linearGradient id="paint0_linear_1067_4179" x1="0" y1="8.86401" x2="72" y2="8.86401" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#D3D7D6"/>
+                    <stop offset="1" stop-color="#191919"/>
+                    </linearGradient>
+                    </defs>
+                    </svg>
+                  </div>
+                </div>
+                <div data-layer="Frame 199" class="Frame199" style="width: 312px; height: 64px; position: relative">
+                  <div data-layer="Item Details" class="ItemDetails" style="width: 240px; height: 64px; left: 0px; top: 0px; position: absolute">
+                    <div data-layer="Frame" class="Frame gradient-border" style="width: 240px; height: 64px; left: 0px; top: 0px; position: absolute; background: #141414; overflow: hidden; border-radius: 40px;">
+                      <div data-layer="Frame 229" class="Frame229" style="width: 36.78px; height: 20px; left: 29.11px; top: 22px; position: absolute">
+                        <div data-svg-wrapper data-layer="Cube" class="Cube" style="left: 0px; top: 0px; position: absolute">
+                          <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M0.900024 5.8999V15.8999L9.78891 20.8999L18.6778 15.8999V5.8999L9.78891 0.899902L0.900024 5.8999ZM18.6778 5.8999L9.78881 10.8997M9.78891 20.8999L9.78881 10.8997M0.900024 5.8999L9.78881 10.8997" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                        <div data-layer="Amount" class="Amount" style="left: 23.78px; top: 4px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word">A</div>
+                      </div>
+                      <div data-layer="Amount" class="Amount" style="left: 75.89px; top: 26px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic"><span style="color: white; font-size: 16px; font-family: BDO Grotesk; font-weight: 400; line-height: 22.40px; letter-spacing: 0.32px; word-wrap: break-word">9 mil ventas</span><span style="color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: BDO Grotesk; font-weight: 400; line-height: 22.40px; letter-spacing: 0.32px; word-wrap: break-word">/mes</span></div>
+                    </div>
+                  </div>
+                  <div data-svg-wrapper data-layer="SVG101" class="Svg101" style="left: 240px; top: 32px; position: absolute">
+                    <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112ZM0 7.36401V8.36401H72V7.36401V6.36401H0V7.36401Z" fill="url(#paint0_linear_1067_4190)"/>
+                    <defs>
+                    <linearGradient id="paint0_linear_1067_4190" x1="0" y1="8.86401" x2="72" y2="8.86401" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#191919"/>
+                    <stop offset="1" stop-color="#D3D7D6"/>
+                    </linearGradient>
+                    </defs>
+                    </svg>
+                  </div>
+                </div>
+                <div data-layer="Frame 198" class="Frame198" style="width: 152px; height: 80px; position: relative">
+                  <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
+                    <div data-layer="Icon Container" class="IconContainer" style="border-radius: 10px; flex-direction: column; justify-content: flex-end; align-items: center; gap: 20px; display: flex">
+                      <div data-layer="Frame" class="Frame" style="width: 80px; height: 80px; position: relative; background: #D3D7D6; overflow: hidden; border-radius: 20px">
+                        <div data-svg-wrapper data-layer="Rectangle 1" class="Rectangle1" style="left: 25px; top: 28.50px; position: absolute">
+                          <svg width="30" height="23" viewBox="0 0 30 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M0 7.1875V11.5L30 4.3125V0L0 7.1875Z" fill="#1A1A1A"/>
+                          <path d="M2.42541 13.7939C1.00305 14.1347 0 15.4064 0 16.869V23H3.57143V17.9688L30 11.5V7.1875L2.42541 13.7939Z" fill="#1A1A1A"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div data-svg-wrapper data-layer="SVG102" class="Svg102" style="left: 80px; top: 40px; position: absolute">
+                    <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M72.7071 6.65691C73.0976 7.04743 73.0976 7.6806 72.7071 8.07112L66.3431 14.4351C65.9526 14.8256 65.3195 14.8256 64.9289 14.4351C64.5384 14.0446 64.5384 13.4114 64.9289 13.0209L70.5858 7.36401L64.9289 1.70716C64.5384 1.31664 64.5384 0.68347 64.9289 0.292946C65.3195 -0.0975785 65.9526 -0.0975785 66.3431 0.292946L72.7071 6.65691ZM72 7.36401V8.36401H0V7.36401V6.36401H72V7.36401Z" fill="url(#paint0_linear_1067_4197)"/>
+                    <defs>
+                    <linearGradient id="paint0_linear_1067_4197" x1="72" y1="8.86401" x2="0" y2="8.86401" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#87A1FF"/>
+                    <stop offset="1" stop-color="#D3D7D6"/>
+                    </linearGradient>
+                    </defs>
+                    </svg>
+                  </div>
+                </div>
+                <div data-layer="Frame 201" class="Frame201" style="width: 240px; height: 64px; position: relative">
+                  <div data-layer="Item Details" class="ItemDetails" style="width: 240px; height: 64px; left: 0px; top: 0px; position: absolute">
+                    <div data-layer="Frame" class="Frame gradient-border gradient-border-blue" style="width: 240px; height: 64px; left: 0px; top: 0px; position: absolute; background: #0022FF; box-shadow: 0px 4px 200px rgba(0, 48, 255, 0.80); overflow: hidden; border-radius: 40px;">
+                      <div data-layer="Frame 230" class="Frame230" style="width: 36.78px; height: 20px; left: 25.61px; top: 22px; position: absolute">
+                        <div data-svg-wrapper data-layer="Cube" class="Cube" style="left: 0px; top: 0px; position: absolute">
+                          <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M0.900024 5.8999V15.8999L9.78891 20.8999L18.6778 15.8999V5.8999L9.78891 0.899902L0.900024 5.8999ZM18.6778 5.8999L9.78881 10.8997L0.900024 5.8999M10.2335 10.8998V20.8998" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                        <div data-layer="Amount" class="Amount" style="left: 23.78px; top: 4px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; color: white; font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word">B</div>
+                      </div>
+                      <div data-layer="Amount" class="Amount" style="left: 72.39px; top: 26px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic"><span style="color: white; font-size: 16px; font-family: BDO Grotesk; font-weight: 400; line-height: 22.40px; letter-spacing: 0.32px; word-wrap: break-word">15 mil ventas</span><span style="color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: BDO Grotesk; font-weight: 400; line-height: 22.40px; letter-spacing: 0.32px; word-wrap: break-word">/mes</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="canvas-legend">
+            Las métricas capturadas determinan automáticamente cuándo B supera consistentemente a A, activando el escalamiento gradual del tráfico
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section centered">
+      <div class="wrap wrap-narrow">
+        <div class="pill">/ Testing</div>
+        <h2 class="headline">Decisiones basadas en datos.<br>Impacto cuantificable.</h2>
+        <p class="sub">Redirigimos tu tráfico gradualmente entre tu sitio web actual y nuestra interfaz experimental, de forma completamente segura.<br>Cuando nuestra interfaz genere conversiones consistentemente mayores, aumentaremos el tráfico.</p>
+        <div class="canvas-outer gradient-border">
+          <div class="flow-wrapper">
+            <div data-layer="Flow" class="Flow" style="width: 1640px; height: 530px; position: relative; flex-shrink: 0; margin: 0 auto;">
+              <div data-layer="Frame 1" class="Frame1" style="width: 1280px; height: 400px; left: 180px; top: 80px; position: absolute">
+              <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
+                <svg width="1281" height="400" viewBox="0 0 1281 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4" d="M0.5 400L0.5 0M80.5 400V0M160.5 400V0M240.5 400V0M320.5 400V0M400.5 400V0M480.5 400V0M560.5 400V0M640.5 400V0M720.5 400V0M800.5 400V0M880.5 400V0M960.5 400V0M1040.5 400V0M1120.5 400V0M1200.5 400V0M1280.5 400V0" stroke="url(#paint0_linear_1302_756)"/>
+                <defs>
+                <linearGradient id="paint0_linear_1302_756" x1="1281.44" y1="1.87751e-06" x2="1281.44" y2="400" gradientUnits="userSpaceOnUse">
+                <stop stop-color="white" stop-opacity="0.1"/>
+                <stop offset="0.4" stop-color="white" stop-opacity="0.15"/>
+                <stop offset="1" stop-color="white" stop-opacity="0.05"/>
+                </linearGradient>
+                </defs>
+                </svg>
+              </div>
+              <div data-layer="Flow Details" class="FlowDetails" style="width: 1127px; left: 78.78px; top: 80px; position: absolute; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
+                <div data-layer="Flow Metrics Container" class="FlowMetricsContainer" style="width: 232px; height: 160.03px; position: relative">
+                  <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 40.02px; position: absolute">
+                    <div data-layer="Frame" class="Frame gradient-border" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; background: #1A1A1A; overflow: hidden; border-radius: 40px;">
+                      <div data-svg-wrapper data-layer="Users" class="Users" style="left: 30px; top: 30px; position: absolute">
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.899994 20.9V18.6778C0.899994 17.499 1.36825 16.3686 2.20174 15.5351C3.03524 14.7016 4.1657 14.2333 5.34444 14.2333H9.78888C10.9676 14.2333 12.0981 14.7016 12.9316 15.5351C13.7651 16.3686 14.2333 17.499 14.2333 18.6778V20.9M15.3444 1.04433C16.3004 1.28911 17.1478 1.84511 17.7529 2.62467C18.358 3.40424 18.6864 4.36303 18.6864 5.34988C18.6864 6.33674 18.358 7.29553 17.7529 8.07509C17.1478 8.85466 16.3004 9.41066 15.3444 9.65544M20.9002 20.8999V18.6776C20.8945 17.6967 20.5645 16.7452 19.9616 15.9714C19.3586 15.1976 18.5166 14.6451 17.5668 14.3999M12.0113 5.34435C12.0113 7.79895 10.0215 9.7888 7.56689 9.7888C5.11229 9.7888 3.12244 7.79895 3.12244 5.34435C3.12244 2.88975 5.11229 0.899902 7.56689 0.899902C10.0215 0.899902 12.0113 2.88975 12.0113 5.34435Z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div data-layer="Label" class="Label" style="left: 16.50px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Tráfico</div>
+                  </div>
+                  <div data-svg-wrapper data-layer="SVG1" class="Svg1" style="left: 80px; top: 0px; position: absolute">
+                    <svg width="153" height="175" viewBox="0 0 153 175" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M152.707 168.102C153.098 167.712 153.098 167.079 152.707 166.688L146.343 160.324C145.953 159.934 145.319 159.934 144.929 160.324C144.538 160.715 144.538 161.348 144.929 161.738L150.586 167.395L144.929 173.052C144.538 173.443 144.538 174.076 144.929 174.466C145.319 174.857 145.953 174.857 146.343 174.466L152.707 168.102ZM152.707 8.07112C153.098 7.6806 153.098 7.04743 152.707 6.65691L146.343 0.292946C145.953 -0.0975785 145.319 -0.0975785 144.929 0.292946C144.538 0.68347 144.538 1.31664 144.929 1.70716L150.586 7.36401L144.929 13.0209C144.538 13.4114 144.538 14.0446 144.929 14.4351C145.319 14.8256 145.953 14.8256 146.343 14.4351L152.707 8.07112ZM0 87.3953V88.3953H44.9375V87.3953V86.3953H0V87.3953ZM114.938 167.395V168.395H152V167.395V166.395H114.938V167.395ZM79.9375 132.395H78.9375C78.9375 152.278 95.0553 168.395 114.938 168.395V167.395V166.395C96.1598 166.395 80.9375 151.173 80.9375 132.395H79.9375ZM44.9375 87.3953V88.3953C54.1454 88.3953 62.6321 94.5243 68.8735 103.229C75.1038 111.919 78.9375 122.969 78.9375 132.395H79.9375H80.9375C80.9375 122.492 76.9362 111.042 70.4989 102.064C64.0728 93.1013 55.0596 86.3953 44.9375 86.3953V87.3953ZM0 87.364V88.364H44.9375V87.364V86.364H0V87.364ZM114.938 7.36401V8.36401H152V7.36401V6.36401H114.938V7.36401ZM79.9375 52.364H80.9375C80.9375 42.9375 84.7712 31.8874 91.0015 23.198C97.2429 14.493 105.73 8.36401 114.938 8.36401V7.36401V6.36401C104.815 6.36401 95.8022 13.07 89.3761 22.0326C82.9388 31.0107 78.9375 42.4606 78.9375 52.364H79.9375ZM44.9375 87.364V88.364C64.8197 88.364 80.9375 72.2463 80.9375 52.364H79.9375H78.9375C78.9375 71.1417 63.7152 86.364 44.9375 86.364V87.364Z" fill="url(#paint0_linear_1058_1405)"/>
+                    <defs>
+                    <linearGradient id="paint0_linear_1058_1405" x1="0" y1="47.3328" x2="152" y2="47.3328" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#D3D7D6" stop-opacity="0"/>
+                    <stop offset="1" stop-color="#D3D7D6"/>
+                    </linearGradient>
+                    </defs>
+                    </svg>
+                  </div>
+                  <div data-layer="Flow Arrow Container 2" class="FlowArrowContainer2" style="padding: 8px; left: 145px; top: 117px; position: absolute; background: #0E0F10; border-radius: 20px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+                    <div data-layer="Label" class="Label" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: #D3D7D6; font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">10%</div>
+                  </div>
+                  <div data-layer="Flow Percentage 1" class="FlowPercentage1" style="padding: 8px; left: 143px; top: 17.03px; position: absolute; background: #0E0F10; border-radius: 20px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+                    <div data-layer="Label" class="Label" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: #D3D7D6; font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">90%</div>
+                  </div>
+                </div>
+                <div data-layer="A/B" class="AB" style="width: 80px; height: 240px; position: relative">
+                  <div data-layer="Icon Container" class="IconContainer" style="height: 80px; padding-bottom: 20px; left: 0px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
+                    <div data-layer="Icon Container" class="IconContainer" style="border-radius: 10px; flex-direction: column; justify-content: flex-end; align-items: center; gap: 20px; display: flex">
+                      <div data-layer="Frame" class="Frame gradient-border" style="width: 80px; height: 80px; position: relative; background: #1A1A1A; overflow: hidden; border-radius: 20px;">
+                        <div data-layer="Flow Cube Container" class="FlowCubeContainer" style="left: 21.52px; top: 28.77px; position: absolute; justify-content: center; align-items: center; gap: 4px; display: inline-flex">
+                          <div data-svg-wrapper data-layer="Cube" class="Cube">
+                            <svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.900024 6.5159V17.7479L10.884 23.3639L20.868 17.7479V6.5159L10.884 0.899902L0.900024 6.5159ZM20.868 6.5159L10.8839 12.1316M10.884 23.3639L10.8839 12.1316M0.900024 6.5159L10.8839 12.1316" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <div data-layer="Flow Cube Text" class="FlowCubeText" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: white; font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word">A</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-layer="Label" class="Label" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Control</div>
+                  </div>
+                  <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 160px; position: absolute">
+                    <div data-layer="Icon Container" class="IconContainer" style="left: 0px; top: 0px; position: absolute; border-radius: 10px; flex-direction: column; justify-content: flex-end; align-items: center; gap: 20px; display: inline-flex">
+                      <div data-layer="Frame" class="Frame gradient-border gradient-border-blue" style="width: 80px; height: 80px; position: relative; background: #0030FF; box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.80); overflow: hidden; border-radius: 20px;">
+                        <div data-layer="Flow Metrics Container 2" class="FlowMetricsContainer2" style="left: 21.52px; top: 28.77px; position: absolute; justify-content: center; align-items: center; gap: 4px; display: inline-flex">
+                          <div data-svg-wrapper data-layer="Cube" class="Cube">
+                            <svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.900024 6.5159V17.7479L10.884 23.3639L20.868 17.7479V6.5159L10.884 0.899902L0.900024 6.5159ZM20.868 6.5159L10.8839 12.1316M10.884 23.3639L10.8839 12.1316M0.900024 6.5159L10.8839 12.1316" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <div data-layer="Flow Experiment Percentage" class="FlowExperimentPercentage" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: white; font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word">B</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-layer="Label" class="Label" style="left: 11px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Variante</div>
+                  </div>
+                </div>
+                <div data-layer="Container" class="Container" style="width: 793px; height: 102px; position: relative">
+                  <div data-svg-wrapper data-layer="SVG2" class="Svg2" style="left: 0px; top: 31px; position: absolute">
+                    <svg width="66" height="42" viewBox="0 0 66 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M65.2345 21.5567C65.625 21.1662 65.625 20.533 65.2345 20.1425L58.8705 13.7785C58.48 13.388 57.8468 13.388 57.4563 13.7785C57.0658 14.1691 57.0658 14.8022 57.4563 15.1928L63.1131 20.8496L57.4563 26.5065C57.0658 26.897 57.0658 27.5302 57.4563 27.9207C57.8468 28.3112 58.48 28.3112 58.8705 27.9207L65.2345 21.5567ZM26.9356 17.241L26.4083 18.0906V18.0906L26.9356 17.241ZM26.9356 24.4582L26.4083 23.6086V23.6086L26.9356 24.4582ZM64.5273 20.8496V19.8496H39.5924V20.8496V21.8496H64.5273V20.8496ZM26.9356 17.241L27.463 16.3913L1.05471 -3.0756e-05L0.527344 0.849609L-1.91331e-05 1.69925L26.4083 18.0906L26.9356 17.241ZM39.5924 20.8496V19.8496C35.306 19.8496 31.1049 18.6518 27.463 16.3913L26.9356 17.241L26.4083 18.0906C30.3668 20.5477 34.9333 21.8496 39.5924 21.8496V20.8496ZM26.9356 24.4582L26.4083 23.6086L-1.91331e-05 40L0.527344 40.8496L1.05471 41.6992L27.463 25.3079L26.9356 24.4582ZM26.9356 24.4582L27.463 25.3079C31.1049 23.0474 35.306 21.8496 39.5924 21.8496V20.8496V19.8496C34.9333 19.8496 30.3668 21.1516 26.4083 23.6086L26.9356 24.4582Z" fill="url(#paint0_linear_1058_1428)"/>
+                    <defs>
+                    <linearGradient id="paint0_linear_1058_1428" x1="64.5273" y1="50.8496" x2="0.527344" y2="50.8496" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#D3D7D6"/>
+                    <stop offset="1" stop-color="#D3D7D6" stop-opacity="0"/>
+                    </linearGradient>
+                    </defs>
+                    </svg>
+                  </div>
+                  <div data-layer="Métricas" class="MTricas" style="width: 152px; height: 80px; left: 72px; top: 11px; position: absolute">
+                    <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute">
+                      <div data-layer="Frame" class="Frame" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; background: #D3D7D6; overflow: hidden; border-radius: 40px">
+                        <div data-svg-wrapper data-layer="Database" class="Database" style="left: 31.33px; top: 30.25px; position: absolute">
+                          <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M18.2334 4.1499C18.2334 5.94483 14.3532 7.3999 9.56669 7.3999C4.78022 7.3999 0.900024 5.94483 0.900024 4.1499M18.2334 4.1499C18.2334 2.35498 14.3532 0.899902 9.56669 0.899902C4.78022 0.899902 0.900024 2.35498 0.900024 4.1499M18.2334 4.1499V10.6499M0.900024 4.1499V10.6499M0.900024 10.6499C0.900024 11.5119 1.81312 12.3385 3.43843 12.948C5.06375 13.5575 7.26815 13.8999 9.56669 13.8999C11.8652 13.8999 14.0696 13.5575 15.695 12.948C17.3203 12.3385 18.2334 11.5119 18.2334 10.6499M0.900024 10.6499V17.1499C0.900024 18.0119 1.81312 18.8385 3.43843 19.448C5.06375 20.0575 7.26815 20.3999 9.56669 20.3999C11.8652 20.3999 14.0696 20.0575 15.695 19.448C17.3203 18.8385 18.2334 18.0119 18.2334 17.1499V10.6499" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-layer="Label" class="Label" style="left: -7px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Métricas<br>almacenadas</div>
+                    </div>
+                    <div data-svg-wrapper data-layer="SVG3" class="Svg3" style="left: 80px; top: 40px; position: absolute">
+                      <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112ZM0 7.36401V8.36401H72V7.36401V6.36401H0V7.36401Z" fill="url(#paint0_linear_1058_1434)"/>
+                      <defs>
+                      <linearGradient id="paint0_linear_1058_1434" x1="0" y1="8.86401" x2="72" y2="8.86401" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#D3D7D6"/>
+                      <stop offset="1" stop-color="#D3D7D6" stop-opacity="0.2"/>
+                      </linearGradient>
+                      </defs>
+                      </svg>
+                    </div>
+                  </div>
+                  <div data-layer="Item Details" class="ItemDetails" style="width: 561px; height: 102px; left: 232px; top: 0px; position: absolute">
+                    <div data-layer="Frame" class="Frame gradient-border" style="width: 561px; height: 100px; left: 0px; top: 0px; position: absolute; background: #171819; overflow: hidden; border-radius: 30px;">
+                      <div data-layer="Amount" class="Amount" style="width: 497px; left: 32px; top: 32px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic"><span style="color: white; font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word">Si Y convierte mejor que X</span><span style="color: rgba(255, 255, 255, 0.50); font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word"> durante 30 días, </span><span style="color: white; font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word">+10% de tráfico</span><span style="color: rgba(255, 255, 255, 0.50); font-size: 17px; font-family: BDO Grotesk; font-weight: 400; line-height: 23.80px; letter-spacing: 0.17px; word-wrap: break-word"> visualiza Y</span></div>
+                    </div>
+                    <div data-layer="Description" class="Description" style="width: 561px; left: 0px; top: 124px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Usamos las métricas para ajustar %</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="canvas-legend">
+            Las métricas capturadas determinan automáticamente cuándo Y supera consistentemente a X, activando el escalamiento gradual del tráfico
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta section" id="contacto">
+      <div class="wrap" style="display: flex; justify-content: center;">
+        <div data-layer="Bloque" class="Bloque" style="width: 100%; flex-direction: column; justify-content: flex-start; align-items: center; gap: 50px; display: flex">
+          <div data-layer="Frame 219" data-propiedad-1="Variante 3" class="Frame219" style="width: 322px; height: 20px; position: relative">
+            <div data-layer="Title" class="Title" style="left: 131px; top: 5px; position: absolute; opacity: 0.01; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: #F2F2F2; font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word; filter: blur(50px)">Optimización CRO</div>
+            <div data-layer="Rectangle 11" class="Rectangle11" style="width: 173px; height: 20px; left: 85px; top: 0px; position: absolute"></div>
+            <div data-layer="Line" class="Line" style="width: 2px; height: 20px; left: 258px; top: 0px; position: absolute; opacity: 0; background: #F2F2F2"></div>
+            <div data-layer="Logo Container" class="LogoContainer" style="left: 85px; top: 0px; position: absolute; box-shadow: 0px 0px 0px; filter: blur(0px); justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+              <div data-svg-wrapper data-layer="Faust Logo" data-color="Azul" data-tipo="Isotipo" class="FaustLogo" style="position: relative; color: white; transition: color 0.3s ease;">
+                <svg width="34" height="20" viewBox="0 0 34 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 6.00006V10.0001L34 4.00006V0L0 6.00006Z" fill="currentColor"/>
+                <path d="M4.95729 11.1252C2.09014 11.6312 0 14.1225 0 17.0339V20H4V15.2941L34 10.0001V6.00006L4.95729 11.1252Z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div data-layer="Title" class="Title" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: #F2F2F2; font-size: 14px; font-family: BDO Grotesk; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">FaustPartners™</div>
+            </div>
+          </div>
+          <h2 data-layer="Financing Text 3" class="FinancingText3 headline" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #F2F2F2; font-size: clamp(38px, 5vw, 68px); font-family: BDO Grotesk; font-weight: 400; line-height: 1.08; letter-spacing: -1.6px; word-wrap: break-word; margin: 0;">Aplica en 1 min. para sumar 500 mil MXN<br/>al MRR de tu empresa.</h2>
+          <div data-layer="Buttons Container" class="ButtonsContainer btn-row" style="justify-content: center;">
+            <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
+            <a class="btn btn-secondary" href="#contacto"><span class="hide-mobile">Escribir un mensaje</span><span class="show-mobile">Contacto</span></a>
+          </div>
+          <div id="plan-builder-mount" class="desktop-hide-form" style="width:100%;max-width:800px;text-align:left;">
+            <div class="plan-builder">
+              <div class="plan-stack plan-sortable">
+                <div class="plan-card plan-income">
+                  <div style="flex:1 1 0;min-width:240px;flex-direction:column;justify-content:center;align-items:flex-start;gap:10px;display:inline-flex">
+                    <div class="plan-title">¿Cuál es el Ingreso Bruto Mensual aproximado de su empresa?</div>
+                    <div class="plan-subtitle">Min. MX 900k</div>
+                  </div>
+                  <label class="plan-income-input-wrap" for="monthly-income">
+                    <span class="plan-income-prefix">MXN</span>
+                    <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric" autocomplete="off" placeholder="1,000,000">
+                  </label>
+                </div>
+                <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true" data-price="0">
+                  <div class="plan-card-body">
+                    <span class="plan-left-state" aria-hidden="true"><img src="./assets/Icons/check.svg" alt=""></span>
+                    <div class="plan-content">
+                      <div class="plan-title">Prototipado y Desarrollo Web</div>
+                      <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y desarrollo/actualización de la plataforma web</div>
+                    </div>
+                  </div>
+                  <div class="plan-price">Sin costo</div>
+                  <button class="plan-toggle" type="button" aria-label="Excluir servicio">
+                    <img src="./assets/Icons/cross.svg" alt="" width="12" height="12">
+                  </button>
+                </div>
+                <div class="plan-card is-selected plan-service" data-plan-id="marketing" data-selected="true" data-price="0">
+                  <div class="plan-card-body">
+                    <span class="plan-left-state" aria-hidden="true"><img src="./assets/Icons/check.svg" alt=""></span>
+                    <div class="plan-content">
+                      <div class="plan-title">Gestión de Marketing Digital</div>
+                      <div class="plan-subtitle plan-description">Gestión completa de estrategias de marketing digital</div>
+                    </div>
+                  </div>
+                  <div class="plan-price">Sin costo</div>
+                  <button class="plan-toggle" type="button" aria-label="Excluir servicio">
+                    <img src="./assets/Icons/cross.svg" alt="" width="12" height="12">
+                  </button>
+                </div>
+              </div>
+              <div class="plan-recommend plan-sortable">
+                <div class="plan-recommend-title">Disponible para incluir</div>
+                <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false" data-price="265000">
+                  <div class="plan-card-body">
+                    <span class="plan-left-state" aria-hidden="true"><img src="./assets/Icons/dash.svg" alt=""></span>
+                    <div class="plan-content">
+                      <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
+                      <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y mejoras iterativas de la plataforma web.</div>
+                    </div>
+                  </div>
+                  <div class="plan-price">MXN 265,000</div>
+                  <button class="plan-toggle" type="button" aria-label="Añadir servicio">
+                    <img src="./assets/Icons/plus.svg" alt="" width="12" height="12">
+                  </button>
+                </div>
+              </div>
+              <div id="whatsapp-plan-cta" class="btn btn-primary" style="align-self:center;cursor:pointer;">
+                <span id="plan-cta-text">Obtener plan por $0</span>
+                <img class="arrow" src="./assets/Icons/button_arrow.svg" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <faust-footer></faust-footer>
+
+  <script>
+
+    /* Automatically manage responsive line breaks (<br>) on headings and paragraphs */
+    (() => {
+      const targets = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6, p'))
+        .filter(el => el.querySelector('br'));
+
+      targets.forEach(el => {
+        el.innerHTML = el.innerHTML.replace(/<br\s*\/?>/gi, '<span class="responsive-br"><br></span>');
+      });
+
+      function checkWraps() {
+        targets.forEach(el => {
+          el.classList.remove('no-br');
+          
+          const brs = el.querySelectorAll('.responsive-br');
+          const computedStyle = window.getComputedStyle(el);
+          const lineHeight = parseFloat(computedStyle.lineHeight);
+          const height = el.clientHeight;
+          const expectedHeight = lineHeight * (brs.length + 1.2);
+          
+          if (height > expectedHeight) {
+            el.classList.add('no-br');
+          }
+        });
+      }
+
+      checkWraps();
+      window.addEventListener('resize', checkWraps);
+    })();
+
+    /* Scroll-driven text lighting up effect */
+    (() => {
+      let leadSpan = document.querySelector('.lead .muted');
+      const targetElement = document.querySelector('.lead');
+      if (!leadSpan || !targetElement) return;
+
+      const originalSpanishText = leadSpan.textContent.trim().replace(/\s+/g, ' ').toLowerCase();
+      let observer;
+      let wordSpans = [];
+      let lastText = '';
+      let rebuildTimeout = null;
+      const cjkRegex = /[\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff]/;
+
+      function tokenizeText(text) {
+        const tokens = [];
+        let currentWord = "";
+        const normalized = text.trim().replace(/\s+/g, " ");
+
+        for (let i = 0; i < normalized.length; i++) {
+          const char = normalized[i];
+          if (cjkRegex.test(char)) {
+            if (currentWord) {
+              tokens.push(currentWord);
+              currentWord = "";
+            }
+            tokens.push(char);
+          } else if (char === " ") {
+            if (currentWord) {
+              tokens.push(currentWord);
+              currentWord = "";
+            }
+          } else {
+            currentWord += char;
+          }
+        }
+        if (currentWord) {
+          tokens.push(currentWord);
+        }
+        return tokens;
+      }
+
+      function rebuildSpans() {
+        const text = leadSpan.textContent;
+        const cleanText = text.trim().replace(/\s+/g, ' ');
+        if (cleanText === lastText) return;
+        
+        lastText = cleanText;
+        const chunks = tokenizeText(cleanText);
+        
+        if (observer) observer.disconnect();
+
+        // Create a new clone to avoid Google Translate's observer restoration loop
+        const newLeadSpan = document.createElement(leadSpan.tagName.toLowerCase());
+        newLeadSpan.className = leadSpan.className;
+        if (leadSpan.hasAttribute('style')) {
+          newLeadSpan.setAttribute('style', leadSpan.getAttribute('style'));
+        }
+        
+        const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
+        const isSpanish = (savedNative === 'Español');
+        const isTextOriginal = (cleanText.toLowerCase() === originalSpanishText);
+
+        // Only block translations (adding notranslate) once Google Translate has successfully translated the text
+        if (!isSpanish && !isTextOriginal) {
+          newLeadSpan.classList.add('notranslate');
+          newLeadSpan.setAttribute('translate', 'no');
+        } else {
+          newLeadSpan.classList.remove('notranslate');
+          newLeadSpan.removeAttribute('translate');
+        }
+
+        wordSpans = [];
+        chunks.forEach(chunk => {
+          if (chunk) {
+            const span = document.createElement('span');
+            span.className = 'scroll-word';
+            const isCjk = cjkRegex.test(chunk);
+            span.textContent = chunk + (isCjk ? '' : ' '); 
+            span.style.color = '#4A4B4F';
+            span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+            newLeadSpan.appendChild(span);
+            wordSpans.push(span);
+          }
+        });
+
+        leadSpan.parentNode.replaceChild(newLeadSpan, leadSpan);
+        leadSpan = newLeadSpan;
+
+        if (observer) observer.observe(leadSpan, { childList: true, subtree: true, characterData: true });
+        
+        updateScrollText();
+      }
+
+      function updateScrollText() {
+        if (!wordSpans.length) return;
+        const rect = targetElement.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        const start = viewportHeight * 0.60;
+        const end = viewportHeight * 0.35;
+
+        let globalProgress = (start - rect.top) / (start - end);
+        globalProgress = Math.max(0, Math.min(1, globalProgress));
+
+        const W = wordSpans.length;
+        
+        const targetWordsLit = globalProgress * W;
+
+        wordSpans.forEach((span, i) => {
+          let wordProgress = targetWordsLit - i;
+          wordProgress = Math.max(0, Math.min(1, wordProgress));
+
+          if (wordProgress === 1) {
+            span.style.color = 'rgb(255, 255, 255)';
+          } else if (wordProgress === 0) {
+            span.style.color = 'rgb(74, 75, 79)';
+          } else {
+            const r = Math.round(74 + (255 - 74) * wordProgress);
+            const g = Math.round(75 + (255 - 75) * wordProgress);
+            const b = Math.round(79 + (255 - 79) * wordProgress);
+            span.style.color = `rgb(${r}, ${g}, ${b})`;
+          }
+        });
+      }
+
+      // Observe mutations (e.g. from Google Translate)
+      observer = new MutationObserver(() => {
+        if (rebuildTimeout) clearTimeout(rebuildTimeout);
+        rebuildTimeout = setTimeout(() => {
+          rebuildSpans();
+        }, 100);
+      });
+
+      // Initial build
+      rebuildSpans();
+
+      document.body.addEventListener('scroll', updateScrollText, { passive: true });
+      window.addEventListener('scroll', updateScrollText, { passive: true });
+      window.addEventListener('resize', updateScrollText);
+
+      updateScrollText();
+
+      setTimeout(() => {
+        try {
+          const savedScrollTop = sessionStorage.getItem('mainScrollPosition');
+          if (savedScrollTop !== null) {
+            const targetPixels = parseInt(savedScrollTop, 10);
+            document.body.scrollTop = targetPixels;
+            if (document.documentElement) {
+              document.documentElement.scrollTop = targetPixels;
+            }
+            updateScrollText();
+          }
+        } catch (e) {
+          console.error("Error al restaurar el scroll:", e);
+        }
+        document.body.classList.add('is-ready');
+      }, 100);
+    })();
+
+    window.addEventListener('beforeunload', () => {
+      const currentScroll = document.body.scrollTop || (document.documentElement ? document.documentElement.scrollTop : 0);
+      sessionStorage.setItem('mainScrollPosition', currentScroll);
+    });
+  </script>
+
+  <script>
+  /* ── Scrollbar Visibility ── */
+  (function() {
+    var root = document.documentElement;
+    var HOLD = 400, FADE_IN = 260, FADE_OUT = 800;
+    var hideTimer = null, rafId = 0, lastTs = 0, current = 0, target = 0;
+    function setV(v) { root.style.setProperty('--sb-v', v.toFixed(3)); }
+    function frame(ts) {
+      if (!lastTs) lastTs = ts;
+      var dt = ts - lastTs; lastTs = ts;
+      var dur = target > current ? FADE_IN : FADE_OUT;
+      var step = dt / dur;
+      current = Math.abs(target - current) <= step ? target : current + (target > current ? step : -step);
+      setV(current);
+      if (current !== target) { rafId = requestAnimationFrame(frame); return; }
+      rafId = 0; lastTs = 0;
+    }
+    function animateTo(n) { target = n; if (!rafId) rafId = requestAnimationFrame(frame); }
+    function onScroll() {
+      animateTo(1);
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(function() { hideTimer = null; animateTo(0); }, HOLD);
+    }
+    setV(0);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('wheel', onScroll, { passive: true });
+    window.addEventListener('touchmove', onScroll, { passive: true });
+    var sp = document.getElementById('side-panel');
+    if (sp) sp.addEventListener('scroll', onScroll, { passive: true });
+  })();
+
+  /* ── Side Pane ── */
+  (function() {
+    var panel = document.getElementById('side-panel');
+    var panelContent = document.getElementById('side-panel-content');
+    var mount = document.getElementById('plan-builder-mount');
+    var closeBtn = document.querySelector('.side-panel-close');
+    if (!panel || !panelContent || !mount || !closeBtn) return;
+    var builder = mount.querySelector('.plan-builder');
+    var BREAKPOINT = 981;
+
+    function isDesktop() { return window.innerWidth >= BREAKPOINT; }
+
+    function syncLayout() {
+      if (isDesktop()) {
+        if (builder && !panelContent.contains(builder)) panelContent.appendChild(builder);
+      } else {
+        if (builder && !mount.contains(builder)) mount.appendChild(builder);
+        document.body.classList.remove('pushed-layout', 'sidebar-closing');
+      }
+    }
+
+    function openSidebar() {
+      if (document.body.classList.contains('pushed-layout')) return;
+      if (isDesktop()) {
+        document.body.classList.remove('sidebar-closing');
+        document.body.classList.add('pushed-layout');
+        window.dispatchEvent(new Event('resize'));
+        setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 650);
+      } else {
+        const targetSection = document.getElementById('contacto');
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+
+    function closeSidebar() {
+      if (!document.body.classList.contains('pushed-layout')) return;
+      document.body.classList.add('sidebar-closing');
+      document.body.classList.remove('pushed-layout');
+      window.dispatchEvent(new Event('resize'));
+      function finalize() { document.body.classList.remove('sidebar-closing'); window.dispatchEvent(new Event('resize')); }
+      panel.addEventListener('transitionend', function handler(e) {
+        if (e.target !== panel || e.propertyName !== 'transform') return;
+        panel.removeEventListener('transitionend', handler);
+        finalize();
+      });
+      setTimeout(finalize, 700);
+    }
+
+    syncLayout();
+    window.addEventListener('resize', syncLayout);
+
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.btn-primary, .btn-nav');
+      if (!btn) return;
+      if (btn.id === 'whatsapp-plan-cta') return;
+      
+      var text = btn.textContent.trim().toLowerCase();
+      if (text.indexOf('aplicar') === 0) { 
+        e.preventDefault();
+        openSidebar(); 
+      }
+    });
+
+    closeBtn.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSidebar(); });
+  })();
+
+  /* ── Plan Builder ── */
+  (function() {
+    var services = Array.from(document.querySelectorAll('.plan-service'));
+    if (!services.length) return;
+    var ctaText = document.getElementById('plan-cta-text');
+    var incomeInput = document.getElementById('monthly-income');
+    var sortableSections = Array.from(document.querySelectorAll('.plan-sortable'));
+    var selectedSection = document.querySelector('.plan-stack.plan-sortable');
+    var recommendedSection = document.querySelector('.plan-recommend.plan-sortable');
+    var ASSET_BASE = './assets/Icons/';
+
+    function parseMoney(raw) { var d = String(raw || '').replace(/\D/g, ''); return d ? Number(d) : 0; }
+
+    function renderCard(card) {
+      var selected = card.getAttribute('data-selected') === 'true';
+      var left = card.querySelector('.plan-left-state img');
+      var toggle = card.querySelector('.plan-toggle');
+      var toggleIcon = toggle ? toggle.querySelector('img') : null;
+      if (!left || !toggle || !toggleIcon) return;
+      card.classList.toggle('is-selected', selected);
+      left.src = ASSET_BASE + (selected ? 'check.svg' : 'dash.svg');
+      toggleIcon.src = ASSET_BASE + (selected ? 'cross.svg' : 'plus.svg');
+      toggle.setAttribute('aria-label', selected ? 'Excluir servicio' : 'Añadir servicio');
+    }
+
+    function renderTotal() {
+      if (!ctaText) return;
+      var total = services.reduce(function(s, c) {
+        return s + (c.getAttribute('data-selected') === 'true' ? parseMoney(c.getAttribute('data-price')) : 0);
+      }, 0);
+      ctaText.textContent = total > 0 ? 'Unirme a Max\u2122' : 'Obtener plan por $0';
+    }
+
+    function reorderWithinSections() {
+      var priority = { 'web-dev': 1, 'marketing': 2, 'faust-max': 3 };
+      sortableSections.forEach(function(section) {
+        var cards = Array.prototype.slice.call(section.querySelectorAll('.plan-service'));
+        if (cards.length <= 1) return;
+        cards.sort(function(a, b) {
+          var as = a.getAttribute('data-selected') === 'true' ? 1 : 0;
+          var bs = b.getAttribute('data-selected') === 'true' ? 1 : 0;
+          if (as !== bs) return bs - as;
+          var ap = priority[a.getAttribute('data-plan-id')] || 999;
+          var bp = priority[b.getAttribute('data-plan-id')] || 999;
+          return ap - bp;
+        }).forEach(function(c) { section.appendChild(c); });
+      });
+    }
+
+    function syncCardBucket(card) {
+      if (!selectedSection || !recommendedSection) return;
+      var selected = card.getAttribute('data-selected') === 'true';
+      if (selected) { card.classList.remove('recommended'); selectedSection.appendChild(card); }
+      else { card.classList.add('recommended'); recommendedSection.appendChild(card); }
+    }
+
+    function updateRecommendedVisibility() {
+      if (!recommendedSection) return;
+      recommendedSection.classList.toggle('is-empty', recommendedSection.querySelectorAll('.plan-service').length === 0);
+    }
+
+    sortableSections.forEach(function(s) {
+      Array.prototype.slice.call(s.querySelectorAll('.plan-service')).forEach(function(c, i) { c.setAttribute('data-order', String(i)); });
+    });
+
+    services.forEach(function(card) {
+      renderCard(card);
+      var toggle = card.querySelector('.plan-toggle');
+      if (!toggle) return;
+      toggle.addEventListener('click', function() {
+        var selected = card.getAttribute('data-selected') === 'true';
+        card.setAttribute('data-selected', selected ? 'false' : 'true');
+        renderCard(card); syncCardBucket(card); renderTotal(); reorderWithinSections(); updateRecommendedVisibility();
+      });
+    });
+
+    if (incomeInput) {
+      incomeInput.addEventListener('input', function() {
+        var caretAtEnd = incomeInput.selectionStart === incomeInput.value.length;
+        var amount = parseMoney(incomeInput.value);
+        incomeInput.value = amount ? amount.toLocaleString('en-US') : '';
+        if (caretAtEnd) { var end = incomeInput.value.length; incomeInput.setSelectionRange(end, end); }
+      });
+    }
+
+    services.forEach(syncCardBucket);
+    renderTotal(); reorderWithinSections(); updateRecommendedVisibility();
+  })();
+
+  /* ── WhatsApp CTA ── */
+  (function() {
+    var whatsappButton = document.getElementById('whatsapp-plan-cta');
+    if (!whatsappButton) return;
+    var services = Array.prototype.slice.call(document.querySelectorAll('.plan-service'));
+    var incomeInput = document.getElementById('monthly-income');
+    function parseMoney(raw) { var d = String(raw || '').replace(/\D/g, ''); return d ? Number(d) : 0; }
+    function buildServicesText(sel) {
+      if (!sel.length) return 'los servicios b\u00e1sicos de Faust';
+      if (sel.length === 1) return sel[0];
+      if (sel.length === 2) return sel[0] + ' y ' + sel[1];
+      return sel.slice(0, -1).join(', ') + ' y ' + sel[sel.length - 1];
+    }
+    function buildWhatsappMessage() {
+      var labels = services.filter(function(c) { return c.getAttribute('data-selected') === 'true'; })
+        .map(function(c) { var l = c.querySelector('.plan-title'); return l ? l.textContent.trim() : ''; }).filter(Boolean);
+      var amount = incomeInput ? parseMoney(incomeInput.value) : 0;
+      var incomeText = amount ? amount.toLocaleString('es-MX') : 'N';
+      var faustMax = services.some(function(c) { return c.getAttribute('data-plan-id') === 'faust-max' && c.getAttribute('data-selected') === 'true'; });
+      return 'Buen d\u00eda. Quisiera recibir una auditor\u00eda personalizada de faust.mx\n\n' +
+        'Requiero los servicios de ' + buildServicesText(labels) + '.\n' +
+        'Mi empresa tiene un ingreso neto mensual de MX $' + incomeText + '.\n' +
+        (faustMax ? 'Tambi\u00e9n, me gustar\u00eda aplicar al plan Max\u2122.' : 'Por el momento, no quiero aplicar al plan Max\u2122.') + '\n' +
+        'Mi empresa es ';
+    }
+    whatsappButton.addEventListener('click', function() {
+      window.open('https://wa.me/524428767130?text=' + encodeURIComponent(buildWhatsappMessage()), '_blank', 'noopener,noreferrer');
+    });
+  })();
+  </script>
+
+  <script>
+  /* ── Background Video Loader ── */
+  (function() {
+    function initHeroVideo() {
+      var hero = document.getElementById('aplicar');
+      if (!hero) return;
+
+      var container = document.createElement('div');
+      container.className = 'hero-video-container';
+
+      var video = document.createElement('video');
+      video.autoplay = true;
+      video.loop = true;
+      video.muted = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('preload', 'auto');
+      
+      container.appendChild(video);
+      hero.appendChild(container);
+
+      video.src = './assets/Hero.mp4';
+      video.load();
+
+      var playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function(error) {
+          console.warn("Autoplay video control:", error);
+        });
+      }
+
+      var isLoaded = false;
+      function checkVideoLoaded() {
+        if (isLoaded) return;
+        if (video.duration > 0 && video.buffered.length > 0) {
+          var bufferedEnd = video.buffered.end(video.buffered.length - 1);
+          if (bufferedEnd >= video.duration - 0.1) {
+            isLoaded = true;
+            container.classList.add('is-loaded');
+            video.removeEventListener('progress', checkVideoLoaded);
+            video.removeEventListener('canplaythrough', checkVideoLoaded);
+            video.removeEventListener('suspend', checkVideoLoaded);
+            video.removeEventListener('loadeddata', checkVideoLoaded);
+          }
+        }
+      }
+
+      video.addEventListener('progress', checkVideoLoaded);
+      video.addEventListener('canplaythrough', checkVideoLoaded);
+      video.addEventListener('suspend', checkVideoLoaded);
+      video.addEventListener('loadeddata', checkVideoLoaded);
+
+      // Fallback: If it's taking too long or browser stops buffering but has enough to play, force show.
+      setTimeout(function() {
+        if (!isLoaded && video.buffered.length > 0) {
+          isLoaded = true;
+          container.classList.add('is-loaded');
+        }
+      }, 8000);
+    }
+
+    if (document.readyState === 'complete') {
+      initHeroVideo();
+    } else {
+      window.addEventListener('load', initHeroVideo);
+    }
+  })();
+  </script>
+
+</body></html>
