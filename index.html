@@ -39,7 +39,6 @@
     * { box-sizing: border-box; }
     ::selection { background: var(--blue); color: #fff; }
     
-    /* Custom scrollbar */
     ::-webkit-scrollbar { width: 2px; height: 2px; }
     ::-webkit-scrollbar-track { background: rgba(0,0,0,calc(var(--sb-v) * 0.4)); margin-top: 80px; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,calc(var(--sb-v) * 0.3)); border-radius: 2px; }
@@ -47,7 +46,6 @@
 
     .btn, .btn-primary, .btn-secondary, .btn-nav, .canvas-outer, .flow-wrapper, .Flow, .Frame1, [data-layer] { user-select: none; }
 
-    /* Bloquear selección en instancias del logotipo */
     .logo-lockup,
     .LogoContainer,
     .footer-logo {
@@ -57,7 +55,6 @@
       -ms-user-select: none !important;
     }
 
-    /* Desbloquear selección en el header del CTA final */
     .cta .headline,
     .FinancingText3 {
       user-select: text !important;
@@ -262,8 +259,7 @@
       .hero { padding-top: 80px; padding-bottom: 60px; height: auto; margin-top: 0; }
       .hide-mobile { display: none; }
       .show-mobile { display: inline; }
-
-      /* Contenedor principal del pie de página */
+      
       .footer-bottom {
         display: flex !important;
         flex-direction: column !important;

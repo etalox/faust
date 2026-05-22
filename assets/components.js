@@ -777,7 +777,6 @@ class FaustFooter extends HTMLElement {
   }
 
   initGoogleTranslate() {
-    // 1. Create hidden element for Google Translate widget
     if (!document.getElementById('google_translate_element')) {
       const gtDiv = document.createElement('div');
       gtDiv.id = 'google_translate_element';
@@ -785,7 +784,6 @@ class FaustFooter extends HTMLElement {
       document.body.appendChild(gtDiv);
     }
 
-    // 2. Define callback function if not already defined
     if (!window.googleTranslateElementInit) {
       window.googleTranslateElementInit = () => {
         new google.translate.TranslateElement({
@@ -797,7 +795,6 @@ class FaustFooter extends HTMLElement {
       };
     }
 
-    // 3. Load script if not already loaded
     if (!document.querySelector('script[src*="translate.google.com"]')) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
@@ -822,7 +819,6 @@ class FaustFooter extends HTMLElement {
   setTranslateCookie(code) {
     const value = `/es/${code}`;
     const domain = window.location.hostname;
-    // Set cookie on root path so it works across all pages
     document.cookie = `googtrans=${value}; path=/;`;
     document.cookie = `googtrans=${value}; path=/; domain=${domain};`;
     if (domain.includes('.')) {
@@ -859,9 +855,7 @@ class FaustFooter extends HTMLElement {
       return false;
     };
 
-    // If it's loaded, set it immediately
     if (!setComboValue()) {
-      // Otherwise, poll for up to 5 seconds
       let attempts = 0;
       const interval = setInterval(() => {
         attempts++;
@@ -879,7 +873,6 @@ class FaustFooter extends HTMLElement {
 
     if (!langBtn || !overlay || !listoBtn) return;
 
-    // Load saved language on startup
     const savedNative = localStorage.getItem('faust-lang-native');
     const savedCountry = localStorage.getItem('faust-lang-country');
     
@@ -892,10 +885,8 @@ class FaustFooter extends HTMLElement {
       langBtn.innerHTML = `<img src="./assets/Icons/Globe.svg" alt=""> ${savedNative}${countryText}`;
     }
 
-    // Apply the translation on load
     this.triggerGoogleTranslate(this.currentLangCode);
 
-    // Sync modal list active selection with active page language
     const syncActiveItem = () => {
       const items = this.querySelectorAll('.lang-item');
       items.forEach(item => {
@@ -912,7 +903,6 @@ class FaustFooter extends HTMLElement {
     langBtn.addEventListener('click', (e) => {
       e.preventDefault();
       
-      // Make sure visual selection reflects current active language when opening modal
       syncActiveItem();
 
       const isDesktop = window.innerWidth >= 981;
@@ -963,14 +953,12 @@ class FaustFooter extends HTMLElement {
     listoBtn.addEventListener('click', (e) => {
       e.preventDefault();
       
-      // Find visually selected item in the list
       const activeItem = this.querySelector('.lang-item.is-active');
       if (activeItem) {
         const nativeName = activeItem.getAttribute('data-lang');
         const countryName = activeItem.getAttribute('data-country') || '';
         const code = this.getGoogleTranslateCode(nativeName, countryName);
 
-        // Only save and reload if the language choice actually changed
         if (code !== this.currentLangCode || nativeName !== this.currentLangNative || countryName !== this.currentLangCountry) {
           localStorage.setItem('faust-lang-native', nativeName);
           if (countryName) {
@@ -986,7 +974,7 @@ class FaustFooter extends HTMLElement {
           }
 
           window.location.reload();
-          return; // Skip closing modal as we are reloading the page
+          return;
         }
       }
 
@@ -1004,8 +992,7 @@ class FaustFooter extends HTMLElement {
         closeModal();
       }
     });
-
-    // Language list items click interactions (just visual toggle, no save/translation until Listo)
+    
     const langItems = this.querySelectorAll('.lang-item');
     langItems.forEach(item => {
       item.addEventListener('click', () => {
