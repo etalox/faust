@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0096)file:///C:/Users/franc/Workspace/Faust%20Partners%20(faust.mx)/faust.mx%20v2/index.html#contacto -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Faust Partners™ es el Growth Partner de Optimización CRO #1 en México. Impulsamos el crecimiento de empresas mediante estrategias basadas en la neurociencia conductual y optimización de UX/UI.">
 
   <!-- Tab -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Growth Partner Líder en México | Faust Partners™</title>
+  <title>Faust Partners™ | CRO Líder en México</title>
   <link rel="icon" type="image/png" href="./assets/Icons/tab_icon.png">
 
   <!-- Microsoft Clarity -->
@@ -15,7 +16,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "wuwhfucwt0");
   </script>
-
+  
   <script src="./assets/components.js" defer></script>
   <style>
     @font-face { font-family: "BDO Grotesk"; src: url("./assets/Fonts/BDOGrotesk-Regular.ttf"); font-weight: 400; }
@@ -44,9 +45,26 @@
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,calc(var(--sb-v) * 0.3)); border-radius: 2px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,calc(var(--sb-v) * 0.5)); }
 
-    .btn, .btn-primary, .btn-secondary, .btn-nav { user-select: none; }
+    .btn, .btn-primary, .btn-secondary, .btn-nav, .canvas-outer, .flow-wrapper, .Flow, .Frame1, [data-layer] { user-select: none; }
 
-    .canvas-outer, .flow-wrapper, .Flow, .Frame1, [data-layer] { user-select: none; }
+    /* Bloquear selección en instancias del logotipo */
+    .logo-lockup,
+    .LogoContainer,
+    .footer-logo {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+    }
+
+    /* Desbloquear selección en el header del CTA final */
+    .cta .headline,
+    .FinancingText3 {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+    }
 
     body {
       background: var(--bg);
@@ -111,7 +129,32 @@
     .gradient-border::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(to bottom, var(--border-top, rgba(255,255,255,.08)), var(--border-bottom, rgba(255,255,255,.02))); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
     .gradient-border-blue { --border-top: rgba(255,255,255,.4); --border-bottom: rgba(255,255,255,.1); }
     .pill { font-size: 16px; color: #8B8D91; margin-bottom: 50px; }
-    .hero { height: calc(100vh / var(--zoom-factor)); margin-top: calc(-80px / var(--zoom-factor)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+    .hero { position: relative; overflow: hidden; height: calc(100vh / var(--zoom-factor)); margin-top: calc(-80px / var(--zoom-factor)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+    .hero-video-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 12s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-video-container.is-loaded {
+      opacity: 1;
+    }
+    .hero-video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.05;
+      display: block;
+    }
     .hero h1 { margin: 0 0 50px; font-size: clamp(44px, 7vw, 86px); line-height: 1.02; letter-spacing: -1.8px; font-weight: 400; }
     .responsive-br br { display: inline; }
     .no-br .responsive-br br { display: none; }
@@ -406,16 +449,16 @@
       </div>
     </section>
 
-    <section class="section" id="estrategia">
+    <section class="section">
       <div class="wrap">
         <div class="pill">/ Gestión</div>
         <h2 class="lead">
-          Aumentamos el CRO de nuestros socios.
-          <span class="muted"> Usamos el poder de la neurociencia conductual para optimizar la conversión de su sitio web. Nuestros UX/UI y Devs se encargan de construirlo.</span>
+          <div class="lead-title" style="display: inline;">Optimizamos la conversión de nuestros socios.</div>
+          <div class="muted" style="display: inline;">Usamos el poder de la Neurociencia Conductual y Análisis de Datos para impulsar su MRR. Nuestro equipo se encarga de la implementación.</div>
         </h2>
         <div class="btn-row">
           <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
-          <a class="btn btn-secondary" href="#resultados">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
+          <a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
         </div>
         <div class="stats">
           <article class="stat">
@@ -446,7 +489,7 @@
       </div>
     </section>
 
-    <section class="section centered" id="resultados">
+    <section class="section centered" id="estrategia">
       <div class="wrap wrap-narrow">
         <div class="pill">/ Gestión</div>
         <h2 class="headline">Desarrollamos arquitectura que escala volumen de conversión.</h2>
@@ -569,7 +612,7 @@
       </div>
     </section>
 
-    <section class="section centered" id="expertos">
+    <section class="section centered">
       <div class="wrap wrap-narrow">
         <div class="pill">/ Testing</div>
         <h2 class="headline">Decisiones basadas en datos.<br>Impacto cuantificable.</h2>
@@ -829,28 +872,99 @@
 
     /* Scroll-driven text lighting up effect */
     (() => {
-      const leadSpan = document.querySelector('.lead .muted');
+      let leadSpan = document.querySelector('.lead .muted');
       const targetElement = document.querySelector('.lead');
       if (!leadSpan || !targetElement) return;
 
-      const text = leadSpan.textContent;
-      const chunks = text.trim().split(/\s+/); 
-      leadSpan.innerHTML = '';
-      const wordSpans = [];
+      const originalSpanishText = leadSpan.textContent.trim().replace(/\s+/g, ' ').toLowerCase();
+      let observer;
+      let wordSpans = [];
+      let lastText = '';
+      let rebuildTimeout = null;
+      const cjkRegex = /[\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff]/;
 
-      chunks.forEach(chunk => {
-        if (chunk) {
-          const span = document.createElement('span');
-          span.className = 'scroll-word';
-          span.textContent = chunk + ' '; 
-          span.style.color = '#4A4B4F';
-          span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
-          leadSpan.appendChild(span);
-          wordSpans.push(span);
+      function tokenizeText(text) {
+        const tokens = [];
+        let currentWord = "";
+        const normalized = text.trim().replace(/\s+/g, " ");
+
+        for (let i = 0; i < normalized.length; i++) {
+          const char = normalized[i];
+          if (cjkRegex.test(char)) {
+            if (currentWord) {
+              tokens.push(currentWord);
+              currentWord = "";
+            }
+            tokens.push(char);
+          } else if (char === " ") {
+            if (currentWord) {
+              tokens.push(currentWord);
+              currentWord = "";
+            }
+          } else {
+            currentWord += char;
+          }
         }
-      });
+        if (currentWord) {
+          tokens.push(currentWord);
+        }
+        return tokens;
+      }
+
+      function rebuildSpans() {
+        const text = leadSpan.textContent;
+        const cleanText = text.trim().replace(/\s+/g, ' ');
+        if (cleanText === lastText) return;
+        
+        lastText = cleanText;
+        const chunks = tokenizeText(cleanText);
+        
+        if (observer) observer.disconnect();
+
+        // Create a new clone to avoid Google Translate's observer restoration loop
+        const newLeadSpan = document.createElement(leadSpan.tagName.toLowerCase());
+        newLeadSpan.className = leadSpan.className;
+        if (leadSpan.hasAttribute('style')) {
+          newLeadSpan.setAttribute('style', leadSpan.getAttribute('style'));
+        }
+        
+        const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
+        const isSpanish = (savedNative === 'Español');
+        const isTextOriginal = (cleanText.toLowerCase() === originalSpanishText);
+
+        // Only block translations (adding notranslate) once Google Translate has successfully translated the text
+        if (!isSpanish && !isTextOriginal) {
+          newLeadSpan.classList.add('notranslate');
+          newLeadSpan.setAttribute('translate', 'no');
+        } else {
+          newLeadSpan.classList.remove('notranslate');
+          newLeadSpan.removeAttribute('translate');
+        }
+
+        wordSpans = [];
+        chunks.forEach(chunk => {
+          if (chunk) {
+            const span = document.createElement('span');
+            span.className = 'scroll-word';
+            const isCjk = cjkRegex.test(chunk);
+            span.textContent = chunk + (isCjk ? '' : ' '); 
+            span.style.color = '#4A4B4F';
+            span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+            newLeadSpan.appendChild(span);
+            wordSpans.push(span);
+          }
+        });
+
+        leadSpan.parentNode.replaceChild(newLeadSpan, leadSpan);
+        leadSpan = newLeadSpan;
+
+        if (observer) observer.observe(leadSpan, { childList: true, subtree: true, characterData: true });
+        
+        updateScrollText();
+      }
 
       function updateScrollText() {
+        if (!wordSpans.length) return;
         const rect = targetElement.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         
@@ -880,6 +994,17 @@
           }
         });
       }
+
+      // Observe mutations (e.g. from Google Translate)
+      observer = new MutationObserver(() => {
+        if (rebuildTimeout) clearTimeout(rebuildTimeout);
+        rebuildTimeout = setTimeout(() => {
+          rebuildSpans();
+        }, 100);
+      });
+
+      // Initial build
+      rebuildSpans();
 
       document.body.addEventListener('scroll', updateScrollText, { passive: true });
       window.addEventListener('scroll', updateScrollText, { passive: true });
@@ -1128,6 +1253,74 @@
     whatsappButton.addEventListener('click', function() {
       window.open('https://wa.me/524428767130?text=' + encodeURIComponent(buildWhatsappMessage()), '_blank', 'noopener,noreferrer');
     });
+  })();
+  </script>
+
+  <script>
+  /* ── Background Video Loader ── */
+  (function() {
+    function initHeroVideo() {
+      var hero = document.getElementById('aplicar');
+      if (!hero) return;
+
+      var container = document.createElement('div');
+      container.className = 'hero-video-container';
+
+      var video = document.createElement('video');
+      video.autoplay = true;
+      video.loop = true;
+      video.muted = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('preload', 'auto');
+      
+      container.appendChild(video);
+      hero.appendChild(container);
+
+      video.src = './assets/Hero.mp4';
+      video.load();
+
+      var playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function(error) {
+          console.warn("Autoplay video control:", error);
+        });
+      }
+
+      var isLoaded = false;
+      function checkVideoLoaded() {
+        if (isLoaded) return;
+        if (video.duration > 0 && video.buffered.length > 0) {
+          var bufferedEnd = video.buffered.end(video.buffered.length - 1);
+          if (bufferedEnd >= video.duration - 0.1) {
+            isLoaded = true;
+            container.classList.add('is-loaded');
+            video.removeEventListener('progress', checkVideoLoaded);
+            video.removeEventListener('canplaythrough', checkVideoLoaded);
+            video.removeEventListener('suspend', checkVideoLoaded);
+            video.removeEventListener('loadeddata', checkVideoLoaded);
+          }
+        }
+      }
+
+      video.addEventListener('progress', checkVideoLoaded);
+      video.addEventListener('canplaythrough', checkVideoLoaded);
+      video.addEventListener('suspend', checkVideoLoaded);
+      video.addEventListener('loadeddata', checkVideoLoaded);
+
+      // Fallback: If it's taking too long or browser stops buffering but has enough to play, force show.
+      setTimeout(function() {
+        if (!isLoaded && video.buffered.length > 0) {
+          isLoaded = true;
+          container.classList.add('is-loaded');
+        }
+      }, 8000);
+    }
+
+    if (document.readyState === 'complete') {
+      initHeroVideo();
+    } else {
+      window.addEventListener('load', initHeroVideo);
+    }
   })();
   </script>
 
