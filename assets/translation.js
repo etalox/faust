@@ -194,8 +194,7 @@ function getSelectedCode() {
   if (covered.includes(browserLang)) {
     if (browserLang === 'es') {
       const fullLang = (navigator.language || 'es-ES').toLowerCase();
-      if (fullLang.includes('mx')) return 'es-LA';
-      if (fullLang === 'es' || fullLang.includes('es-es')) return 'es-ES';
+      if (fullLang.includes('es-es')) return 'es-ES';
       return 'es-LA';
     }
     if (browserLang === 'en') {
@@ -370,20 +369,27 @@ async function detectCountryByIP() {
 
     if (targetCode) {
       const currentCode = getSelectedCode();
-      if (currentCode !== targetCode) {
-        const mappedLang = FAUST_LANGUAGES.find(l => l.code === targetCode);
-        if (mappedLang) {
-          localStorage.setItem('faust-lang-selection-code', targetCode);
-          localStorage.setItem('faust-lang-native', mappedLang.lang);
-          localStorage.setItem('faust-lang-country', mappedLang.country || '');
+      const mappedLang = FAUST_LANGUAGES.find(l => l.code === targetCode);
+      if (mappedLang) {
+        localStorage.setItem('faust-lang-selection-code', targetCode);
+        localStorage.setItem('faust-lang-native', mappedLang.lang);
+        localStorage.setItem('faust-lang-country', mappedLang.country || '');
+      }
 
-          const cookieCode = getTranslateCodeForSelection(targetCode);
-          if (cookieCode === 'es') {
+      if (currentCode !== targetCode) {
+        const currentCookieCode = getTranslateCodeForSelection(currentCode);
+        const targetCookieCode = getTranslateCodeForSelection(targetCode);
+
+        if (currentCookieCode === targetCookieCode) {
+          window.dispatchEvent(new CustomEvent('faust-language-changed', {
+            detail: { code: targetCode }
+          }));
+        } else {
+          if (targetCookieCode === 'es') {
             clearTranslateCookie();
           } else {
-            setTranslateCookie(cookieCode);
+            setTranslateCookie(targetCookieCode);
           }
-
           window.location.reload();
         }
       }

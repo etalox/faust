@@ -47,6 +47,13 @@ class MockMutationObserver {
 }
 
 // Set up global context
+global.CustomEvent = class CustomEvent {
+  constructor(type, options) {
+    this.type = type;
+    this.detail = options ? options.detail : null;
+  }
+};
+
 global.window = {
   location: {
     hostname: 'localhost',
@@ -55,7 +62,11 @@ global.window = {
     }
   },
   localStorage: mockLocalStorage,
-  reloaded: false
+  reloaded: false,
+  dispatchEvent: (event) => {
+    global.window.dispatchedEvents.push(event);
+  },
+  dispatchedEvents: []
 };
 global.localStorage = mockLocalStorage;
 global.document = mockDocument;
@@ -107,6 +118,7 @@ async function runTests() {
   mockFetchResult = { country_code: 'MX' };
   mockFetchError = null;
   global.window.reloaded = false;
+  global.window.dispatchedEvents = [];
 
   await detectCountryByIP();
 
@@ -116,6 +128,10 @@ async function runTests() {
   assert(getDetectedCountryName() === 'México', 'getDetectedCountryName() should resolve to México');
   assert(getButtonLabelHtml('es-LA').includes('México'), 'Button label should contain México');
   assert(!getButtonLabelHtml('es-LA').includes('LATAM'), 'Button label should not contain LATAM');
+  assert(global.window.reloaded === false, 'Should NOT reload since es-ES and es-LA share the same base translate code es');
+  assert(global.window.dispatchedEvents.length === 1, 'Should dispatch a faust-language-changed event');
+  assert(global.window.dispatchedEvents[0].type === 'faust-language-changed', 'Event type should be faust-language-changed');
+  assert(global.window.dispatchedEvents[0].detail.code === 'es-LA', 'Event detail code should be es-LA');
 
   // Test Case 2: Language list output contains "Español Latinoamética"
   const listHtml = generateLangListHtml('es-LA');
@@ -128,6 +144,7 @@ async function runTests() {
   global.navigator.language = 'es-MX'; // Browser region MX
   mockFetchError = new Error('API blocked');
   global.window.reloaded = false;
+  global.window.dispatchedEvents = [];
 
   await detectCountryByIP();
   assert(localStorage.getItem('faust-detected-country-code') === null, 'No country code from failed IP call');
@@ -149,11 +166,14 @@ async function runTests() {
   mockFetchResult = { country_code: 'CO' };
   mockFetchError = null;
   global.window.reloaded = false;
+  global.window.dispatchedEvents = [];
 
   await detectCountryByIP();
   assert(localStorage.getItem('faust-detected-country-code') === 'CO', 'Detected country code should be CO');
   assert(getDetectedCountryName() === 'Colombia', 'getDetectedCountryName() should resolve to Colombia');
   assert(getButtonLabelHtml('es-LA').includes('Colombia'), 'Button label should contain Colombia');
+  assert(global.window.reloaded === false, 'Should NOT reload since Colombia is also es-LA');
+  assert(global.window.dispatchedEvents.length === 1, 'Should dispatch a faust-language-changed event for Colombia visitor');
 
   console.log('ALL NEW REGION-DETECTION TESTS PASSED SUCCESSFULLY!');
 }

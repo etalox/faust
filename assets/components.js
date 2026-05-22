@@ -1,6 +1,17 @@
 
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
+    this._onLanguageChanged = () => {
+      this.render();
+    };
+    window.addEventListener('faust-language-changed', this._onLanguageChanged);
+
+    this.render();
+  }
+
+  render() {
+    this.cleanup();
+
     const activeCode = getSelectedCode();
     const isLATAM = (activeCode === 'es-LA');
 
@@ -362,6 +373,10 @@ class FaustNavbar extends HTMLElement {
           const code = item.getAttribute('data-code');
           const langDef = FAUST_LANGUAGES.find(l => l.code === code);
           if (langDef) {
+            const currentCode = getSelectedCode();
+            const currentCookieCode = getTranslateCodeForSelection(currentCode);
+            const targetCookieCode = getTranslateCodeForSelection(code);
+
             localStorage.setItem('faust-lang-selection-code', code);
             localStorage.setItem('faust-lang-native', langDef.lang);
             if (langDef.country) {
@@ -370,14 +385,19 @@ class FaustNavbar extends HTMLElement {
               localStorage.removeItem('faust-lang-country');
             }
 
-            const cookieCode = getTranslateCodeForSelection(code);
-            if (cookieCode === 'es') {
-              clearTranslateCookie();
+            if (currentCookieCode === targetCookieCode) {
+              window.dispatchEvent(new CustomEvent('faust-language-changed', {
+                detail: { code }
+              }));
             } else {
-              setTranslateCookie(cookieCode);
+              const cookieCode = targetCookieCode;
+              if (cookieCode === 'es') {
+                clearTranslateCookie();
+              } else {
+                setTranslateCookie(cookieCode);
+              }
+              window.location.reload();
             }
-
-            window.location.reload();
           }
         });
       });
@@ -411,28 +431,28 @@ class FaustNavbar extends HTMLElement {
     };
 
     if (heroLogo) {
-      const heroObserver = new IntersectionObserver(
+      this._heroObserver = new IntersectionObserver(
         ([entry]) => {
           isHeroIntersecting = entry.isIntersecting;
           updateLogoColor();
         },
         { threshold: 0, rootMargin: '-80px 0px 0px 0px' }
       );
-      heroObserver.observe(heroLogo);
+      this._heroObserver.observe(heroLogo);
     } else {
       isHeroIntersecting = false;
       updateLogoColor();
     }
 
     if (ctaLogo) {
-      const ctaObserver = new IntersectionObserver(
+      this._ctaObserver = new IntersectionObserver(
         ([entry]) => {
           isCtaIntersecting = entry.isIntersecting;
           updateLogoColor();
         },
         { threshold: 0, rootMargin: '0px 0px -30% 0px' }
       );
-      ctaObserver.observe(ctaLogo);
+      this._ctaObserver.observe(ctaLogo);
     }
   }
 
@@ -483,12 +503,30 @@ class FaustNavbar extends HTMLElement {
     this._resizeHandler = checkNavGap;
   }
 
-  disconnectedCallback() {
+  cleanup() {
     if (this._resizeHandler) {
       window.removeEventListener('resize', this._resizeHandler);
+      this._resizeHandler = null;
     }
     if (this._outsideClickListener) {
       document.removeEventListener('click', this._outsideClickListener);
+      this._outsideClickListener = null;
+    }
+    if (this._heroObserver) {
+      this._heroObserver.disconnect();
+      this._heroObserver = null;
+    }
+    if (this._ctaObserver) {
+      this._ctaObserver.disconnect();
+      this._ctaObserver = null;
+    }
+  }
+
+  disconnectedCallback() {
+    this.cleanup();
+    if (this._onLanguageChanged) {
+      window.removeEventListener('faust-language-changed', this._onLanguageChanged);
+      this._onLanguageChanged = null;
     }
   }
 }
@@ -496,6 +534,25 @@ class FaustNavbar extends HTMLElement {
 
 class FaustFooter extends HTMLElement {
   connectedCallback() {
+    this._onLanguageChanged = () => {
+      this.render();
+    };
+    window.addEventListener('faust-language-changed', this._onLanguageChanged);
+
+    this.render();
+  }
+
+  render() {
+    // 1. Check if the modal overlay was open before rendering
+    const overlay = this.querySelector('#lang-menu-overlay');
+    const wasOpen = overlay ? overlay.classList.contains('is-open') : false;
+    const savedScrollTop = this._savedModalScrollTop !== undefined ? this._savedModalScrollTop : null;
+    this._savedModalScrollTop = undefined;
+
+    // 2. Perform cleanup of global listeners and observers
+    this.cleanup();
+
+    // 3. Render HTML template
     const activeCode = getSelectedCode();
     const buttonLabel = getButtonLabelHtml(activeCode);
     const langListHtml = generateLangListHtml(activeCode);
@@ -799,6 +856,13 @@ class FaustFooter extends HTMLElement {
             gap: 10px;
           }
         }
+
+        /* Prevent transitions during window resize */
+        body.resize-active .lang-overlay,
+        body.resize-active .lang-overlay * {
+          transition: none !important;
+          animation: none !important;
+        }
       </style>
 
       <footer>
@@ -867,7 +931,8 @@ class FaustFooter extends HTMLElement {
     `;
 
     this.initGoogleTranslate();
-    this.initLanguageModal();
+    this.initLanguageModal(wasOpen, savedScrollTop);
+    this.initResizeHandler();
   }
 
   initGoogleTranslate() {
@@ -956,7 +1021,7 @@ class FaustFooter extends HTMLElement {
     }
   }
 
-  initLanguageModal() {
+  initLanguageModal(wasOpen = false, savedScrollTop = null) {
     const langBtn = this.querySelector('.lang');
     const overlay = this.querySelector('#lang-menu-overlay');
     const listoBtn = this.querySelector('.btn-listo');
@@ -981,17 +1046,13 @@ class FaustFooter extends HTMLElement {
       });
     };
 
-    let translationObserver = null;
-    let translationTimeout = null;
-    let maxTimeout = null;
-
     const startTranslationMonitoring = () => {
-      if (translationObserver) {
-        translationObserver.disconnect();
-        translationObserver = null;
+      if (this._translationObserver) {
+        this._translationObserver.disconnect();
+        this._translationObserver = null;
       }
-      if (translationTimeout) clearTimeout(translationTimeout);
-      if (maxTimeout) clearTimeout(maxTimeout);
+      if (this._translationTimeout) clearTimeout(this._translationTimeout);
+      if (this._maxTimeout) clearTimeout(this._maxTimeout);
 
       listoBtn.disabled = true;
       listoBtn.style.opacity = '0.6';
@@ -1000,17 +1061,17 @@ class FaustFooter extends HTMLElement {
       listoBtn.textContent = 'Translating...';
 
       const resetDebounce = () => {
-        if (translationTimeout) clearTimeout(translationTimeout);
-        translationTimeout = setTimeout(() => {
+        if (this._translationTimeout) clearTimeout(this._translationTimeout);
+        this._translationTimeout = setTimeout(() => {
           stopTranslationMonitoring();
         }, 700);
       };
 
-      translationObserver = new MutationObserver((mutations) => {
+      this._translationObserver = new MutationObserver((mutations) => {
         resetDebounce();
       });
 
-      translationObserver.observe(document.body, {
+      this._translationObserver.observe(document.body, {
         childList: true,
         subtree: true,
         characterData: true
@@ -1018,18 +1079,18 @@ class FaustFooter extends HTMLElement {
 
       resetDebounce();
 
-      maxTimeout = setTimeout(() => {
+      this._maxTimeout = setTimeout(() => {
         stopTranslationMonitoring();
       }, 3500);
     };
 
     const stopTranslationMonitoring = () => {
-      if (translationObserver) {
-        translationObserver.disconnect();
-        translationObserver = null;
+      if (this._translationObserver) {
+        this._translationObserver.disconnect();
+        this._translationObserver = null;
       }
-      if (translationTimeout) clearTimeout(translationTimeout);
-      if (maxTimeout) clearTimeout(maxTimeout);
+      if (this._translationTimeout) clearTimeout(this._translationTimeout);
+      if (this._maxTimeout) clearTimeout(this._maxTimeout);
 
       listoBtn.disabled = false;
       listoBtn.style.opacity = '';
@@ -1046,7 +1107,7 @@ class FaustFooter extends HTMLElement {
     };
 
     const shouldOpenModal = localStorage.getItem('faust-show-modal-after-reload') === 'true';
-    if (shouldOpenModal) {
+    if (wasOpen || shouldOpenModal) {
       syncActiveItem();
 
       const isDesktop = window.innerWidth >= 981;
@@ -1057,20 +1118,22 @@ class FaustFooter extends HTMLElement {
       }
 
       const modalBody = this.querySelector('.lang-modal-body');
-      const savedModalScrollTop = localStorage.getItem('faust-modal-scroll-top');
-      if (modalBody && savedModalScrollTop !== null) {
-        modalBody.scrollTop = parseFloat(savedModalScrollTop);
-        localStorage.removeItem('faust-modal-scroll-top');
-      } else {
-        const activeItem = this.querySelector('.lang-item.is-active');
-        if (activeItem) {
-          activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+      if (modalBody) {
+        if (savedScrollTop !== null) {
+          modalBody.scrollTop = savedScrollTop;
+        } else {
+          const activeItem = this.querySelector('.lang-item.is-active');
+          if (activeItem) {
+            activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+          }
         }
       }
 
       overlay.classList.add('is-open');
 
-      startTranslationMonitoring();
+      if (shouldOpenModal) {
+        startTranslationMonitoring();
+      }
     }
 
     langBtn.addEventListener('click', (e) => {
@@ -1131,22 +1194,23 @@ class FaustFooter extends HTMLElement {
       }
     });
 
-    document.addEventListener('keydown', (e) => {
+    this._keydownListener = (e) => {
       if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
         closeModal();
       }
-    });
+    };
+    document.addEventListener('keydown', this._keydownListener);
     
     const langItems = this.querySelectorAll('.lang-item');
     langItems.forEach(item => {
       item.addEventListener('click', () => {
-        langItems.forEach(i => i.classList.remove('is-active'));
-        item.classList.add('is-active');
-
         const code = item.getAttribute('data-code');
         const langDef = FAUST_LANGUAGES.find(l => l.code === code);
 
         if (langDef && code !== activeCode) {
+          const currentCookieCode = getTranslateCodeForSelection(activeCode);
+          const targetCookieCode = getTranslateCodeForSelection(code);
+
           localStorage.setItem('faust-lang-selection-code', code);
           localStorage.setItem('faust-lang-native', langDef.lang);
           if (langDef.country) {
@@ -1155,24 +1219,83 @@ class FaustFooter extends HTMLElement {
             localStorage.removeItem('faust-lang-country');
           }
 
-          localStorage.setItem('faust-show-modal-after-reload', 'true');
-
-          const modalBody = this.querySelector('.lang-modal-body');
-          if (modalBody) {
-            localStorage.setItem('faust-modal-scroll-top', modalBody.scrollTop.toString());
-          }
-
-          const cookieCode = getTranslateCodeForSelection(code);
-          if (cookieCode === 'es') {
-            this.clearTranslateCookie();
+          if (currentCookieCode === targetCookieCode) {
+            const modalBody = this.querySelector('.lang-modal-body');
+            if (modalBody) {
+              this._savedModalScrollTop = modalBody.scrollTop;
+            }
+            window.dispatchEvent(new CustomEvent('faust-language-changed', {
+              detail: { code }
+            }));
           } else {
-            this.setTranslateCookie(cookieCode);
-          }
+            localStorage.setItem('faust-show-modal-after-reload', 'true');
 
-          window.location.reload();
+            const modalBody = this.querySelector('.lang-modal-body');
+            if (modalBody) {
+              localStorage.setItem('faust-modal-scroll-top', modalBody.scrollTop.toString());
+            }
+
+            if (targetCookieCode === 'es') {
+              this.clearTranslateCookie();
+            } else {
+              this.setTranslateCookie(targetCookieCode);
+            }
+
+            window.location.reload();
+          }
         }
       });
     });
+  }
+
+  initResizeHandler() {
+    this._resizeHandler = () => {
+      if (this._resizeTimeout) {
+        clearTimeout(this._resizeTimeout);
+      }
+      document.body.classList.add('resize-active');
+      this._resizeTimeout = setTimeout(() => {
+        document.body.classList.remove('resize-active');
+      }, 100);
+    };
+    window.addEventListener('resize', this._resizeHandler);
+  }
+
+  cleanup() {
+    if (this._resizeHandler) {
+      window.removeEventListener('resize', this._resizeHandler);
+      this._resizeHandler = null;
+    }
+    if (this._resizeTimeout) {
+      clearTimeout(this._resizeTimeout);
+      this._resizeTimeout = null;
+    }
+    document.body.classList.remove('resize-active');
+
+    if (this._keydownListener) {
+      document.removeEventListener('keydown', this._keydownListener);
+      this._keydownListener = null;
+    }
+    if (this._translationObserver) {
+      this._translationObserver.disconnect();
+      this._translationObserver = null;
+    }
+    if (this._translationTimeout) {
+      clearTimeout(this._translationTimeout);
+      this._translationTimeout = null;
+    }
+    if (this._maxTimeout) {
+      clearTimeout(this._maxTimeout);
+      this._maxTimeout = null;
+    }
+  }
+
+  disconnectedCallback() {
+    this.cleanup();
+    if (this._onLanguageChanged) {
+      window.removeEventListener('faust-language-changed', this._onLanguageChanged);
+      this._onLanguageChanged = null;
+    }
   }
 }
 
