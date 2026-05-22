@@ -578,7 +578,7 @@ class FaustFooter extends HTMLElement {
           <div class="lang-modal-container">
             <div class="lang-modal">
               <div class="lang-modal-header">
-                <span>Selecciona el idioma</span>
+                <span>Select your language</span>
               </div>
             <div class="lang-modal-body">
               <div class="lang-list">
