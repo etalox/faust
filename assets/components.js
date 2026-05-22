@@ -1024,7 +1024,7 @@ class FaustFooter extends HTMLElement {
     const savedCountry = localStorage.getItem('faust-lang-country');
     
     this.currentLangNative = savedNative || 'Español';
-    this.currentLangCountry = savedCountry || 'España';
+    this.currentLangCountry = savedCountry !== null ? savedCountry : (savedNative ? '' : 'España');
     this.currentLangCode = this.getGoogleTranslateCode(this.currentLangNative, this.currentLangCountry);
 
     if (savedNative) {
