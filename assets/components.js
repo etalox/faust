@@ -1130,9 +1130,16 @@ class FaustFooter extends HTMLElement {
         listoBtn.style.width = '100%';
       }
 
-      const activeItem = this.querySelector('.lang-item.is-active');
-      if (activeItem) {
-        activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+      const modalBody = this.querySelector('.lang-modal-body');
+      const savedModalScrollTop = localStorage.getItem('faust-modal-scroll-top');
+      if (modalBody && savedModalScrollTop !== null) {
+        modalBody.scrollTop = parseFloat(savedModalScrollTop);
+        localStorage.removeItem('faust-modal-scroll-top');
+      } else {
+        const activeItem = this.querySelector('.lang-item.is-active');
+        if (activeItem) {
+          activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+        }
       }
 
       overlay.classList.add('is-open');
@@ -1239,6 +1246,12 @@ class FaustFooter extends HTMLElement {
 
           // Guardar indicador para reabrir el modal de inmediato tras la recarga
           localStorage.setItem('faust-show-modal-after-reload', 'true');
+
+          // Guardar posición exacta del scroll de la lista de idiomas para que no se pierda al recargar
+          const modalBody = this.querySelector('.lang-modal-body');
+          if (modalBody) {
+            localStorage.setItem('faust-modal-scroll-top', modalBody.scrollTop.toString());
+          }
 
           // Forzar la recarga para que Google Translate inicialice de manera nativa y consistente
           window.location.reload();
