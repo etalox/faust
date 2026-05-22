@@ -674,10 +674,10 @@ class FaustFooter extends HTMLElement {
       </footer>
 
       <!-- Language selection modal overlay -->
-      <div class="lang-overlay notranslate" id="lang-menu-overlay" translate="no">
+      <div class="lang-overlay" id="lang-menu-overlay">
         <div class="wrap lang-overlay-wrap">
           <div class="lang-modal-container">
-            <div class="lang-modal">
+            <div class="lang-modal notranslate" translate="no">
               <div class="lang-modal-header">
                 <span>Select your language</span>
               </div>
@@ -937,10 +937,24 @@ class FaustFooter extends HTMLElement {
   }
 
   triggerGoogleTranslate(code) {
+    const metaId = 'faust-notranslate-meta';
     if (code === 'es') {
       this.clearTranslateCookie();
+      document.documentElement.setAttribute('translate', 'no');
+      if (!document.getElementById(metaId)) {
+        const meta = document.createElement('meta');
+        meta.id = metaId;
+        meta.name = 'google';
+        meta.content = 'notranslate';
+        document.head.appendChild(meta);
+      }
     } else {
       this.setTranslateCookie(code);
+      document.documentElement.removeAttribute('translate');
+      const meta = document.getElementById(metaId);
+      if (meta) {
+        meta.remove();
+      }
     }
 
     const setComboValue = () => {
@@ -1001,6 +1015,68 @@ class FaustFooter extends HTMLElement {
       });
     };
 
+    let translationObserver = null;
+    let translationTimeout = null;
+    let maxTimeout = null;
+
+    const startTranslationMonitoring = () => {
+      if (translationObserver) {
+        translationObserver.disconnect();
+        translationObserver = null;
+      }
+      if (translationTimeout) clearTimeout(translationTimeout);
+      if (maxTimeout) clearTimeout(maxTimeout);
+
+      // Deshabilitar botón "Listo"
+      listoBtn.disabled = true;
+      listoBtn.style.opacity = '0.6';
+      listoBtn.style.pointerEvents = 'none';
+      listoBtn.style.cursor = 'not-allowed';
+      listoBtn.textContent = 'Translating...';
+
+      const resetDebounce = () => {
+        if (translationTimeout) clearTimeout(translationTimeout);
+        translationTimeout = setTimeout(() => {
+          stopTranslationMonitoring();
+        }, 700); // 700ms sin cambios en el DOM significa que la traducción terminó
+      };
+
+      // MutationObserver temporal para vigilar cambios en el DOM (traducciones)
+      translationObserver = new MutationObserver((mutations) => {
+        resetDebounce();
+      });
+
+      translationObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+
+      // Primer debounce
+      resetDebounce();
+
+      // Timeout de respaldo de 3.5 segundos si la traducción tarda o no reporta cambios
+      maxTimeout = setTimeout(() => {
+        stopTranslationMonitoring();
+      }, 3500);
+    };
+
+    const stopTranslationMonitoring = () => {
+      if (translationObserver) {
+        translationObserver.disconnect();
+        translationObserver = null;
+      }
+      if (translationTimeout) clearTimeout(translationTimeout);
+      if (maxTimeout) clearTimeout(maxTimeout);
+
+      // Habilitar botón "Listo"
+      listoBtn.disabled = false;
+      listoBtn.style.opacity = '';
+      listoBtn.style.pointerEvents = '';
+      listoBtn.style.cursor = '';
+      listoBtn.textContent = 'Listo';
+    };
+
     langBtn.addEventListener('click', (e) => {
       e.preventDefault();
       
@@ -1053,32 +1129,6 @@ class FaustFooter extends HTMLElement {
 
     listoBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      
-      const activeItem = this.querySelector('.lang-item.is-active');
-      if (activeItem) {
-        const nativeName = activeItem.getAttribute('data-lang');
-        const countryName = activeItem.getAttribute('data-country') || '';
-        const code = this.getGoogleTranslateCode(nativeName, countryName);
-
-        if (code !== this.currentLangCode || nativeName !== this.currentLangNative || countryName !== this.currentLangCountry) {
-          localStorage.setItem('faust-lang-native', nativeName);
-          if (countryName) {
-            localStorage.setItem('faust-lang-country', countryName);
-          } else {
-            localStorage.removeItem('faust-lang-country');
-          }
-
-          if (code === 'es') {
-            this.clearTranslateCookie();
-          } else {
-            this.setTranslateCookie(code);
-          }
-
-          window.location.reload();
-          return;
-        }
-      }
-
       closeModal();
     });
 
@@ -1099,6 +1149,29 @@ class FaustFooter extends HTMLElement {
       item.addEventListener('click', () => {
         langItems.forEach(i => i.classList.remove('is-active'));
         item.classList.add('is-active');
+
+        const nativeName = item.getAttribute('data-lang');
+        const countryName = item.getAttribute('data-country') || '';
+        const code = this.getGoogleTranslateCode(nativeName, countryName);
+
+        if (code !== this.currentLangCode || nativeName !== this.currentLangNative || countryName !== this.currentLangCountry) {
+          localStorage.setItem('faust-lang-native', nativeName);
+          if (countryName) {
+            localStorage.setItem('faust-lang-country', countryName);
+          } else {
+            localStorage.removeItem('faust-lang-country');
+          }
+
+          const countryText = countryName ? ` <span style="color: #8B8D91 !important;">${countryName}</span>` : '';
+          langBtn.innerHTML = `<img src="./assets/Icons/Globe.svg" alt=""> ${nativeName}${countryText}`;
+
+          this.currentLangNative = nativeName;
+          this.currentLangCountry = countryName;
+          this.currentLangCode = code;
+
+          startTranslationMonitoring();
+          this.triggerGoogleTranslate(code);
+        }
       });
     });
   }
