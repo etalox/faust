@@ -82,6 +82,7 @@ class FaustNavbar extends HTMLElement {
         .nav-lang-selector {
           position: relative;
           display: inline-block;
+          margin-right: -6px;
         }
         @media (max-width: 980px) {
           .nav-lang-selector {
@@ -324,13 +325,6 @@ class FaustNavbar extends HTMLElement {
               clearTranslateCookie();
             } else {
               setTranslateCookie(cookieCode);
-            }
-
-            localStorage.setItem('faust-show-modal-after-reload', 'true');
-
-            const modalBody = this.querySelector('.lang-modal-body');
-            if (modalBody) {
-              localStorage.setItem('faust-modal-scroll-top', modalBody.scrollTop.toString());
             }
 
             window.location.reload();
