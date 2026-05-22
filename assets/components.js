@@ -1,3 +1,104 @@
+// Auto-protect brand names from translation
+(function() {
+  const brandRegex = /Faust\s*Partners™?/gi;
+  const skipTags = ['SCRIPT', 'STYLE', 'IFRAME', 'NOSCRIPT', 'HEAD', 'META', 'TEXTAREA', 'INPUT'];
+
+  function protectTitle() {
+    const titleEl = document.querySelector('title');
+    if (titleEl) {
+      brandRegex.lastIndex = 0;
+      if (brandRegex.test(titleEl.textContent)) {
+        titleEl.classList.add('notranslate');
+        titleEl.setAttribute('translate', 'no');
+      }
+    }
+  }
+
+  function protectNode(node) {
+    if (!node) return;
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.nodeValue;
+      brandRegex.lastIndex = 0;
+      if (brandRegex.test(text)) {
+        brandRegex.lastIndex = 0;
+        const parent = node.parentNode;
+        if (!parent) return;
+
+        if (parent.closest && parent.closest('.notranslate, [translate="no"]')) {
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        let lastOffset = 0;
+        let match;
+
+        while ((match = brandRegex.exec(text)) !== null) {
+          const matchText = match[0];
+          const matchIndex = match.index;
+
+          if (matchIndex > lastOffset) {
+            fragment.appendChild(document.createTextNode(text.substring(lastOffset, matchIndex)));
+          }
+
+          const span = document.createElement('span');
+          span.className = 'notranslate';
+          span.setAttribute('translate', 'no');
+          span.textContent = matchText;
+          fragment.appendChild(span);
+
+          lastOffset = brandRegex.lastIndex;
+        }
+
+        if (lastOffset < text.length) {
+          fragment.appendChild(document.createTextNode(text.substring(lastOffset)));
+        }
+
+        parent.replaceChild(fragment, node);
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      if (skipTags.includes(node.tagName)) return;
+      if (node.classList.contains('notranslate') || node.getAttribute('translate') === 'no') return;
+
+      const children = Array.from(node.childNodes);
+      for (const child of children) {
+        protectNode(child);
+      }
+    }
+  }
+
+  function runProtection() {
+    protectTitle();
+    if (document.body) {
+      protectNode(document.body);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runProtection);
+  } else {
+    runProtection();
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    observer.disconnect();
+    protectTitle();
+    for (const mutation of mutations) {
+      for (const addedNode of mutation.addedNodes) {
+        protectNode(addedNode);
+      }
+    }
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+})();
+
 (function() {
   const applyNotranslate = () => {
     const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
