@@ -1266,7 +1266,6 @@
       container.className = 'hero-video-container';
 
       var video = document.createElement('video');
-      video.autoplay = true;
       video.loop = true;
       video.muted = true;
       video.setAttribute('playsinline', '');
@@ -1278,13 +1277,6 @@
       video.src = './assets/Hero.mp4';
       video.load();
 
-      var playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function(error) {
-          console.warn("Autoplay video control:", error);
-        });
-      }
-
       var isLoaded = false;
       function checkVideoLoaded() {
         if (isLoaded) return;
@@ -1292,7 +1284,19 @@
           var bufferedEnd = video.buffered.end(video.buffered.length - 1);
           if (bufferedEnd >= video.duration - 0.1) {
             isLoaded = true;
-            container.classList.add('is-loaded');
+            
+            var playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.then(function() {
+                container.classList.add('is-loaded');
+              }).catch(function(error) {
+                console.warn("Autoplay video control:", error);
+                container.classList.add('is-loaded');
+              });
+            } else {
+              container.classList.add('is-loaded');
+            }
+
             video.removeEventListener('progress', checkVideoLoaded);
             video.removeEventListener('canplaythrough', checkVideoLoaded);
             video.removeEventListener('suspend', checkVideoLoaded);
@@ -1306,11 +1310,20 @@
       video.addEventListener('suspend', checkVideoLoaded);
       video.addEventListener('loadeddata', checkVideoLoaded);
 
-      // Fallback: If it's taking too long or browser stops buffering but has enough to play, force show.
+      // Fallback: If it's taking too long or browser stops buffering, force show.
       setTimeout(function() {
-        if (!isLoaded && video.buffered.length > 0) {
+        if (!isLoaded) {
           isLoaded = true;
-          container.classList.add('is-loaded');
+          var playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.then(function() {
+              container.classList.add('is-loaded');
+            }).catch(function(error) {
+              container.classList.add('is-loaded');
+            });
+          } else {
+            container.classList.add('is-loaded');
+          }
         }
       }, 8000);
     }
