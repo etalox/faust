@@ -129,8 +129,7 @@
 // Global language metadata and helpers
 const FAUST_LANGUAGES = [
   { code: 'auto', lang: 'Automatico', country: '', engLang: 'Automatic', engCountry: '', gtCode: 'auto' },
-  { code: 'es-MX', lang: 'Español', country: 'México', engLang: 'Spanish', engCountry: 'Mexico', gtCode: 'es' },
-  { code: 'es-LA', lang: 'Español', country: 'Latinoamérica', engLang: 'Spanish', engCountry: 'Latin America', gtCode: 'es' },
+  { code: 'es-LA', lang: 'Español', country: 'Latinoamética', engLang: 'Spanish', engCountry: 'Latin America', gtCode: 'es' },
   { code: 'es-ES', lang: 'Español', country: 'España', engLang: 'Spanish', engCountry: 'Spain', gtCode: 'es' },
   { code: 'pt', lang: 'Português', country: '', engLang: 'Portuguese', engCountry: '', gtCode: 'pt' },
   { code: 'en-GB', lang: 'English', country: 'UK', engLang: 'English', engCountry: 'United Kingdom', gtCode: 'en' },
@@ -163,18 +162,20 @@ function getLanguageName(code) {
 }
 
 function getSelectedCode() {
-  if (typeof window === 'undefined' || !window.localStorage) return 'es-ES';
+  if (typeof window === 'undefined' || !window.localStorage) return 'es-LA';
   
   const savedCode = localStorage.getItem('faust-lang-selection-code');
-  if (savedCode) return savedCode;
+  if (savedCode) {
+    if (savedCode === 'es-MX') return 'es-LA';
+    return savedCode;
+  }
   
   const savedNative = localStorage.getItem('faust-lang-native');
   const savedCountry = localStorage.getItem('faust-lang-country') || '';
   
   if (savedNative === 'Automatico') return 'auto';
   if (savedNative === 'Español') {
-    if (savedCountry === 'México') return 'es-MX';
-    if (savedCountry === 'Latinoamérica') return 'es-LA';
+    if (savedCountry === 'México' || savedCountry === 'Latinoamérica' || savedCountry === 'Latinoamética' || savedCountry === 'LATAM') return 'es-LA';
     return 'es-ES';
   }
   if (savedNative === 'Português') return 'pt';
@@ -193,7 +194,7 @@ function getSelectedCode() {
   if (covered.includes(browserLang)) {
     if (browserLang === 'es') {
       const fullLang = (navigator.language || 'es-ES').toLowerCase();
-      if (fullLang.includes('mx')) return 'es-MX';
+      if (fullLang.includes('mx')) return 'es-LA';
       if (fullLang === 'es' || fullLang.includes('es-es')) return 'es-ES';
       return 'es-LA';
     }
@@ -257,6 +258,30 @@ function generateLangListHtml(activeCode) {
   }).join('');
 }
 
+function getDetectedCountryName() {
+  if (typeof window === 'undefined' || !window.localStorage) return 'Latinoamética';
+  let countryCode = localStorage.getItem('faust-detected-country-code');
+  if (!countryCode) {
+    if (typeof navigator !== 'undefined') {
+      const navLang = navigator.language || navigator.userLanguage || '';
+      const parts = navLang.split('-');
+      if (parts.length > 1) {
+        countryCode = parts[1].toUpperCase();
+      }
+    }
+  }
+  if (countryCode) {
+    try {
+      const displayNames = new Intl.DisplayNames(['es'], { type: 'region' });
+      const name = displayNames.of(countryCode);
+      if (name) return name;
+    } catch (e) {
+      // Fallback
+    }
+  }
+  return 'Latinoamética';
+}
+
 function getButtonLabelHtml(code) {
   if (code === 'auto') {
     const detectedLangCode = getBrowserLangCode();
@@ -264,7 +289,13 @@ function getButtonLabelHtml(code) {
     return `<img src="./assets/Icons/Globe.svg" alt=""> Automatico <span style="color: #8B8D91 !important;">(${detectedName})</span>`;
   }
   const lang = FAUST_LANGUAGES.find(l => l.code === code) || FAUST_LANGUAGES[3]; // Fallback to es-ES
-  const countryText = lang.country ? ` <span style="color: #8B8D91 !important;">${lang.country}</span>` : '';
+  
+  let country = lang.country;
+  if (code === 'es-LA') {
+    country = getDetectedCountryName();
+  }
+  
+  const countryText = country ? ` <span style="color: #8B8D91 !important;">${country}</span>` : '';
   return `<img src="./assets/Icons/Globe.svg" alt=""> ${lang.lang}${countryText}`;
 }
 
@@ -291,8 +322,13 @@ function clearTranslateCookie() {
 async function detectCountryByIP() {
   if (typeof window === 'undefined' || !window.localStorage) return;
 
-  // If the user has already chosen a language selection or if the IP detection has already run, stop.
-  if (localStorage.getItem('faust-lang-selection-code') || localStorage.getItem('faust-ip-detected') === 'true') {
+  // If we already detected the country code, we don't need to run again
+  if (localStorage.getItem('faust-detected-country-code')) {
+    return;
+  }
+
+  // If the IP detection has already run, stop to avoid repeat requests
+  if (localStorage.getItem('faust-ip-detected') === 'true') {
     return;
   }
 
@@ -307,18 +343,22 @@ async function detectCountryByIP() {
 
     if (!country) return;
 
+    // Save the detected country code
+    localStorage.setItem('faust-detected-country-code', country);
+
+    // If the user already has a saved selection, don't auto-redirect them
+    if (localStorage.getItem('faust-lang-selection-code')) {
+      return;
+    }
+
     const browserLang = getBrowserLangCode();
     let targetCode = null;
 
     if (browserLang === 'es') {
-      if (country === 'MX') {
-        targetCode = 'es-MX';
-      } else if (['AR', 'CL', 'CO', 'PE', 'VE', 'EC', 'GT', 'CU', 'BO', 'DO', 'HN', 'PY', 'SV', 'NI', 'CR', 'PA', 'UY', 'PR'].includes(country)) {
-        targetCode = 'es-LA';
-      } else if (country === 'ES') {
+      if (country === 'ES') {
         targetCode = 'es-ES';
       } else {
-        targetCode = 'es-LA'; // Fallback for other Spanish-speaking regions
+        targetCode = 'es-LA';
       }
     } else if (browserLang === 'en') {
       if (['GB', 'IE', 'AU', 'NZ'].includes(country)) {

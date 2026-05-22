@@ -2,13 +2,13 @@
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
     const activeCode = getSelectedCode();
-    const isMX = (activeCode === 'es-MX');
+    const isLATAM = (activeCode === 'es-LA');
 
     let navLangHtml = '';
     let aplicarBtnClass = 'btn btn-secondary btn-nav';
     let arrowClass = 'arrow arrow-light';
 
-    if (!isMX) {
+    if (!isLATAM) {
       aplicarBtnClass = 'btn btn-primary btn-nav';
       arrowClass = 'arrow';
 
@@ -336,7 +336,7 @@ class FaustNavbar extends HTMLElement {
       }
     }
 
-    if (!isMX) {
+    if (!isLATAM) {
       const navLangBtn = this.querySelector('#nav-lang-btn');
       const navLangDropdown = this.querySelector('#nav-lang-dropdown');
 
