@@ -34,6 +34,7 @@
       --line: rgba(255,255,255,.07);
       --chip: rgba(253,253,255,.06);
       --sb-v: 0;
+      --lead-font-size: clamp(32px, 4.2vw, 54px);
       overflow: hidden;
       height: 100%;
     }
@@ -164,13 +165,13 @@
     .supported .label { font-size: 14px; color: rgba(255,255,255,.7); margin-bottom: 20px; }
     .supported .logos { display: flex; gap: 40px; justify-content: center; align-items: center; flex-wrap: wrap; }
     .supported .logos img { height: 32px; object-fit: contain; opacity: .8; }
-    .lead { font-size: clamp(32px, 4.2vw, 54px); line-height: 1.15; letter-spacing: -1.2px; margin: 0 0 50px; font-weight: 300;}
+    .lead { font-size: var(--lead-font-size); line-height: 1.15; letter-spacing: -1.2px; margin: 0 0 50px; font-weight: 300;}
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0px; margin-top: 70px; }
     .stat { padding: 50px 100px 50px 100px; display: flex; flex-direction: column; gap: 50px; border-left: 1px solid var(--line); }
     .stat:first-child { border-left: 0; padding-left: 0; }
     .stat-heading { color: #8B8D91; font-size: 16px; font-weight: 500; text-transform: capitalize; }
     .stat-number-wrap { display: flex; flex-direction: column; gap: 25px; }
-    .stat-number-wrap h3 { margin: 0; font-size: 48px; font-weight: 400; color: #F2F2F2; }
+    .stat-number-wrap h3 { margin: 0; font-size: var(--lead-font-size); font-weight: 400; color: #F2F2F2; }
     .stat-number-wrap .title { margin: 0; font-size: 17px; font-weight: 400; color: #F2F2F2; }
     .stat .desc { margin: 0; color: #8B8D91; font-size: 14px; line-height: 1.5; }
     .centered { text-align: center; }
