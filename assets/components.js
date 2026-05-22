@@ -90,7 +90,7 @@ class FaustNavbar extends HTMLElement {
             <a href="./index.html#empresa">Empresa</a>
           </div>
           <div class="nav-right">
-            <a id="nav-contacto" href="./index.html#contacto">Contacto</a>
+            <a id="nav-contacto" href="./index.html#contacto" style="user-select: none !important;">Contacto</a>
             <a class="btn btn-secondary btn-nav" href="./index.html#aplicar">
               Aplicar
               <img class="arrow arrow-light" src="./assets/Icons/button_arrow.svg" alt="">

@@ -140,7 +140,7 @@
       overflow: hidden;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 12s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 8s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .hero-video-container.is-loaded {
       opacity: 1;
@@ -235,7 +235,7 @@
     .nav-logo-icon { transition: filter .45s cubic-bezier(.4,0,.2,1); filter: brightness(0) invert(1); }
     .nav-logo-icon.is-blue { filter: none; }
     .nav-inner { height: 80px; display: flex; justify-content: space-between; align-items: center; position: relative; }
-    .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; }
+    .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; user-select: none !important; }
     .nav.nav-contacto-hidden #nav-contacto { display: none; }
     .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
     .arrow { width: 14px; height: 10px; transition: filter 240ms ease-out; }
