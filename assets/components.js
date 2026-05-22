@@ -1,3 +1,131 @@
+// Early check to disable page transitions during translation reload
+(function() {
+  if (typeof window !== 'undefined' && window.localStorage && localStorage.getItem('faust-show-modal-after-reload') === 'true') {
+    const style = document.createElement('style');
+    style.id = 'faust-no-transitions-style';
+    style.textContent = `
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+      body {
+        opacity: 1 !important;
+      }
+      .lang-overlay {
+        transition: none !important;
+      }
+      .lang-modal-container {
+        transition: none !important;
+      }
+      .lang-modal {
+        transition: none !important;
+      }
+    `;
+    document.documentElement.appendChild(style);
+  }
+})();
+
+// Auto-protect brand names from translation
+(function() {
+  const brandRegex = /Faust\s*Partners™?/gi;
+  const skipTags = ['SCRIPT', 'STYLE', 'IFRAME', 'NOSCRIPT', 'HEAD', 'META', 'TEXTAREA', 'INPUT'];
+
+  function protectTitle() {
+    const titleEl = document.querySelector('title');
+    if (titleEl) {
+      brandRegex.lastIndex = 0;
+      if (brandRegex.test(titleEl.textContent)) {
+        titleEl.classList.add('notranslate');
+        titleEl.setAttribute('translate', 'no');
+      }
+    }
+  }
+
+  function protectNode(node) {
+    if (!node) return;
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.nodeValue;
+      brandRegex.lastIndex = 0;
+      if (brandRegex.test(text)) {
+        brandRegex.lastIndex = 0;
+        const parent = node.parentNode;
+        if (!parent) return;
+
+        if (parent.closest && parent.closest('.notranslate, [translate="no"]')) {
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        let lastOffset = 0;
+        let match;
+
+        while ((match = brandRegex.exec(text)) !== null) {
+          const matchText = match[0];
+          const matchIndex = match.index;
+
+          if (matchIndex > lastOffset) {
+            fragment.appendChild(document.createTextNode(text.substring(lastOffset, matchIndex)));
+          }
+
+          const span = document.createElement('span');
+          span.className = 'notranslate';
+          span.setAttribute('translate', 'no');
+          span.textContent = matchText;
+          fragment.appendChild(span);
+
+          lastOffset = brandRegex.lastIndex;
+        }
+
+        if (lastOffset < text.length) {
+          fragment.appendChild(document.createTextNode(text.substring(lastOffset)));
+        }
+
+        parent.replaceChild(fragment, node);
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      if (skipTags.includes(node.tagName)) return;
+      if (node.classList.contains('notranslate') || node.getAttribute('translate') === 'no') return;
+
+      const children = Array.from(node.childNodes);
+      for (const child of children) {
+        protectNode(child);
+      }
+    }
+  }
+
+  function runProtection() {
+    protectTitle();
+    if (document.body) {
+      protectNode(document.body);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runProtection);
+  } else {
+    runProtection();
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    observer.disconnect();
+    protectTitle();
+    for (const mutation of mutations) {
+      for (const addedNode of mutation.addedNodes) {
+        protectNode(addedNode);
+      }
+    }
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+})();
+
 (function() {
   const applyNotranslate = () => {
     const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
@@ -104,9 +232,14 @@ class FaustNavbar extends HTMLElement {
     if (internalNav) {
       internalNav.offsetHeight; 
 
-      setTimeout(() => {
+      const isReload = localStorage.getItem('faust-show-modal-after-reload') === 'true';
+      if (isReload) {
         internalNav.classList.add('is-active');
-      }, 120);
+      } else {
+        setTimeout(() => {
+          internalNav.classList.add('is-active');
+        }, 120);
+      }
     }
 
     this.initLogoObserver();
@@ -573,10 +706,10 @@ class FaustFooter extends HTMLElement {
       </footer>
 
       <!-- Language selection modal overlay -->
-      <div class="lang-overlay notranslate" id="lang-menu-overlay" translate="no">
+      <div class="lang-overlay" id="lang-menu-overlay">
         <div class="wrap lang-overlay-wrap">
           <div class="lang-modal-container">
-            <div class="lang-modal">
+            <div class="lang-modal notranslate" translate="no">
               <div class="lang-modal-header">
                 <span>Select your language</span>
               </div>
@@ -836,10 +969,24 @@ class FaustFooter extends HTMLElement {
   }
 
   triggerGoogleTranslate(code) {
+    const metaId = 'faust-notranslate-meta';
     if (code === 'es') {
       this.clearTranslateCookie();
+      document.documentElement.setAttribute('translate', 'no');
+      if (!document.getElementById(metaId)) {
+        const meta = document.createElement('meta');
+        meta.id = metaId;
+        meta.name = 'google';
+        meta.content = 'notranslate';
+        document.head.appendChild(meta);
+      }
     } else {
       this.setTranslateCookie(code);
+      document.documentElement.removeAttribute('translate');
+      const meta = document.getElementById(metaId);
+      if (meta) {
+        meta.remove();
+      }
     }
 
     const setComboValue = () => {
@@ -900,6 +1047,99 @@ class FaustFooter extends HTMLElement {
       });
     };
 
+    let translationObserver = null;
+    let translationTimeout = null;
+    let maxTimeout = null;
+
+    const startTranslationMonitoring = () => {
+      if (translationObserver) {
+        translationObserver.disconnect();
+        translationObserver = null;
+      }
+      if (translationTimeout) clearTimeout(translationTimeout);
+      if (maxTimeout) clearTimeout(maxTimeout);
+
+      // Deshabilitar botón "Listo"
+      listoBtn.disabled = true;
+      listoBtn.style.opacity = '0.6';
+      listoBtn.style.pointerEvents = 'none';
+      listoBtn.style.cursor = 'not-allowed';
+      listoBtn.textContent = 'Translating...';
+
+      const resetDebounce = () => {
+        if (translationTimeout) clearTimeout(translationTimeout);
+        translationTimeout = setTimeout(() => {
+          stopTranslationMonitoring();
+        }, 700); // 700ms sin cambios en el DOM significa que la traducción terminó
+      };
+
+      // MutationObserver temporal para vigilar cambios en el DOM (traducciones)
+      translationObserver = new MutationObserver((mutations) => {
+        resetDebounce();
+      });
+
+      translationObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+
+      // Primer debounce
+      resetDebounce();
+
+      // Timeout de respaldo de 3.5 segundos si la traducción tarda o no reporta cambios
+      maxTimeout = setTimeout(() => {
+        stopTranslationMonitoring();
+      }, 3500);
+    };
+
+    const stopTranslationMonitoring = () => {
+      if (translationObserver) {
+        translationObserver.disconnect();
+        translationObserver = null;
+      }
+      if (translationTimeout) clearTimeout(translationTimeout);
+      if (maxTimeout) clearTimeout(maxTimeout);
+
+      // Habilitar botón "Listo"
+      listoBtn.disabled = false;
+      listoBtn.style.opacity = '';
+      listoBtn.style.pointerEvents = '';
+      listoBtn.style.cursor = '';
+      listoBtn.textContent = 'Listo';
+
+      // Limpiar la bandera de recarga para no reabrir el modal en futuros refrescos manuales
+      localStorage.removeItem('faust-show-modal-after-reload');
+
+      // Remover los estilos de recarga sin transiciones
+      const noTransStyle = document.getElementById('faust-no-transitions-style');
+      if (noTransStyle) {
+        noTransStyle.remove();
+      }
+    };
+
+    // Comprobar si acabamos de recargar para aplicar traducción
+    const shouldOpenModal = localStorage.getItem('faust-show-modal-after-reload') === 'true';
+    if (shouldOpenModal) {
+      syncActiveItem();
+
+      const isDesktop = window.innerWidth >= 981;
+      if (isDesktop) {
+        langBtn.style.opacity = '0';
+        langBtn.style.pointerEvents = 'none';
+        listoBtn.style.width = '100%';
+      }
+
+      const activeItem = this.querySelector('.lang-item.is-active');
+      if (activeItem) {
+        activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
+      }
+
+      overlay.classList.add('is-open');
+
+      startTranslationMonitoring();
+    }
+
     langBtn.addEventListener('click', (e) => {
       e.preventDefault();
       
@@ -916,14 +1156,12 @@ class FaustFooter extends HTMLElement {
         langBtn.style.pointerEvents = 'none';
       }
 
-      overlay.classList.add('is-open');
-      
       const activeItem = this.querySelector('.lang-item.is-active');
       if (activeItem) {
-        setTimeout(() => {
-          activeItem.scrollIntoView({ block: 'center', inline: 'nearest' });
-        }, 50);
+        activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
       }
+
+      overlay.classList.add('is-open');
 
       if (isDesktop) {
         // Force reflow
@@ -952,32 +1190,6 @@ class FaustFooter extends HTMLElement {
 
     listoBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      
-      const activeItem = this.querySelector('.lang-item.is-active');
-      if (activeItem) {
-        const nativeName = activeItem.getAttribute('data-lang');
-        const countryName = activeItem.getAttribute('data-country') || '';
-        const code = this.getGoogleTranslateCode(nativeName, countryName);
-
-        if (code !== this.currentLangCode || nativeName !== this.currentLangNative || countryName !== this.currentLangCountry) {
-          localStorage.setItem('faust-lang-native', nativeName);
-          if (countryName) {
-            localStorage.setItem('faust-lang-country', countryName);
-          } else {
-            localStorage.removeItem('faust-lang-country');
-          }
-
-          if (code === 'es') {
-            this.clearTranslateCookie();
-          } else {
-            this.setTranslateCookie(code);
-          }
-
-          window.location.reload();
-          return;
-        }
-      }
-
       closeModal();
     });
 
@@ -998,6 +1210,39 @@ class FaustFooter extends HTMLElement {
       item.addEventListener('click', () => {
         langItems.forEach(i => i.classList.remove('is-active'));
         item.classList.add('is-active');
+
+        const nativeName = item.getAttribute('data-lang');
+        const countryName = item.getAttribute('data-country') || '';
+        const code = this.getGoogleTranslateCode(nativeName, countryName);
+
+        if (code !== this.currentLangCode || nativeName !== this.currentLangNative || countryName !== this.currentLangCountry) {
+          localStorage.setItem('faust-lang-native', nativeName);
+          if (countryName) {
+            localStorage.setItem('faust-lang-country', countryName);
+          } else {
+            localStorage.removeItem('faust-lang-country');
+          }
+
+          const countryText = countryName ? ` <span style="color: #8B8D91 !important;">${countryName}</span>` : '';
+          langBtn.innerHTML = `<img src="./assets/Icons/Globe.svg" alt=""> ${nativeName}${countryText}`;
+
+          this.currentLangNative = nativeName;
+          this.currentLangCountry = countryName;
+          this.currentLangCode = code;
+
+          // Configurar cookie de Google Translate
+          if (code === 'es') {
+            this.clearTranslateCookie();
+          } else {
+            this.setTranslateCookie(code);
+          }
+
+          // Guardar indicador para reabrir el modal de inmediato tras la recarga
+          localStorage.setItem('faust-show-modal-after-reload', 'true');
+
+          // Forzar la recarga para que Google Translate inicialice de manera nativa y consistente
+          window.location.reload();
+        }
       });
     });
   }
