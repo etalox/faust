@@ -1075,7 +1075,34 @@ class FaustFooter extends HTMLElement {
       listoBtn.style.pointerEvents = '';
       listoBtn.style.cursor = '';
       listoBtn.textContent = 'Listo';
+
+      // Limpiar la bandera de recarga para no reabrir el modal en futuros refrescos manuales
+      localStorage.removeItem('faust-show-modal-after-reload');
     };
+
+    // Comprobar si acabamos de recargar para aplicar traducción
+    const shouldOpenModal = localStorage.getItem('faust-show-modal-after-reload') === 'true';
+    if (shouldOpenModal) {
+      syncActiveItem();
+
+      const isDesktop = window.innerWidth >= 981;
+      if (isDesktop) {
+        langBtn.style.opacity = '0';
+        langBtn.style.pointerEvents = 'none';
+        listoBtn.style.width = '100%';
+      }
+
+      overlay.classList.add('is-open');
+
+      const activeItem = this.querySelector('.lang-item.is-active');
+      if (activeItem) {
+        setTimeout(() => {
+          activeItem.scrollIntoView({ block: 'center', inline: 'nearest' });
+        }, 50);
+      }
+
+      startTranslationMonitoring();
+    }
 
     langBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1169,8 +1196,18 @@ class FaustFooter extends HTMLElement {
           this.currentLangCountry = countryName;
           this.currentLangCode = code;
 
-          startTranslationMonitoring();
-          this.triggerGoogleTranslate(code);
+          // Configurar cookie de Google Translate
+          if (code === 'es') {
+            this.clearTranslateCookie();
+          } else {
+            this.setTranslateCookie(code);
+          }
+
+          // Guardar indicador para reabrir el modal de inmediato tras la recarga
+          localStorage.setItem('faust-show-modal-after-reload', 'true');
+
+          // Forzar la recarga para que Google Translate inicialice de manera nativa y consistente
+          window.location.reload();
         }
       });
     });
