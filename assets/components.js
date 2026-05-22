@@ -13,12 +13,16 @@ class FaustNavbar extends HTMLElement {
       arrowClass = 'arrow';
 
       const buttonLabel = getButtonLabelHtml(activeCode);
+      const navbarButtonLabel = buttonLabel.replace(
+        /^(<img[^>]+>)\s*(.+)$/i,
+        '$1<span class="nav-lang-btn-text">$2</span>'
+      );
       const dropdownItems = generateLangListHtml(activeCode);
 
       navLangHtml = `
         <div class="nav-lang-selector notranslate" translate="no" id="nav-lang-selector">
           <button class="btn btn-secondary btn-nav nav-lang-btn" id="nav-lang-btn" style="user-select: none !important;">
-            ${buttonLabel}
+            ${navbarButtonLabel}
           </button>
           <div class="nav-lang-dropdown" id="nav-lang-dropdown">
             <div class="lang-modal notranslate" translate="no">
@@ -94,14 +98,60 @@ class FaustNavbar extends HTMLElement {
         .nav-lang-btn {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
+          justify-content: center;
+          gap: 0 !important;
           cursor: pointer;
           user-select: none;
+          height: 50px;
+          padding: 0 16px !important;
+          border-radius: 999px;
+          box-sizing: border-box;
+          transition: padding 0.4s ease-out,
+                      background 180ms ease-out,
+                      color 180ms ease-out;
         }
 
-        .nav-lang-btn:hover {
+        .nav-lang-btn:hover,
+        .nav-lang-selector:hover .nav-lang-btn,
+        .nav-lang-selector:has(.is-open) .nav-lang-btn {
           background: rgba(238, 238, 241, 0.10) !important;
           color: #fff !important;
+        }
+
+        /* Ensure the gradient border outline remains visible on hover/open, matching standard secondary buttons */
+        .nav-lang-selector:hover .nav-lang-btn::before,
+        .nav-lang-selector:has(.is-open) .nav-lang-btn::before,
+        .nav-lang-btn:hover::before {
+          opacity: 1 !important;
+        }
+
+        .nav-lang-btn-text {
+          max-width: 0;
+          opacity: 0;
+          overflow: hidden;
+          white-space: nowrap;
+          margin-left: 0;
+          display: inline-block;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 1;
+          transition: max-width 0.4s ease-out,
+                      opacity 0.3s ease-out,
+                      margin-left 0.4s ease-out;
+        }
+
+        .nav-lang-selector:hover .nav-lang-btn,
+        .nav-lang-selector:focus-within .nav-lang-btn,
+        .nav-lang-selector:has(.is-open) .nav-lang-btn {
+          padding: 0 20px !important;
+        }
+
+        .nav-lang-selector:hover .nav-lang-btn-text,
+        .nav-lang-selector:focus-within .nav-lang-btn-text,
+        .nav-lang-selector:has(.is-open) .nav-lang-btn-text {
+          max-width: 250px;
+          opacity: 1;
+          margin-left: 8px;
         }
 
         .btn-primary.btn-nav {
