@@ -287,6 +287,75 @@ function clearTranslateCookie() {
   }
 }
 
+// Perform IP-based country geolocation auto-detection on first visit
+async function detectCountryByIP() {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+
+  // If the user has already chosen a language selection or if the IP detection has already run, stop.
+  if (localStorage.getItem('faust-lang-selection-code') || localStorage.getItem('faust-ip-detected') === 'true') {
+    return;
+  }
+
+  // Mark as detected (or attempted) so we don't repeat this even if it fails or gets blocked
+  localStorage.setItem('faust-ip-detected', 'true');
+
+  try {
+    const response = await fetch('https://ipapi.co/json/');
+    if (!response.ok) throw new Error('Network response not ok');
+    const data = await response.json();
+    const country = (data.country_code || '').toUpperCase();
+
+    if (!country) return;
+
+    const browserLang = getBrowserLangCode();
+    let targetCode = null;
+
+    if (browserLang === 'es') {
+      if (country === 'MX') {
+        targetCode = 'es-MX';
+      } else if (['AR', 'CL', 'CO', 'PE', 'VE', 'EC', 'GT', 'CU', 'BO', 'DO', 'HN', 'PY', 'SV', 'NI', 'CR', 'PA', 'UY', 'PR'].includes(country)) {
+        targetCode = 'es-LA';
+      } else if (country === 'ES') {
+        targetCode = 'es-ES';
+      } else {
+        targetCode = 'es-LA'; // Fallback for other Spanish-speaking regions
+      }
+    } else if (browserLang === 'en') {
+      if (['GB', 'IE', 'AU', 'NZ'].includes(country)) {
+        targetCode = 'en-GB';
+      } else {
+        targetCode = 'en-US';
+      }
+    }
+
+    if (targetCode) {
+      const currentCode = getSelectedCode();
+      if (currentCode !== targetCode) {
+        const mappedLang = FAUST_LANGUAGES.find(l => l.code === targetCode);
+        if (mappedLang) {
+          localStorage.setItem('faust-lang-selection-code', targetCode);
+          localStorage.setItem('faust-lang-native', mappedLang.lang);
+          localStorage.setItem('faust-lang-country', mappedLang.country || '');
+
+          const cookieCode = getTranslateCodeForSelection(targetCode);
+          if (cookieCode === 'es') {
+            clearTranslateCookie();
+          } else {
+            setTranslateCookie(cookieCode);
+          }
+
+          window.location.reload();
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Geolocation detection failed:', error);
+  }
+}
+
+// Start IP detection immediately in the background
+detectCountryByIP();
+
 (function() {
   const applyNotranslate = () => {
     const activeCode = getSelectedCode();
