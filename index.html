@@ -1256,8 +1256,13 @@
   </script>
 
   <script>
-  /* ── Background Video Loader ── */
+  /* ── Background Video Loader with IndexedDB Caching ── */
   (function() {
+    var DB_NAME = 'faust-video-store';
+    var STORE_NAME = 'videos';
+    var VIDEO_KEY = 'hero-video';
+    var VIDEO_URL = './assets/Hero.mp4';
+
     function initHeroVideo() {
       var hero = document.getElementById('aplicar');
       if (!hero) return;
@@ -1274,10 +1279,9 @@
       container.appendChild(video);
       hero.appendChild(container);
 
-      video.src = './assets/Hero.mp4';
-      video.load();
-
       var isLoaded = false;
+      var objectUrl = null;
+
       function checkVideoLoaded() {
         if (isLoaded) return;
         if (video.duration > 0 && video.buffered.length > 0) {
@@ -1311,7 +1315,7 @@
       video.addEventListener('loadeddata', checkVideoLoaded);
 
       // Fallback: If it's taking too long or browser stops buffering, force show.
-      setTimeout(function() {
+      var fallbackTimeout = setTimeout(function() {
         if (!isLoaded) {
           isLoaded = true;
           var playPromise = video.play();
@@ -1326,6 +1330,85 @@
           }
         }
       }, 8000);
+
+      // Try loading from IndexedDB
+      try {
+        var request = indexedDB.open(DB_NAME, 1);
+        
+        request.onupgradeneeded = function(e) {
+          var db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+
+        request.onsuccess = function(e) {
+          var db = e.target.result;
+          try {
+            var transaction = db.transaction([STORE_NAME], 'readonly');
+            var store = transaction.objectStore(STORE_NAME);
+            var getReq = store.get(VIDEO_KEY);
+
+            getReq.onsuccess = function() {
+              var blob = getReq.result;
+              if (blob instanceof Blob) {
+                // Found locally! Create an object URL and load it
+                objectUrl = URL.createObjectURL(blob);
+                video.src = objectUrl;
+                video.load();
+              } else {
+                // Not cached yet, fetch and cache
+                downloadAndStoreVideo(db);
+              }
+            };
+
+            getReq.onerror = function() {
+              downloadAndStoreVideo(db);
+            };
+          } catch (err) {
+            downloadAndStoreVideo(db);
+          }
+        };
+
+        request.onerror = function() {
+          loadFromNetwork();
+        };
+      } catch (err) {
+        loadFromNetwork();
+      }
+
+      function downloadAndStoreVideo(db) {
+        loadFromNetwork();
+
+        fetch(VIDEO_URL)
+          .then(function(res) {
+            return res.blob();
+          })
+          .then(function(blob) {
+            try {
+              var transaction = db.transaction([STORE_NAME], 'readwrite');
+              var store = transaction.objectStore(STORE_NAME);
+              store.put(blob, VIDEO_KEY);
+            } catch (e) {
+              console.warn("Could not write video to IndexedDB:", e);
+            }
+          })
+          .catch(function(err) {
+            console.warn("Could not fetch video for caching:", err);
+          });
+      }
+
+      function loadFromNetwork() {
+        video.src = VIDEO_URL;
+        video.load();
+      }
+
+      // Cleanup object URL if created
+      window.addEventListener('unload', function() {
+        if (objectUrl) {
+          URL.revokeObjectURL(objectUrl);
+        }
+      });
     }
 
     function delayInitHeroVideo() {
