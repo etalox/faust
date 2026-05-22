@@ -1,177 +1,41 @@
-// Early check to disable page transitions during translation reload
-(function() {
-  if (typeof window !== 'undefined' && window.localStorage && localStorage.getItem('faust-show-modal-after-reload') === 'true') {
-    const style = document.createElement('style');
-    style.id = 'faust-no-transitions-style';
-    style.textContent = `
-      * {
-        transition: none !important;
-        animation: none !important;
-      }
-      body {
-        opacity: 1 !important;
-      }
-      .lang-overlay {
-        transition: none !important;
-      }
-      .lang-modal-container {
-        transition: none !important;
-      }
-      .lang-modal {
-        transition: none !important;
-      }
-    `;
-    document.documentElement.appendChild(style);
-  }
-})();
-
-// Auto-protect brand names from translation
-(function() {
-  const brandRegex = /Faust\s*Partners™?/gi;
-  const skipTags = ['SCRIPT', 'STYLE', 'IFRAME', 'NOSCRIPT', 'HEAD', 'META', 'TEXTAREA', 'INPUT'];
-
-  function protectTitle() {
-    const titleEl = document.querySelector('title');
-    if (titleEl) {
-      brandRegex.lastIndex = 0;
-      if (brandRegex.test(titleEl.textContent)) {
-        titleEl.classList.add('notranslate');
-        titleEl.setAttribute('translate', 'no');
-      }
-    }
-  }
-
-  function protectNode(node) {
-    if (!node) return;
-    if (node.nodeType === Node.TEXT_NODE) {
-      const text = node.nodeValue;
-      brandRegex.lastIndex = 0;
-      if (brandRegex.test(text)) {
-        brandRegex.lastIndex = 0;
-        const parent = node.parentNode;
-        if (!parent) return;
-
-        if (parent.closest && parent.closest('.notranslate, [translate="no"]')) {
-          return;
-        }
-
-        const fragment = document.createDocumentFragment();
-        let lastOffset = 0;
-        let match;
-
-        while ((match = brandRegex.exec(text)) !== null) {
-          const matchText = match[0];
-          const matchIndex = match.index;
-
-          if (matchIndex > lastOffset) {
-            fragment.appendChild(document.createTextNode(text.substring(lastOffset, matchIndex)));
-          }
-
-          const span = document.createElement('span');
-          span.className = 'notranslate';
-          span.setAttribute('translate', 'no');
-          span.textContent = matchText;
-          fragment.appendChild(span);
-
-          lastOffset = brandRegex.lastIndex;
-        }
-
-        if (lastOffset < text.length) {
-          fragment.appendChild(document.createTextNode(text.substring(lastOffset)));
-        }
-
-        parent.replaceChild(fragment, node);
-      }
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-      if (skipTags.includes(node.tagName)) return;
-      if (node.classList.contains('notranslate') || node.getAttribute('translate') === 'no') return;
-
-      const children = Array.from(node.childNodes);
-      for (const child of children) {
-        protectNode(child);
-      }
-    }
-  }
-
-  function runProtection() {
-    protectTitle();
-    if (document.body) {
-      protectNode(document.body);
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runProtection);
-  } else {
-    runProtection();
-  }
-
-  const observer = new MutationObserver((mutations) => {
-    observer.disconnect();
-    protectTitle();
-    for (const mutation of mutations) {
-      for (const addedNode of mutation.addedNodes) {
-        protectNode(addedNode);
-      }
-    }
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true
-    });
-  });
-
-  observer.observe(document.documentElement, {
-    childList: true,
-    subtree: true
-  });
-})();
-
-(function() {
-  const applyNotranslate = () => {
-    const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
-    const savedCountry = localStorage.getItem('faust-lang-country') || 'España';
-    
-    const getGoogleTranslateCode = (lang, country) => {
-      if (lang === 'Español') return 'es';
-      if (lang === 'Português') return 'pt';
-      if (lang === 'English') return 'en';
-      if (lang === 'Français') return 'fr';
-      if (lang === 'Русский') return 'ru';
-      if (lang === '简体中文') return 'zh-CN';
-      if (lang === '日本語') return 'ja';
-      return 'es';
-    };
-
-    const code = getGoogleTranslateCode(savedNative, savedCountry);
-    const metaId = 'faust-notranslate-meta';
-
-    if (code === 'es') {
-      document.documentElement.setAttribute('translate', 'no');
-      if (!document.getElementById(metaId)) {
-        const meta = document.createElement('meta');
-        meta.id = metaId;
-        meta.name = 'google';
-        meta.content = 'notranslate';
-        document.head.appendChild(meta);
-      }
-    } else {
-      document.documentElement.removeAttribute('translate');
-      const meta = document.getElementById(metaId);
-      if (meta) {
-        meta.remove();
-      }
-    }
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyNotranslate);
-  } else {
-    applyNotranslate();
-  }
-})();
 
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
+    const activeCode = getSelectedCode();
+    const isMX = (activeCode === 'es-MX');
+
+    let navLangHtml = '';
+    let aplicarBtnClass = 'btn btn-secondary btn-nav';
+    let arrowClass = 'arrow arrow-light';
+
+    if (!isMX) {
+      aplicarBtnClass = 'btn btn-primary btn-nav';
+      arrowClass = 'arrow';
+
+      const buttonLabel = getButtonLabelHtml(activeCode);
+      const dropdownItems = generateLangListHtml(activeCode);
+
+      navLangHtml = `
+        <div class="nav-lang-selector notranslate" translate="no" id="nav-lang-selector">
+          <button class="btn btn-secondary btn-nav nav-lang-btn" id="nav-lang-btn" style="user-select: none !important;">
+            ${buttonLabel}
+          </button>
+          <div class="nav-lang-dropdown" id="nav-lang-dropdown">
+            <div class="lang-modal notranslate" translate="no">
+              <div class="lang-modal-header">
+                <span>Select your language</span>
+              </div>
+              <div class="lang-modal-body">
+                <div class="lang-list">
+                  ${dropdownItems}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     this.innerHTML = `
       <style>
         .nav-links a, #nav-contacto {
@@ -183,15 +47,25 @@ class FaustNavbar extends HTMLElement {
 
         .nav {
           --nav-transition-dur: 0.5s;
+          background: transparent !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+        }
+
+        .nav::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
           background: rgb(8, 9, 10) !important; 
           backdrop-filter: blur(0px) !important;
-          -webkit-backdrop-filter: blur(0px) !important;     
+          -webkit-backdrop-filter: blur(0px) !important;
           transition: background var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1), 
                       backdrop-filter var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1),
                       -webkit-backdrop-filter var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .nav.is-active {
+        .nav.is-active::before {
           background: rgba(9, 10, 11, 0.88) !important; 
           backdrop-filter: blur(20px) !important;
           -webkit-backdrop-filter: blur(20px) !important;
@@ -202,6 +76,174 @@ class FaustNavbar extends HTMLElement {
           -webkit-user-select: none !important;
           -moz-user-select: none !important;
           -ms-user-select: none !important;
+        }
+
+        /* Navbar language selector styles */
+        .nav-lang-selector {
+          position: relative;
+          display: inline-block;
+        }
+        @media (max-width: 980px) {
+          .nav-lang-selector {
+            display: none !important;
+          }
+        }
+        
+        
+        .nav-lang-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          user-select: none;
+        }
+
+        .nav-lang-btn:hover {
+          background: rgba(238, 238, 241, 0.10) !important;
+          color: #fff !important;
+        }
+
+        .btn-primary.btn-nav {
+          color: #161616 !important;
+        }
+
+        .btn-primary.btn-nav:hover {
+          color: #fff !important;
+        }
+
+        .nav-lang-dropdown {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          margin-top: 12px;
+          width: 380px;
+          max-width: calc(100vw - 32px);
+          display: none;
+          flex-direction: column;
+          z-index: 1000;
+        }
+        
+        .nav-lang-dropdown.is-open {
+          display: flex;
+        }
+
+        /* Reusing exact modal styles from footer modal */
+        .nav-lang-dropdown .lang-modal {
+          background: rgba(253, 253, 255, 0.06);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: none;
+          border-radius: 20px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          max-height: 380px;
+          /* Preventing CSS leakage from FaustFooter scaleY(0) / opacity 0 */
+          transform: none !important;
+          opacity: 1 !important;
+        }
+
+        .nav-lang-dropdown .lang-modal-header {
+          padding: 20px 24px;
+          display: flex;
+          align-items: center;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-lang-dropdown .lang-modal-header span {
+          font-size: 15px;
+          font-weight: 600;
+          color: #fff;
+          letter-spacing: 0.28px;
+        }
+
+        .nav-lang-dropdown .lang-modal-body {
+          overflow-y: auto;
+          padding: 10px 0;
+          flex: 1;
+        }
+
+        .nav-lang-dropdown .lang-modal-body::-webkit-scrollbar {
+          width: 4px;
+        }
+
+        .nav-lang-dropdown .lang-modal-body::-webkit-scrollbar-track {
+          background: transparent;
+          margin: 12px 0;
+        }
+
+        .nav-lang-dropdown .lang-modal-body::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.08);
+          border-radius: 10px;
+        }
+
+        .nav-lang-dropdown .lang-modal-body::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-lang-dropdown .lang-item {
+          padding: 12px 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          transition: background 0.15s ease;
+        }
+
+        .nav-lang-dropdown .lang-item:hover {
+          background: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav-lang-dropdown .lang-item-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .nav-lang-dropdown .lang-name-row {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+        }
+
+        .nav-lang-dropdown .lang-name-native {
+          font-size: 14px;
+          font-weight: 500;
+          color: #fff;
+        }
+
+        .nav-lang-dropdown .lang-country-native {
+          font-size: 13px;
+          color: #8b8d91;
+        }
+
+        .nav-lang-dropdown .lang-name-sub {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+          font-size: 12px;
+          color: #8b8d91;
+        }
+
+        .nav-lang-dropdown .lang-checkmark {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background: var(--blue, #0022ff);
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          opacity: 0;
+          transform: scale(0.8);
+          transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .nav-lang-dropdown .lang-item.is-active .lang-checkmark {
+          opacity: 1;
+          transform: scale(1);
         }
       </style>
 
@@ -219,9 +261,10 @@ class FaustNavbar extends HTMLElement {
           </div>
           <div class="nav-right">
             <a id="nav-contacto" href="./index.html#contacto" style="user-select: none !important;">Contacto</a>
-            <a class="btn btn-secondary btn-nav" href="./index.html#aplicar">
+            ${navLangHtml}
+            <a class="${aplicarBtnClass}" href="./index.html#aplicar">
               Aplicar
-              <img class="arrow arrow-light" src="./assets/Icons/button_arrow.svg" alt="">
+              <img class="${arrowClass}" src="./assets/Icons/button_arrow.svg" alt="">
             </a>
           </div>
         </div>
@@ -240,6 +283,60 @@ class FaustNavbar extends HTMLElement {
           internalNav.classList.add('is-active');
         }, 120);
       }
+    }
+
+    if (!isMX) {
+      const navLangBtn = this.querySelector('#nav-lang-btn');
+      const navLangDropdown = this.querySelector('#nav-lang-dropdown');
+
+      if (navLangBtn && navLangDropdown) {
+        navLangBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          navLangDropdown.classList.toggle('is-open');
+        });
+
+        const outsideClickListener = (e) => {
+          if (!this.contains(e.target)) {
+            navLangDropdown.classList.remove('is-open');
+          }
+        };
+        document.addEventListener('click', outsideClickListener);
+        this._outsideClickListener = outsideClickListener;
+      }
+
+      const langItems = this.querySelectorAll('#nav-lang-dropdown .lang-item');
+      langItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const code = item.getAttribute('data-code');
+          const langDef = FAUST_LANGUAGES.find(l => l.code === code);
+          if (langDef) {
+            localStorage.setItem('faust-lang-selection-code', code);
+            localStorage.setItem('faust-lang-native', langDef.lang);
+            if (langDef.country) {
+              localStorage.setItem('faust-lang-country', langDef.country);
+            } else {
+              localStorage.removeItem('faust-lang-country');
+            }
+
+            const cookieCode = getTranslateCodeForSelection(code);
+            if (cookieCode === 'es') {
+              clearTranslateCookie();
+            } else {
+              setTranslateCookie(cookieCode);
+            }
+
+            localStorage.setItem('faust-show-modal-after-reload', 'true');
+
+            const modalBody = this.querySelector('.lang-modal-body');
+            if (modalBody) {
+              localStorage.setItem('faust-modal-scroll-top', modalBody.scrollTop.toString());
+            }
+
+            window.location.reload();
+          }
+        });
+      });
     }
 
     this.initLogoObserver();
@@ -312,7 +409,6 @@ class FaustNavbar extends HTMLElement {
         const visibleLinks = links.filter(link => link.style.display !== 'none');
         
         if (visibleLinks.length <= 2) {
-          // Hide all of them if 2 or fewer remain
           visibleLinks.forEach(link => link.style.display = 'none');
           break;
         }
@@ -347,11 +443,19 @@ class FaustNavbar extends HTMLElement {
     if (this._resizeHandler) {
       window.removeEventListener('resize', this._resizeHandler);
     }
+    if (this._outsideClickListener) {
+      document.removeEventListener('click', this._outsideClickListener);
+    }
   }
 }
 
+
 class FaustFooter extends HTMLElement {
   connectedCallback() {
+    const activeCode = getSelectedCode();
+    const buttonLabel = getButtonLabelHtml(activeCode);
+    const langListHtml = generateLangListHtml(activeCode);
+
     this.innerHTML = `
       <style>
         /* ── Backup styles and variables for standalone/external pages ── */
@@ -467,8 +571,6 @@ class FaustFooter extends HTMLElement {
           position: fixed;
           inset: 0;
           background: rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
           z-index: 2000;
           opacity: 0;
           pointer-events: none;
@@ -614,18 +716,12 @@ class FaustFooter extends HTMLElement {
             opacity: 1 !important;
             visibility: hidden;
             background: rgba(0, 0, 0, 0);
-            backdrop-filter: blur(0px);
-            -webkit-backdrop-filter: blur(0px);
             transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-                        backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-                        -webkit-backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                         visibility 0.3s cubic-bezier(0.25, 1, 0.5, 1);
           }
           .lang-overlay.is-open {
             visibility: visible;
             background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             pointer-events: auto;
           }
           .lang-modal-container {
@@ -698,7 +794,7 @@ class FaustFooter extends HTMLElement {
             <div style="display:flex;gap:20px;align-items:center;">
               <a href="./index.html#" style="text-decoration:underline;color:#fff;">Gestionar cookies</a>
               
-              <span class="lang btn btn-secondary notranslate" translate="no"><img src="./assets/Icons/Globe.svg" alt=""> Español <span style="color: #8B8D91 !important;">España</span></span>
+              <span class="lang btn btn-secondary notranslate" translate="no">${buttonLabel}</span>
               
             </div>
           </div>
@@ -713,196 +809,17 @@ class FaustFooter extends HTMLElement {
               <div class="lang-modal-header">
                 <span>Select your language</span>
               </div>
-            <div class="lang-modal-body">
-              <div class="lang-list">
-                <!-- 1. Español México -->
-                <div class="lang-item" data-lang="Español" data-country="México">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">Español</span>
-                      <span class="lang-country-native">México</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">Spanish</span>
-                      <span class="lang-country-english">Mexico</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
+              <div class="lang-modal-body">
+                <div class="lang-list">
+                  ${langListHtml}
                 </div>
-
-                <!-- 2. Español Latinoamérica -->
-                <div class="lang-item" data-lang="Español" data-country="Latinoamérica">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">Español</span>
-                      <span class="lang-country-native">Latinoamérica</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">Spanish</span>
-                      <span class="lang-country-english">Latin America</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 3. Español España (Active by default) -->
-                <div class="lang-item is-active" data-lang="Español" data-country="España">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">Español</span>
-                      <span class="lang-country-native">España</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">Spanish</span>
-                      <span class="lang-country-english">Spain</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 4. Portugués -->
-                <div class="lang-item" data-lang="Português">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">Português</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">Portuguese</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 5. Inglés UK -->
-                <div class="lang-item" data-lang="English" data-country="UK">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">English</span>
-                      <span class="lang-country-native">UK</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">English</span>
-                      <span class="lang-country-english">United Kingdom</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 6. Inglés USA -->
-                <div class="lang-item" data-lang="English" data-country="US">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">English</span>
-                      <span class="lang-country-native">US</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">English</span>
-                      <span class="lang-country-english">United States</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 7. Francés -->
-                <div class="lang-item" data-lang="Français">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">Français</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">French</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 8. Ruso -->
-                <div class="lang-item" data-lang="Русский">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">Русский</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">Russian</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 9. Mandarín -->
-                <div class="lang-item" data-lang="简体中文">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">简体中文</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">Mandarin Chinese</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- 10. Japonés -->
-                <div class="lang-item" data-lang="日本語">
-                  <div class="lang-item-info">
-                    <div class="lang-name-row">
-                      <span class="lang-name-native">日本語</span>
-                    </div>
-                    <div class="lang-name-sub">
-                      <span class="lang-name-english">Japanese</span>
-                    </div>
-                  </div>
-                  <div class="lang-checkmark">
-                    <svg width="10" height="8" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 5L4.5 8.5L11 1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-
               </div>
             </div>
+            <!-- Botón Listo -->
+            <button class="btn btn-secondary btn-listo">Listo</button>
           </div>
-          <!-- Botón Listo -->
-          <button class="btn btn-secondary btn-listo">Listo</button>
         </div>
       </div>
-    </div>
     `;
 
     this.initGoogleTranslate();
@@ -921,7 +838,6 @@ class FaustFooter extends HTMLElement {
       window.googleTranslateElementInit = () => {
         new google.translate.TranslateElement({
           pageLanguage: 'es',
-          includedLanguages: 'es,pt,en,fr,ru,zh-CN,ja',
           layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false
         }, 'google_translate_element');
@@ -939,33 +855,16 @@ class FaustFooter extends HTMLElement {
   }
 
   getGoogleTranslateCode(lang, country) {
-    if (lang === 'Español') return 'es';
-    if (lang === 'Português') return 'pt';
-    if (lang === 'English') return 'en';
-    if (lang === 'Français') return 'fr';
-    if (lang === 'Русский') return 'ru';
-    if (lang === '简体中文') return 'zh-CN';
-    if (lang === '日本語') return 'ja';
-    return 'es';
+    const code = getSelectedCode();
+    return getTranslateCodeForSelection(code);
   }
 
   setTranslateCookie(code) {
-    const value = `/es/${code}`;
-    const domain = window.location.hostname;
-    document.cookie = `googtrans=${value}; path=/;`;
-    document.cookie = `googtrans=${value}; path=/; domain=${domain};`;
-    if (domain.includes('.')) {
-      document.cookie = `googtrans=${value}; path=/; domain=.${domain};`;
-    }
+    setTranslateCookie(code);
   }
 
   clearTranslateCookie() {
-    const domain = window.location.hostname;
-    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain};`;
-    if (domain.includes('.')) {
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${domain};`;
-    }
+    clearTranslateCookie();
   }
 
   triggerGoogleTranslate(code) {
@@ -1020,26 +919,17 @@ class FaustFooter extends HTMLElement {
 
     if (!langBtn || !overlay || !listoBtn) return;
 
-    const savedNative = localStorage.getItem('faust-lang-native');
-    const savedCountry = localStorage.getItem('faust-lang-country');
+    const activeCode = getSelectedCode();
     
-    this.currentLangNative = savedNative || 'Español';
-    this.currentLangCountry = savedCountry !== null ? savedCountry : (savedNative ? '' : 'España');
-    this.currentLangCode = this.getGoogleTranslateCode(this.currentLangNative, this.currentLangCountry);
-
-    if (savedNative) {
-      const countryText = savedCountry ? ` <span style="color: #8B8D91 !important;">${savedCountry}</span>` : '';
-      langBtn.innerHTML = `<img src="./assets/Icons/Globe.svg" alt=""> ${savedNative}${countryText}`;
-    }
+    this.currentLangCode = getTranslateCodeForSelection(activeCode);
 
     this.triggerGoogleTranslate(this.currentLangCode);
 
     const syncActiveItem = () => {
       const items = this.querySelectorAll('.lang-item');
       items.forEach(item => {
-        const itemNative = item.getAttribute('data-lang');
-        const itemCountry = item.getAttribute('data-country') || '';
-        if (itemNative === this.currentLangNative && itemCountry === this.currentLangCountry) {
+        const code = item.getAttribute('data-code');
+        if (code === activeCode) {
           item.classList.add('is-active');
         } else {
           item.classList.remove('is-active');
@@ -1059,7 +949,6 @@ class FaustFooter extends HTMLElement {
       if (translationTimeout) clearTimeout(translationTimeout);
       if (maxTimeout) clearTimeout(maxTimeout);
 
-      // Deshabilitar botón "Listo"
       listoBtn.disabled = true;
       listoBtn.style.opacity = '0.6';
       listoBtn.style.pointerEvents = 'none';
@@ -1070,10 +959,9 @@ class FaustFooter extends HTMLElement {
         if (translationTimeout) clearTimeout(translationTimeout);
         translationTimeout = setTimeout(() => {
           stopTranslationMonitoring();
-        }, 700); // 700ms sin cambios en el DOM significa que la traducción terminó
+        }, 700);
       };
 
-      // MutationObserver temporal para vigilar cambios en el DOM (traducciones)
       translationObserver = new MutationObserver((mutations) => {
         resetDebounce();
       });
@@ -1084,10 +972,8 @@ class FaustFooter extends HTMLElement {
         characterData: true
       });
 
-      // Primer debounce
       resetDebounce();
 
-      // Timeout de respaldo de 3.5 segundos si la traducción tarda o no reporta cambios
       maxTimeout = setTimeout(() => {
         stopTranslationMonitoring();
       }, 3500);
@@ -1101,24 +987,20 @@ class FaustFooter extends HTMLElement {
       if (translationTimeout) clearTimeout(translationTimeout);
       if (maxTimeout) clearTimeout(maxTimeout);
 
-      // Habilitar botón "Listo"
       listoBtn.disabled = false;
       listoBtn.style.opacity = '';
       listoBtn.style.pointerEvents = '';
       listoBtn.style.cursor = '';
       listoBtn.textContent = 'Listo';
 
-      // Limpiar la bandera de recarga para no reabrir el modal en futuros refrescos manuales
       localStorage.removeItem('faust-show-modal-after-reload');
 
-      // Remover los estilos de recarga sin transiciones
       const noTransStyle = document.getElementById('faust-no-transitions-style');
       if (noTransStyle) {
         noTransStyle.remove();
       }
     };
 
-    // Comprobar si acabamos de recargar para aplicar traducción
     const shouldOpenModal = localStorage.getItem('faust-show-modal-after-reload') === 'true';
     if (shouldOpenModal) {
       syncActiveItem();
@@ -1171,7 +1053,6 @@ class FaustFooter extends HTMLElement {
       overlay.classList.add('is-open');
 
       if (isDesktop) {
-        // Force reflow
         listoBtn.offsetWidth;
         listoBtn.style.transition = 'width 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
         listoBtn.style.width = '100%';
@@ -1218,42 +1099,32 @@ class FaustFooter extends HTMLElement {
         langItems.forEach(i => i.classList.remove('is-active'));
         item.classList.add('is-active');
 
-        const nativeName = item.getAttribute('data-lang');
-        const countryName = item.getAttribute('data-country') || '';
-        const code = this.getGoogleTranslateCode(nativeName, countryName);
+        const code = item.getAttribute('data-code');
+        const langDef = FAUST_LANGUAGES.find(l => l.code === code);
 
-        if (code !== this.currentLangCode || nativeName !== this.currentLangNative || countryName !== this.currentLangCountry) {
-          localStorage.setItem('faust-lang-native', nativeName);
-          if (countryName) {
-            localStorage.setItem('faust-lang-country', countryName);
+        if (langDef && code !== activeCode) {
+          localStorage.setItem('faust-lang-selection-code', code);
+          localStorage.setItem('faust-lang-native', langDef.lang);
+          if (langDef.country) {
+            localStorage.setItem('faust-lang-country', langDef.country);
           } else {
             localStorage.removeItem('faust-lang-country');
           }
 
-          const countryText = countryName ? ` <span style="color: #8B8D91 !important;">${countryName}</span>` : '';
-          langBtn.innerHTML = `<img src="./assets/Icons/Globe.svg" alt=""> ${nativeName}${countryText}`;
-
-          this.currentLangNative = nativeName;
-          this.currentLangCountry = countryName;
-          this.currentLangCode = code;
-
-          // Configurar cookie de Google Translate
-          if (code === 'es') {
-            this.clearTranslateCookie();
-          } else {
-            this.setTranslateCookie(code);
-          }
-
-          // Guardar indicador para reabrir el modal de inmediato tras la recarga
           localStorage.setItem('faust-show-modal-after-reload', 'true');
 
-          // Guardar posición exacta del scroll de la lista de idiomas para que no se pierda al recargar
           const modalBody = this.querySelector('.lang-modal-body');
           if (modalBody) {
             localStorage.setItem('faust-modal-scroll-top', modalBody.scrollTop.toString());
           }
 
-          // Forzar la recarga para que Google Translate inicialice de manera nativa y consistente
+          const cookieCode = getTranslateCodeForSelection(code);
+          if (cookieCode === 'es') {
+            this.clearTranslateCookie();
+          } else {
+            this.setTranslateCookie(cookieCode);
+          }
+
           window.location.reload();
         }
       });
