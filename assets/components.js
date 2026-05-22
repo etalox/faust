@@ -1,3 +1,30 @@
+// Early check to disable page transitions during translation reload
+(function() {
+  if (typeof window !== 'undefined' && window.localStorage && localStorage.getItem('faust-show-modal-after-reload') === 'true') {
+    const style = document.createElement('style');
+    style.id = 'faust-no-transitions-style';
+    style.textContent = `
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+      body {
+        opacity: 1 !important;
+      }
+      .lang-overlay {
+        transition: none !important;
+      }
+      .lang-modal-container {
+        transition: none !important;
+      }
+      .lang-modal {
+        transition: none !important;
+      }
+    `;
+    document.documentElement.appendChild(style);
+  }
+})();
+
 // Auto-protect brand names from translation
 (function() {
   const brandRegex = /Faust\s*Partners™?/gi;
@@ -205,9 +232,14 @@ class FaustNavbar extends HTMLElement {
     if (internalNav) {
       internalNav.offsetHeight; 
 
-      setTimeout(() => {
+      const isReload = localStorage.getItem('faust-show-modal-after-reload') === 'true';
+      if (isReload) {
         internalNav.classList.add('is-active');
-      }, 120);
+      } else {
+        setTimeout(() => {
+          internalNav.classList.add('is-active');
+        }, 120);
+      }
     }
 
     this.initLogoObserver();
@@ -1078,6 +1110,12 @@ class FaustFooter extends HTMLElement {
 
       // Limpiar la bandera de recarga para no reabrir el modal en futuros refrescos manuales
       localStorage.removeItem('faust-show-modal-after-reload');
+
+      // Remover los estilos de recarga sin transiciones
+      const noTransStyle = document.getElementById('faust-no-transitions-style');
+      if (noTransStyle) {
+        noTransStyle.remove();
+      }
     };
 
     // Comprobar si acabamos de recargar para aplicar traducción
@@ -1092,14 +1130,12 @@ class FaustFooter extends HTMLElement {
         listoBtn.style.width = '100%';
       }
 
-      overlay.classList.add('is-open');
-
       const activeItem = this.querySelector('.lang-item.is-active');
       if (activeItem) {
-        setTimeout(() => {
-          activeItem.scrollIntoView({ block: 'center', inline: 'nearest' });
-        }, 50);
+        activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
       }
+
+      overlay.classList.add('is-open');
 
       startTranslationMonitoring();
     }
@@ -1120,14 +1156,12 @@ class FaustFooter extends HTMLElement {
         langBtn.style.pointerEvents = 'none';
       }
 
-      overlay.classList.add('is-open');
-      
       const activeItem = this.querySelector('.lang-item.is-active');
       if (activeItem) {
-        setTimeout(() => {
-          activeItem.scrollIntoView({ block: 'center', inline: 'nearest' });
-        }, 50);
+        activeItem.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'auto' });
       }
+
+      overlay.classList.add('is-open');
 
       if (isDesktop) {
         // Force reflow
