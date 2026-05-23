@@ -7,13 +7,14 @@
     (function() {
       var CODE = 'es-LA';
       var LANG = 'Español';
-      var COUNTRY = 'México';
+      var COUNTRY = 'Mexico';
       var GT_CODE = 'es';
 
       if (window.localStorage) {
         localStorage.setItem('faust-lang-selection-code', CODE);
         localStorage.setItem('faust-lang-native', LANG);
         localStorage.setItem('faust-lang-country', COUNTRY);
+        localStorage.setItem('faust-detected-country-code', 'MX');
       }
 
       var domain = window.location.hostname;

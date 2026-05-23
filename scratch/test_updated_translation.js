@@ -125,8 +125,8 @@ async function runTests() {
   assert(localStorage.getItem('faust-detected-country-code') === 'MX', 'Detected country code should be stored as MX');
   assert(localStorage.getItem('faust-lang-selection-code') === 'es-LA', 'Should select es-LA for Mexican visitors');
   assert(localStorage.getItem('faust-lang-country') === 'Latinoamética', 'Saved country label should be Latinoamética');
-  assert(getDetectedCountryName() === 'México', 'getDetectedCountryName() should resolve to México');
-  assert(getButtonLabelHtml('es-LA').includes('México'), 'Button label should contain México');
+  assert(getDetectedCountryName('en') === 'Mexico', 'getDetectedCountryName() should resolve to Mexico');
+  assert(getButtonLabelHtml('es-LA').includes('Mexico'), 'Button label should contain Mexico');
   assert(!getButtonLabelHtml('es-LA').includes('LATAM'), 'Button label should not contain LATAM');
   assert(global.window.reloaded === false, 'Should NOT reload since es-ES and es-LA share the same base translate code es');
   assert(global.window.dispatchedEvents.length === 1, 'Should dispatch a faust-language-changed event');
@@ -148,8 +148,8 @@ async function runTests() {
 
   await detectCountryByIP();
   assert(localStorage.getItem('faust-detected-country-code') === null, 'No country code from failed IP call');
-  assert(getDetectedCountryName() === 'México', 'getDetectedCountryName should fall back to navigator.language region name (México)');
-  assert(getButtonLabelHtml('es-LA').includes('México'), 'Button label should contain México via browser fallback');
+  assert(getDetectedCountryName('en') === 'Mexico', 'getDetectedCountryName should fall back to navigator.language region name (Mexico)');
+  assert(getButtonLabelHtml('es-LA').includes('Mexico'), 'Button label should contain Mexico via browser fallback');
 
   // Test Case 4: No country detected at all (fails and browser language is just 'es')
   localStorage.clear();
@@ -157,8 +157,8 @@ async function runTests() {
   mockFetchError = new Error('API blocked');
   
   await detectCountryByIP();
-  assert(getDetectedCountryName() === 'Latinoamética', 'Should fall back to Latinoamética if no region is detected');
-  assert(getButtonLabelHtml('es-LA').includes('Latinoamética'), 'Button label should fall back to Latinoamética');
+  assert(getDetectedCountryName('en') === 'Latin America', 'Should fall back to Latin America if no region is detected');
+  assert(getButtonLabelHtml('es-LA').includes('Latin America'), 'Button label should fall back to Latin America');
 
   // Test Case 5: Visited from another LATAM country (e.g. Colombia 'CO')
   localStorage.clear();
@@ -170,7 +170,7 @@ async function runTests() {
 
   await detectCountryByIP();
   assert(localStorage.getItem('faust-detected-country-code') === 'CO', 'Detected country code should be CO');
-  assert(getDetectedCountryName() === 'Colombia', 'getDetectedCountryName() should resolve to Colombia');
+  assert(getDetectedCountryName('en') === 'Colombia', 'getDetectedCountryName() should resolve to Colombia');
   assert(getButtonLabelHtml('es-LA').includes('Colombia'), 'Button label should contain Colombia');
   assert(global.window.reloaded === false, 'Should NOT reload since Colombia is also es-LA');
   assert(global.window.dispatchedEvents.length === 1, 'Should dispatch a faust-language-changed event for Colombia visitor');

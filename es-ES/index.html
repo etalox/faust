@@ -7,13 +7,14 @@
     (function() {
       var CODE = 'es-ES';
       var LANG = 'Español';
-      var COUNTRY = 'España';
+      var COUNTRY = 'Spain';
       var GT_CODE = 'es';
 
       if (window.localStorage) {
         localStorage.setItem('faust-lang-selection-code', CODE);
         localStorage.setItem('faust-lang-native', LANG);
         localStorage.setItem('faust-lang-country', COUNTRY);
+        localStorage.setItem('faust-detected-country-code', 'ES');
       }
 
       var domain = window.location.hostname;
