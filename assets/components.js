@@ -188,13 +188,23 @@ class FaustNavbar extends HTMLElement {
           margin-top: 12px;
           width: 380px;
           max-width: calc(100vw - 32px);
-          display: none;
+          display: flex;
           flex-direction: column;
           z-index: 1000;
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+          transform: translateY(-8px);
+          transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                      transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                      visibility 0.25s;
         }
         
         .nav-lang-dropdown.is-open {
-          display: flex;
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+          transform: translateY(0);
         }
 
         /* Reusing exact modal styles from footer modal */
@@ -314,6 +324,13 @@ class FaustNavbar extends HTMLElement {
         .nav-lang-dropdown .lang-item.is-active .lang-checkmark {
           opacity: 1;
           transform: scale(1);
+        }
+
+        /* Prevent transitions during window resize */
+        body.resize-active .nav-lang-dropdown,
+        body.resize-active .nav-lang-dropdown * {
+          transition: none !important;
+          animation: none !important;
         }
       </style>
 
