@@ -146,18 +146,18 @@ function getBrowserLangCode() {
   return navLang.split('-')[0].toLowerCase();
 }
 
-function getLanguageName(code) {
+function getLanguageName(code, locale) {
+  locale = locale || 'es';
   try {
-    const displayNames = new Intl.DisplayNames(['es'], { type: 'language' });
+    const displayNames = new Intl.DisplayNames([locale], { type: 'language' });
     const name = displayNames.of(code);
     return name.charAt(0).toUpperCase() + name.slice(1);
   } catch (e) {
     const fallbacks = {
-      'en': 'Inglés', 'es': 'Español', 'pt': 'Portugués', 'fr': 'Francés',
-      'de': 'Alemán', 'it': 'Italiano', 'ja': 'Japonés', 'zh': 'Chino',
-      'ru': 'Ruso', 'ko': 'Coreano'
+      'en': { 'en': 'English', 'es': 'Spanish', 'pt': 'Portuguese', 'fr': 'French', 'ru': 'Russian', 'ja': 'Japanese', 'zh': 'Chinese' },
+      'es': { 'en': 'Inglés', 'es': 'Español', 'pt': 'Portugués', 'fr': 'Francés', 'ru': 'Ruso', 'ja': 'Japonés', 'zh': 'Chino' }
     };
-    return fallbacks[code] || code.toUpperCase();
+    return (fallbacks[locale] && fallbacks[locale][code]) || code.toUpperCase();
   }
 }
 
@@ -230,9 +230,10 @@ function generateLangListHtml(activeCode) {
     let nameEnglish = lang.engLang;
     if (lang.code === 'auto') {
       const detectedLangCode = getBrowserLangCode();
-      const detectedName = getLanguageName(detectedLangCode);
-      nameNative = `Automatico (${detectedName})`;
-      nameEnglish = `Automatic (${detectedName})`;
+      const detectedNameNative = getLanguageName(detectedLangCode, 'es');
+      const detectedNameEnglish = getLanguageName(detectedLangCode, 'en');
+      nameNative = `Automatico (${detectedNameNative})`;
+      nameEnglish = `Automatic (${detectedNameEnglish})`;
     }
 
     return `
@@ -257,8 +258,11 @@ function generateLangListHtml(activeCode) {
   }).join('');
 }
 
-function getDetectedCountryName() {
-  if (typeof window === 'undefined' || !window.localStorage) return 'Latinoamética';
+function getDetectedCountryName(locale) {
+  locale = locale || 'en';
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return locale === 'es' ? 'Latinoamética' : 'Latin America';
+  }
   let countryCode = localStorage.getItem('faust-detected-country-code');
   if (!countryCode) {
     if (typeof navigator !== 'undefined') {
@@ -271,31 +275,31 @@ function getDetectedCountryName() {
   }
   if (countryCode) {
     try {
-      const displayNames = new Intl.DisplayNames(['es'], { type: 'region' });
+      const displayNames = new Intl.DisplayNames([locale], { type: 'region' });
       const name = displayNames.of(countryCode);
       if (name) return name;
     } catch (e) {
       // Fallback
     }
   }
-  return 'Latinoamética';
+  return locale === 'es' ? 'Latinoamética' : 'Latin America';
 }
 
 function getButtonLabelHtml(code) {
   if (code === 'auto') {
     const detectedLangCode = getBrowserLangCode();
-    const detectedName = getLanguageName(detectedLangCode);
-    return `<img src="./assets/Icons/Globe.svg" alt=""> Automatico <span style="color: #8B8D91 !important;">(${detectedName})</span>`;
+    const detectedName = getLanguageName(detectedLangCode, 'en');
+    return `<img src="./assets/Icons/Globe.svg" alt=""> Automatic <span style="color: #8B8D91 !important;">(${detectedName})</span>`;
   }
-  const lang = FAUST_LANGUAGES.find(l => l.code === code) || FAUST_LANGUAGES[3]; // Fallback to es-ES
+  const lang = FAUST_LANGUAGES.find(l => l.code === code) || FAUST_LANGUAGES[5]; // Fallback to en-US
   
-  let country = lang.country;
+  let country = lang.engCountry;
   if (code === 'es-LA') {
-    country = getDetectedCountryName();
+    country = getDetectedCountryName('en');
   }
   
   const countryText = country ? ` <span style="color: #8B8D91 !important;">${country}</span>` : '';
-  return `<img src="./assets/Icons/Globe.svg" alt=""> ${lang.lang}${countryText}`;
+  return `<img src="./assets/Icons/Globe.svg" alt=""> ${lang.engLang}${countryText}`;
 }
 
 function setTranslateCookie(code) {
