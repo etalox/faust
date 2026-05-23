@@ -128,7 +128,7 @@
 
 // Global language metadata and helpers
 const FAUST_LANGUAGES = [
-  { code: 'auto', lang: 'Automatico', country: '', engLang: 'Automatic', engCountry: '', gtCode: 'auto' },
+  { code: 'auto', lang: 'Automatic', country: '', engLang: 'Automatic', engCountry: '', gtCode: 'auto' },
   { code: 'es-LA', lang: 'Español', country: 'Latinoamética', engLang: 'Spanish', engCountry: 'Latin America', gtCode: 'es' },
   { code: 'es-ES', lang: 'Español', country: 'España', engLang: 'Spanish', engCountry: 'Spain', gtCode: 'es' },
   { code: 'pt', lang: 'Português', country: '', engLang: 'Portuguese', engCountry: '', gtCode: 'pt' },
