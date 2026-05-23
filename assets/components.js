@@ -69,7 +69,7 @@ class FaustNavbar extends HTMLElement {
 
         .nav::before {
           content: "";
-          position: fixed;
+          position: absolute;
           inset: 0;
           z-index: -1;
           background: rgb(8, 9, 10) !important; 
