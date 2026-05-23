@@ -51,11 +51,20 @@
 
     .logo-lockup,
     .LogoContainer,
-    .footer-logo {
+    .footer-logo,
+    .logos {
       user-select: none !important;
       -webkit-user-select: none !important;
       -moz-user-select: none !important;
       -ms-user-select: none !important;
+      -webkit-user-drag: none !important;
+      user-drag: none !important;
+    }
+    img, svg {
+      -webkit-user-drag: none !important;
+      user-drag: none !important;
+      user-select: none !important;
+      pointer-events: none !important;
     }
 
     .cta .headline,
@@ -451,6 +460,33 @@
       .plan-card .plan-toggle { order: 3; margin-left: auto; }
       #whatsapp-plan-cta { width: 100%; justify-content: center; }
     }
+
+    /* Google Translate Hover Highlight and Tooltip Overrides */
+    .goog-text-highlight {
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .goog-tooltip,
+    .goog-tooltip:hover,
+    #goog-gt-tt,
+    .goog-te-balloon-frame {
+      display: none !important;
+      visibility: hidden !important;
+    }
+    font {
+      background-color: transparent !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    font:hover,
+    font *:hover,
+    .goog-text-highlight:hover,
+    .goog-text-highlight *:hover {
+      background-color: transparent !important;
+      background: transparent !important;
+    }
   </style>
 </head>
 <body>
@@ -468,7 +504,7 @@
   <main>
     <section class="hero wrap" id="aplicar">
       <div class="logo-lockup" id="hero-logo">
-        <img src="./assets/Logotypes/Faust%20Logo.svg" alt="Faust">
+        <img src="./assets/Logotypes/Faust%20Logo.svg" alt="Faust" draggable="false">
         <span>FaustPartners™</span>
       </div>
       <h1>Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
@@ -480,9 +516,9 @@
       <div class="supported">
         <div class="label">Respaldado por</div>
         <div class="logos">
-          <img src="./assets/Logotypes/finsus.svg" alt="Finsus">
-          <img src="./assets/Logotypes/herdez.svg" alt="Herdez">
-          <img src="./assets/Logotypes/mc.svg" alt="MC">
+          <img src="./assets/Logotypes/finsus.svg" alt="Finsus" draggable="false">
+          <img src="./assets/Logotypes/herdez.svg" alt="Herdez" draggable="false">
+          <img src="./assets/Logotypes/mc.svg" alt="MC" draggable="false">
         </div>
       </div>
     </section>

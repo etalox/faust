@@ -91,6 +91,14 @@ class FaustNavbar extends HTMLElement {
           -webkit-user-select: none !important;
           -moz-user-select: none !important;
           -ms-user-select: none !important;
+          -webkit-user-drag: none !important;
+          user-drag: none !important;
+        }
+        img, svg {
+          -webkit-user-drag: none !important;
+          user-drag: none !important;
+          user-select: none !important;
+          pointer-events: none !important;
         }
 
         /* Navbar language selector styles */
@@ -312,7 +320,7 @@ class FaustNavbar extends HTMLElement {
       <nav class="nav">
         <div class="wrap nav-inner">
           <div class="logo-lockup" style="margin:0">
-            <img id="nav-isotipo" class="nav-logo-icon" src="./assets/Logotypes/Faust Logo.svg" alt="Faust">
+            <img id="nav-isotipo" class="nav-logo-icon" src="./assets/Logotypes/Faust Logo.svg" alt="Faust" draggable="false">
             <span id="nav-logo-text">FaustPartners™</span>
           </div>
           <div class="nav-links">
