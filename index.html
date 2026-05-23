@@ -130,7 +130,7 @@
     .gradient-border::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(to bottom, var(--border-top, rgba(255,255,255,.08)), var(--border-bottom, rgba(255,255,255,.02))); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
     .gradient-border-blue { --border-top: rgba(255,255,255,.4); --border-bottom: rgba(255,255,255,.1); }
     .pill { font-size: 16px; color: #8B8D91; margin-bottom: 50px; }
-    .hero { position: relative; overflow: hidden; height: calc(100vh / var(--zoom-factor)); margin-top: calc(-80px / var(--zoom-factor)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; max-width: none !important; width: 100% !important; }
+    .hero { position: relative; overflow: hidden; height: calc(100vh / var(--zoom-factor)); margin-top: calc(-80px / var(--zoom-factor)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; max-width: none !important; width: 100% !important; min-height: 980px;}
     .hero-video-container {
       position: absolute;
       top: 0;
