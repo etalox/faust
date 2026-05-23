@@ -191,17 +191,14 @@ class FaustNavbar extends HTMLElement {
           display: flex;
           flex-direction: column;
           z-index: 1000;
-          opacity: 0;
           visibility: hidden;
           pointer-events: none;
           transform: translateY(-8px);
-          transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1),
-                      transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+          transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
                       visibility 0.25s;
         }
         
         .nav-lang-dropdown.is-open {
-          opacity: 1;
           visibility: visible;
           pointer-events: auto;
           transform: translateY(0);
@@ -209,12 +206,12 @@ class FaustNavbar extends HTMLElement {
 
         /* Reusing exact modal styles from footer modal */
         .nav-lang-dropdown .lang-modal {
-          background: rgba(253, 253, 255, 0.06);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
+          background: rgba(253, 253, 255, 0);
+          backdrop-filter: blur(0px);
+          -webkit-backdrop-filter: blur(0px);
           border: none;
           border-radius: 20px;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0);
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -222,6 +219,28 @@ class FaustNavbar extends HTMLElement {
           /* Preventing CSS leakage from FaustFooter scaleY(0) / opacity 0 */
           transform: none !important;
           opacity: 1 !important;
+          transition: background 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                      backdrop-filter 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                      -webkit-backdrop-filter 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                      box-shadow 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .nav-lang-dropdown.is-open .lang-modal {
+          background: rgba(253, 253, 255, 0.06);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .nav-lang-dropdown .lang-modal-header,
+        .nav-lang-dropdown .lang-modal-body {
+          opacity: 0;
+          transition: opacity 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .nav-lang-dropdown.is-open .lang-modal-header,
+        .nav-lang-dropdown.is-open .lang-modal-body {
+          opacity: 1;
         }
 
         .nav-lang-dropdown .lang-modal-header {
@@ -696,11 +715,12 @@ class FaustFooter extends HTMLElement {
         .lang-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.6);
+          background: rgba(0, 0, 0, 0);
           z-index: 2000;
-          opacity: 0;
+          visibility: hidden;
           pointer-events: none;
-          transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+          transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      visibility 0.3s;
         }
         .lang-overlay-wrap {
           height: 100%;
@@ -711,7 +731,8 @@ class FaustFooter extends HTMLElement {
           box-sizing: border-box;
         }
         .lang-overlay.is-open {
-          opacity: 1;
+          visibility: visible;
+          background: rgba(0, 0, 0, 0.6);
           pointer-events: auto;
         }
         .lang-modal-container {
@@ -728,16 +749,38 @@ class FaustFooter extends HTMLElement {
         }
         .lang-modal {
           flex: 1;
-          background: var(--chip);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
+          background: rgba(253, 253, 255, 0);
+          backdrop-filter: blur(0px);
+          -webkit-backdrop-filter: blur(0px);
           border: none;
           border-radius: 20px;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0);
           display: flex;
           flex-direction: column;
           overflow: hidden;
           min-height: 0;
+          transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      -webkit-backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .lang-overlay.is-open .lang-modal {
+          background: var(--chip);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .lang-modal-header,
+        .lang-modal-body,
+        .btn-listo {
+          opacity: 0;
+          transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .lang-overlay.is-open .lang-modal-header,
+        .lang-overlay.is-open .lang-modal-body,
+        .lang-overlay.is-open .btn-listo {
+          opacity: 1;
         }
         .lang-modal-header {
           padding: 20px 24px;
@@ -839,7 +882,6 @@ class FaustFooter extends HTMLElement {
 
         @media (min-width: 981px) {
           .lang-overlay {
-            opacity: 1 !important;
             visibility: hidden;
             background: rgba(0, 0, 0, 0);
             transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
@@ -857,12 +899,18 @@ class FaustFooter extends HTMLElement {
           .lang-modal {
             transform: scaleY(0);
             transform-origin: bottom;
-            opacity: 0;
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                        background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                        backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                        -webkit-backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                        box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1);
           }
           .lang-overlay.is-open .lang-modal {
             transform: scaleY(1);
-            opacity: 1;
+            background: var(--chip);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
           }
           .btn-listo {
             align-self: flex-end;
