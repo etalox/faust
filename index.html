@@ -84,13 +84,21 @@
       overflow-y: auto;
       overflow-x: hidden;
       height: calc(100vh / var(--zoom-factor));
-      transition: margin-right .6s cubic-bezier(.2,1,.3,1), opacity 0.4s ease-out;
-      
-      opacity: 0;
+      transition: margin-right .6s cubic-bezier(.2,1,.3,1);
     }
 
-    body.is-ready {
+    .page-fade-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 99999;
+      pointer-events: none;
       opacity: 1;
+      transition: opacity 0.4s ease-out;
+    }
+
+    body.is-ready .page-fade-overlay {
+      opacity: 0;
     }
 
     body.pushed-layout { margin-right: 450px; }
@@ -490,6 +498,7 @@
   </style>
 </head>
 <body>
+  <div class="page-fade-overlay"></div>
   <!-- Side Panel -->
   <div id="side-panel" class="side-panel">
     <div class="side-panel-header">
