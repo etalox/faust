@@ -128,7 +128,6 @@
 
 // Global language metadata and helpers
 const FAUST_LANGUAGES = [
-  { code: 'auto', lang: 'Automatic', country: '', engLang: 'Automatic', engCountry: '', gtCode: 'auto' },
   { code: 'es-LA', lang: 'Español', country: 'Latinoamética', engLang: 'Spanish', engCountry: 'Latin America', gtCode: 'es' },
   { code: 'es-ES', lang: 'Español', country: 'España', engLang: 'Spanish', engCountry: 'Spain', gtCode: 'es' },
   { code: 'pt', lang: 'Português', country: '', engLang: 'Portuguese', engCountry: '', gtCode: 'pt' },
@@ -137,7 +136,7 @@ const FAUST_LANGUAGES = [
   { code: 'fr', lang: 'Français', country: '', engLang: 'French', engCountry: '', gtCode: 'fr' },
   { code: 'ru', lang: 'Русский', country: '', engLang: 'Russian', engCountry: '', gtCode: 'ru' },
   { code: 'zh-CN', lang: '简体中文', country: '', engLang: 'Mandarin Chinese', engCountry: '', gtCode: 'zh-CN' },
-  { code: 'ja', lang: '日本語', country: '', engLang: 'Japanese', engCountry: '', gtCode: 'ja' }
+  { code: 'auto', lang: 'Automatic', country: '', engLang: 'Automatic', engCountry: '', gtCode: 'auto' }
 ];
 
 function getBrowserLangCode() {
@@ -154,8 +153,8 @@ function getLanguageName(code, locale) {
     return name.charAt(0).toUpperCase() + name.slice(1);
   } catch (e) {
     const fallbacks = {
-      'en': { 'en': 'English', 'es': 'Spanish', 'pt': 'Portuguese', 'fr': 'French', 'ru': 'Russian', 'ja': 'Japanese', 'zh': 'Chinese' },
-      'es': { 'en': 'Inglés', 'es': 'Español', 'pt': 'Portugués', 'fr': 'Francés', 'ru': 'Ruso', 'ja': 'Japonés', 'zh': 'Chino' }
+      'en': { 'en': 'English', 'es': 'Spanish', 'pt': 'Portuguese', 'fr': 'French', 'ru': 'Russian', 'zh': 'Chinese' },
+      'es': { 'en': 'Inglés', 'es': 'Español', 'pt': 'Portugués', 'fr': 'Francés', 'ru': 'Ruso', 'zh': 'Chino' }
     };
     return (fallbacks[locale] && fallbacks[locale][code]) || code.toUpperCase();
   }
@@ -186,11 +185,10 @@ function getSelectedCode() {
   if (savedNative === 'Français') return 'fr';
   if (savedNative === 'Русский') return 'ru';
   if (savedNative === '简体中文') return 'zh-CN';
-  if (savedNative === '日本語') return 'ja';
   
   // First visit: auto-detect!
   const browserLang = getBrowserLangCode();
-  const covered = ['es', 'pt', 'en', 'fr', 'ru', 'zh', 'ja'];
+  const covered = ['es', 'pt', 'en', 'fr', 'ru', 'zh'];
   if (covered.includes(browserLang)) {
     if (browserLang === 'es') {
       const fullLang = (navigator.language || 'es-ES').toLowerCase();
@@ -206,7 +204,6 @@ function getSelectedCode() {
     if (browserLang === 'fr') return 'fr';
     if (browserLang === 'ru') return 'ru';
     if (browserLang === 'zh') return 'zh-CN';
-    if (browserLang === 'ja') return 'ja';
   }
   
   return 'auto';
@@ -291,7 +288,7 @@ function getButtonLabelHtml(code) {
     const detectedName = getLanguageName(detectedLangCode, 'en');
     return `<img src="./assets/Icons/Globe.svg" alt=""> Automatic <span style="color: #8B8D91 !important;">(${detectedName})</span>`;
   }
-  const lang = FAUST_LANGUAGES.find(l => l.code === code) || FAUST_LANGUAGES[5]; // Fallback to en-US
+  const lang = FAUST_LANGUAGES.find(l => l.code === code) || FAUST_LANGUAGES.find(l => l.code === 'en-US');
   
   let country = lang.engCountry;
   if (code === 'es-LA') {
@@ -417,7 +414,6 @@ function checkUrlLanguage() {
     'fr': { code: 'fr', lang: 'Français', country: '', gtCode: 'fr' },
     'ru': { code: 'ru', lang: 'Русский', country: '', gtCode: 'ru' },
     'zh-cn': { code: 'zh-CN', lang: '简体中文', country: '', gtCode: 'zh-CN' },
-    'ja': { code: 'ja', lang: '日本語', country: '', gtCode: 'ja' },
     'auto': { code: 'auto', lang: 'Automatico', country: '', gtCode: 'auto' }
   };
 
