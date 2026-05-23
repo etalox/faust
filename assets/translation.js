@@ -229,7 +229,7 @@ function generateLangListHtml(activeCode) {
       const detectedLangCode = getBrowserLangCode();
       const detectedNameNative = getLanguageName(detectedLangCode, 'es');
       const detectedNameEnglish = getLanguageName(detectedLangCode, 'en');
-      nameNative = `Automatico (${detectedNameNative})`;
+      nameNative = `Automático (${detectedNameNative})`;
       nameEnglish = `Automatic (${detectedNameEnglish})`;
     }
 
@@ -414,7 +414,7 @@ function checkUrlLanguage() {
     'fr': { code: 'fr', lang: 'Français', country: '', gtCode: 'fr' },
     'ru': { code: 'ru', lang: 'Русский', country: '', gtCode: 'ru' },
     'zh-cn': { code: 'zh-CN', lang: '简体中文', country: '', gtCode: 'zh-CN' },
-    'auto': { code: 'auto', lang: 'Automatico', country: '', gtCode: 'auto' }
+    'auto': { code: 'auto', lang: 'Automatic', country: '', gtCode: 'auto' }
   };
 
   let detected = null;
