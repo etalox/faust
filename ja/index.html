@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Faust Partners</title>
+  <script>
+    (function() {
+      var CODE = 'ja';
+      var LANG = '日本語';
+      var COUNTRY = '';
+      var GT_CODE = 'ja';
+
+      if (window.localStorage) {
+        localStorage.setItem('faust-lang-selection-code', CODE);
+        localStorage.setItem('faust-lang-native', LANG);
+        localStorage.setItem('faust-lang-country', COUNTRY);
+      }
+
+      var cookieVal = '/es/' + GT_CODE;
+      var domain = window.location.hostname;
+      
+      document.cookie = "googtrans=" + cookieVal + "; path=/;";
+      document.cookie = "googtrans=" + cookieVal + "; path=/; domain=" + domain + ";";
+      if (domain.includes('.')) {
+        document.cookie = "googtrans=" + cookieVal + "; path=/; domain=." + domain + ";";
+      }
+
+      window.location.replace('../');
+    })();
+  </script>
+</head>
+<body>
+  Redirecting...
+</body>
+</html>

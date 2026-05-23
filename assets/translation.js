@@ -399,6 +399,73 @@ async function detectCountryByIP() {
   }
 }
 
+// Check URL for language overrides (e.g. ?lang=es-la or #es-la)
+function checkUrlLanguage() {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  
+  const langMappings = {
+    'es-la': { code: 'es-LA', lang: 'Español', country: 'Latinoamética', gtCode: 'es' },
+    'es-mx': { code: 'es-LA', lang: 'Español', country: 'México', gtCode: 'es' },
+    'es-es': { code: 'es-ES', lang: 'Español', country: 'España', gtCode: 'es' },
+    'pt': { code: 'pt', lang: 'Português', country: '', gtCode: 'pt' },
+    'en-gb': { code: 'en-GB', lang: 'English', country: 'UK', gtCode: 'en' },
+    'en-us': { code: 'en-US', lang: 'English', country: 'US', gtCode: 'en' },
+    'fr': { code: 'fr', lang: 'Français', country: '', gtCode: 'fr' },
+    'ru': { code: 'ru', lang: 'Русский', country: '', gtCode: 'ru' },
+    'zh-cn': { code: 'zh-CN', lang: '简体中文', country: '', gtCode: 'zh-CN' },
+    'ja': { code: 'ja', lang: '日本語', country: '', gtCode: 'ja' },
+    'auto': { code: 'auto', lang: 'Automatico', country: '', gtCode: 'auto' }
+  };
+
+  let detected = null;
+
+  // 1. Check query parameters (?lang=...)
+  if (window.location.search) {
+    const params = new URLSearchParams(window.location.search);
+    const langParam = (params.get('lang') || '').toLowerCase();
+    if (langParam && langMappings[langParam]) {
+      detected = langMappings[langParam];
+    }
+  }
+
+  // 2. Check hash (#es-mx)
+  if (!detected && window.location.hash) {
+    const hash = window.location.hash.toLowerCase().replace('#', '').replace(/\//g, '');
+    if (langMappings[hash]) {
+      detected = langMappings[hash];
+    }
+  }
+
+  if (detected) {
+    const currentCode = getSelectedCode();
+    if (currentCode !== detected.code) {
+      localStorage.setItem('faust-lang-selection-code', detected.code);
+      localStorage.setItem('faust-lang-native', detected.lang);
+      localStorage.setItem('faust-lang-country', detected.country);
+
+      const currentCookieCode = getTranslateCodeForSelection(currentCode);
+      const targetCookieCode = detected.gtCode;
+
+      if (currentCookieCode === targetCookieCode) {
+        // Trigger event for dynamic updates without reload
+        window.dispatchEvent(new CustomEvent('faust-language-changed', {
+          detail: { code: detected.code }
+        }));
+      } else {
+        if (targetCookieCode === 'es' || detected.code === 'auto') {
+          clearTranslateCookie();
+        } else {
+          setTranslateCookie(targetCookieCode);
+        }
+        window.location.reload();
+      }
+    }
+  }
+}
+
+// Check URL overrides first
+checkUrlLanguage();
+
 // Start IP detection immediately in the background
 detectCountryByIP();
 
