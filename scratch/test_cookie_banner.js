@@ -31,6 +31,11 @@ class MockElement {
     this.attributes = {};
     this.childNodes = [];
     this._innerHTML = '';
+    this.style = {
+      properties: {},
+      setProperty: (name, val) => { this.style.properties[name] = val; },
+      removeProperty: (name) => { delete this.style.properties[name]; }
+    };
   }
 
   get parentNode() {
@@ -104,6 +109,7 @@ global.window = {
   location: { hostname: 'localhost', pathname: '', reload: () => { global.window.reloaded = true; } },
   localStorage: mockLocalStorage,
   addEventListener: () => {},
+  removeEventListener: () => {},
   reloaded: false
 };
 global.localStorage = mockLocalStorage;
