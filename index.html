@@ -6,7 +6,7 @@
 
   <!-- Tab -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faust Partners™ / Growth Partner Líder en México</title>
+  <title>Faust Partners™ | Growth Partner Líder en México</title>
   <link rel="icon" type="image/png" href="./assets/Icons/tab_icon.png">
 
   <!-- Microsoft Clarity -->
@@ -393,7 +393,7 @@
     }
     .apply-modal {
       flex: 1;
-      background: rgba(253, 253, 255, 0);
+      background: rgba(21, 21, 21, 0.1);
       backdrop-filter: blur(0px);
       -webkit-backdrop-filter: blur(0px);
       border: 1px solid rgba(255, 255, 255, 0.02);
@@ -409,10 +409,10 @@
                   border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
     .apply-overlay.is-open .apply-modal {
-      background: rgba(253, 253, 255, 0.06);
+      background: rgba(21, 21, 21, 0.9);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0);
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
     }
 
@@ -511,7 +511,7 @@
     .apply-input {
       width: 100%;
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.0);
       border-radius: 12px;
       padding: 16px 20px;
       font-size: 16px;
@@ -552,7 +552,7 @@
     .apply-option-item {
       padding: 14px 20px;
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0);
       border-radius: 12px;
       color: #fff;
       font-size: 15px;
@@ -564,19 +564,19 @@
       transition: border-color 0.2s, background-color 0.2s;
     }
     .apply-option-item:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.15);
+      background: var(--chip);
+      color: #fff;
     }
     .apply-option-item.is-selected {
-      border-color: #fff;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 1);
+      color: #000;
     }
     .apply-option-checkmark {
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: #fff;
-      color: #000;
+      background: #141416;
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1106,7 +1106,7 @@
             <!-- Dynamic step contents -->
           </div>
           <div class="apply-modal-footer">
-            <button class="btn btn-secondary btn-apply-back" id="apply-btn-back" style="display: none;">Atrás</button>
+            <button class="btn btn-secondary btn-apply-back" id="apply-btn-back" style="display: none;">Anterior</button>
             <button class="btn btn-primary btn-apply-next" id="apply-btn-next">Siguiente</button>
           </div>
         </div>
