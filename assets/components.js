@@ -1138,8 +1138,8 @@ class FaustFooter extends HTMLElement {
         .cookie-status-badge {
           font-size: 11px;
           font-weight: 600;
-          color: #0022ff;
-          background: rgba(0, 34, 255, 0.15);
+          color: #ffffff;
+          background: #0022ff;
           padding: 4px 8px;
           border-radius: 4px;
           white-space: nowrap;
@@ -1236,10 +1236,17 @@ class FaustFooter extends HTMLElement {
                     <span style="font-size: 15px; font-weight: 600; color: #fff;">Microsoft Clarity</span>
                     <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Para analizar de forma visual e individual la interacción y comportamiento de navegación.</span>
                   </div>
-                  <label class="faust-switch">
-                    <input type="checkbox" id="overlay-cookie-clarity-toggle" ${faustIsClarityEnabled() ? 'checked' : ''}>
-                    <span class="faust-slider"></span>
-                  </label>
+                  ${faustIsStrictRegion() ? `
+                    <label class="faust-switch">
+                      <input type="checkbox" id="overlay-cookie-clarity-toggle" ${faustIsClarityEnabled() ? 'checked' : ''}>
+                      <span class="faust-slider"></span>
+                    </label>
+                  ` : `
+                    <div style="display: flex; align-items: center;">
+                      <span class="cookie-status-badge">Siempre activas</span>
+                      <input type="checkbox" id="overlay-cookie-clarity-toggle" checked style="display: none;">
+                    </div>
+                  `}
                 </div>
 
                 <div style="height: 1px; background: rgba(255, 255, 255, 0.06);"></div>
