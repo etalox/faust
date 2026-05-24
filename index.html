@@ -1486,14 +1486,15 @@
         // Step 3: Gross Monthly Revenue
         render: (data) => {
           const options = [
-            "Menos de MXN $100,000",
-            "MXN $100,000 - MXN $500,000",
-            "MXN $500,000 - MXN $1,500,000",
-            "Más de MXN $1,500,000"
+            "Menos de $1M",
+            "De $1M a $5M",
+            "De $5M a $10M",
+            "De $10M a $50M",
+            "Más de $50M"
           ];
           return `
             <div class="apply-group">
-              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los ingresos brutos mensuales de su empresa.</label>
+              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los ingresos brutos mensuales de su empresa (MXN).</label>
               <div class="apply-options-list">
                 ${options.map(opt => {
                   const selected = data.revenue === opt;
