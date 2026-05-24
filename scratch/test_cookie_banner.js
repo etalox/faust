@@ -239,6 +239,30 @@ assert(localStorage.getItem('faust-cookie-consent-analytics') === 'false', 'Anal
 assert(localStorage.getItem('faust-cookie-consent-clarity') === 'false', 'Clarity should be set to false');
 assert(localStorage.getItem('faust-cookie-consent-choice-made') === 'true', 'Choice made should be set to true');
 
+// Test Case 4.5: Active language selection overrides geolocation, but browser fallback language does not if geolocation is available
+localStorage.clear();
+localStorage.setItem('faust-detected-country-code', 'MX');
+global.navigator.language = 'en-GB'; // strict browser language
+global.getSelectedCode = () => 'es-LA'; // standard active code
+assert(faustIsStrictRegion() === false, 'Mexican geolocation should override strict browser language and return false when active code is standard');
+
+global.getSelectedCode = () => 'en-GB'; // strict active code
+assert(faustIsStrictRegion() === true, 'Strict selected language (en-GB) should force strict mode regardless of Mexican geolocation');
+
+// Test Case 4.7: Strict geolocation (ES) forces strict banner even with non-strict language selection (e.g. pt)
+localStorage.clear();
+localStorage.setItem('faust-detected-country-code', 'ES');
+global.navigator.language = 'pt';
+global.getSelectedCode = () => 'pt';
+global.window.faustGaLoaded = undefined;
+
+mockDocument.body.childNodes = [];
+eval(bannerCode);
+
+banner = mockDocument.getElementById('faust-cookie-banner');
+assert(banner !== null, 'Banner should display for strict region (ES)');
+assert(banner.innerHTML.includes('id="btn-cookie-decline"'), 'Strict banner should have decline button even when language is Portuguese');
+
 // Test Case 5: Footer modal rendering checks
 localStorage.clear();
 localStorage.setItem('faust-detected-country-code', 'MX'); // standard region
