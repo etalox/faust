@@ -415,6 +415,8 @@ class FaustNavbar extends HTMLElement {
           transition: none !important;
           animation: none !important;
         }
+
+
       </style>
 
       <nav class="nav">
@@ -455,25 +457,15 @@ class FaustNavbar extends HTMLElement {
       }
     }
 
-    if (!isLATAM) {
-      const navLangBtn = this.querySelector('#nav-lang-btn');
-      const navLangDropdown = this.querySelector('#nav-lang-dropdown');
+    const navLangBtn = this.querySelector('#nav-lang-btn');
+    const navLangDropdown = this.querySelector('#nav-lang-dropdown');
 
-      if (navLangBtn && navLangDropdown) {
-        navLangBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          navLangDropdown.classList.toggle('is-open');
-        });
-
-        const outsideClickListener = (e) => {
-          if (!this.contains(e.target)) {
-            navLangDropdown.classList.remove('is-open');
-          }
-        };
-        document.addEventListener('click', outsideClickListener);
-        this._outsideClickListener = outsideClickListener;
-      }
+    if (!isLATAM && navLangBtn && navLangDropdown) {
+      navLangBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navLangDropdown.classList.toggle('is-open');
+      });
 
       const langItems = this.querySelectorAll('#nav-lang-dropdown .lang-item');
       langItems.forEach(item => {
@@ -510,6 +502,14 @@ class FaustNavbar extends HTMLElement {
         });
       });
     }
+
+    const outsideClickListener = (e) => {
+      if (!this.contains(e.target)) {
+        if (navLangDropdown) navLangDropdown.classList.remove('is-open');
+      }
+    };
+    document.addEventListener('click', outsideClickListener);
+    this._outsideClickListener = outsideClickListener;
 
     this.initLogoObserver();
     this.initResizeHandler();
@@ -1044,6 +1044,58 @@ class FaustFooter extends HTMLElement {
           transition: none !important;
           animation: none !important;
         }
+
+        /* Cookie Switch Styles */
+        .faust-switch {
+          position: relative;
+          display: inline-block;
+          width: 44px;
+          height: 24px;
+          flex-shrink: 0;
+        }
+        .faust-switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .faust-slider {
+          position: absolute;
+          cursor: pointer;
+          inset: 0;
+          background-color: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 24px;
+          transition: .3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .faust-slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 3px;
+          bottom: 3px;
+          background-color: #8b8d91;
+          border-radius: 50%;
+          transition: .3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .faust-switch input:checked + .faust-slider {
+          background-color: var(--blue, #0022ff);
+          border-color: var(--blue, #0022ff);
+        }
+        .faust-switch input:checked + .faust-slider:before {
+          transform: translateX(20px);
+          background-color: #fff;
+        }
+        .cookie-status-badge {
+          font-size: 11px;
+          font-weight: 600;
+          color: #0022ff;
+          background: rgba(0, 34, 255, 0.15);
+          padding: 4px 8px;
+          border-radius: 4px;
+          white-space: nowrap;
+          align-self: flex-start;
+        }
       </style>
 
       <footer>
@@ -1080,7 +1132,7 @@ class FaustFooter extends HTMLElement {
               <a href="./terms.html">Términos y condiciones</a>
             </div>
             <div style="display:flex;gap:20px;align-items:center;">
-              <a href="./index.html#" style="text-decoration:underline;color:#fff;">Gestionar cookies</a>
+              <a href="#" id="footer-cookie-trigger" style="text-decoration:underline;color:#fff;">Gestionar cookies</a>
               
               <span class="lang btn btn-secondary notranslate" translate="no">${buttonLabel}</span>
               
@@ -1108,11 +1160,101 @@ class FaustFooter extends HTMLElement {
           </div>
         </div>
       </div>
+
+      <!-- Cookie selection modal overlay -->
+      <div class="lang-overlay" id="cookie-menu-overlay">
+        <div class="wrap lang-overlay-wrap">
+          <div class="lang-modal-container" style="max-height: 450px;">
+            <div class="lang-modal notranslate" translate="no" style="min-height: 0; flex: 1;">
+              <div class="lang-modal-header">
+                <span>Configuración de cookies</span>
+              </div>
+              <div class="lang-modal-body" style="padding: 24px; display: flex; flex-direction: column; gap: 20px; text-align: left;">
+                <!-- Esenciales -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 15px; font-weight: 600; color: #fff;">Esenciales</span>
+                    <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Necesarias para el funcionamiento técnico del sitio.</span>
+                  </div>
+                  <span class="cookie-status-badge">Siempre activas</span>
+                </div>
+                
+                <div style="height: 1px; background: rgba(255, 255, 255, 0.06);"></div>
+                
+                <!-- Cookies Analíticas -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 15px; font-weight: 600; color: #fff;">Cookies analíticas</span>
+                    <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Google Analytics y Microsoft Clarity para comprender el uso del sitio y medir visitas.</span>
+                  </div>
+                  <label class="faust-switch">
+                    <input type="checkbox" id="overlay-cookie-analytics-toggle" ${localStorage.getItem('faust-cookie-consent-analytics') === 'true' ? 'checked' : ''}>
+                    <span class="faust-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!-- Botón Guardar en modal -->
+            <button class="btn btn-secondary btn-listo btn-save-cookies-overlay" id="btn-save-cookies-overlay">Guardar preferencias</button>
+          </div>
+        </div>
+      </div>
     `;
 
     this.initGoogleTranslate();
     this.initLanguageModal(wasOpen, savedScrollTop);
+    this.initCookieModal();
     this.initResizeHandler();
+  }
+
+  initCookieModal() {
+    const triggerLink = this.querySelector('#footer-cookie-trigger');
+    const overlay = this.querySelector('#cookie-menu-overlay');
+    const saveBtn = this.querySelector('#btn-save-cookies-overlay');
+
+    if (!triggerLink || !overlay || !saveBtn) return;
+
+    const openCookieModal = (e) => {
+      e.preventDefault();
+      const analyticsChecked = localStorage.getItem('faust-cookie-consent-analytics') === 'true';
+      
+      const analyticsInput = this.querySelector('#overlay-cookie-analytics-toggle');
+      if (analyticsInput) analyticsInput.checked = analyticsChecked;
+
+      overlay.classList.add('is-open');
+    };
+
+    const closeCookieModal = () => {
+      overlay.classList.remove('is-open');
+    };
+
+    triggerLink.addEventListener('click', openCookieModal);
+
+    saveBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const analyticsInput = this.querySelector('#overlay-cookie-analytics-toggle');
+      const analyticsChecked = analyticsInput ? analyticsInput.checked : false;
+
+      const oldAnalytics = localStorage.getItem('faust-cookie-consent-analytics') === 'true';
+
+      localStorage.setItem('faust-cookie-consent-analytics', analyticsChecked ? 'true' : 'false');
+
+      closeCookieModal();
+
+      if (oldAnalytics && !analyticsChecked) {
+        window.location.reload();
+      } else {
+        if (typeof faustInitTrackingScripts === 'function') {
+          faustInitTrackingScripts();
+        }
+      }
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target.classList.contains('lang-overlay-wrap')) {
+        closeCookieModal();
+      }
+    });
   }
 
   initGoogleTranslate() {
@@ -1528,3 +1670,257 @@ customElements.define('faust-footer', FaustFooter);
     console.error("Error al rastrear páginas visitadas:", e);
   }
 })();
+
+/* ── Cookie Consent and Tracking Scripts Initialization ── */
+function faustInitTrackingScripts() {
+  const consentAnalytics = localStorage.getItem('faust-cookie-consent-analytics') === 'true';
+
+  if (consentAnalytics) {
+    if (!window.faustGaLoaded) {
+      const gaScript = document.createElement('script');
+      gaScript.async = true;
+      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+      document.head.appendChild(gaScript);
+      
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){window.dataLayer.push(arguments);}
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-XXXXXXXXXX');
+      
+      window.faustGaLoaded = true;
+    }
+    if (typeof window.clarity === 'function') {
+      window.clarity("consent");
+    }
+  } else {
+    if (typeof window.clarity === 'function') {
+      window.clarity("consent", false);
+    }
+  }
+}
+
+// Run immediately on page load
+try {
+  faustInitTrackingScripts();
+} catch(e) {
+  console.error("Error al inicializar scripts de rastreo:", e);
+}
+
+/* ── Premium Glassmorphic Cookie Consent Banner ── */
+(function() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  
+  const hasConsented = localStorage.getItem('faust-cookie-consent-analytics');
+  if (hasConsented !== null) return; // Already accepted or set via footer
+
+  // Inject styles
+  const style = document.createElement('style');
+  style.textContent = `
+    .cookie-banner-overlay {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                  transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .cookie-banner-overlay.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .cookie-banner-container {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(20, 21, 23, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    .cookie-banner-content {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+
+    .cookie-banner-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.28px;
+    }
+
+    .cookie-banner-text {
+      font-size: 13px;
+      color: #8b8d91;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .btn-cookie-accept {
+      height: 48px;
+      padding: 0 32px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      background: #f2f2f2;
+      color: #161616 !important;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 240ms ease-out, color 240ms ease-out, transform 150ms ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .btn-cookie-accept:hover {
+      background: #0022ff;
+      color: #fff !important;
+    }
+
+    .btn-cookie-accept:active {
+      transform: scale(0.97);
+    }
+
+    @media (max-width: 768px) {
+      .cookie-banner-overlay {
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+      }
+      
+      .cookie-banner-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+        padding: 20px 24px;
+        border-radius: 16px;
+      }
+      
+      .cookie-banner-content {
+        gap: 4px;
+      }
+      
+      .btn-cookie-accept {
+        width: 100%;
+        height: 44px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  const initBanner = () => {
+    if (document.getElementById('faust-cookie-banner')) return;
+
+    const activeCode = (typeof getSelectedCode === 'function') ? getSelectedCode() : 'es-LA';
+
+    const translations = {
+      'es': {
+        title: 'Consentimiento de Cookies',
+        text: 'Utilizamos cookies analíticas para comprender el comportamiento de los visitantes y medir el tráfico del sitio.',
+        accept: 'Aceptar'
+      },
+      'pt': {
+        title: 'Consentimento de Cookies',
+        text: 'Utilizamos cookies de análise para entender o comportamento dos visitantes e medir o tráfego do site.',
+        accept: 'Aceitar'
+      },
+      'en': {
+        title: 'Cookie Consent',
+        text: 'We use analytical cookies to understand visitor behavior and measure website traffic.',
+        accept: 'Accept'
+      },
+      'fr': {
+        title: 'Consentement aux Cookies',
+        text: 'Nous utilisons des cookies analytiques pour comprendre le comportement des visiteurs et mesurer le trafic du site.',
+        accept: 'Accepter'
+      },
+      'ru': {
+        title: 'Согласие на использование файлов cookie',
+        text: 'Мы используем аналитические файлы cookie для анализа поведения посетителей и измерения трафика сайта.',
+        accept: 'Принять'
+      },
+      'zh': {
+        title: 'Cookie 同意书',
+        text: '我们使用分析型 Cookie 来了解访客行为并测量网站流量。',
+        accept: '接受'
+      }
+    };
+
+    let baseLang = 'es';
+    if (activeCode.startsWith('en')) baseLang = 'en';
+    else if (activeCode.startsWith('pt')) baseLang = 'pt';
+    else if (activeCode.startsWith('fr')) baseLang = 'fr';
+    else if (activeCode.startsWith('ru')) baseLang = 'ru';
+    else if (activeCode.startsWith('zh')) baseLang = 'zh';
+
+    const t = translations[baseLang] || translations['es'];
+
+    const overlay = document.createElement('div');
+    overlay.className = 'cookie-banner-overlay';
+    overlay.id = 'faust-cookie-banner';
+
+    overlay.innerHTML = `
+      <div class="cookie-banner-container">
+        <div class="cookie-banner-content">
+          <span class="cookie-banner-title">${t.title}</span>
+          <p class="cookie-banner-text">${t.text}</p>
+        </div>
+        <button class="btn-cookie-accept" id="btn-cookie-accept">${t.accept}</button>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    setTimeout(() => {
+      overlay.classList.add('show');
+    }, 500);
+
+    const acceptBtn = overlay.querySelector('#btn-cookie-accept');
+    acceptBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.setItem('faust-cookie-consent-analytics', 'true');
+      
+      overlay.classList.remove('show');
+      setTimeout(() => {
+        overlay.remove();
+      }, 400);
+
+      if (typeof faustInitTrackingScripts === 'function') {
+        faustInitTrackingScripts();
+      }
+      
+      const overlayCheckbox = document.getElementById('overlay-cookie-analytics-toggle');
+      if (overlayCheckbox) overlayCheckbox.checked = true;
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBanner);
+  } else {
+    initBanner();
+  }
+})();
+
+
