@@ -1734,7 +1734,6 @@ try {
     .cookie-banner-overlay.show {
       opacity: 1;
       transform: translateY(0);
-      pointer-events: auto;
     }
 
     .cookie-banner-container {
@@ -1753,6 +1752,7 @@ try {
       gap: 32px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
       box-sizing: border-box;
+      pointer-events: auto;
     }
 
     .cookie-banner-close {
@@ -1900,7 +1900,8 @@ try {
     const t = translations[baseLang] || translations['es'];
 
     const overlay = document.createElement('div');
-    overlay.className = 'cookie-banner-overlay';
+    overlay.className = 'cookie-banner-overlay notranslate';
+    overlay.setAttribute('translate', 'no');
     overlay.id = 'faust-cookie-banner';
 
     overlay.innerHTML = `
