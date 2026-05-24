@@ -37,7 +37,8 @@ const mockDocument = {
   querySelectorAll: () => [],
   getElementById: () => null,
   addEventListener: () => {},
-  cookie: ''
+  cookie: '',
+  title: 'Faust Partners'
 };
 
 // Mock MutationObserver
@@ -66,7 +67,8 @@ global.window = {
   dispatchEvent: (event) => {
     global.window.dispatchedEvents.push(event);
   },
-  dispatchedEvents: []
+  dispatchedEvents: [],
+  addEventListener: () => {}
 };
 global.localStorage = mockLocalStorage;
 global.document = mockDocument;
