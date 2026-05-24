@@ -1426,7 +1426,7 @@
         // Step 1: Name and Cargo
         render: (data) => `
           <div class="apply-group">
-            <label class="apply-label" for="apply-name">¿Cuál es su nombre?</label>
+            <label class="apply-label" for="apply-name">¿Cuál es su nombre?*</label>
             <input type="text" id="apply-name" class="apply-input" placeholder="Nombre completo" value="${data.name || ''}">
           </div>
           <div class="apply-group" style="margin-top: 24px;">
@@ -1465,7 +1465,7 @@
         // Step 2: Company Name
         render: (data) => `
           <div class="apply-group">
-            <label class="apply-label" for="apply-company">¿Cuál es el nombre de su empresa?</label>
+            <label class="apply-label" for="apply-company">¿Cuál es el nombre de su empresa?*</label>
             <input type="text" id="apply-company" class="apply-input" placeholder="Nombre de la empresa" value="${data.company || ''}">
           </div>
         `,
@@ -1494,7 +1494,7 @@
           ];
           return `
             <div class="apply-group">
-              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los ingresos brutos mensuales de su empresa (MXN).</label>
+              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los ingresos brutos mensuales de su empresa (MXN).*</label>
               <div class="apply-options-list">
                 ${options.map(opt => {
                   const selected = data.revenue === opt;
