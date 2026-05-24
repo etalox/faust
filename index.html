@@ -434,29 +434,13 @@
     }
     .apply-modal-title-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       width: 100%;
     }
     .apply-modal-title-row span {
       font-size: 20px;
       font-weight: 500;
-      color: #fff;
-    }
-    .apply-modal-close {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 28px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.2s;
-    }
-    .apply-modal-close:hover {
       color: #fff;
     }
     .apply-progress-bar {
@@ -632,18 +616,43 @@
       color: #fff;
     }
     .calendar-nav-btn {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 16px;
+      position: relative;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--chip);
+      border: 0 !important;
+      color: var(--fg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 50%;
       cursor: pointer;
-      padding: 4px 10px;
-      border-radius: 8px;
-      transition: background 0.2s, color 0.2s;
+      padding: 0;
+      transition: background 180ms ease-out, color 180ms ease-out, opacity 180ms ease-out;
+    }
+    .calendar-nav-btn::before {
+      content: ''; 
+      position: absolute; 
+      inset: 0;
+      border-radius: 50%; 
+      padding: 1px; 
+      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03)); 
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); 
+      -webkit-mask-composite: xor; 
+      mask-composite: exclude; 
+      pointer-events: none; 
+      transition: opacity 180ms ease-out;
     }
     .calendar-nav-btn:hover {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(238, 238, 241, 0.10);
       color: #fff;
+    }
+    .calendar-nav-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+      pointer-events: none;
     }
     .calendar-weekdays {
       display: grid;
@@ -674,7 +683,8 @@
     .calendar-day:not(.is-past):hover {
       background: rgba(255, 255, 255, 0.06);
     }
-    .calendar-day.is-past {
+    .calendar-day.is-past,
+    .calendar-day.is-weekend {
       color: rgba(255, 255, 255, 0.15);
       cursor: not-allowed;
       pointer-events: none;
@@ -1097,7 +1107,6 @@
           <div class="apply-modal-header">
             <div class="apply-modal-title-row">
               <span>Aplicar</span>
-              <button class="apply-modal-close" id="apply-modal-close-btn" aria-label="Cerrar">&times;</button>
             </div>
             <!-- Progress Line Indicator -->
             <div class="apply-progress-bar" id="apply-progress-bar"></div>
@@ -1345,15 +1354,37 @@
   /* ── Apply Overlay Wizard ── */
   (function() {
     const overlay = document.getElementById('apply-overlay');
-    const closeBtn = document.getElementById('apply-modal-close-btn');
     const modalBody = document.getElementById('apply-modal-body');
     const progressBar = document.getElementById('apply-progress-bar');
     const btnBack = document.getElementById('apply-btn-back');
     const btnNext = document.getElementById('apply-btn-next');
+    const modalFooter = document.querySelector('.apply-modal-footer');
 
-    if (!overlay || !closeBtn || !modalBody || !progressBar || !btnBack || !btnNext) return;
+    if (!overlay || !modalBody || !progressBar || !btnBack || !btnNext || !modalFooter) return;
 
     let currentStep = 0;
+    let pendingBackHeight = null;
+    let mobileBackTimeout = null;
+
+    function triggerPendingBackHeightAdjustment() {
+      if (pendingBackHeight === null) return;
+      const h = pendingBackHeight;
+      pendingBackHeight = null;
+      if (mobileBackTimeout) {
+        clearTimeout(mobileBackTimeout);
+        mobileBackTimeout = null;
+      }
+      adjustModalHeight(h);
+    }
+
+    function cancelPendingBackHeightAdjustment() {
+      pendingBackHeight = null;
+      if (mobileBackTimeout) {
+        clearTimeout(mobileBackTimeout);
+        mobileBackTimeout = null;
+      }
+    }
+
     const formData = {
       name: '',
       role: '',
@@ -1377,20 +1408,35 @@
       ];
       
       const firstDayIndex = new Date(year, month, 1).getDay();
-      let startDay = firstDayIndex - 1;
-      if (startDay < 0) startDay = 6;
+      const startDay = (firstDayIndex + 1) % 7;
       
       const totalDays = new Date(year, month + 1, 0).getDate();
+
+      // Limit navigation: block month prior to current, and more than 3 months in the future
+      const now = new Date();
+      const curYear = now.getFullYear();
+      const curMonth = now.getMonth();
+      
+      const maxDate = new Date(curYear, curMonth + 3, 1);
+      const maxYear = maxDate.getFullYear();
+      const maxMonth = maxDate.getMonth();
+
+      const isPrevDisabled = (year < curYear) || (year === curYear && month <= curMonth);
+      const isNextDisabled = (year > maxYear) || (year === maxYear && month >= maxMonth);
       
       let html = `
         <div class="apply-calendar">
           <div class="calendar-header">
-            <button type="button" class="calendar-nav-btn prev-month" id="calendar-prev-btn">&lt;</button>
+            <button type="button" class="calendar-nav-btn prev-month" id="calendar-prev-btn" ${isPrevDisabled ? 'disabled' : ''}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
             <span class="calendar-month-title">${monthNames[month]} ${year}</span>
-            <button type="button" class="calendar-nav-btn next-month" id="calendar-next-btn">&gt;</button>
+            <button type="button" class="calendar-nav-btn next-month" id="calendar-next-btn" ${isNextDisabled ? 'disabled' : ''}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
           </div>
           <div class="calendar-weekdays">
-            <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+            <div>S</div><div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div>
           </div>
           <div class="calendar-days">
       `;
@@ -1402,12 +1448,14 @@
       for (let day = 1; day <= totalDays; day++) {
         const currentDate = new Date(year, month, day);
         const isPast = currentDate < today;
+        const dayOfWeek = currentDate.getDay();
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
         
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const isSelected = selectedDateStr === dateStr;
         
         html += `
-          <div class="calendar-day ${isPast ? 'is-past' : ''} ${isSelected ? 'is-selected' : ''}" 
+          <div class="calendar-day ${isPast ? 'is-past' : ''} ${isWeekend ? 'is-weekend' : ''} ${isSelected ? 'is-selected' : ''}" 
                data-date="${dateStr}">
             <span>${day}</span>
           </div>
@@ -1429,7 +1477,7 @@
             <label class="apply-label" for="apply-name">¿Cuál es su nombre?*</label>
             <input type="text" id="apply-name" class="apply-input" placeholder="Nombre completo" value="${data.name || ''}">
           </div>
-          <div class="apply-group" style="margin-top: 24px;">
+          <div class="apply-group" id="apply-role-container" style="margin-top: 24px; display: none;">
             <label class="apply-label" for="apply-role">Por favor, seleccione su cargo.</label>
             <select id="apply-role" class="apply-input">
               <option value="" disabled ${!data.role ? 'selected' : ''}>Seleccione su cargo...</option>
@@ -1442,15 +1490,70 @@
           </div>
         `,
         validate: (data) => {
-          return (data.name && data.name.trim().length > 0) && (data.role && data.role !== "");
+          const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
+          const isChinese = activeLang.startsWith('zh');
+          if (isChinese) {
+            return data.name && data.name.trim().length >= 1;
+          } else {
+            return data.name && data.name.trim().length >= 7 && data.name.trim().split(/\s+/).filter(Boolean).length >= 2;
+          }
         },
         bind: (data, updateValid) => {
           const nameInput = document.getElementById('apply-name');
           const roleSelect = document.getElementById('apply-role');
+          const roleContainer = document.getElementById('apply-role-container');
+
+          function checkRoleVisibility(forceNoTransition) {
+            if (!roleContainer) return;
+            const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
+            const isChinese = activeLang.startsWith('zh');
+            const isNameValid = isChinese 
+              ? (data.name && data.name.trim().length >= 1)
+              : (data.name && data.name.trim().length >= 7 && data.name.trim().split(/\s+/).filter(Boolean).length >= 2);
+
+            const shouldShow = isNameValid;
+            const currentlyVisible = roleContainer.style.display !== 'none';
+
+            if (shouldShow && !currentlyVisible) {
+              const container = document.querySelector('.apply-modal-container');
+              const prevHeight = container ? container.offsetHeight : 0;
+              roleContainer.style.display = 'block';
+              if (!forceNoTransition) {
+                adjustModalHeight(prevHeight);
+              }
+            } else if (!shouldShow && currentlyVisible) {
+              const container = document.querySelector('.apply-modal-container');
+              const prevHeight = container ? container.offsetHeight : 0;
+              roleContainer.style.display = 'none';
+              if (!forceNoTransition) {
+                adjustModalHeight(prevHeight);
+              }
+            }
+          }
+
           if (nameInput) {
             nameInput.addEventListener('input', () => {
               data.name = nameInput.value;
+              checkRoleVisibility();
               updateValid();
+            });
+            nameInput.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
+                const isChinese = activeLang.startsWith('zh');
+                const isNameValid = isChinese 
+                  ? (data.name && data.name.trim().length >= 1)
+                  : (data.name && data.name.trim().length >= 7 && data.name.trim().split(/\s+/).filter(Boolean).length >= 2);
+                
+                if (isNameValid) {
+                  if (roleContainer && roleContainer.style.display !== 'none' && roleSelect) {
+                    roleSelect.focus();
+                  } else {
+                    navigateNext();
+                  }
+                }
+              }
             });
           }
           if (roleSelect) {
@@ -1458,7 +1561,15 @@
               data.role = roleSelect.value;
               updateValid();
             });
+            roleSelect.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                navigateNext();
+              }
+            });
           }
+
+          checkRoleVisibility(true);
         }
       },
       {
@@ -1478,6 +1589,12 @@
             companyInput.addEventListener('input', () => {
               data.company = companyInput.value;
               updateValid();
+            });
+            companyInput.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                navigateNext();
+              }
             });
           }
         }
@@ -1596,6 +1713,12 @@
               data.contact = contactInput.value;
               updateValid();
             });
+            contactInput.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                navigateNext();
+              }
+            });
           }
         }
       },
@@ -1622,30 +1745,49 @@
               prevBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
+                const now = new Date();
+                const curYear = now.getFullYear();
+                const curMonth = now.getMonth();
+                if (calendarYear < curYear || (calendarYear === curYear && calendarMonth <= curMonth)) {
+                  return;
+                }
+                const container = document.querySelector('.apply-modal-container');
+                const prevHeight = container ? container.offsetHeight : 0;
                 calendarMonth--;
                 if (calendarMonth < 0) {
                   calendarMonth = 11;
                   calendarYear--;
                 }
                 renderCalendarView();
-                adjustModalHeight();
+                adjustModalHeight(prevHeight);
               });
             }
             if (nextBtn) {
               nextBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
+                const now = new Date();
+                const curYear = now.getFullYear();
+                const curMonth = now.getMonth();
+                const maxDate = new Date(curYear, curMonth + 3, 1);
+                const maxYear = maxDate.getFullYear();
+                const maxMonth = maxDate.getMonth();
+                if (calendarYear > maxYear || (calendarYear === maxYear && calendarMonth >= maxMonth)) {
+                  return;
+                }
+                const container = document.querySelector('.apply-modal-container');
+                const prevHeight = container ? container.offsetHeight : 0;
                 calendarMonth++;
                 if (calendarMonth > 11) {
                   calendarMonth = 0;
                   calendarYear++;
                 }
                 renderCalendarView();
-                adjustModalHeight();
+                adjustModalHeight(prevHeight);
               });
             }
             
-            const dayCells = mount.querySelectorAll('.calendar-day:not(.is-past)');
+            const dayCells = mount.querySelectorAll('.calendar-day:not(.is-past):not(.is-weekend)');
             dayCells.forEach(cell => {
               cell.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1684,6 +1826,57 @@
       });
     }
 
+    const DRAFT_KEY = 'faust-apply-draft';
+
+    function saveFormDraft() {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          formData: formData,
+          currentStep: currentStep
+        }));
+      } catch (e) {
+        console.warn("Failed to save draft:", e);
+      }
+    }
+
+    function loadFormDraft() {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY);
+        if (draft) {
+          const parsed = JSON.parse(draft);
+          if (parsed && parsed.formData) {
+            Object.assign(formData, parsed.formData);
+            if (typeof parsed.currentStep === 'number' && parsed.currentStep >= 0 && parsed.currentStep < steps.length) {
+              currentStep = parsed.currentStep;
+            }
+            if (formData.date) {
+              const parts = formData.date.split('-');
+              if (parts.length === 3) {
+                const y = parseInt(parts[0], 10);
+                const m = parseInt(parts[1], 10) - 1;
+                if (!isNaN(y) && !isNaN(m)) {
+                  calendarYear = y;
+                  calendarMonth = m;
+                }
+              }
+            }
+            return true;
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to load draft:", e);
+      }
+      return false;
+    }
+
+    function clearFormDraft() {
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch (e) {
+        console.warn("Failed to clear draft:", e);
+      }
+    }
+
     function checkValidation() {
       const current = steps[currentStep];
       const isValid = current.validate(formData);
@@ -1692,11 +1885,12 @@
       } else {
         btnNext.setAttribute('disabled', 'true');
       }
+      saveFormDraft();
     }
 
     let heightTransitionTimeout = null;
 
-    function adjustModalHeight() {
+    function adjustModalHeight(prevHeight) {
       const container = document.querySelector('.apply-modal-container');
       if (!container) return;
       
@@ -1705,7 +1899,10 @@
         heightTransitionTimeout = null;
       }
       
-      const prevHeight = container.offsetHeight;
+      if (prevHeight === undefined) {
+        prevHeight = container.offsetHeight;
+      }
+      
       container.style.height = 'auto';
       const targetHeight = container.offsetHeight;
       
@@ -1723,36 +1920,81 @@
       }, 350);
     }
 
-    function renderStep() {
+    function renderStep(isOpening, isBack) {
+      const container = document.querySelector('.apply-modal-container');
+      const prevHeight = (container && !isOpening) ? container.offsetHeight : 0;
       const step = steps[currentStep];
-      modalBody.innerHTML = step.render(formData);
-      step.bind(formData, checkValidation);
-      updateProgressBar();
 
-      if (currentStep === 0) {
-        btnBack.style.display = 'none';
-      } else {
-        btnBack.style.display = 'block';
+      if (prevHeight === 0) {
+        modalBody.innerHTML = step.render(formData);
+        step.bind(formData, checkValidation);
+        updateProgressBar();
+
+        if (currentStep === 0) {
+          btnBack.style.display = 'none';
+        } else {
+          btnBack.style.display = 'block';
+        }
+
+        if (currentStep === steps.length - 1) {
+          btnNext.textContent = 'Enviar';
+        } else {
+          btnNext.textContent = 'Siguiente';
+        }
+
+        checkValidation();
+        if (!isBack) {
+          adjustModalHeight(prevHeight);
+        }
+        
+        const firstInput = modalBody.querySelector('input, select');
+        if (firstInput) {
+          firstInput.focus();
+        }
+        modalBody.style.opacity = '1';
+        saveFormDraft();
+        return;
       }
 
-      if (currentStep === steps.length - 1) {
-        btnNext.textContent = 'Enviar';
-      } else {
-        btnNext.textContent = 'Siguiente';
-      }
-
-      checkValidation();
-      adjustModalHeight();
+      modalBody.style.opacity = '0';
       
-      const firstInput = modalBody.querySelector('input, select');
-      if (firstInput) {
-        firstInput.focus();
-      }
+      setTimeout(() => {
+        modalBody.innerHTML = step.render(formData);
+        step.bind(formData, checkValidation);
+        updateProgressBar();
+
+        if (currentStep === 0) {
+          btnBack.style.display = 'none';
+        } else {
+          btnBack.style.display = 'block';
+        }
+
+        if (currentStep === steps.length - 1) {
+          btnNext.textContent = 'Enviar';
+        } else {
+          btnNext.textContent = 'Siguiente';
+        }
+
+        checkValidation();
+        if (!isBack) {
+          adjustModalHeight(prevHeight);
+        }
+        
+        const firstInput = modalBody.querySelector('input, select');
+        if (firstInput) {
+          firstInput.focus();
+        }
+        
+        modalBody.style.opacity = '1';
+        saveFormDraft();
+      }, 150);
     }
 
     function navigateNext() {
       const current = steps[currentStep];
       if (!current.validate(formData)) return;
+
+      cancelPendingBackHeightAdjustment();
 
       if (currentStep === steps.length - 1) {
         submitForm();
@@ -1764,8 +2006,24 @@
 
     function navigateBack() {
       if (currentStep > 0) {
+        const container = document.querySelector('.apply-modal-container');
+        if (container && pendingBackHeight === null) {
+          pendingBackHeight = container.offsetHeight;
+          container.style.height = pendingBackHeight + 'px';
+        }
+
         currentStep--;
-        renderStep();
+        renderStep(false, true);
+
+        if (mobileBackTimeout) {
+          clearTimeout(mobileBackTimeout);
+          mobileBackTimeout = null;
+        }
+
+        const isMobile = window.innerWidth <= 980 || ('ontouchstart' in window);
+        if (isMobile) {
+          mobileBackTimeout = setTimeout(triggerPendingBackHeightAdjustment, 1000);
+        }
       }
     }
 
@@ -1939,6 +2197,8 @@
         console.error("Error al guardar localmente en localStorage:", e);
       }
 
+      clearFormDraft();
+
       fetch('https://splitforms.com/api/submit', {
         method: 'POST',
         headers: { 
@@ -1971,25 +2231,38 @@
     }
 
     function showSuccessScreen() {
-      progressBar.style.display = 'none';
-      btnBack.style.display = 'none';
-      btnNext.style.display = 'none';
-      
-      modalBody.innerHTML = `
-        <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
-          <div class="apply-success-icon" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px;">✓</div>
-          <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Gracias por aplicar!</h3>
-          <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto con usted o su empresa muy pronto.</p>
-          <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
-            <a class="btn btn-secondary" href="https://wa.me/524428767130?text=Hola%20Faust%20Partners" target="_blank" rel="noopener noreferrer" style="border: 1px solid rgba(255,255,255,0.15) !important;">Escribir un mensaje</a>
-            <button class="btn btn-primary" id="apply-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
+      const container = document.querySelector('.apply-modal-container');
+      const prevHeight = container ? container.offsetHeight : 0;
+
+      const renderContent = () => {
+        progressBar.style.display = 'none';
+        btnBack.style.display = 'none';
+        btnNext.style.display = 'none';
+        
+        modalBody.innerHTML = `
+          <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
+            <div class="apply-success-icon" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px;">✓</div>
+            <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Gracias por aplicar!</h3>
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto con usted o su empresa muy pronto.</p>
+            <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
+              <a class="btn btn-secondary" href="https://wa.me/524428767130?text=Hola%20Faust%20Partners" target="_blank" rel="noopener noreferrer" style="border: 1px solid rgba(255,255,255,0.15) !important;">Escribir un mensaje</a>
+              <button class="btn btn-primary" id="apply-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
+            </div>
           </div>
-        </div>
-      `;
-      
-      document.getElementById('apply-success-close-btn').addEventListener('click', window.closeApplyModal);
-      
-      adjustModalHeight();
+        `;
+        
+        document.getElementById('apply-success-close-btn').addEventListener('click', window.closeApplyModal);
+        
+        adjustModalHeight(prevHeight);
+        modalBody.style.opacity = '1';
+      };
+
+      if (prevHeight === 0) {
+        renderContent();
+      } else {
+        modalBody.style.opacity = '0';
+        setTimeout(renderContent, 150);
+      }
     }
 
     window.resetForm = function() {
@@ -2001,10 +2274,13 @@
       formData.contact = '';
       formData.date = '';
       currentStep = 0;
+      clearFormDraft();
+      cancelPendingBackHeightAdjustment();
     };
 
     window.openApplyModal = function() {
       ensureIpDetected();
+      const isOpening = !overlay.classList.contains('is-open');
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       
@@ -2017,20 +2293,22 @@
       if (checkBlockedState()) {
         showSuccessScreen();
       } else {
-        window.resetForm();
+        const hasDraft = loadFormDraft();
+        if (!hasDraft) {
+          window.resetForm();
+        }
         progressBar.style.display = 'flex';
-        btnBack.style.display = 'block';
         btnNext.style.display = 'block';
-        renderStep();
+        renderStep(isOpening);
       }
     };
 
     window.closeApplyModal = function() {
       overlay.classList.remove('is-open');
       document.body.style.overflow = '';
+      modalBody.style.opacity = '';
+      cancelPendingBackHeightAdjustment();
     };
-
-    closeBtn.addEventListener('click', window.closeApplyModal);
 
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay || e.target.classList.contains('apply-overlay-wrap')) {
@@ -2046,6 +2324,12 @@
 
     btnNext.addEventListener('click', navigateNext);
     btnBack.addEventListener('click', navigateBack);
+    modalFooter.addEventListener('mouseleave', () => {
+      const isMobile = window.innerWidth <= 980 || ('ontouchstart' in window);
+      if (!isMobile) {
+        triggerPendingBackHeightAdjustment();
+      }
+    });
 
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('a, button, .btn');
