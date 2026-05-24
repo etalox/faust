@@ -384,17 +384,36 @@ async function detectCountryByIP() {
   localStorage.setItem('faust-ip-detected', 'true');
 
   try {
-    const response = await fetch('https://ipapi.co/json/');
-    if (!response.ok) throw new Error('Network response not ok');
-    const data = await response.json();
-    if (data.ip) {
-      localStorage.setItem('faust-detected-ip', data.ip);
+    let country = null;
+    let ip = null;
+
+    const services = [
+      { url: 'https://ipapi.co/json/', countryKey: 'country_code', ipKey: 'ip' },
+      { url: 'https://ipinfo.io/json', countryKey: 'country', ipKey: 'ip' }
+    ];
+
+    for (const service of services) {
+      try {
+        const response = await fetch(service.url);
+        if (response.ok) {
+          const data = await response.json();
+          const detectedCountry = (data[service.countryKey] || '').toUpperCase();
+          if (detectedCountry) {
+            country = detectedCountry;
+            ip = data[service.ipKey];
+            break;
+          }
+        }
+      } catch (e) {
+        console.warn('Geolocation detection failed for ' + service.url, e);
+      }
     }
-    const country = (data.country_code || '').toUpperCase();
 
     if (!country) return;
 
-    // Save the detected country code
+    if (ip) {
+      localStorage.setItem('faust-detected-ip', ip);
+    }
     localStorage.setItem('faust-detected-country-code', country);
 
     // If the user already has a saved selection, don't auto-redirect them

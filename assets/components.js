@@ -8,12 +8,19 @@ const strictCountriesList = [
 
 const faustIsStrictRegion = () => {
   if (typeof window === 'undefined') return false;
-  const detectedCountry = (localStorage.getItem('faust-detected-country-code') || '').toUpperCase();
-  if (detectedCountry && strictCountriesList.includes(detectedCountry)) {
+  
+  // Check active language selection code (e.g. if manually switched to en-GB, es-ES, fr)
+  const activeCode = (typeof getSelectedCode === 'function') ? getSelectedCode() : 'es-LA';
+  if (activeCode === 'es-ES' || activeCode === 'en-GB' || activeCode.startsWith('fr')) {
     return true;
   }
   
-  // Check browser language region
+  const detectedCountry = (localStorage.getItem('faust-detected-country-code') || '').toUpperCase();
+  if (detectedCountry) {
+    return strictCountriesList.includes(detectedCountry);
+  }
+  
+  // Check browser language region (fallback if geolocation hasn't loaded or failed)
   const browserLang = (navigator.language || navigator.userLanguage || '');
   const parts = browserLang.split('-');
   if (parts.length > 1) {
@@ -21,12 +28,6 @@ const faustIsStrictRegion = () => {
     if (strictCountriesList.includes(browserCountry)) {
       return true;
     }
-  }
-  
-  // Check active language selection code
-  const activeCode = (typeof getSelectedCode === 'function') ? getSelectedCode() : 'es-LA';
-  if (activeCode === 'es-ES' || activeCode === 'en-GB' || activeCode.startsWith('fr')) {
-    return true;
   }
   
   return false;
@@ -1233,7 +1234,7 @@ class FaustFooter extends HTMLElement {
                 <!-- Microsoft Clarity -->
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                   <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <span style="font-size: 15px; font-weight: 600; color: #fff;">Microsoft Clarity</span>
+                    <span style="font-size: 15px; font-weight: 600; color: #fff;">Seguimiento de navegación</span>
                     <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Para analizar de forma visual e individual la interacción y comportamiento de navegación.</span>
                   </div>
                   ${faustIsStrictRegion() ? `
