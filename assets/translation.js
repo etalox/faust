@@ -31,14 +31,7 @@
   const skipTags = ['SCRIPT', 'STYLE', 'IFRAME', 'NOSCRIPT', 'HEAD', 'META', 'TEXTAREA', 'INPUT'];
 
   function protectTitle() {
-    const titleEl = document.querySelector('title');
-    if (titleEl) {
-      brandRegex.lastIndex = 0;
-      if (brandRegex.test(titleEl.textContent)) {
-        titleEl.classList.add('notranslate');
-        titleEl.setAttribute('translate', 'no');
-      }
-    }
+    // Allow page title (browser tab title) to be translated.
   }
 
   function protectNode(node) {
@@ -339,6 +332,9 @@ async function detectCountryByIP() {
     const response = await fetch('https://ipapi.co/json/');
     if (!response.ok) throw new Error('Network response not ok');
     const data = await response.json();
+    if (data.ip) {
+      localStorage.setItem('faust-detected-ip', data.ip);
+    }
     const country = (data.country_code || '').toUpperCase();
 
     if (!country) return;
@@ -477,6 +473,9 @@ detectCountryByIP();
 
     if (code === 'es') {
       document.documentElement.setAttribute('translate', 'no');
+      if (document.body) {
+        document.body.setAttribute('translate', 'no');
+      }
       if (!document.getElementById(metaId)) {
         const meta = document.createElement('meta');
         meta.id = metaId;
@@ -486,6 +485,9 @@ detectCountryByIP();
       }
     } else {
       document.documentElement.removeAttribute('translate');
+      if (document.body) {
+        document.body.removeAttribute('translate');
+      }
       const meta = document.getElementById(metaId);
       if (meta) {
         meta.remove();
@@ -499,3 +501,113 @@ detectCountryByIP();
     applyNotranslate();
   }
 })();
+
+function initLegalTranslationNotice() {
+  const metaDate = document.querySelector('.meta-date');
+  if (!metaDate) return;
+
+  const existing = document.querySelector('.legal-translation-notice');
+  if (existing) existing.remove();
+
+  const activeCode = getSelectedCode();
+  const gtCode = getTranslateCodeForSelection(activeCode);
+  const isSpanish = (gtCode === 'es');
+
+  if (isSpanish) return;
+
+  let targetLangCode = activeCode;
+  if (activeCode === 'auto') {
+    targetLangCode = getBrowserLangCode();
+  }
+  const langPrefix = targetLangCode.split('-')[0];
+  const targetLangName = getLanguageName(langPrefix, 'es');
+
+  const container = document.createElement('div');
+  container.className = 'legal-translation-notice';
+  container.setAttribute('style', 'background: rgba(253, 253, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 20px 24px; margin-top: 16px; margin-bottom: 32px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);');
+
+  const note = document.createElement('p');
+  note.className = 'translation-note';
+  note.setAttribute('style', 'margin: 0; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; flex: 1 1 300px; font-family: inherit;');
+  note.textContent = 'El contenido de esta página no se ha traducido para mantener precisión legal.';
+
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-secondary translation-request-btn';
+  btn.setAttribute('style', 'margin-left: auto; flex-shrink: 0; padding: 12px 24px !important; font-size: 14px !important; height: 44px !important; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; cursor: pointer; font-family: inherit; overflow: hidden; white-space: nowrap; box-sizing: border-box;');
+
+  const pagePath = window.location.pathname.split('/').pop() || 'privacy.html';
+  const requestKey = `faust-translation-requested-${pagePath}-${targetLangCode}`;
+  const isRequested = localStorage.getItem(requestKey) === 'true';
+
+  const getSuccessText = (prefix) => {
+    const translations = {
+      'es': '✓ Solicitud de traducción recibida',
+      'en': '✓ Translation request received',
+      'pt': '✓ Solicitação de tradução recebida',
+      'fr': '✓ Demande de traduction reçue',
+      'ru': '✓ Запрос на перевод получен',
+      'zh': '✓ 翻译申请已收到',
+      'de': '✓ Übersetzungsanfrage erhalten',
+      'it': '✓ Richiesta di traduzione recibuta'
+    };
+    return translations[prefix] || translations['es'];
+  };
+
+  const successText = getSuccessText(langPrefix);
+
+  if (isRequested) {
+    btn.innerHTML = `<span>${successText}</span>`;
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+  } else {
+    btn.innerHTML = `<span>Solicitar traducción a ${targetLangName}</span>`;
+    btn.addEventListener('click', () => {
+      localStorage.setItem(requestKey, 'true');
+      
+      const oldWidth = btn.getBoundingClientRect().width;
+      btn.style.width = oldWidth + 'px';
+
+      btn.innerHTML = `<span>${successText}</span>`;
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
+
+      btn.style.width = 'auto';
+      const newWidth = btn.getBoundingClientRect().width;
+
+      btn.style.width = oldWidth + 'px';
+      btn.offsetHeight; // force reflow
+
+      btn.style.transition = 'width 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 350ms ease-out';
+      btn.style.width = newWidth + 'px';
+
+      setTimeout(() => {
+        btn.style.width = 'auto';
+        btn.style.transition = '';
+      }, 350);
+    });
+  }
+
+  container.appendChild(note);
+  container.appendChild(btn);
+
+  if (!document.getElementById('legal-translation-styles')) {
+    const style = document.createElement('style');
+    style.id = 'legal-translation-styles';
+    style.textContent = `
+      .translation-request-btn:hover {
+        background: rgba(238, 238, 241, 0.15) !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  metaDate.parentNode.insertBefore(container, metaDate.nextSibling);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLegalTranslationNotice);
+} else {
+  initLegalTranslationNotice();
+}
+
+window.addEventListener('faust-language-changed', initLegalTranslationNotice);

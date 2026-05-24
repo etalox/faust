@@ -53,6 +53,41 @@ class FaustNavbar extends HTMLElement {
 
     this.innerHTML = `
       <style>
+        /* ── Base Styles for Navbar Components ── */
+        .btn { border-radius: 999px; padding: 16px 24px; font-size: 16px; border: 1px solid transparent; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; text-decoration: none; box-sizing: border-box; font-family: inherit; }
+        .btn-primary { background: #f2f2f2; color: #161616 !important; font-weight: 600; transition: background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out; }
+        .btn-primary:hover { background: #0022ff; color: #fff !important; }
+        .btn-primary:hover .arrow { filter: invert(1); }
+        .btn-secondary { 
+          position: relative; 
+          background: var(--chip); 
+          border: 0 !important;
+          color: #f2f2f2; 
+          backdrop-filter: blur(20px); 
+          transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
+        }
+        .btn-secondary::before { 
+          content: ''; 
+          position: absolute; 
+          inset: 0;
+          border-radius: 999px; 
+          padding: 1px; 
+          background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03)); 
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); 
+          -webkit-mask-composite: xor; 
+          mask-composite: exclude; 
+          pointer-events: none; 
+          transition: opacity 180ms ease-out;
+        }
+        .btn-secondary:hover { background: rgba(238, 238, 241, 0.10); color: #fff; }
+        .btn-nav { height: 50px; padding: 18px 20px; font-size: 14px; color: #fff; border-radius: 40px; backdrop-filter: blur(20px); overflow: hidden; }
+        .btn-nav:hover { background: #0022ff; }
+        .btn-secondary::before { transition: opacity 180ms ease-out; }
+        .btn-nav:hover::before { opacity: 0; }
+        
+        .arrow { width: 14px; height: 10px; transition: filter 240ms ease-out; }
+        .arrow-light { filter: invert(1); }
+
         .nav-links a, #nav-contacto {
           transition: opacity 0.2s ease, color 0.2s ease;
         }
@@ -61,6 +96,10 @@ class FaustNavbar extends HTMLElement {
         }
 
         .nav {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+          border-bottom: 1px solid var(--line);
           --nav-transition-dur: 0.5s;
           background: transparent !important;
           backdrop-filter: none !important;
@@ -86,13 +125,38 @@ class FaustNavbar extends HTMLElement {
           -webkit-backdrop-filter: blur(20px) !important;
         }
 
+        .nav-inner { height: 80px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; user-select: none !important; }
+        .nav.nav-contacto-hidden #nav-contacto { display: none; }
+        .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
+
+        @media (max-width: 980px) {
+          .nav { position: fixed; top: 0; left: 0; right: 0; }
+        }
+
         .logo-lockup {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 14px;
+          letter-spacing: .28px;
           user-select: none !important;
           -webkit-user-select: none !important;
           -moz-user-select: none !important;
           -ms-user-select: none !important;
           -webkit-user-drag: none !important;
           user-drag: none !important;
+        }
+        .logo-lockup img {
+          width: 34px;
+          height: 20px;
+        }
+        .nav-logo-icon {
+          transition: filter .45s cubic-bezier(.4,0,.2,1);
+          filter: brightness(0) invert(1);
+        }
+        .nav-logo-icon.is-blue {
+          filter: none;
         }
         img, svg {
           -webkit-user-drag: none !important;
@@ -355,10 +419,10 @@ class FaustNavbar extends HTMLElement {
 
       <nav class="nav">
         <div class="wrap nav-inner">
-          <div class="logo-lockup" style="margin:0">
+          <a class="logo-lockup" href="./index.html" style="margin:0">
             <img id="nav-isotipo" class="nav-logo-icon" src="./assets/Logotypes/Faust Logo.svg" alt="Faust" draggable="false">
             <span id="nav-logo-text">FaustPartners™</span>
-          </div>
+          </a>
           <div class="nav-links">
             <a href="./index.html#estrategia">Estrategia</a>
             <a href="./index.html#resultados">Resultados</a>
@@ -609,6 +673,50 @@ class FaustFooter extends HTMLElement {
           --chip: rgba(253, 253, 255, 0.06);
           --fg: #f2f2f2;
         }
+        
+        footer { border-top: 1px solid var(--line); padding: 80px 0 15px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 80px; }
+        .footer-col h4 { margin: 0 0 24px; font-family: "BDO Grotesk", sans-serif; font-weight: 500; font-size: 18px; color: #fff; }
+        .footer-col a { display: block; color: #7c7f84; margin: 10px 0; font-size: 16px; text-decoration: none; }
+        .footer-col a:hover { color: #fff; }
+        .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; color: #7c7f84; font-size: 16px; }
+        .lang { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 16px 20px; background: var(--chip); color:white; cursor: pointer; }
+        .lang img { width: 16px; height: 16px; }
+
+        @media (max-width: 980px) {
+          .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+          .footer-bottom {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 20px !important;
+            width: 100% !important;
+          }
+
+          .footer-bottom > div:first-child {
+            order: 1 !important;
+            text-align: left !important;
+          }
+
+          .footer-bottom > div:nth-child(2) {
+            order: 2 !important;
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: flex-start !important;
+            flex-wrap: wrap !important;
+            gap: 20px !important;
+            width: 100% !important;
+          }
+
+          .footer-bottom > div:last-child {
+            order: 3 !important;
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+          }
+        }
+
         faust-footer .btn { 
           border-radius: 999px; 
           padding: 16px 24px; 
@@ -968,9 +1076,8 @@ class FaustFooter extends HTMLElement {
           <div class="footer-bottom">
             <div class="footer-logo" style="color: #fff !important;">Faust Partners™ © 2026</div>
             <div style="display:flex;gap:24px;">
-              <a href="./index.html#">Privacidad</a>
-              <a href="./index.html#">Términos y condiciones</a>
-              <a href="./index.html#">Legal</a>
+              <a href="./privacy.html">Privacidad</a>
+              <a href="./terms.html">Términos y condiciones</a>
             </div>
             <div style="display:flex;gap:20px;align-items:center;">
               <a href="./index.html#" style="text-decoration:underline;color:#fff;">Gestionar cookies</a>
@@ -1054,6 +1161,9 @@ class FaustFooter extends HTMLElement {
     if (code === 'es') {
       this.clearTranslateCookie();
       document.documentElement.setAttribute('translate', 'no');
+      if (document.body) {
+        document.body.setAttribute('translate', 'no');
+      }
       if (!document.getElementById(metaId)) {
         const meta = document.createElement('meta');
         meta.id = metaId;
@@ -1064,6 +1174,9 @@ class FaustFooter extends HTMLElement {
     } else {
       this.setTranslateCookie(code);
       document.documentElement.removeAttribute('translate');
+      if (document.body) {
+        document.body.removeAttribute('translate');
+      }
       const meta = document.getElementById(metaId);
       if (meta) {
         meta.remove();
@@ -1374,3 +1487,44 @@ class FaustFooter extends HTMLElement {
 
 customElements.define('faust-navbar', FaustNavbar);
 customElements.define('faust-footer', FaustFooter);
+
+/* ── Cumulative Session Timer ── */
+(function() {
+  let lastSavedTime = Date.now();
+  
+  document.addEventListener('visibilitychange', () => {
+    lastSavedTime = Date.now();
+  });
+  
+  setInterval(() => {
+    const now = Date.now();
+    if (document.visibilityState === 'visible') {
+      const delta = Math.round((now - lastSavedTime) / 1000);
+      if (delta > 0) {
+        const accumulated = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
+        localStorage.setItem('faust-cumulative-session-time', accumulated + delta);
+        lastSavedTime = now;
+      }
+    } else {
+      lastSavedTime = now;
+    }
+  }, 1000);
+})();
+
+/* ── Track Visited Pages ── */
+(function() {
+  try {
+    const visited = JSON.parse(localStorage.getItem('faust-visited-pages') || '[]');
+    let current = window.location.pathname.split('/').pop() || 'index.html';
+    // Clean up empty, root or directory paths to index.html
+    if (current === '' || current === 'es-MX' || current === 'en-US' || current === 'es-LA' || current === 'es-ES' || current === 'en-GB' || current === 'zh-CN' || current === 'pt' || current === 'fr' || current === 'ru') {
+      current = 'index.html';
+    }
+    if (visited.length === 0 || visited[visited.length - 1] !== current) {
+      visited.push(current);
+      localStorage.setItem('faust-visited-pages', JSON.stringify(visited));
+    }
+  } catch (e) {
+    console.error("Error al rastrear páginas visitadas:", e);
+  }
+})();
