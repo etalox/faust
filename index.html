@@ -353,120 +353,355 @@
       }
     }
 
-    /* ── Plan Builder ── */
-    .plan-builder { align-self: stretch; display: flex; flex-direction: column; gap: 40px; }
-    .plan-stack { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
-    .plan-card {
-      align-self: stretch; padding: 40px; background: var(--chip); border-radius: 14px;
-      display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
-      transition: background-color 160ms ease, outline-color 160ms ease;
-      outline: 1px solid transparent; outline-offset: -1px; position: relative;
+    /* ── Apply Form Overlay Wizard ── */
+    .apply-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      z-index: 3000;
+      visibility: hidden;
+      pointer-events: none;
+      transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  visibility 0.3s;
     }
-    .plan-card::after {
-      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.02));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    .apply-overlay.is-open {
+      visibility: visible;
+      background: rgba(0, 0, 0, 0.6);
+      pointer-events: auto;
     }
-    .plan-card.recommended { background: rgba(253,253,255,.03); }
-    .plan-card.is-selected { outline-color: rgba(255,255,255,.06); background: var(--chip); }
-    .plan-card-body { flex: 1 1 0; min-width: 240px; display: flex; align-items: center; gap: 40px; }
-    .plan-content { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-    .plan-title { color: var(--fg); font-size: 16px; font-weight: 500; line-height: 1.3; }
-    .plan-subtitle { color: #8B8D91; font-size: 14px; font-weight: 400; line-height: 1.5; }
-    .plan-price { color: white; font-size: 16px; font-weight: 400; line-height: 1; white-space: nowrap; }
-    .plan-left-state { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; opacity: .9; }
-    .plan-left-state img { width: 16px; height: 16px; object-fit: contain; display: block; }
-    .plan-toggle {
-      width: 52px; height: 36px; border: 0; border-radius: 999px; background: var(--chip);
-      display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
-      transition: background-color 150ms ease, transform 120ms ease; flex-shrink: 0; position: relative;
+    .apply-overlay-wrap {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px !important;
+      box-sizing: border-box;
     }
-    .plan-toggle::before {
-      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    .apply-modal-container {
+      width: 500px;
+      max-width: 100%;
+      height: auto;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  height 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .plan-toggle:hover { background: rgba(238,238,241,.10); }
-    .plan-toggle:active { transform: scale(.97); }
-    .plan-toggle img { width: 12px; height: 12px; object-fit: contain; display: block; pointer-events: none; }
-    .plan-income { justify-content: space-between; }
-    .plan-income-input-wrap {
-      position: relative; height: 52px; padding: 0 20px;
-      background: var(--chip); border-radius: 12px; border: 0;
-      display: inline-flex; align-items: center; gap: 8px; min-width: 176px;
+    .apply-overlay.is-open .apply-modal-container {
+      transform: translateY(0);
     }
-    .plan-income-input-wrap::before {
-      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    .apply-modal {
+      flex: 1;
+      background: rgba(253, 253, 255, 0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      border-radius: 24px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  -webkit-backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .plan-income-input-wrap::after {
-      content: ''; position: absolute; inset: -4px; border-radius: 16px;
-      border: 1px solid transparent; transition: border-color .2s ease; pointer-events: none;
+    .apply-overlay.is-open .apply-modal {
+      background: rgba(253, 253, 255, 0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
     }
-    .plan-income-input-wrap:focus-within::after { border-color: var(--fg); }
-    .plan-income-prefix { color: var(--fg); font-size: 16px; font-weight: 500; line-height: 1; white-space: nowrap; }
-    .plan-income-input {
-      width: 100%; min-width: 84px; background: transparent; border: 0; outline: none;
-      color: rgba(255,255,255,.8); font-size: 16px; font-family: "BDO Grotesk", sans-serif;
-      font-weight: 400; line-height: 1;
-    }
-    .plan-income-input::placeholder { color: rgba(255,255,255,.35); }
-    .plan-recommend { align-self: stretch; display: flex; flex-direction: column; gap: 10px; }
-    .plan-recommend-title { color: var(--muted); font-size: 16px; font-weight: 500; line-height: 1.2; margin-bottom: 10px; }
-    .plan-recommend.is-empty .plan-recommend-title { display: none; }
-    #whatsapp-plan-cta { user-select: none; }
 
-    /* ── Side Panel (base: hidden) ── */
-    .side-panel { display: none; }
+    .apply-modal-header,
+    .apply-modal-body,
+    .apply-modal-footer {
+      opacity: 0;
+      transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .apply-overlay.is-open .apply-modal-header,
+    .apply-overlay.is-open .apply-modal-body,
+    .apply-overlay.is-open .apply-modal-footer {
+      opacity: 1;
+    }
 
-    @media (min-width: 981px) {
-      .desktop-hide-form { display: none !important; }
-      .side-panel {
-        position: fixed; top: 0; bottom: 0; right: 0; width: 450px;
-        background: var(--bg); border-left: 1px solid var(--line); z-index: 100;
-        transform: translateX(100%); transition: transform .6s cubic-bezier(.2,1,.3,1);
-        overflow-y: auto; display: flex; flex-direction: column; gap: 24px;
-        padding-bottom: 80px; scrollbar-width: none; -ms-overflow-style: none;
-      }
-      .side-panel::-webkit-scrollbar { display: none; }
-      .pushed-layout .side-panel { transform: translateX(0); }
-      .side-panel-header { padding: 40px 32px 0; display: flex; justify-content: space-between; align-items: center; }
-      .side-panel-title { color: var(--fg); font-size: 22px; line-height: 1.2; font-weight: 500; }
-      .side-panel-close {
-        width: 40px; height: 40px; background: var(--chip); border: 1px solid var(--line);
-        border-radius: 50%; color: var(--fg); font-size: 20px;
-        display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background .2s;
-      }
-      .side-panel-close:hover { background: rgba(255,255,255,.1); }
-      .side-panel .plan-builder { padding: 0 32px !important; width: 100% !important; max-width: 100% !important; }
-      .side-panel .plan-card { padding: 24px !important; gap: 16px !important; flex-direction: column !important; align-items: flex-start !important; }
-      .side-panel .plan-income { border-radius: 14px !important; }
-      .side-panel .plan-income-input-wrap { width: 100% !important; }
-      .side-panel .plan-card-body { gap: 16px !important; }
-      .side-panel .plan-title { font-size: 16px !important; line-height: 1.3 !important; }
-      .side-panel .plan-subtitle { font-size: 13px !important; }
-      .side-panel #whatsapp-plan-cta { width: 100% !important; margin-top: 20px !important; justify-content: center; }
-      body.pushed-layout .side-panel #side-panel-content { padding-bottom: 100px; }
-      body.pushed-layout h1 .responsive-br br,
-      body.pushed-layout h2 .responsive-br br { display: none; }
-      body.pushed-layout h1 .responsive-br::after,
-      body.pushed-layout h2 .responsive-br::after { content: " "; }
-      body.pushed-layout h1,
-      body.pushed-layout h2 { display: block !important; }
+    .apply-modal-header {
+      padding: 24px 32px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .apply-modal-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .apply-modal-title-row span {
+      font-size: 20px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .apply-modal-close {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+    .apply-modal-close:hover {
+      color: #fff;
+    }
+    .apply-progress-bar {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      margin-top: 16px;
+    }
+    .apply-step-line {
+      flex: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 99px;
+      transition: background 0.3s ease;
+    }
+    .apply-step-line.is-active {
+      background: #fff;
+    }
+    .apply-step-line.is-completed {
+      background: #fff;
+      opacity: 0.6;
+    }
+
+    .apply-modal-body {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .apply-modal-footer {
+      padding: 16px 32px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .apply-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+    .apply-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.4;
+    }
+    .apply-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 16px;
+      color: #fff;
+      font-family: inherit;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .apply-input:focus {
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    select.apply-input {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      padding-right: 50px;
+      cursor: pointer;
+    }
+    select.apply-input option {
+      background: #141416;
+      color: #fff;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+
+    .apply-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+    .apply-option-item {
+      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .apply-option-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .apply-option-item.is-selected {
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .apply-option-checkmark {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .apply-option-item.is-selected .apply-option-checkmark {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Next Button Visually Disabled & Animations */
+    .btn-apply-next {
+      transition: background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                  transform 0.2s ease;
+    }
+    .btn-apply-next:active {
+      transform: scale(0.98);
+    }
+    .btn-apply-next:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.03) !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+      color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    /* Custom Calendar Component Styles */
+    .apply-calendar {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .calendar-month-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .calendar-nav-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .calendar-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 8px;
+    }
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      row-gap: 6px;
+    }
+    .calendar-day, .calendar-day-empty {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: #fff;
+      transition: background 0.2s, border-color 0.2s;
+      border: 1px solid transparent;
+    }
+    .calendar-day:not(.is-past):hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .calendar-day.is-past {
+      color: rgba(255, 255, 255, 0.15);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .calendar-day.is-selected {
+      border-color: #fff !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      font-weight: 600;
     }
 
     @media (max-width: 980px) {
-      .plan-card { padding: 24px 20px; gap: 20px; }
-      .plan-card-body { gap: 20px; }
-      .plan-content { min-width: 0; }
-      .plan-card .plan-card-body { flex-basis: 100%; }
-      .plan-card .plan-price { order: 2; }
-      .plan-card .plan-toggle { order: 3; margin-left: auto; }
-      #whatsapp-plan-cta { width: 100%; justify-content: center; }
+      .apply-modal-container {
+        width: 100%;
+        height: auto;
+        max-height: calc(100vh - 40px);
+        margin: 20px 0;
+      }
+      .apply-modal-body {
+        padding: 24px;
+        justify-content: flex-start;
+      }
+      .apply-modal-header {
+        padding: 20px 24px 12px;
+      }
+      .apply-modal-footer {
+        padding: 12px 24px 20px;
+      }
     }
 
     /* Google Translate Hover Highlight and Tooltip Overrides */
@@ -499,14 +734,7 @@
 </head>
 <body>
   <div class="page-fade-overlay"></div>
-  <!-- Side Panel -->
-  <div id="side-panel" class="side-panel">
-    <div class="side-panel-header">
-      <div class="side-panel-title">Personalizar plan</div>
-      <button class="side-panel-close" aria-label="Cerrar panel">&times;</button>
-    </div>
-    <div id="side-panel-content"></div>
-  </div>
+
 
   <faust-navbar></faust-navbar>
 
@@ -853,74 +1081,38 @@
             <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
             <a class="btn btn-secondary" href="#contacto"><span class="hide-mobile">Escribir un mensaje</span><span class="show-mobile">Contacto</span></a>
           </div>
-          <div id="plan-builder-mount" class="desktop-hide-form" style="width:100%;max-width:800px;text-align:left;">
-            <div class="plan-builder">
-              <div class="plan-stack plan-sortable">
-                <div class="plan-card plan-income">
-                  <div style="flex:1 1 0;min-width:240px;flex-direction:column;justify-content:center;align-items:flex-start;gap:10px;display:inline-flex">
-                    <div class="plan-title">¿Cuál es el Ingreso Bruto Mensual aproximado de su empresa?</div>
-                    <div class="plan-subtitle">Min. MX 900k</div>
-                  </div>
-                  <label class="plan-income-input-wrap" for="monthly-income">
-                    <span class="plan-income-prefix">MXN</span>
-                    <input id="monthly-income" class="plan-income-input" type="text" inputmode="numeric" autocomplete="off" placeholder="1,000,000">
-                  </label>
-                </div>
-                <div class="plan-card is-selected plan-service" data-plan-id="web-dev" data-selected="true" data-price="0">
-                  <div class="plan-card-body">
-                    <span class="plan-left-state" aria-hidden="true"><img src="./assets/Icons/check.svg" alt=""></span>
-                    <div class="plan-content">
-                      <div class="plan-title">Prototipado y Desarrollo Web</div>
-                      <div class="plan-subtitle plan-description">Prototipado de alta fidelidad y desarrollo/actualización de la plataforma web</div>
-                    </div>
-                  </div>
-                  <div class="plan-price">Sin costo</div>
-                  <button class="plan-toggle" type="button" aria-label="Excluir servicio">
-                    <img src="./assets/Icons/cross.svg" alt="" width="12" height="12">
-                  </button>
-                </div>
-                <div class="plan-card is-selected plan-service" data-plan-id="marketing" data-selected="true" data-price="0">
-                  <div class="plan-card-body">
-                    <span class="plan-left-state" aria-hidden="true"><img src="./assets/Icons/check.svg" alt=""></span>
-                    <div class="plan-content">
-                      <div class="plan-title">Gestión de Marketing Digital</div>
-                      <div class="plan-subtitle plan-description">Gestión completa de estrategias de marketing digital</div>
-                    </div>
-                  </div>
-                  <div class="plan-price">Sin costo</div>
-                  <button class="plan-toggle" type="button" aria-label="Excluir servicio">
-                    <img src="./assets/Icons/cross.svg" alt="" width="12" height="12">
-                  </button>
-                </div>
-              </div>
-              <div class="plan-recommend plan-sortable">
-                <div class="plan-recommend-title">Disponible para incluir</div>
-                <div class="plan-card recommended plan-service" data-plan-id="faust-max" data-selected="false" data-price="265000">
-                  <div class="plan-card-body">
-                    <span class="plan-left-state" aria-hidden="true"><img src="./assets/Icons/dash.svg" alt=""></span>
-                    <div class="plan-content">
-                      <div class="plan-title">Faust.Max™ Plan Empresarial Inteligente</div>
-                      <div class="plan-subtitle plan-description">Experimentación controlada, análisis de datos y mejoras iterativas de la plataforma web.</div>
-                    </div>
-                  </div>
-                  <div class="plan-price">MXN 265,000</div>
-                  <button class="plan-toggle" type="button" aria-label="Añadir servicio">
-                    <img src="./assets/Icons/plus.svg" alt="" width="12" height="12">
-                  </button>
-                </div>
-              </div>
-              <div id="whatsapp-plan-cta" class="btn btn-primary" style="align-self:center;cursor:pointer;">
-                <span id="plan-cta-text">Obtener plan por $0</span>
-                <img class="arrow" src="./assets/Icons/button_arrow.svg" alt="">
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </section>
   </main>
 
   <faust-footer></faust-footer>
+
+  <!-- Apply Form Overlay Wizard -->
+  <div class="apply-overlay" id="apply-overlay">
+    <div class="wrap apply-overlay-wrap">
+      <div class="apply-modal-container">
+        <div class="apply-modal notranslate" translate="no">
+          <div class="apply-modal-header">
+            <div class="apply-modal-title-row">
+              <span>Aplicar</span>
+              <button class="apply-modal-close" id="apply-modal-close-btn" aria-label="Cerrar">&times;</button>
+            </div>
+            <!-- Progress Line Indicator -->
+            <div class="apply-progress-bar" id="apply-progress-bar"></div>
+          </div>
+          <div class="apply-modal-body" id="apply-modal-body">
+            <!-- Dynamic step contents -->
+          </div>
+          <div class="apply-modal-footer">
+            <button class="btn btn-secondary btn-apply-back" id="apply-btn-back" style="display: none;">Atrás</button>
+            <button class="btn btn-primary btn-apply-next" id="apply-btn-next">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
 
@@ -1146,195 +1338,721 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('wheel', onScroll, { passive: true });
     window.addEventListener('touchmove', onScroll, { passive: true });
-    var sp = document.getElementById('side-panel');
+    var sp = document.getElementById('apply-modal-body');
     if (sp) sp.addEventListener('scroll', onScroll, { passive: true });
   })();
 
-  /* ── Side Pane ── */
+  /* ── Apply Overlay Wizard ── */
   (function() {
-    var panel = document.getElementById('side-panel');
-    var panelContent = document.getElementById('side-panel-content');
-    var mount = document.getElementById('plan-builder-mount');
-    var closeBtn = document.querySelector('.side-panel-close');
-    if (!panel || !panelContent || !mount || !closeBtn) return;
-    var builder = mount.querySelector('.plan-builder');
-    var BREAKPOINT = 981;
+    const overlay = document.getElementById('apply-overlay');
+    const closeBtn = document.getElementById('apply-modal-close-btn');
+    const modalBody = document.getElementById('apply-modal-body');
+    const progressBar = document.getElementById('apply-progress-bar');
+    const btnBack = document.getElementById('apply-btn-back');
+    const btnNext = document.getElementById('apply-btn-next');
 
-    function isDesktop() { return window.innerWidth >= BREAKPOINT; }
+    if (!overlay || !closeBtn || !modalBody || !progressBar || !btnBack || !btnNext) return;
 
-    function syncLayout() {
-      if (isDesktop()) {
-        if (builder && !panelContent.contains(builder)) panelContent.appendChild(builder);
+    let currentStep = 0;
+    const formData = {
+      name: '',
+      role: '',
+      company: '',
+      revenue: '',
+      teams: [],
+      contact: '',
+      date: ''
+    };
+
+    let calendarYear = new Date().getFullYear();
+    let calendarMonth = new Date().getMonth();
+
+    function buildCalendarHTML(year, month, selectedDateStr) {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      
+      const monthNames = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      ];
+      
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      let startDay = firstDayIndex - 1;
+      if (startDay < 0) startDay = 6;
+      
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      
+      let html = `
+        <div class="apply-calendar">
+          <div class="calendar-header">
+            <button type="button" class="calendar-nav-btn prev-month" id="calendar-prev-btn">&lt;</button>
+            <span class="calendar-month-title">${monthNames[month]} ${year}</span>
+            <button type="button" class="calendar-nav-btn next-month" id="calendar-next-btn">&gt;</button>
+          </div>
+          <div class="calendar-weekdays">
+            <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+          </div>
+          <div class="calendar-days">
+      `;
+      
+      for (let i = 0; i < startDay; i++) {
+        html += `<div class="calendar-day-empty"></div>`;
+      }
+      
+      for (let day = 1; day <= totalDays; day++) {
+        const currentDate = new Date(year, month, day);
+        const isPast = currentDate < today;
+        
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const isSelected = selectedDateStr === dateStr;
+        
+        html += `
+          <div class="calendar-day ${isPast ? 'is-past' : ''} ${isSelected ? 'is-selected' : ''}" 
+               data-date="${dateStr}">
+            <span>${day}</span>
+          </div>
+        `;
+      }
+      
+      html += `
+          </div>
+        </div>
+      `;
+      return html;
+    }
+
+    const steps = [
+      {
+        // Step 1: Name and Cargo
+        render: (data) => `
+          <div class="apply-group">
+            <label class="apply-label" for="apply-name">¿Cuál es su nombre?</label>
+            <input type="text" id="apply-name" class="apply-input" placeholder="Nombre completo" value="${data.name || ''}">
+          </div>
+          <div class="apply-group" style="margin-top: 24px;">
+            <label class="apply-label" for="apply-role">Por favor, seleccione su cargo.</label>
+            <select id="apply-role" class="apply-input">
+              <option value="" disabled ${!data.role ? 'selected' : ''}>Seleccione su cargo...</option>
+              <option value="Director General / CEO" ${data.role === 'Director General / CEO' ? 'selected' : ''}>Director General / CEO</option>
+              <option value="Director de Tecnología / CTO" ${data.role === 'Director de Tecnología / CTO' ? 'selected' : ''}>Director de Tecnología / CTO</option>
+              <option value="Director de Marketing / CMO" ${data.role === 'Director de Marketing / CMO' ? 'selected' : ''}>Director de Marketing / CMO</option>
+              <option value="Socio / Partner" ${data.role === 'Socio / Partner' ? 'selected' : ''}>Socio / Partner</option>
+              <option value="Otro" ${data.role === 'Otro' ? 'selected' : ''}>Otro</option>
+            </select>
+          </div>
+        `,
+        validate: (data) => {
+          return (data.name && data.name.trim().length > 0) && (data.role && data.role !== "");
+        },
+        bind: (data, updateValid) => {
+          const nameInput = document.getElementById('apply-name');
+          const roleSelect = document.getElementById('apply-role');
+          if (nameInput) {
+            nameInput.addEventListener('input', () => {
+              data.name = nameInput.value;
+              updateValid();
+            });
+          }
+          if (roleSelect) {
+            roleSelect.addEventListener('change', () => {
+              data.role = roleSelect.value;
+              updateValid();
+            });
+          }
+        }
+      },
+      {
+        // Step 2: Company Name
+        render: (data) => `
+          <div class="apply-group">
+            <label class="apply-label" for="apply-company">¿Cuál es el nombre de su empresa?</label>
+            <input type="text" id="apply-company" class="apply-input" placeholder="Nombre de la empresa" value="${data.company || ''}">
+          </div>
+        `,
+        validate: (data) => {
+          return data.company && data.company.trim().length > 0;
+        },
+        bind: (data, updateValid) => {
+          const companyInput = document.getElementById('apply-company');
+          if (companyInput) {
+            companyInput.addEventListener('input', () => {
+              data.company = companyInput.value;
+              updateValid();
+            });
+          }
+        }
+      },
+      {
+        // Step 3: Gross Monthly Revenue
+        render: (data) => {
+          const options = [
+            "Menos de MXN $100,000",
+            "MXN $100,000 - MXN $500,000",
+            "MXN $500,000 - MXN $1,500,000",
+            "Más de MXN $1,500,000"
+          ];
+          return `
+            <div class="apply-group">
+              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los ingresos brutos mensuales de su empresa.</label>
+              <div class="apply-options-list">
+                ${options.map(opt => {
+                  const selected = data.revenue === opt;
+                  return `
+                    <div class="apply-option-item ${selected ? 'is-selected' : ''}" data-value="${opt}">
+                      <span>${opt}</span>
+                      <div class="apply-option-checkmark">✓</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        },
+        validate: (data) => {
+          return !!data.revenue;
+        },
+        bind: (data, updateValid) => {
+          const items = document.querySelectorAll('.apply-option-item');
+          items.forEach(item => {
+            item.addEventListener('click', () => {
+              items.forEach(el => el.classList.remove('is-selected'));
+              item.classList.add('is-selected');
+              data.revenue = item.getAttribute('data-value');
+              updateValid();
+              setTimeout(() => {
+                if (currentStep === 2) {
+                  navigateNext();
+                }
+              }, 200);
+            });
+          });
+        }
+      },
+      {
+        // Step 4: Available Teams (optional)
+        render: (data) => {
+          const options = [
+            "Diseño UX/UI",
+            "Desarrollo Front-End",
+            "Marketing Digital",
+            "Análisis de Datos"
+          ];
+          const selectedTeams = data.teams || [];
+          return `
+            <div class="apply-group">
+              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los equipos de su empresa con disponibilidad para colaborar con el nuestro (opcional)</label>
+              <div class="apply-options-list">
+                ${options.map(opt => {
+                  const selected = selectedTeams.includes(opt);
+                  return `
+                    <div class="apply-option-item ${selected ? 'is-selected' : ''}" data-value="${opt}">
+                      <span>${opt}</span>
+                      <div class="apply-option-checkmark">✓</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        },
+        validate: (data) => {
+          return true;
+        },
+        bind: (data, updateValid) => {
+          const items = document.querySelectorAll('.apply-option-item');
+          if (!data.teams) data.teams = [];
+          items.forEach(item => {
+            item.addEventListener('click', () => {
+              const val = item.getAttribute('data-value');
+              const idx = data.teams.indexOf(val);
+              if (idx > -1) {
+                data.teams.splice(idx, 1);
+                item.classList.remove('is-selected');
+              } else {
+                data.teams.push(val);
+                item.classList.add('is-selected');
+              }
+              updateValid();
+            });
+          });
+        }
+      },
+      {
+        // Step 5: Contact Info
+        render: (data) => `
+          <div class="apply-group">
+            <label class="apply-label" for="apply-contact">Por favor, ingrese un correo electrónico o número de contacto.</label>
+            <input type="text" id="apply-contact" class="apply-input" placeholder="correo@empresa.com o número telefónico" value="${data.contact || ''}">
+          </div>
+        `,
+        validate: (data) => {
+          return data.contact && data.contact.trim().length > 0;
+        },
+        bind: (data, updateValid) => {
+          const contactInput = document.getElementById('apply-contact');
+          if (contactInput) {
+            contactInput.addEventListener('input', () => {
+              data.contact = contactInput.value;
+              updateValid();
+            });
+          }
+        }
+      },
+      {
+        // Step 6: Date (optional)
+        render: (data) => `
+          <div class="apply-group">
+            <label class="apply-label" style="margin-bottom: 8px;">Seleccione una fecha para agendar una llamada o videoconferencia (opcional).</label>
+            <div id="apply-calendar-mount"></div>
+          </div>
+        `,
+        validate: (data) => {
+          return true;
+        },
+        bind: (data, updateValid) => {
+          function renderCalendarView() {
+            const mount = document.getElementById('apply-calendar-mount');
+            if (!mount) return;
+            mount.innerHTML = buildCalendarHTML(calendarYear, calendarMonth, data.date);
+            
+            const prevBtn = document.getElementById('calendar-prev-btn');
+            const nextBtn = document.getElementById('calendar-next-btn');
+            if (prevBtn) {
+              prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                calendarMonth--;
+                if (calendarMonth < 0) {
+                  calendarMonth = 11;
+                  calendarYear--;
+                }
+                renderCalendarView();
+                adjustModalHeight();
+              });
+            }
+            if (nextBtn) {
+              nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                calendarMonth++;
+                if (calendarMonth > 11) {
+                  calendarMonth = 0;
+                  calendarYear++;
+                }
+                renderCalendarView();
+                adjustModalHeight();
+              });
+            }
+            
+            const dayCells = mount.querySelectorAll('.calendar-day:not(.is-past)');
+            dayCells.forEach(cell => {
+              cell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const selectedDate = cell.getAttribute('data-date');
+                data.date = selectedDate;
+                
+                mount.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('is-selected'));
+                cell.classList.add('is-selected');
+                
+                updateValid();
+              });
+            });
+          }
+          
+          renderCalendarView();
+        }
+      }
+    ];
+
+    progressBar.innerHTML = '';
+    for (let i = 0; i < steps.length; i++) {
+      const line = document.createElement('div');
+      line.className = 'apply-step-line';
+      progressBar.appendChild(line);
+    }
+
+    function updateProgressBar() {
+      const lines = progressBar.querySelectorAll('.apply-step-line');
+      lines.forEach((line, idx) => {
+        line.classList.remove('is-active', 'is-completed');
+        if (idx < currentStep) {
+          line.classList.add('is-completed');
+        } else if (idx === currentStep) {
+          line.classList.add('is-active');
+        }
+      });
+    }
+
+    function checkValidation() {
+      const current = steps[currentStep];
+      const isValid = current.validate(formData);
+      if (isValid) {
+        btnNext.removeAttribute('disabled');
       } else {
-        if (builder && !mount.contains(builder)) mount.appendChild(builder);
-        document.body.classList.remove('pushed-layout', 'sidebar-closing');
+        btnNext.setAttribute('disabled', 'true');
       }
     }
 
-    function openSidebar() {
-      if (document.body.classList.contains('pushed-layout')) return;
-      if (isDesktop()) {
-        document.body.classList.remove('sidebar-closing');
-        document.body.classList.add('pushed-layout');
-        window.dispatchEvent(new Event('resize'));
-        setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 650);
+    let heightTransitionTimeout = null;
+
+    function adjustModalHeight() {
+      const container = document.querySelector('.apply-modal-container');
+      if (!container) return;
+      
+      if (heightTransitionTimeout) {
+        clearTimeout(heightTransitionTimeout);
+        heightTransitionTimeout = null;
+      }
+      
+      const prevHeight = container.offsetHeight;
+      container.style.height = 'auto';
+      const targetHeight = container.offsetHeight;
+      
+      if (prevHeight === 0 || prevHeight === targetHeight) {
+        container.style.height = 'auto';
+        return;
+      }
+      
+      container.style.height = prevHeight + 'px';
+      container.offsetHeight; // force reflow
+      container.style.height = targetHeight + 'px';
+      
+      heightTransitionTimeout = setTimeout(() => {
+        container.style.height = 'auto';
+      }, 350);
+    }
+
+    function renderStep() {
+      const step = steps[currentStep];
+      modalBody.innerHTML = step.render(formData);
+      step.bind(formData, checkValidation);
+      updateProgressBar();
+
+      if (currentStep === 0) {
+        btnBack.style.display = 'none';
       } else {
-        const targetSection = document.getElementById('contacto');
-        if (targetSection) {
-          targetSection.scrollIntoView({ behavior: 'smooth' });
+        btnBack.style.display = 'block';
+      }
+
+      if (currentStep === steps.length - 1) {
+        btnNext.textContent = 'Enviar';
+      } else {
+        btnNext.textContent = 'Siguiente';
+      }
+
+      checkValidation();
+      adjustModalHeight();
+      
+      const firstInput = modalBody.querySelector('input, select');
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }
+
+    function navigateNext() {
+      const current = steps[currentStep];
+      if (!current.validate(formData)) return;
+
+      if (currentStep === steps.length - 1) {
+        submitForm();
+      } else {
+        currentStep++;
+        renderStep();
+      }
+    }
+
+    function navigateBack() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderStep();
+      }
+    }
+
+    async function ensureIpDetected() {
+      let cached = localStorage.getItem('faust-detected-ip');
+      if (cached) return cached;
+
+      const services = [
+        'https://ipapi.co/json/',
+        'https://api.ipify.org?format=json',
+        'https://ipinfo.io/json'
+      ];
+      for (const service of services) {
+        try {
+          const response = await fetch(service);
+          if (response.ok) {
+            const data = await response.json();
+            const ip = data.ip;
+            if (ip) {
+              localStorage.setItem('faust-detected-ip', ip);
+              return ip;
+            }
+          }
+        } catch (e) {
+          console.warn("Failed fetching IP from " + service, e);
+        }
+      }
+      return null;
+    }
+
+    function checkBlockedState() {
+      const ninetyDays = 90 * 24 * 60 * 60 * 1000;
+      let blockedIps = {};
+      try {
+        blockedIps = JSON.parse(localStorage.getItem('faust-blocked-ips') || '{}');
+      } catch (e) {}
+
+      let changed = false;
+      const now = Date.now();
+      for (const ip in blockedIps) {
+        if (now - blockedIps[ip] >= ninetyDays) {
+          delete blockedIps[ip];
+          changed = true;
+        }
+      }
+      if (changed) {
+        localStorage.setItem('faust-blocked-ips', JSON.stringify(blockedIps));
+      }
+
+      const localBlockTime = parseInt(localStorage.getItem('faust-local-blocked-at') || '0', 10);
+      if (localBlockTime && (now - localBlockTime >= ninetyDays)) {
+        localStorage.removeItem('faust-local-blocked-at');
+        localStorage.setItem('faust-submission-count', '0');
+      }
+
+      const submissionCount = parseInt(localStorage.getItem('faust-submission-count') || '0', 10);
+      if (submissionCount >= 2) {
+        return true;
+      }
+
+      const clientIp = localStorage.getItem('faust-detected-ip');
+      if (clientIp && blockedIps[clientIp]) {
+        return true;
+      }
+
+      return false;
+    }
+
+    async function recordSubmission() {
+      const newCount = parseInt(localStorage.getItem('faust-submission-count') || '0', 10) + 1;
+      localStorage.setItem('faust-submission-count', newCount);
+
+      if (newCount >= 2) {
+        localStorage.setItem('faust-local-blocked-at', Date.now().toString());
+        
+        let clientIp = localStorage.getItem('faust-detected-ip');
+        if (!clientIp) {
+          clientIp = await ensureIpDetected();
+        }
+        
+        if (clientIp) {
+          let blockedIps = {};
+          try {
+            blockedIps = JSON.parse(localStorage.getItem('faust-blocked-ips') || '{}');
+          } catch (e) {}
+          blockedIps[clientIp] = Date.now();
+          localStorage.setItem('faust-blocked-ips', JSON.stringify(blockedIps));
         }
       }
     }
 
-    function closeSidebar() {
-      if (!document.body.classList.contains('pushed-layout')) return;
-      document.body.classList.add('sidebar-closing');
-      document.body.classList.remove('pushed-layout');
-      window.dispatchEvent(new Event('resize'));
-      function finalize() { document.body.classList.remove('sidebar-closing'); window.dispatchEvent(new Event('resize')); }
-      panel.addEventListener('transitionend', function handler(e) {
-        if (e.target !== panel || e.propertyName !== 'transform') return;
-        panel.removeEventListener('transitionend', handler);
-        finalize();
-      });
-      setTimeout(finalize, 700);
+    // Run IP detection as early as possible
+    ensureIpDetected();
+
+    // Run block cleanup on load
+    checkBlockedState();
+
+    function getAutomaticCollectionData() {
+      const ip = localStorage.getItem('faust-detected-ip') || 'No detectada';
+      
+      let visitedPages = 'Ninguna';
+      try {
+        const pages = JSON.parse(localStorage.getItem('faust-visited-pages') || '[]');
+        if (pages.length > 0) {
+          visitedPages = pages.join(' -> ');
+        }
+      } catch (e) {
+        console.error("Error parsing visited pages", e);
+      }
+
+      const lang = localStorage.getItem('faust-lang-native') || localStorage.getItem('faust-lang') || document.documentElement.lang || navigator.language || 'No detectado';
+      
+      const countryCode = localStorage.getItem('faust-detected-country-code') || 'Desconocido';
+      const countryName = localStorage.getItem('faust-lang-country') || '';
+      const countryStr = countryName ? `${countryName} (${countryCode})` : countryCode;
+      
+      const ua = navigator.userAgent;
+      let os = "Otro OS";
+      if (ua.includes("Windows")) os = "Windows";
+      else if (ua.includes("Macintosh")) os = "macOS";
+      else if (ua.includes("iPhone")) os = "iOS (iPhone)";
+      else if (ua.includes("iPad")) os = "iOS (iPad)";
+      else if (ua.includes("Android")) os = "Android";
+      else if (ua.includes("Linux")) os = "Linux";
+      
+      let type = "Desktop";
+      if (/mobile|android|iphone|ipod|phone/i.test(ua)) {
+        type = "Mobile";
+      } else if (/ipad|tablet/i.test(ua)) {
+        type = "Tablet";
+      }
+      const deviceStr = `${type} - ${os}`;
+      
+      const totalSeconds = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
+      let sessionTimeStr = '';
+      if (totalSeconds < 60) {
+        sessionTimeStr = `${totalSeconds}s`;
+      } else {
+        const minutes = Math.floor(totalSeconds / 60);
+        const remainingSeconds = totalSeconds % 60;
+        if (minutes < 60) {
+          sessionTimeStr = `${minutes}m ${remainingSeconds}s`;
+        } else {
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          sessionTimeStr = `${hours}h ${remainingMinutes}m ${remainingSeconds}s`;
+        }
+      }
+      
+      return `IP: ${ip} | Páginas Visitadas: ${visitedPages} | Idioma: ${lang} | País: ${countryStr} | Dispositivo: ${deviceStr} | Tiempo: ${sessionTimeStr}`;
     }
 
-    syncLayout();
-    window.addEventListener('resize', syncLayout);
+    function submitForm() {
+      btnNext.setAttribute('disabled', 'true');
+      btnNext.textContent = 'Enviando...';
 
-    document.addEventListener('click', function(e) {
-      var btn = e.target.closest('.btn-primary, .btn-nav');
-      if (!btn) return;
-      if (btn.id === 'whatsapp-plan-cta') return;
+      const autoData = getAutomaticCollectionData();
+
+      try {
+        const saved = JSON.parse(localStorage.getItem('faust-applications') || '[]');
+        const fullData = Object.assign({}, formData, {
+          autoCollected: autoData
+        });
+        saved.push({
+          timestamp: new Date().toISOString(),
+          data: fullData
+        });
+        localStorage.setItem('faust-applications', JSON.stringify(saved));
+        console.log("Formulario guardado localmente (localStorage):", fullData);
+      } catch (e) {
+        console.error("Error al guardar localmente en localStorage:", e);
+      }
+
+      fetch('https://formsubmit.co/ajax/francohumbertoquinonesramirez@gmail.com', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `Nueva aplicación Faust Partners - ${formData.company.trim()}`,
+          Nombre: formData.name.trim(),
+          Cargo: formData.role,
+          Empresa: formData.company.trim(),
+          "Ingresos brutos": formData.revenue,
+          "Equipos disponibles": (formData.teams && formData.teams.length > 0) ? formData.teams.join(', ') : 'Ninguno',
+          "Contacto": formData.contact.trim(),
+          "Fecha propuesta": formData.date || 'No especificada',
+          "Recopilado Automáticamente": autoData
+        })
+      })
+      .then(async () => {
+        await recordSubmission();
+        showSuccessScreen();
+      })
+      .catch(async err => {
+        console.warn("Error al enviar a FormSubmit, ejecutando fallback:", err);
+        await recordSubmission();
+        showSuccessScreen();
+      });
+    }
+
+    function showSuccessScreen() {
+      progressBar.style.display = 'none';
+      btnBack.style.display = 'none';
+      btnNext.style.display = 'none';
       
-      var text = btn.textContent.trim().toLowerCase();
-      if (text.indexOf('aplicar') === 0) { 
-        e.preventDefault();
-        openSidebar(); 
+      modalBody.innerHTML = `
+        <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
+          <div class="apply-success-icon" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px;">✓</div>
+          <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Gracias por aplicar!</h3>
+          <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto contigo muy pronto.</p>
+          <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
+            <a class="btn btn-secondary" href="https://wa.me/524428767130?text=Hola%20Faust%20Partners" target="_blank" rel="noopener noreferrer" style="border: 1px solid rgba(255,255,255,0.15) !important;">Escribir un mensaje</a>
+            <button class="btn btn-primary" id="apply-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('apply-success-close-btn').addEventListener('click', window.closeApplyModal);
+      
+      adjustModalHeight();
+    }
+
+    window.resetForm = function() {
+      formData.name = '';
+      formData.role = '';
+      formData.company = '';
+      formData.revenue = '';
+      formData.teams = [];
+      formData.contact = '';
+      formData.date = '';
+      currentStep = 0;
+    };
+
+    window.openApplyModal = function() {
+      ensureIpDetected();
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      
+      const container = document.querySelector('.apply-modal-container');
+      if (container) {
+        container.style.height = 'auto';
+        container.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
+      }
+
+      if (checkBlockedState()) {
+        showSuccessScreen();
+      } else {
+        window.resetForm();
+        progressBar.style.display = 'flex';
+        btnBack.style.display = 'block';
+        btnNext.style.display = 'block';
+        renderStep();
+      }
+    };
+
+    window.closeApplyModal = function() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    };
+
+    closeBtn.addEventListener('click', window.closeApplyModal);
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target.classList.contains('apply-overlay-wrap')) {
+        window.closeApplyModal();
       }
     });
 
-    closeBtn.addEventListener('click', closeSidebar);
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSidebar(); });
-  })();
-
-  /* ── Plan Builder ── */
-  (function() {
-    var services = Array.from(document.querySelectorAll('.plan-service'));
-    if (!services.length) return;
-    var ctaText = document.getElementById('plan-cta-text');
-    var incomeInput = document.getElementById('monthly-income');
-    var sortableSections = Array.from(document.querySelectorAll('.plan-sortable'));
-    var selectedSection = document.querySelector('.plan-stack.plan-sortable');
-    var recommendedSection = document.querySelector('.plan-recommend.plan-sortable');
-    var ASSET_BASE = './assets/Icons/';
-
-    function parseMoney(raw) { var d = String(raw || '').replace(/\D/g, ''); return d ? Number(d) : 0; }
-
-    function renderCard(card) {
-      var selected = card.getAttribute('data-selected') === 'true';
-      var left = card.querySelector('.plan-left-state img');
-      var toggle = card.querySelector('.plan-toggle');
-      var toggleIcon = toggle ? toggle.querySelector('img') : null;
-      if (!left || !toggle || !toggleIcon) return;
-      card.classList.toggle('is-selected', selected);
-      left.src = ASSET_BASE + (selected ? 'check.svg' : 'dash.svg');
-      toggleIcon.src = ASSET_BASE + (selected ? 'cross.svg' : 'plus.svg');
-      toggle.setAttribute('aria-label', selected ? 'Excluir servicio' : 'Añadir servicio');
-    }
-
-    function renderTotal() {
-      if (!ctaText) return;
-      var total = services.reduce(function(s, c) {
-        return s + (c.getAttribute('data-selected') === 'true' ? parseMoney(c.getAttribute('data-price')) : 0);
-      }, 0);
-      ctaText.textContent = total > 0 ? 'Unirme a Max\u2122' : 'Obtener plan por $0';
-    }
-
-    function reorderWithinSections() {
-      var priority = { 'web-dev': 1, 'marketing': 2, 'faust-max': 3 };
-      sortableSections.forEach(function(section) {
-        var cards = Array.prototype.slice.call(section.querySelectorAll('.plan-service'));
-        if (cards.length <= 1) return;
-        cards.sort(function(a, b) {
-          var as = a.getAttribute('data-selected') === 'true' ? 1 : 0;
-          var bs = b.getAttribute('data-selected') === 'true' ? 1 : 0;
-          if (as !== bs) return bs - as;
-          var ap = priority[a.getAttribute('data-plan-id')] || 999;
-          var bp = priority[b.getAttribute('data-plan-id')] || 999;
-          return ap - bp;
-        }).forEach(function(c) { section.appendChild(c); });
-      });
-    }
-
-    function syncCardBucket(card) {
-      if (!selectedSection || !recommendedSection) return;
-      var selected = card.getAttribute('data-selected') === 'true';
-      if (selected) { card.classList.remove('recommended'); selectedSection.appendChild(card); }
-      else { card.classList.add('recommended'); recommendedSection.appendChild(card); }
-    }
-
-    function updateRecommendedVisibility() {
-      if (!recommendedSection) return;
-      recommendedSection.classList.toggle('is-empty', recommendedSection.querySelectorAll('.plan-service').length === 0);
-    }
-
-    sortableSections.forEach(function(s) {
-      Array.prototype.slice.call(s.querySelectorAll('.plan-service')).forEach(function(c, i) { c.setAttribute('data-order', String(i)); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        window.closeApplyModal();
+      }
     });
 
-    services.forEach(function(card) {
-      renderCard(card);
-      var toggle = card.querySelector('.plan-toggle');
-      if (!toggle) return;
-      toggle.addEventListener('click', function() {
-        var selected = card.getAttribute('data-selected') === 'true';
-        card.setAttribute('data-selected', selected ? 'false' : 'true');
-        renderCard(card); syncCardBucket(card); renderTotal(); reorderWithinSections(); updateRecommendedVisibility();
-      });
-    });
+    btnNext.addEventListener('click', navigateNext);
+    btnBack.addEventListener('click', navigateBack);
 
-    if (incomeInput) {
-      incomeInput.addEventListener('input', function() {
-        var caretAtEnd = incomeInput.selectionStart === incomeInput.value.length;
-        var amount = parseMoney(incomeInput.value);
-        incomeInput.value = amount ? amount.toLocaleString('en-US') : '';
-        if (caretAtEnd) { var end = incomeInput.value.length; incomeInput.setSelectionRange(end, end); }
-      });
-    }
-
-    services.forEach(syncCardBucket);
-    renderTotal(); reorderWithinSections(); updateRecommendedVisibility();
-  })();
-
-  /* ── WhatsApp CTA ── */
-  (function() {
-    var whatsappButton = document.getElementById('whatsapp-plan-cta');
-    if (!whatsappButton) return;
-    var services = Array.prototype.slice.call(document.querySelectorAll('.plan-service'));
-    var incomeInput = document.getElementById('monthly-income');
-    function parseMoney(raw) { var d = String(raw || '').replace(/\D/g, ''); return d ? Number(d) : 0; }
-    function buildServicesText(sel) {
-      if (!sel.length) return 'los servicios b\u00e1sicos de Faust';
-      if (sel.length === 1) return sel[0];
-      if (sel.length === 2) return sel[0] + ' y ' + sel[1];
-      return sel.slice(0, -1).join(', ') + ' y ' + sel[sel.length - 1];
-    }
-    function buildWhatsappMessage() {
-      var labels = services.filter(function(c) { return c.getAttribute('data-selected') === 'true'; })
-        .map(function(c) { var l = c.querySelector('.plan-title'); return l ? l.textContent.trim() : ''; }).filter(Boolean);
-      var amount = incomeInput ? parseMoney(incomeInput.value) : 0;
-      var incomeText = amount ? amount.toLocaleString('es-MX') : 'N';
-      var faustMax = services.some(function(c) { return c.getAttribute('data-plan-id') === 'faust-max' && c.getAttribute('data-selected') === 'true'; });
-      return 'Buen d\u00eda. Quisiera recibir una auditor\u00eda personalizada de faust.mx\n\n' +
-        'Requiero los servicios de ' + buildServicesText(labels) + '.\n' +
-        'Mi empresa tiene un ingreso neto mensual de MX $' + incomeText + '.\n' +
-        (faustMax ? 'Tambi\u00e9n, me gustar\u00eda aplicar al plan Max\u2122.' : 'Por el momento, no quiero aplicar al plan Max\u2122.') + '\n' +
-        'Mi empresa es ';
-    }
-    whatsappButton.addEventListener('click', function() {
-      window.open('https://wa.me/524428767130?text=' + encodeURIComponent(buildWhatsappMessage()), '_blank', 'noopener,noreferrer');
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('a, button, .btn');
+      if (!btn) return;
+      
+      const text = btn.textContent.trim().toLowerCase();
+      if (text.startsWith('aplicar')) {
+        e.preventDefault();
+        window.openApplyModal();
+      }
     });
   })();
   </script>
