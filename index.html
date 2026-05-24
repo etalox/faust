@@ -762,7 +762,7 @@
       <h1>Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
       <p>Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
       <div class="btn-row" style="justify-content:center">
-        <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
+        <a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
         <a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
       </div>
       <div class="supported">
@@ -783,7 +783,7 @@
           <div class="muted" style="display: inline;">Usamos el poder de la Neurociencia Conductual y Análisis de Datos para impulsar su MRR. Nuestro equipo se encarga de la implementación.</div>
         </h2>
         <div class="btn-row">
-          <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
+          <a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
           <a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
         </div>
         <div class="stats">
@@ -1093,7 +1093,7 @@
           </div>
           <h2 data-layer="Financing Text 3" class="FinancingText3 headline" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #F2F2F2; font-size: clamp(38px, 5vw, 68px); font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 1.08; letter-spacing: -1.6px; word-wrap: break-word; margin: 0;">Aplica en 1 min. para sumar 500 mil MXN<br/>al MRR de tu empresa.</h2>
           <div data-layer="Buttons Container" class="ButtonsContainer btn-row" style="justify-content: center;">
-            <a class="btn btn-primary" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
+            <a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
             <a class="btn btn-secondary" href="#contacto"><span class="hide-mobile">Escribir un mensaje</span><span class="show-mobile">Contacto</span></a>
           </div>
 
@@ -2555,10 +2555,18 @@
       const btn = e.target.closest('a, button, .btn');
       if (!btn) return;
       
+      const href = btn.getAttribute('href');
+      const hasApplyAction = btn.getAttribute('data-action') === 'apply' || btn.classList.contains('faust-apply-btn');
+      const isApplyHref = href === '#contacto' || href === '#aplicar' || href === './index.html#aplicar' || href === 'index.html#aplicar';
+      
       const text = btn.textContent.trim().toLowerCase();
-      if (text.startsWith('aplicar')) {
-        e.preventDefault();
-        window.openApplyModal();
+      const isApplyText = text.startsWith('aplicar') || text === 'apply' || text === 'postuler' || text === 'candidatar-se' || text === '申请' || text === 'подать заявку';
+
+      if (hasApplyAction || isApplyHref || isApplyText) {
+        if (window.openApplyModal) {
+          e.preventDefault();
+          window.openApplyModal();
+        }
       }
     });
   })();

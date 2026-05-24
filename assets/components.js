@@ -16,11 +16,11 @@ class FaustNavbar extends HTMLElement {
     const isLATAM = (activeCode === 'es-LA');
 
     let navLangHtml = '';
-    let aplicarBtnClass = 'btn btn-secondary btn-nav';
+    let aplicarBtnClass = 'btn btn-secondary btn-nav faust-apply-btn';
     let arrowClass = 'arrow arrow-light';
 
     if (!isLATAM) {
-      aplicarBtnClass = 'btn btn-primary btn-nav';
+      aplicarBtnClass = 'btn btn-primary btn-nav faust-apply-btn';
       arrowClass = 'arrow';
 
       const buttonLabel = getButtonLabelHtml(activeCode);
@@ -432,7 +432,7 @@ class FaustNavbar extends HTMLElement {
           <div class="nav-right">
             <a id="nav-contacto" href="./index.html#contacto" style="user-select: none !important;">Contacto</a>
             ${navLangHtml}
-            <a class="${aplicarBtnClass}" href="./index.html#aplicar">
+            <a class="${aplicarBtnClass}" data-action="apply" href="./index.html#aplicar">
               Aplicar
               <img class="${arrowClass}" src="./assets/Icons/button_arrow.svg" alt="">
             </a>
@@ -1051,7 +1051,7 @@ class FaustFooter extends HTMLElement {
           <div class="footer-grid">
             <div class="footer-col">
               <h4>General</h4>
-              <a href="./index.html#">Aplicar</a>
+              <a class="faust-apply-btn" data-action="apply" href="./index.html#">Aplicar</a>
               <a href="./index.html#">Diseño web</a>
               <a href="./index.html#">Consultoría</a>
               <a href="./index.html#">Software</a>
