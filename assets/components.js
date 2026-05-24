@@ -1824,6 +1824,7 @@ try {
     .cookie-banner-container {
       position: relative;
       width: auto;
+      min-width: min(752px, 100%);
       max-width: 1200px;
       background: rgba(20, 21, 23, 0.85);
       backdrop-filter: blur(20px);
@@ -2065,18 +2066,40 @@ try {
 
     document.body.appendChild(overlay);
 
+    const updateLegalNavBottom = () => {
+      const container = overlay.querySelector('.cookie-banner-container');
+      if (container && overlay.classList.contains('show')) {
+        const rect = container.getBoundingClientRect();
+        const bannerStyle = window.getComputedStyle(overlay);
+        const bannerBottom = parseInt(bannerStyle.bottom, 10) || 0;
+        const totalHeight = rect.height + bannerBottom;
+        document.documentElement.style.setProperty('--legal-nav-bottom', `${totalHeight + 40}px`);
+      } else {
+        document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
+      }
+    };
+
+    const closeBannerAndResetButtons = () => {
+      overlay.classList.remove('show');
+      document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
+      window.removeEventListener('resize', updateLegalNavBottom);
+      setTimeout(() => {
+        overlay.remove();
+      }, 400);
+    };
+
     setTimeout(() => {
       overlay.classList.add('show');
+      updateLegalNavBottom();
     }, 500);
+
+    window.addEventListener('resize', updateLegalNavBottom);
 
     const closeBtn = overlay.querySelector('#btn-cookie-close');
     if (closeBtn) {
       closeBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        overlay.classList.remove('show');
-        setTimeout(() => {
-          overlay.remove();
-        }, 400);
+        closeBannerAndResetButtons();
       });
     }
 
@@ -2088,10 +2111,7 @@ try {
         localStorage.setItem('faust-cookie-consent-clarity', 'false');
         localStorage.setItem('faust-cookie-consent-choice-made', 'true');
         
-        overlay.classList.remove('show');
-        setTimeout(() => {
-          overlay.remove();
-        }, 400);
+        closeBannerAndResetButtons();
 
         const overlayClarityCheckbox = document.getElementById('overlay-cookie-clarity-toggle');
         if (overlayClarityCheckbox) overlayClarityCheckbox.checked = false;
@@ -2107,10 +2127,7 @@ try {
       localStorage.setItem('faust-cookie-consent-clarity', 'true');
       localStorage.setItem('faust-cookie-consent-choice-made', 'true');
       
-      overlay.classList.remove('show');
-      setTimeout(() => {
-        overlay.remove();
-      }, 400);
+      closeBannerAndResetButtons();
 
       if (typeof faustInitTrackingScripts === 'function') {
         faustInitTrackingScripts();
