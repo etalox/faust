@@ -10,7 +10,10 @@ const mockLocalStorage = {
 };
 
 // Mock HTMLElement and customElements for Node
-global.HTMLElement = class HTMLElement {};
+global.HTMLElement = class HTMLElement {
+  querySelector() { return null; }
+  querySelectorAll() { return []; }
+};
 global.customElements = {
   define: () => {}
 };
@@ -120,8 +123,17 @@ function assert(condition, message) {
 // Read components.js and extract the script contents
 const code = fs.readFileSync('c:/Users/franc/Workspace/Faust Partners/assets/components.js', 'utf8');
 
-// Define getSelectedCode if referenced (or mock it)
+// Define getSelectedCode and translation helper mocks if referenced
 global.getSelectedCode = () => 'es-LA';
+global.getButtonLabelHtml = (code) => `<span>Lang: ${code}</span>`;
+global.generateLangListHtml = (code) => `<div>List: ${code}</div>`;
+global.getTranslateCodeForSelection = (code) => code;
+global.setTranslateCookie = (code) => {};
+global.clearTranslateCookie = () => {};
+global.FAUST_LANGUAGES = [
+  { code: 'es-LA', lang: 'Español', country: 'México' },
+  { code: 'en-US', lang: 'English', country: 'United States' }
+];
 
 // Mock clarity globally
 global.window.clarityCalls = [];
@@ -130,7 +142,9 @@ global.window.clarity = (...args) => {
 };
 
 // Evaluate the component script to register top-level functions and mock classes
-const evalCode = code.replace('class FaustFooter', 'global.FaustFooter = class FaustFooter');
+const evalCode = code
+  .replace('class FaustFooter', 'global.FaustFooter = class FaustFooter')
+  .replace(/const faustIs/g, 'global.faustIs');
 eval(evalCode);
 
 // Mock footer instances
