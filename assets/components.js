@@ -1,4 +1,53 @@
 
+// Helpers for cookie consent checking
+const strictCountriesList = [
+  'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 
+  'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 
+  'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH'
+];
+
+const faustIsStrictRegion = () => {
+  if (typeof window === 'undefined') return false;
+  const detectedCountry = (localStorage.getItem('faust-detected-country-code') || '').toUpperCase();
+  if (detectedCountry && strictCountriesList.includes(detectedCountry)) {
+    return true;
+  }
+  
+  // Check browser language region
+  const browserLang = (navigator.language || navigator.userLanguage || '');
+  const parts = browserLang.split('-');
+  if (parts.length > 1) {
+    const browserCountry = parts[1].toUpperCase();
+    if (strictCountriesList.includes(browserCountry)) {
+      return true;
+    }
+  }
+  
+  // Check active language selection code
+  const activeCode = (typeof getSelectedCode === 'function') ? getSelectedCode() : 'es-LA';
+  if (activeCode === 'es-ES' || activeCode === 'en-GB' || activeCode.startsWith('fr')) {
+    return true;
+  }
+  
+  return false;
+};
+
+const faustIsClarityEnabled = () => {
+  if (typeof window === 'undefined') return false;
+  const consent = localStorage.getItem('faust-cookie-consent-clarity');
+  if (consent === 'true') return true;
+  if (consent === 'false') return false;
+  // Default: false in strict regions, true in standard regions
+  return !faustIsStrictRegion();
+};
+
+const faustIsAnalyticsEnabled = () => {
+  if (typeof window === 'undefined') return false;
+  const consent = localStorage.getItem('faust-cookie-consent-analytics');
+  if (consent === 'true') return true;
+  return false;
+};
+
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
     this._onLanguageChanged = () => {
@@ -1164,7 +1213,7 @@ class FaustFooter extends HTMLElement {
       <!-- Cookie selection modal overlay -->
       <div class="lang-overlay" id="cookie-menu-overlay">
         <div class="wrap lang-overlay-wrap">
-          <div class="lang-modal-container" style="max-height: 450px;">
+          <div class="lang-modal-container" style="max-height: 520px;">
             <div class="lang-modal notranslate" translate="no" style="min-height: 0; flex: 1;">
               <div class="lang-modal-header">
                 <span>Configuración de cookies</span>
@@ -1181,14 +1230,28 @@ class FaustFooter extends HTMLElement {
                 
                 <div style="height: 1px; background: rgba(255, 255, 255, 0.06);"></div>
                 
-                <!-- Cookies Analíticas -->
+                <!-- Microsoft Clarity -->
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                   <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <span style="font-size: 15px; font-weight: 600; color: #fff;">Cookies analíticas</span>
-                    <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Google Analytics y Microsoft Clarity para comprender el uso del sitio y medir visitas.</span>
+                    <span style="font-size: 15px; font-weight: 600; color: #fff;">Microsoft Clarity</span>
+                    <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Para analizar de forma visual e individual la interacción y comportamiento de navegación.</span>
                   </div>
                   <label class="faust-switch">
-                    <input type="checkbox" id="overlay-cookie-analytics-toggle" ${localStorage.getItem('faust-cookie-consent-analytics') === 'true' ? 'checked' : ''}>
+                    <input type="checkbox" id="overlay-cookie-clarity-toggle" ${faustIsClarityEnabled() ? 'checked' : ''}>
+                    <span class="faust-slider"></span>
+                  </label>
+                </div>
+
+                <div style="height: 1px; background: rgba(255, 255, 255, 0.06);"></div>
+
+                <!-- Google Analytics (Otras Cookies Analíticas) -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <span style="font-size: 15px; font-weight: 600; color: #fff;">Otras cookies analíticas</span>
+                    <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Google Analytics para comprender el uso general del sitio y medir visitas.</span>
+                  </div>
+                  <label class="faust-switch">
+                    <input type="checkbox" id="overlay-cookie-analytics-toggle" ${faustIsAnalyticsEnabled() ? 'checked' : ''}>
                     <span class="faust-slider"></span>
                   </label>
                 </div>
@@ -1216,10 +1279,12 @@ class FaustFooter extends HTMLElement {
 
     const openCookieModal = (e) => {
       e.preventDefault();
-      const analyticsChecked = localStorage.getItem('faust-cookie-consent-analytics') === 'true';
       
+      const clarityInput = this.querySelector('#overlay-cookie-clarity-toggle');
+      if (clarityInput) clarityInput.checked = faustIsClarityEnabled();
+
       const analyticsInput = this.querySelector('#overlay-cookie-analytics-toggle');
-      if (analyticsInput) analyticsInput.checked = analyticsChecked;
+      if (analyticsInput) analyticsInput.checked = faustIsAnalyticsEnabled();
 
       overlay.classList.add('is-open');
     };
@@ -1232,16 +1297,24 @@ class FaustFooter extends HTMLElement {
 
     saveBtn.addEventListener('click', (e) => {
       e.preventDefault();
+      const clarityInput = this.querySelector('#overlay-cookie-clarity-toggle');
+      const clarityChecked = clarityInput ? clarityInput.checked : false;
+
       const analyticsInput = this.querySelector('#overlay-cookie-analytics-toggle');
       const analyticsChecked = analyticsInput ? analyticsInput.checked : false;
 
+      const oldClarity = localStorage.getItem('faust-cookie-consent-clarity') === 'true';
       const oldAnalytics = localStorage.getItem('faust-cookie-consent-analytics') === 'true';
 
+      localStorage.setItem('faust-cookie-consent-clarity', clarityChecked ? 'true' : 'false');
       localStorage.setItem('faust-cookie-consent-analytics', analyticsChecked ? 'true' : 'false');
+      localStorage.setItem('faust-cookie-consent-choice-made', 'true');
 
       closeCookieModal();
 
-      if (oldAnalytics && !analyticsChecked) {
+      const clarityWasActive = oldClarity || (localStorage.getItem('faust-cookie-consent-clarity') === null && !faustIsStrictRegion());
+
+      if ((clarityWasActive && !clarityChecked) || (oldAnalytics && !analyticsChecked)) {
         window.location.reload();
       } else {
         if (typeof faustInitTrackingScripts === 'function') {
@@ -1673,9 +1746,10 @@ customElements.define('faust-footer', FaustFooter);
 
 /* ── Cookie Consent and Tracking Scripts Initialization ── */
 function faustInitTrackingScripts() {
-  const consentAnalytics = localStorage.getItem('faust-cookie-consent-analytics') === 'true';
+  const clarityEnabled = faustIsClarityEnabled();
+  const analyticsEnabled = faustIsAnalyticsEnabled();
 
-  if (consentAnalytics) {
+  if (analyticsEnabled) {
     if (!window.faustGaLoaded) {
       const gaScript = document.createElement('script');
       gaScript.async = true;
@@ -1689,11 +1763,12 @@ function faustInitTrackingScripts() {
       
       window.faustGaLoaded = true;
     }
-    if (typeof window.clarity === 'function') {
+  }
+
+  if (typeof window.clarity === 'function') {
+    if (clarityEnabled) {
       window.clarity("consent");
-    }
-  } else {
-    if (typeof window.clarity === 'function') {
+    } else {
       window.clarity("consent", false);
     }
   }
@@ -1711,7 +1786,10 @@ try {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
   
   const hasConsented = localStorage.getItem('faust-cookie-consent-analytics');
-  if (hasConsented === 'true') return; // Only skip if explicitly accepted
+  const choiceMade = localStorage.getItem('faust-cookie-consent-choice-made') === 'true';
+
+  if (hasConsented === 'true') return;
+  if (choiceMade && faustIsStrictRegion()) return;
 
   // Inject styles
   const style = document.createElement('style');
@@ -1797,6 +1875,13 @@ try {
       margin: 0;
     }
 
+    .cookie-banner-buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
     .btn-cookie-accept {
       height: 48px;
       padding: 0 32px;
@@ -1825,6 +1910,34 @@ try {
       transform: scale(0.97);
     }
 
+    .btn-cookie-decline {
+      height: 48px;
+      padding: 0 32px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff !important;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out, transform 150ms ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .btn-cookie-decline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-cookie-decline:active {
+      transform: scale(0.97);
+    }
+
     @media (max-width: 768px) {
       .cookie-banner-overlay {
         bottom: 16px;
@@ -1843,7 +1956,16 @@ try {
       .cookie-banner-content {
         gap: 4px;
       }
+
+      .cookie-banner-buttons {
+        width: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+      }
       
+      .btn-cookie-decline,
       .btn-cookie-accept {
         width: 100%;
         height: 44px;
@@ -1860,33 +1982,45 @@ try {
     const translations = {
       'es': {
         title: 'Consentimiento de Cookies y Acuerdo Legal',
-        text: 'Utilizamos cookies analíticas. Al hacer clic en Aceptar, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
-        accept: 'Aceptar'
+        textStandard: 'Utilizamos cookies analíticas. Al interactuar con el sitio, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
+        textStrict: 'Utilizamos cookies analíticas. Al hacer clic en Aceptar, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
+        accept: 'Aceptar',
+        decline: 'Rechazar'
       },
       'pt': {
         title: 'Consentimento de Cookies e Acordo Legal',
-        text: 'Utilizamos cookies de análise. Ao clicar em Aceitar, você concorda com nossa <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nossos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
-        accept: 'Aceitar'
+        textStandard: 'Utilizamos cookies de análise. Ao interagir com o site, você concorda com nossa <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nossos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
+        textStrict: 'Utilizamos cookies de análise. Ao clicar em Aceitar, você concorda com nossa <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nossos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
+        accept: 'Aceitar',
+        decline: 'Recusar'
       },
       'en': {
         title: 'Cookie Consent & Legal Agreement',
-        text: 'We use analytical cookies. By clicking Accept, you agree to our <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Privacy Policy</a> and <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Terms of Service</a>.',
-        accept: 'Accept'
+        textStandard: 'We use analytical cookies. By interacting with the site, you agree to our <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Privacy Policy</a> and <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Terms of Service</a>.',
+        textStrict: 'We use analytical cookies. By clicking Accept, you agree to our <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Privacy Policy</a> and <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Terms of Service</a>.',
+        accept: 'Accept',
+        decline: 'Decline'
       },
       'fr': {
         title: 'Consentement aux Cookies et Accord Légal',
-        text: 'Nous utilisons des cookies analytiques. En cliquant sur Accepter, vous acceptez notre <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Politique de Confidentialité</a> et nos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Conditions d\'Utilisation</a>.',
-        accept: 'Accepter'
+        textStandard: 'Nous utilisons des cookies analytiques. En interagissant avec le site, vous acceptez notre <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Politique de Confidentialité</a> et nos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Conditions d\'Utilisation</a>.',
+        textStrict: 'Nous utilisons des cookies analytiques. En cliquant sur Accepter, vous acceptez notre <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Politique de Confidentialité</a> et nos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Conditions d\'Utilisation</a>.',
+        accept: 'Accepter',
+        decline: 'Refuser'
       },
       'ru': {
         title: 'Согласие на использование файлов cookie и юридическое соглашение',
-        text: 'Мы используем аналитические файлы cookie для анализа поведения посетителей и измерения трафика сайта. Нажимая кнопку Принять, вы соглашаетесь с нашей <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Политикой конфиденциальности</a> и <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Условиями использования</a>.',
-        accept: 'Принять'
+        textStandard: 'Мы используем аналитические файлы cookie. Взаимодействуя с сайтом, вы соглашаетесь с нашей <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Политикой конфиденциальности</a> и <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Условиями использования</a>.',
+        textStrict: 'Мы используем аналитические файлы cookie. Нажимая кнопку Принять, вы соглашаетесь с нашей <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Политикой конфиденциальности</a> и <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Условиями использования</a>.',
+        accept: 'Принять',
+        decline: 'Отклонить'
       },
       'zh': {
         title: 'Cookie 同意与法律协议',
-        text: '我们使用分析型 Cookie 来了解访客行为并测量网站流量。点击接受即表示您同意我们的 <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">隐私政策</a> 和 <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">服务条款</a>。',
-        accept: '接受'
+        textStandard: '我们使用分析型 Cookie。与本网站互动即表示您同意我们的 <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">隐私政策</a> 和 <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">服务条款</a>。',
+        textStrict: '我们使用分析型 Cookie。点击接受即表示您同意我们的 <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">隐私政策</a> 和 <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">服务条款</a>。',
+        accept: '接受',
+        decline: '拒绝'
       }
     };
 
@@ -1898,6 +2032,8 @@ try {
     else if (activeCode.startsWith('zh')) baseLang = 'zh';
 
     const t = translations[baseLang] || translations['es'];
+    const strictMode = faustIsStrictRegion();
+    const textToShow = strictMode ? t.textStrict : t.textStandard;
 
     const overlay = document.createElement('div');
     overlay.className = 'cookie-banner-overlay notranslate';
@@ -1911,9 +2047,12 @@ try {
         </button>
         <div class="cookie-banner-content">
           <span class="cookie-banner-title">${t.title}</span>
-          <p class="cookie-banner-text">${t.text}</p>
+          <p class="cookie-banner-text">${textToShow}</p>
         </div>
-        <button class="btn-cookie-accept" id="btn-cookie-accept">${t.accept}</button>
+        <div class="cookie-banner-buttons">
+          ${strictMode ? `<button class="btn-cookie-decline" id="btn-cookie-decline">${t.decline}</button>` : ''}
+          <button class="btn-cookie-accept" id="btn-cookie-accept">${t.accept}</button>
+        </div>
       </div>
     `;
 
@@ -1934,10 +2073,32 @@ try {
       });
     }
 
+    const declineBtn = overlay.querySelector('#btn-cookie-decline');
+    if (declineBtn) {
+      declineBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.setItem('faust-cookie-consent-analytics', 'false');
+        localStorage.setItem('faust-cookie-consent-clarity', 'false');
+        localStorage.setItem('faust-cookie-consent-choice-made', 'true');
+        
+        overlay.classList.remove('show');
+        setTimeout(() => {
+          overlay.remove();
+        }, 400);
+
+        const overlayClarityCheckbox = document.getElementById('overlay-cookie-clarity-toggle');
+        if (overlayClarityCheckbox) overlayClarityCheckbox.checked = false;
+        const overlayAnalyticsCheckbox = document.getElementById('overlay-cookie-analytics-toggle');
+        if (overlayAnalyticsCheckbox) overlayAnalyticsCheckbox.checked = false;
+      });
+    }
+
     const acceptBtn = overlay.querySelector('#btn-cookie-accept');
     acceptBtn.addEventListener('click', (e) => {
       e.preventDefault();
       localStorage.setItem('faust-cookie-consent-analytics', 'true');
+      localStorage.setItem('faust-cookie-consent-clarity', 'true');
+      localStorage.setItem('faust-cookie-consent-choice-made', 'true');
       
       overlay.classList.remove('show');
       setTimeout(() => {
@@ -1948,8 +2109,10 @@ try {
         faustInitTrackingScripts();
       }
       
-      const overlayCheckbox = document.getElementById('overlay-cookie-analytics-toggle');
-      if (overlayCheckbox) overlayCheckbox.checked = true;
+      const overlayClarityCheckbox = document.getElementById('overlay-cookie-clarity-toggle');
+      if (overlayClarityCheckbox) overlayClarityCheckbox.checked = true;
+      const overlayAnalyticsCheckbox = document.getElementById('overlay-cookie-analytics-toggle');
+      if (overlayAnalyticsCheckbox) overlayAnalyticsCheckbox.checked = true;
     });
   };
 
@@ -1959,5 +2122,3 @@ try {
     initBanner();
   }
 })();
-
-
