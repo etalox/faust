@@ -1939,13 +1939,14 @@
         console.error("Error al guardar localmente en localStorage:", e);
       }
 
-      fetch('https://formsubmit.co/ajax/francohumbertoquinonesramirez@gmail.com', {
+      fetch('https://splitforms.com/api/submit', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify({
+          access_key: 'f6778d6ae57e42a5a319d81048ab8db7',
           _subject: `Nueva aplicación Faust Partners - ${formData.company.trim()}`,
           Nombre: formData.name.trim(),
           Cargo: formData.role,
@@ -1954,7 +1955,8 @@
           "Equipos disponibles": (formData.teams && formData.teams.length > 0) ? formData.teams.join(', ') : 'Ninguno',
           "Contacto": formData.contact.trim(),
           "Fecha propuesta": formData.date || 'No especificada',
-          "Recopilado Automáticamente": autoData
+          "Recopilado Automáticamente": autoData,
+          botcheck: ""
         })
       })
       .then(async () => {
@@ -1962,7 +1964,7 @@
         showSuccessScreen();
       })
       .catch(async err => {
-        console.warn("Error al enviar a FormSubmit, ejecutando fallback:", err);
+        console.warn("Error al enviar a Splitforms, ejecutando fallback:", err);
         await recordSubmission();
         showSuccessScreen();
       });
@@ -1977,7 +1979,7 @@
         <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
           <div class="apply-success-icon" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px;">✓</div>
           <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Gracias por aplicar!</h3>
-          <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto contigo muy pronto.</p>
+          <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto con usted o su empresa muy pronto.</p>
           <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
             <a class="btn btn-secondary" href="https://wa.me/524428767130?text=Hola%20Faust%20Partners" target="_blank" rel="noopener noreferrer" style="border: 1px solid rgba(255,255,255,0.15) !important;">Escribir un mensaje</a>
             <button class="btn btn-primary" id="apply-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
