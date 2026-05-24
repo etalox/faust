@@ -1517,9 +1517,6 @@
               <option value="Otro" ${data.role === 'Otro' ? 'selected' : ''}>Otro</option>
             </select>
           </div>
-          <div class="apply-legal-notice" style="margin-top: 32px; font-size: 11px; color: rgba(255, 255, 255, 0.4); line-height: 1.5; text-align: center;">
-            Al hacer clic en Siguiente aceptas nuestros <a href="./terms.html" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: underline;">Términos y Condiciones</a> de servicio y nuestra <a href="./privacy.html" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: underline;">Política de Privacidad</a>.
-          </div>
         `,
         validate: (data) => {
           const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();

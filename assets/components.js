@@ -1711,7 +1711,7 @@ try {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
   
   const hasConsented = localStorage.getItem('faust-cookie-consent-analytics');
-  if (hasConsented !== null) return; // Already accepted or set via footer
+  if (hasConsented === 'true') return; // Only skip if explicitly accepted
 
   // Inject styles
   const style = document.createElement('style');
@@ -1738,20 +1738,42 @@ try {
     }
 
     .cookie-banner-container {
-      width: 100%;
-      max-width: 800px;
+      position: relative;
+      width: auto;
+      max-width: 1200px;
       background: rgba(20, 21, 23, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
-      padding: 24px 32px;
+      padding: 24px 44px 24px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 32px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
       box-sizing: border-box;
+    }
+
+    .cookie-banner-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: color 180ms ease, background-color 180ms ease;
+    }
+
+    .cookie-banner-close:hover {
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.08);
     }
 
     .cookie-banner-content {
@@ -1814,7 +1836,7 @@ try {
         flex-direction: column;
         align-items: stretch;
         gap: 20px;
-        padding: 20px 24px;
+        padding: 28px 24px 20px 24px;
         border-radius: 16px;
       }
       
@@ -1837,33 +1859,33 @@ try {
 
     const translations = {
       'es': {
-        title: 'Consentimiento de Cookies',
-        text: 'Utilizamos cookies analíticas para comprender el comportamiento de los visitantes y medir el tráfico del sitio.',
+        title: 'Consentimiento de Cookies y Acuerdo Legal',
+        text: 'Utilizamos cookies analíticas. Al hacer clic en Aceptar, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
         accept: 'Aceptar'
       },
       'pt': {
-        title: 'Consentimento de Cookies',
-        text: 'Utilizamos cookies de análise para entender o comportamento dos visitantes e medir o tráfego do site.',
+        title: 'Consentimento de Cookies e Acordo Legal',
+        text: 'Utilizamos cookies de análise. Ao clicar em Aceitar, você concorda com nossa <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nossos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
         accept: 'Aceitar'
       },
       'en': {
-        title: 'Cookie Consent',
-        text: 'We use analytical cookies to understand visitor behavior and measure website traffic.',
+        title: 'Cookie Consent & Legal Agreement',
+        text: 'We use analytical cookies. By clicking Accept, you agree to our <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Privacy Policy</a> and <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Terms of Service</a>.',
         accept: 'Accept'
       },
       'fr': {
-        title: 'Consentement aux Cookies',
-        text: 'Nous utilisons des cookies analytiques pour comprendre le comportement des visiteurs et mesurer le trafic du site.',
+        title: 'Consentement aux Cookies et Accord Légal',
+        text: 'Nous utilisons des cookies analytiques. En cliquant sur Accepter, vous acceptez notre <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Politique de Confidentialité</a> et nos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Conditions d\'Utilisation</a>.',
         accept: 'Accepter'
       },
       'ru': {
-        title: 'Согласие на использование файлов cookie',
-        text: 'Мы используем аналитические файлы cookie для анализа поведения посетителей и измерения трафика сайта.',
+        title: 'Согласие на использование файлов cookie и юридическое соглашение',
+        text: 'Мы используем аналитические файлы cookie для анализа поведения посетителей и измерения трафика сайта. Нажимая кнопку Принять, вы соглашаетесь с нашей <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Политикой конфиденциальности</a> и <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Условиями использования</a>.',
         accept: 'Принять'
       },
       'zh': {
-        title: 'Cookie 同意书',
-        text: '我们使用分析型 Cookie 来了解访客行为并测量网站流量。',
+        title: 'Cookie 同意与法律协议',
+        text: '我们使用分析型 Cookie 来了解访客行为并测量网站流量。点击接受即表示您同意我们的 <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">隐私政策</a> 和 <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">服务条款</a>。',
         accept: '接受'
       }
     };
@@ -1883,6 +1905,9 @@ try {
 
     overlay.innerHTML = `
       <div class="cookie-banner-container">
+        <button class="cookie-banner-close" id="btn-cookie-close" aria-label="Cerrar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
         <div class="cookie-banner-content">
           <span class="cookie-banner-title">${t.title}</span>
           <p class="cookie-banner-text">${t.text}</p>
@@ -1896,6 +1921,17 @@ try {
     setTimeout(() => {
       overlay.classList.add('show');
     }, 500);
+
+    const closeBtn = overlay.querySelector('#btn-cookie-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        overlay.classList.remove('show');
+        setTimeout(() => {
+          overlay.remove();
+        }, 400);
+      });
+    }
 
     const acceptBtn = overlay.querySelector('#btn-cookie-accept');
     acceptBtn.addEventListener('click', (e) => {
