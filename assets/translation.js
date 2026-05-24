@@ -30,8 +30,61 @@
   const brandRegex = /Faust\s*Partners™?/gi;
   const skipTags = ['SCRIPT', 'STYLE', 'IFRAME', 'NOSCRIPT', 'HEAD', 'META', 'TEXTAREA', 'INPUT'];
 
+  const originalTitle = document.title;
+  let originalPageName = '';
+
+  if (originalTitle.includes('|')) {
+    const parts = originalTitle.split('|');
+    if (parts.length >= 2) {
+      if (originalTitle.toLowerCase().indexOf('faust') < originalTitle.indexOf('|')) {
+        originalPageName = parts[1].trim();
+      } else {
+        originalPageName = parts[0].trim();
+      }
+    }
+  } else if (originalTitle.includes('-')) {
+    const parts = originalTitle.split('-');
+    if (parts.length >= 2) {
+      if (originalTitle.toLowerCase().indexOf('faust') < originalTitle.indexOf('-')) {
+        originalPageName = parts[1].trim();
+      } else {
+        originalPageName = parts[0].trim();
+      }
+    }
+  } else {
+    if (originalTitle.toLowerCase().includes('faust')) {
+      originalPageName = '';
+    } else {
+      originalPageName = originalTitle;
+    }
+  }
+
+  // Set the initial standardised title format
+  const initialTitle = originalPageName ? `Faust Partners™ | ${originalPageName}` : "Faust Partners™";
+  document.title = initialTitle;
+
+  let observer = null;
+
   function protectTitle() {
-    // Allow page title (browser tab title) to be translated.
+    const currentTitle = document.title;
+    if (currentTitle.includes('|')) {
+      const parts = currentTitle.split('|');
+      if (parts.length >= 2) {
+        const translatedPageName = parts[1].trim();
+        const desiredTitle = `Faust Partners™ | ${translatedPageName}`;
+        if (currentTitle !== desiredTitle) {
+          if (observer) observer.disconnect();
+          document.title = desiredTitle;
+          if (observer) {
+            observer.observe(document.documentElement, {
+              childList: true,
+              characterData: true,
+              subtree: true
+            });
+          }
+        }
+      }
+    }
   }
 
   function protectNode(node) {
@@ -99,7 +152,7 @@
     runProtection();
   }
 
-  const observer = new MutationObserver((mutations) => {
+  observer = new MutationObserver((mutations) => {
     observer.disconnect();
     protectTitle();
     for (const mutation of mutations) {
@@ -109,12 +162,14 @@
     }
     observer.observe(document.documentElement, {
       childList: true,
+      characterData: true,
       subtree: true
     });
   });
 
   observer.observe(document.documentElement, {
     childList: true,
+    characterData: true,
     subtree: true
   });
 })();
