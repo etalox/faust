@@ -1301,22 +1301,47 @@
 
       updateScrollText();
 
-      setTimeout(() => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+
+      window.addEventListener('pageshow', (event) => {
+        let isReload = false;
         try {
-          const savedScrollTop = sessionStorage.getItem('mainScrollPosition');
-          if (savedScrollTop !== null) {
-            const targetPixels = parseInt(savedScrollTop, 10);
-            document.body.scrollTop = targetPixels;
-            if (document.documentElement) {
-              document.documentElement.scrollTop = targetPixels;
-            }
-            updateScrollText();
+          const navs = performance.getEntriesByType('navigation');
+          if (navs.length > 0) {
+            isReload = navs[0].type === 'reload';
+          } else if (performance.navigation) {
+            isReload = performance.navigation.type === 1;
           }
-        } catch (e) {
-          console.error("Error al restaurar el scroll:", e);
-        }
-        document.body.classList.add('is-ready');
-      }, 100);
+        } catch (e) {}
+
+        setTimeout(() => {
+          try {
+            if (isReload) {
+              const savedScrollTop = sessionStorage.getItem('mainScrollPosition');
+              if (savedScrollTop !== null) {
+                const targetPixels = parseInt(savedScrollTop, 10);
+                document.body.scrollTop = targetPixels;
+                if (document.documentElement) {
+                  document.documentElement.scrollTop = targetPixels;
+                }
+                updateScrollText();
+              }
+            } else {
+              sessionStorage.removeItem('mainScrollPosition');
+              document.body.scrollTop = 0;
+              if (document.documentElement) {
+                document.documentElement.scrollTop = 0;
+              }
+              updateScrollText();
+            }
+          } catch (e) {
+            console.error("Error al restaurar o reiniciar el scroll:", e);
+          }
+          document.body.classList.add('is-ready');
+        }, 100);
+      });
     })();
 
     window.addEventListener('beforeunload', () => {
@@ -1492,6 +1517,9 @@
               <option value="Socio / Partner" ${data.role === 'Socio / Partner' ? 'selected' : ''}>Socio / Partner</option>
               <option value="Otro" ${data.role === 'Otro' ? 'selected' : ''}>Otro</option>
             </select>
+          </div>
+          <div class="apply-legal-notice" style="margin-top: 32px; font-size: 11px; color: rgba(255, 255, 255, 0.4); line-height: 1.5; text-align: center;">
+            Al hacer clic en Siguiente aceptas nuestros <a href="./terms.html" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: underline;">Términos y Condiciones</a> de servicio y nuestra <a href="./privacy.html" target="_blank" style="color: rgba(255,255,255,0.6); text-decoration: underline;">Política de Privacidad</a>.
           </div>
         `,
         validate: (data) => {

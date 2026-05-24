@@ -107,6 +107,52 @@
       margin-top: 80px;
     }
 
+    /* ── Button Styles ── */
+    .btn { 
+      border-radius: 999px; 
+      padding: 16px 24px; 
+      font-size: 16px; 
+      border: 1px solid transparent; 
+      display: inline-flex; 
+      gap: 8px; 
+      align-items: center; 
+      cursor: pointer; 
+      user-select: none;
+    }
+    .btn-secondary { 
+      position: relative; 
+      background: var(--chip); 
+      border: 0 !important;
+      color: var(--fg); 
+      backdrop-filter: blur(20px); 
+      transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
+    }
+    .btn-secondary::before { 
+      content: ''; 
+      position: absolute; 
+      inset: 0;
+      border-radius: 999px; 
+      padding: 1px; 
+      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03)); 
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); 
+      -webkit-mask-composite: xor; 
+      mask-composite: exclude; 
+      pointer-events: none; 
+      transition: opacity 180ms ease-out;
+    }
+    .btn-secondary:hover { background: rgba(238, 238, 241, 0.10); color: #fff; }
+
+    .legal-nav-buttons {
+      position: sticky;
+      bottom: 40px;
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      z-index: 100;
+    }
+
     @media (max-width: 980px) {
       html {
         overflow-y: auto !important;
@@ -167,6 +213,12 @@
 
         <h2>6. Cambios a la Política</h2>
         <p>Nos reservamos el derecho de efectuar modificaciones o actualizaciones a esta política en cualquier momento, publicando los cambios directamente en este sitio.</p>
+      </div>
+      
+      <!-- Botones de navegación legal -->
+      <div class="legal-nav-buttons">
+        <a class="btn btn-secondary" href="./index.html">Atrás</a>
+        <a class="btn btn-secondary" href="./terms.html">Términos y condiciones</a>
       </div>
     </div>
   </div>

@@ -819,7 +819,7 @@ class FaustFooter extends HTMLElement {
           -ms-user-select: none !important;
         }
 
-        /* ── Menú de selección de idiomas (original / Faust Partners) ── */
+        /* ── Menú de selección de idiomas (original / FaustPartners) ── */
         .lang-overlay {
           position: fixed;
           inset: 0;
