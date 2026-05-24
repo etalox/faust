@@ -603,6 +603,7 @@
       border-radius: 16px;
       padding: 16px;
       box-sizing: border-box;
+      overflow: hidden;
     }
     .calendar-header {
       display: flex;
@@ -667,6 +668,7 @@
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       row-gap: 6px;
+      will-change: transform;
     }
     .calendar-day, .calendar-day-empty {
       aspect-ratio: 1;
@@ -696,11 +698,14 @@
     }
 
     @media (max-width: 980px) {
+      .apply-overlay-wrap {
+        align-items: flex-end;
+      }
       .apply-modal-container {
         width: 100%;
         height: auto;
         max-height: calc(100vh - 40px);
-        margin: 20px 0;
+        margin: 0;
       }
       .apply-modal-body {
         padding: 24px;
@@ -1408,7 +1413,7 @@
       ];
       
       const firstDayIndex = new Date(year, month, 1).getDay();
-      const startDay = (firstDayIndex + 1) % 7;
+      const startDay = firstDayIndex;
       
       const totalDays = new Date(year, month + 1, 0).getDate();
 
@@ -1436,7 +1441,7 @@
             </button>
           </div>
           <div class="calendar-weekdays">
-            <div>S</div><div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div>
+            <div>D</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div>
           </div>
           <div class="calendar-days">
       `;
@@ -1495,7 +1500,8 @@
           if (isChinese) {
             return data.name && data.name.trim().length >= 1;
           } else {
-            return data.name && data.name.trim().length >= 7 && data.name.trim().split(/\s+/).filter(Boolean).length >= 2;
+            const words = data.name ? data.name.trim().split(/\s+/).filter(Boolean) : [];
+            return words.length >= 2 && words[0].length >= 3;
           }
         },
         bind: (data, updateValid) => {
@@ -1507,11 +1513,12 @@
             if (!roleContainer) return;
             const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
             const isChinese = activeLang.startsWith('zh');
+            const words = data.name ? data.name.trim().split(/\s+/).filter(Boolean) : [];
             const isNameValid = isChinese 
               ? (data.name && data.name.trim().length >= 1)
-              : (data.name && data.name.trim().length >= 7 && data.name.trim().split(/\s+/).filter(Boolean).length >= 2);
+              : (words.length >= 2 && words[0].length >= 3);
 
-            const shouldShow = isNameValid;
+            const shouldShow = isNameValid || (data.role && data.role !== '');
             const currentlyVisible = roleContainer.style.display !== 'none';
 
             if (shouldShow && !currentlyVisible) {
@@ -1542,9 +1549,10 @@
                 e.preventDefault();
                 const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
                 const isChinese = activeLang.startsWith('zh');
+                const words = data.name ? data.name.trim().split(/\s+/).filter(Boolean) : [];
                 const isNameValid = isChinese 
                   ? (data.name && data.name.trim().length >= 1)
-                  : (data.name && data.name.trim().length >= 7 && data.name.trim().split(/\s+/).filter(Boolean).length >= 2);
+                  : (words.length >= 2 && words[0].length >= 3);
                 
                 if (isNameValid) {
                   if (roleContainer && roleContainer.style.display !== 'none' && roleSelect) {
@@ -1734,7 +1742,7 @@
           return true;
         },
         bind: (data, updateValid) => {
-          function renderCalendarView() {
+          function renderCalendarView(entryDirection) {
             const mount = document.getElementById('apply-calendar-mount');
             if (!mount) return;
             mount.innerHTML = buildCalendarHTML(calendarYear, calendarMonth, data.date);
@@ -1758,7 +1766,7 @@
                   calendarMonth = 11;
                   calendarYear--;
                 }
-                renderCalendarView();
+                renderCalendarView('left');
                 adjustModalHeight(prevHeight);
               });
             }
@@ -1782,7 +1790,7 @@
                   calendarMonth = 0;
                   calendarYear++;
                 }
-                renderCalendarView();
+                renderCalendarView('right');
                 adjustModalHeight(prevHeight);
               });
             }
@@ -1792,17 +1800,220 @@
               cell.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const selectedDate = cell.getAttribute('data-date');
-                data.date = selectedDate;
-                
-                mount.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('is-selected'));
-                cell.classList.add('is-selected');
-                
+                if (data.date === selectedDate) {
+                  data.date = '';
+                  cell.classList.remove('is-selected');
+                } else {
+                  data.date = selectedDate;
+                  mount.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('is-selected'));
+                  cell.classList.add('is-selected');
+                }
                 updateValid();
               });
             });
+
+            // Slide entry transition
+            const newDays = mount.querySelector('.calendar-days');
+            if (newDays && entryDirection) {
+              newDays.style.transition = 'none';
+              if (entryDirection === 'left') {
+                newDays.style.transform = 'translateX(-100%)';
+              } else if (entryDirection === 'right') {
+                newDays.style.transform = 'translateX(100%)';
+              }
+              newDays.offsetHeight; // force reflow
+              newDays.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+              newDays.style.transform = 'translateX(0)';
+            }
           }
           
           renderCalendarView();
+
+          const mount = document.getElementById('apply-calendar-mount');
+          if (mount) {
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let startTranslateX = 0;
+            let touchStartTime = 0;
+            let lastTouchX = 0;
+            let lastTouchTime = 0;
+            let velocity = 0;
+            let daysContainer = null;
+            let isDragging = false;
+            let monthChangeTimeout = null;
+
+            function getTranslateX(element) {
+              const style = window.getComputedStyle(element);
+              const transform = style.transform || style.webkitTransform;
+              if (!transform || transform === 'none') {
+                return 0;
+              }
+              const matrix = transform.match(/^matrix\((.+)\)$/);
+              if (matrix) {
+                const values = matrix[1].split(',').map(Number);
+                return values[4] || 0;
+              }
+              const matrix3d = transform.match(/^matrix3d\((.+)\)$/);
+              if (matrix3d) {
+                const values = matrix3d[1].split(',').map(Number);
+                return values[12] || 0;
+              }
+              return 0;
+            }
+
+            mount.addEventListener('touchstart', (e) => {
+              const target = e.target.closest('.calendar-days');
+              if (target) {
+                daysContainer = target;
+                if (monthChangeTimeout) {
+                  clearTimeout(monthChangeTimeout);
+                  monthChangeTimeout = null;
+                }
+                
+                const prevBtn = document.getElementById('calendar-prev-btn');
+                const nextBtn = document.getElementById('calendar-next-btn');
+                
+                const currentTx = getTranslateX(daysContainer);
+                daysContainer.style.transition = 'none';
+                daysContainer.style.transform = `translateX(${currentTx}px)`;
+                
+                if (currentTx > 0 && (!prevBtn || prevBtn.disabled)) {
+                  startTranslateX = currentTx / 0.25;
+                } else if (currentTx < 0 && (!nextBtn || nextBtn.disabled)) {
+                  startTranslateX = currentTx / 0.25;
+                } else {
+                  startTranslateX = currentTx;
+                }
+                
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                touchStartTime = Date.now();
+                lastTouchX = touchStartX;
+                lastTouchTime = touchStartTime;
+                velocity = 0;
+                isDragging = true;
+              }
+            }, { passive: true });
+
+            mount.addEventListener('touchmove', (e) => {
+              if (!isDragging || !daysContainer) return;
+              const currentX = e.touches[0].clientX;
+              const currentY = e.touches[0].clientY;
+              const diffX = currentX - touchStartX;
+              const diffY = currentY - touchStartY;
+
+              if (Math.abs(diffX) > Math.abs(diffY)) {
+                const now = Date.now();
+                const dt = now - lastTouchTime;
+                if (dt > 0) {
+                  velocity = (currentX - lastTouchX) / dt;
+                }
+                lastTouchX = currentX;
+                lastTouchTime = now;
+
+                let dragDistance = startTranslateX + diffX;
+                const prevBtn = document.getElementById('calendar-prev-btn');
+                const nextBtn = document.getElementById('calendar-next-btn');
+
+                const canGoPrev = prevBtn && !prevBtn.disabled;
+                const canGoNext = nextBtn && !nextBtn.disabled;
+
+                if (dragDistance > 0 && !canGoPrev) {
+                  dragDistance = dragDistance * 0.25; // resistance
+                } else if (dragDistance < 0 && !canGoNext) {
+                  dragDistance = dragDistance * 0.25; // resistance
+                }
+
+                // Automatic threshold check: if dragged past 140px and navigation is enabled,
+                // trigger the transition immediately and end dragging.
+                const autoTriggerThreshold = 140; // pixels
+                if (dragDistance > autoTriggerThreshold && canGoPrev) {
+                  isDragging = false;
+                  daysContainer.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+                  daysContainer.style.transform = 'translateX(100%)';
+                  monthChangeTimeout = setTimeout(() => {
+                    if (prevBtn) prevBtn.click();
+                  }, 200);
+                  daysContainer = null;
+                  return;
+                } else if (dragDistance < -autoTriggerThreshold && canGoNext) {
+                  isDragging = false;
+                  daysContainer.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+                  daysContainer.style.transform = 'translateX(-100%)';
+                  monthChangeTimeout = setTimeout(() => {
+                    if (nextBtn) nextBtn.click();
+                  }, 200);
+                  daysContainer = null;
+                  return;
+                }
+
+                daysContainer.style.transform = `translateX(${dragDistance}px)`;
+              }
+            }, { passive: true });
+
+            mount.addEventListener('touchend', (e) => {
+              if (!isDragging || !daysContainer) return;
+              isDragging = false;
+
+              const touchEndX = e.changedTouches[0].clientX;
+              const touchEndY = e.changedTouches[0].clientY;
+              const diffX = touchEndX - touchStartX;
+              const diffY = touchEndY - touchStartY;
+              const now = Date.now();
+
+              if (now - lastTouchTime > 80) {
+                velocity = 0;
+              }
+
+              daysContainer.style.transition = 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+
+              const prevBtn = document.getElementById('calendar-prev-btn');
+              const nextBtn = document.getElementById('calendar-next-btn');
+              
+              const flickThresholdVelocity = 0.4; // px/ms
+              const flickThresholdDistance = 30; // px
+              const dragThresholdDistance = 120; // px
+              
+              const finalTx = startTranslateX + diffX;
+              const absVelocity = Math.abs(velocity);
+              const absDiffX = Math.abs(diffX);
+              const isHorizontal = absDiffX > Math.abs(diffY);
+
+              let action = 'snap';
+
+              if (isHorizontal) {
+                if (absVelocity > flickThresholdVelocity && absDiffX > flickThresholdDistance) {
+                  if (velocity > 0) {
+                    action = 'prev';
+                  } else {
+                    action = 'next';
+                  }
+                } else {
+                  if (finalTx > dragThresholdDistance) {
+                    action = 'prev';
+                  } else if (finalTx < -dragThresholdDistance) {
+                    action = 'next';
+                  }
+                }
+              }
+
+              if (action === 'prev' && prevBtn && !prevBtn.disabled) {
+                daysContainer.style.transform = 'translateX(100%)';
+                monthChangeTimeout = setTimeout(() => {
+                  if (prevBtn) prevBtn.click();
+                }, 200);
+              } else if (action === 'next' && nextBtn && !nextBtn.disabled) {
+                daysContainer.style.transform = 'translateX(-100%)';
+                monthChangeTimeout = setTimeout(() => {
+                  if (nextBtn) nextBtn.click();
+                }, 200);
+              } else {
+                daysContainer.style.transform = 'translateX(0)';
+              }
+
+              daysContainer = null;
+            }, { passive: true });
+          }
         }
       }
     ];
@@ -1885,6 +2096,23 @@
       } else {
         btnNext.setAttribute('disabled', 'true');
       }
+
+      if (currentStep === steps.length - 1) {
+        if (formData.date && formData.date.trim() !== '') {
+          btnNext.textContent = 'Enviar';
+        } else {
+          btnNext.textContent = 'Omitir y enviar';
+        }
+      } else if (currentStep === 3) {
+        if (formData.teams && formData.teams.length > 0) {
+          btnNext.textContent = 'Siguiente';
+        } else {
+          btnNext.textContent = 'Omitir';
+        }
+      } else {
+        btnNext.textContent = 'Siguiente';
+      }
+
       saveFormDraft();
     }
 
@@ -1936,11 +2164,7 @@
           btnBack.style.display = 'block';
         }
 
-        if (currentStep === steps.length - 1) {
-          btnNext.textContent = 'Enviar';
-        } else {
-          btnNext.textContent = 'Siguiente';
-        }
+        // btnNext text content is handled by checkValidation()
 
         checkValidation();
         if (!isBack) {
@@ -1969,11 +2193,7 @@
           btnBack.style.display = 'block';
         }
 
-        if (currentStep === steps.length - 1) {
-          btnNext.textContent = 'Enviar';
-        } else {
-          btnNext.textContent = 'Siguiente';
-        }
+        // btnNext text content is handled by checkValidation()
 
         checkValidation();
         if (!isBack) {
