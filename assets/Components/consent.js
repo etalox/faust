@@ -580,7 +580,7 @@ try {
       return;
     }
 
-    if (scrollTop >= showThreshold) {
+    if (faustIsStrictRegion()) {
       if (!bannerCreated) {
         initBanner();
       }
@@ -590,12 +590,23 @@ try {
         overlay.classList.add('show');
         updateLegalNavBottom();
       }
-    } else if (scrollTop < hideThreshold) {
-      // scrollTop < hideThreshold
-      const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
-      if (overlay && overlay.classList.contains('show')) {
-        overlay.classList.remove('show');
-        updateLegalNavBottom();
+    } else {
+      if (scrollTop >= showThreshold) {
+        if (!bannerCreated) {
+          initBanner();
+        }
+        const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+        if (overlay && !overlay.classList.contains('show')) {
+          overlay.offsetHeight; // Force reflow for transition
+          overlay.classList.add('show');
+          updateLegalNavBottom();
+        }
+      } else if (scrollTop < hideThreshold) {
+        const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+        if (overlay && overlay.classList.contains('show')) {
+          overlay.classList.remove('show');
+          updateLegalNavBottom();
+        }
       }
     }
   }
