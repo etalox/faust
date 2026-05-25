@@ -818,8 +818,8 @@
       pointer-events: none;
     }
     .calendar-day.is-selected {
-      border-color: #fff !important;
-      background: rgba(255, 255, 255, 0.08) !important;
+      background: #0000FF !important;
+      color: #fff !important;
       font-weight: 600;
     }
 
@@ -1412,6 +1412,7 @@
       contact: '',
       date: ''
     };
+    window.confirmedCompany = '';
 
     let calendarYear = new Date().getFullYear();
     let calendarMonth = new Date().getMonth();
@@ -2095,6 +2096,9 @@
             if (typeof parsed.currentStep === 'number' && parsed.currentStep >= 0 && parsed.currentStep < steps.length) {
               currentStep = parsed.currentStep;
             }
+            if (formData.company && currentStep > 1) {
+              window.confirmedCompany = formData.company;
+            }
             if (formData.date) {
               const parts = formData.date.split('-');
               if (parts.length === 3) {
@@ -2257,6 +2261,11 @@
 
       cancelPendingBackHeightAdjustment();
 
+      if (currentStep === 1) {
+        window.confirmedCompany = formData.company || '';
+        window.dispatchEvent(new CustomEvent('faust-company-confirmed', { detail: window.confirmedCompany }));
+      }
+
       if (currentStep === steps.length - 1) {
         submitForm();
       } else {
@@ -2331,7 +2340,7 @@
         domain = companyVal;
       }
       
-      return `${emailPrefix}@${domain}.com o número de teléfono`;
+      return `${emailPrefix}@${domain}.com`;
     }
 
     function validateContactMethod(val) {
@@ -2848,6 +2857,8 @@
       currentStep = 0;
       clearFormDraft();
       cancelPendingBackHeightAdjustment();
+      window.confirmedCompany = '';
+      window.dispatchEvent(new CustomEvent('faust-company-confirmed', { detail: '' }));
     };
 
     window.openApplyModal = function() {
