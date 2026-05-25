@@ -3384,25 +3384,20 @@
         });
       }
 
-      // 3. Bidirectional reveal observer
-      var observerOptions = {
+      // 3. Bidirectional reveal observer (split into reveal and hide observers for perfect cross-browser reliability)
+      var revealObserverOptions = {
         root: null,
         rootMargin: '-120px 0px -120px 0px', // Trigger animations slightly higher on the screen when scrolling down
         threshold: 0.02
       };
 
-      var observer = new IntersectionObserver(function(entries, obs) {
+      var revealObserver = new IntersectionObserver(function(entries) {
         var groupsToReveal = {};
-        var groupsToHide = {};
 
         entries.forEach(function(entry) {
-          var el = entry.target;
-          var groupId = el.getAttribute('data-reveal-group');
-          
           if (entry.isIntersecting) {
+            var groupId = entry.target.getAttribute('data-reveal-group');
             groupsToReveal[groupId] = true;
-          } else {
-            groupsToHide[groupId] = true;
           }
         });
 
@@ -3415,8 +3410,6 @@
               enteringElements.push(el);
             }
           });
-          // Remove from hide checklist if it's currently intersecting
-          delete groupsToHide[groupId];
         });
 
         if (enteringElements.length > 0) {
@@ -3433,6 +3426,23 @@
             revealElements(enteringElements);
           }
         }
+      }, revealObserverOptions);
+
+      var hideObserverOptions = {
+        root: null,
+        rootMargin: '0px 0px 0px 0px', // Viewport boundaries
+        threshold: 0
+      };
+
+      var hideObserver = new IntersectionObserver(function(entries) {
+        var groupsToHide = {};
+
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) {
+            var groupId = entry.target.getAttribute('data-reveal-group');
+            groupsToHide[groupId] = true;
+          }
+        });
 
         // Resolve exiting groups (hiding them only when all elements are out of viewport)
         Object.keys(groupsToHide).forEach(function(groupId) {
@@ -3449,7 +3459,7 @@
             });
           }
         });
-      }, observerOptions);
+      }, hideObserverOptions);
 
       function revealElements(elements) {
         // Sort entering elements: top-to-bottom, then left-to-right (horizontal stagger)
@@ -3475,10 +3485,10 @@
                                   el.classList.contains('headline') || el.classList.contains('lead');
             
             if (isPrevHeader) {
-              // Start 400ms after the header started animating
+              // Start 120ms after the header started animating
               currentDelay += 120;
             } else if (isCurrentHeader) {
-              // Start 200ms after the previous element (e.g., eyebrow) started animating
+              // Start 120ms after the previous element (e.g., eyebrow) started animating
               currentDelay += 120;
             } else {
               // Standard stagger delay
@@ -3490,9 +3500,10 @@
         });
       }
 
-      // Start observing all reveal items
+      // Start observing all reveal items with both observers
       revealItems.forEach(function(item) {
-        observer.observe(item);
+        revealObserver.observe(item);
+        hideObserver.observe(item);
       });
     })();
   </script>
