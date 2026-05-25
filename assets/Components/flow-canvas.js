@@ -117,7 +117,7 @@
     faust-flow-canvas.has-animations .Frame198 faust-flow-arrow {
       opacity: 0;
       transform: scaleX(0);
-      transform-origin: right;
+      transform-origin: left;
     }
     faust-flow-canvas.has-animations.animating .Frame198 faust-flow-arrow {
       opacity: 1;
@@ -185,7 +185,7 @@
     faust-flow-canvas.has-animations .FlowMetricsContainer faust-flow-arrow-split-down {
       opacity: 0;
       transform: scale(0);
-      transform-origin: top left;
+      transform-origin: center;
     }
     faust-flow-canvas.has-animations.animating .FlowMetricsContainer faust-flow-arrow-split-down {
       opacity: 1;
