@@ -126,8 +126,11 @@ function assert(condition, message) {
   }
 }
 
-// Read components.js and extract the script contents
-const code = fs.readFileSync('c:/Users/franc/Workspace/Faust Partners/assets/components.js', 'utf8');
+// Read component fragments and concatenate them
+const consentCode = fs.readFileSync('c:/Users/franc/Workspace/Faust Partners/assets/Components/consent.js', 'utf8');
+const footerCode = fs.readFileSync('c:/Users/franc/Workspace/Faust Partners/assets/Components/footer.js', 'utf8');
+const code = consentCode + '\n' + footerCode;
+
 
 // Define getSelectedCode and translation helper mocks if referenced
 global.getSelectedCode = () => 'es-LA';

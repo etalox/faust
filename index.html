@@ -352,8 +352,9 @@
       }
     }
 
-    /* ── Apply Form Overlay Wizard ── */
-    .apply-overlay {
+    /* ── Apply & Message Form Overlay Wizard ── */
+    .apply-overlay,
+    .message-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0);
@@ -363,12 +364,14 @@
       transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                   visibility 0.3s;
     }
-    .apply-overlay.is-open {
+    .apply-overlay.is-open,
+    .message-overlay.is-open {
       visibility: visible;
       background: rgba(0, 0, 0, 0.6);
       pointer-events: auto;
     }
-    .apply-overlay-wrap {
+    .apply-overlay-wrap,
+    .message-overlay-wrap {
       height: 100%;
       display: flex;
       justify-content: center;
@@ -376,7 +379,8 @@
       padding: 20px !important;
       box-sizing: border-box;
     }
-    .apply-modal-container {
+    .apply-modal-container,
+    .message-modal-container {
       width: 500px;
       max-width: 100%;
       height: auto;
@@ -387,10 +391,12 @@
       transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                   height 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .apply-overlay.is-open .apply-modal-container {
+    .apply-overlay.is-open .apply-modal-container,
+    .message-overlay.is-open .message-modal-container {
       transform: translateY(0);
     }
-    .apply-modal {
+    .apply-modal,
+    .message-modal {
       flex: 1;
       background: rgba(21, 21, 21, 0.1);
       backdrop-filter: blur(0px);
@@ -407,7 +413,8 @@
                   box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                   border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .apply-overlay.is-open .apply-modal {
+    .apply-overlay.is-open .apply-modal,
+    .message-overlay.is-open .message-modal {
       background: rgba(21, 21, 21, 0.9);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -417,27 +424,36 @@
 
     .apply-modal-header,
     .apply-modal-body,
-    .apply-modal-footer {
+    .apply-modal-footer,
+    .message-modal-header,
+    .message-modal-body,
+    .message-modal-footer {
       opacity: 0;
       transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     }
     .apply-overlay.is-open .apply-modal-header,
     .apply-overlay.is-open .apply-modal-body,
-    .apply-overlay.is-open .apply-modal-footer {
+    .apply-overlay.is-open .apply-modal-footer,
+    .message-overlay.is-open .message-modal-header,
+    .message-overlay.is-open .message-modal-body,
+    .message-overlay.is-open .message-modal-footer {
       opacity: 1;
     }
 
-    .apply-modal-header {
+    .apply-modal-header,
+    .message-modal-header {
       padding: 24px 32px 16px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
-    .apply-modal-title-row {
+    .apply-modal-title-row,
+    .message-modal-title-row {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
     }
-    .apply-modal-title-row span {
+    .apply-modal-title-row span,
+    .message-modal-title-row span {
       font-size: 20px;
       font-weight: 500;
       color: #fff;
@@ -463,7 +479,8 @@
       opacity: 0.6;
     }
 
-    .apply-modal-body {
+    .apply-modal-body,
+    .message-modal-body {
       flex: 1;
       padding: 32px;
       overflow-y: auto;
@@ -471,7 +488,8 @@
       flex-direction: column;
       justify-content: center;
     }
-    .apply-modal-footer {
+    .apply-modal-footer,
+    .message-modal-footer {
       padding: 16px 32px 24px;
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
@@ -503,6 +521,11 @@
       outline: none;
       box-sizing: border-box;
       transition: border-color 0.2s, background-color 0.2s;
+    }
+    .apply-input[readonly] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(255, 255, 255, 0.01) !important;
     }
     .apply-input:focus {
       border-color: #fff;
@@ -574,18 +597,24 @@
       transform: scale(1);
     }
 
-    /* Next Button Visually Disabled & Animations */
-    .btn-apply-next {
+    /* Next & Message Submit Button Visually Disabled & Animations */
+    .btn-apply-next,
+    #message-submit-btn,
+    #msg-success-close-btn-ind {
       transition: background-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                   border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                   opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                   color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                   transform 0.2s ease;
     }
-    .btn-apply-next:active {
+    .btn-apply-next:active,
+    #message-submit-btn:active,
+    #msg-success-close-btn-ind:active {
       transform: scale(0.98);
     }
-    .btn-apply-next:disabled {
+    .btn-apply-next:disabled,
+    #message-submit-btn:disabled,
+    #msg-success-close-btn-ind:disabled {
       opacity: 0.3;
       cursor: not-allowed;
       pointer-events: none;
@@ -697,23 +726,28 @@
     }
 
     @media (max-width: 980px) {
-      .apply-overlay-wrap {
+      .apply-overlay-wrap,
+      .message-overlay-wrap {
         align-items: flex-end;
       }
-      .apply-modal-container {
+      .apply-modal-container,
+      .message-modal-container {
         width: 100%;
         height: auto;
         max-height: calc(100vh - 40px);
         margin: 0;
       }
-      .apply-modal-body {
+      .apply-modal-body,
+      .message-modal-body {
         padding: 24px;
         justify-content: flex-start;
       }
-      .apply-modal-header {
+      .apply-modal-header,
+      .message-modal-header {
         padding: 20px 24px 12px;
       }
-      .apply-modal-footer {
+      .apply-modal-footer,
+      .message-modal-footer {
         padding: 12px 24px 20px;
       }
     }
@@ -761,8 +795,8 @@
       <h1>Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
       <p>Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
       <div class="btn-row" style="justify-content:center">
-        <a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
-        <a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
+        <faust-btn-apply></faust-btn-apply>
+        <faust-btn-strategy></faust-btn-strategy>
       </div>
       <div class="supported">
         <div class="label">Respaldado por</div>
@@ -782,8 +816,8 @@
           <div class="muted" style="display: inline;">Usamos Neurociencia Conductual y Análisis de Datos para optimizar la Tasa de Conversión (%) de tu sitio web. Cubrimos el ciclo de Análisis, Diseño y Desarrollo iterativo.</div>
         </h2>
         <div class="btn-row">
-          <a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
-          <a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>
+          <faust-btn-apply></faust-btn-apply>
+          <faust-btn-strategy></faust-btn-strategy>
         </div>
         <div class="stats">
           <article class="stat">
@@ -1092,8 +1126,8 @@
           </div>
           <h2 data-layer="Financing Text 3" class="FinancingText3 headline" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #F2F2F2; font-size: clamp(38px, 5vw, 68px); font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 1.08; letter-spacing: -1.6px; word-wrap: break-word; margin: 0;">Maximiza tus ingresos.<br/>Cero riesgos.</h2>
           <div data-layer="Buttons Container" class="ButtonsContainer btn-row" style="justify-content: center;">
-            <a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>
-            <a class="btn btn-secondary" href="#contacto"><span class="hide-mobile">Escribir un mensaje</span><span class="show-mobile">Contacto</span></a>
+            <faust-btn-apply></faust-btn-apply>
+            <faust-btn-message></faust-btn-message>
           </div>
 
         </div>
@@ -1121,6 +1155,27 @@
           <div class="apply-modal-footer">
             <button class="btn btn-secondary btn-apply-back" id="apply-btn-back" style="display: none;">Anterior</button>
             <button class="btn btn-primary btn-apply-next" id="apply-btn-next">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Message Overlay -->
+  <div class="message-overlay" id="message-overlay">
+    <div class="wrap message-overlay-wrap">
+      <div class="message-modal-container">
+        <div class="message-modal notranslate" translate="no">
+          <div class="message-modal-header">
+            <div class="message-modal-title-row">
+              <span>Escribir un mensaje</span>
+            </div>
+          </div>
+          <div class="message-modal-body" id="message-modal-body">
+            <!-- Form or Success contents -->
+          </div>
+          <div class="message-modal-footer" id="message-modal-footer">
+            <!-- Buttons Cancelar / Enviar -->
           </div>
         </div>
       </div>
@@ -2489,13 +2544,22 @@
             <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Gracias por aplicar!</h3>
             <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto con usted o su empresa muy pronto.</p>
             <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
-              <a class="btn btn-secondary" href="https://wa.me/524428767130?text=Hola%20Faust%20Partners" target="_blank" rel="noopener noreferrer" style="border: 1px solid rgba(255,255,255,0.15) !important;">Escribir un mensaje</a>
+              <button class="btn btn-secondary" id="apply-success-message-btn" style="border: 1px solid rgba(255,255,255,0.15) !important; background: transparent; color: #fff; cursor: pointer;">Escribir un mensaje</button>
               <button class="btn btn-primary" id="apply-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
             </div>
           </div>
         `;
         
         document.getElementById('apply-success-close-btn').addEventListener('click', window.closeApplyModal);
+        
+        const msgBtn = document.getElementById('apply-success-message-btn');
+        if (msgBtn) {
+          msgBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.closeApplyModal();
+            window.openMessageModal();
+          });
+        }
         
         adjustModalHeight(prevHeight);
         modalBody.style.opacity = '1';
@@ -2508,6 +2572,252 @@
         setTimeout(renderContent, 150);
       }
     }
+
+    /* ── Independent Contact Message Modal Controller ── */
+    const msgOverlay = document.getElementById('message-overlay');
+    const msgModalBody = document.getElementById('message-modal-body');
+
+    let msgHeightTransitionTimeout = null;
+    function adjustMsgModalHeight(prevHeight) {
+      const container = document.querySelector('.message-modal-container');
+      if (!container) return;
+      
+      if (msgHeightTransitionTimeout) {
+        clearTimeout(msgHeightTransitionTimeout);
+        msgHeightTransitionTimeout = null;
+      }
+      
+      if (prevHeight === undefined) {
+        prevHeight = container.offsetHeight;
+      }
+      
+      container.style.height = 'auto';
+      const targetHeight = container.offsetHeight;
+      
+      if (prevHeight === 0 || prevHeight === targetHeight) {
+        container.style.height = 'auto';
+        return;
+      }
+      
+      container.style.height = prevHeight + 'px';
+      container.offsetHeight; // force reflow
+      container.style.height = targetHeight + 'px';
+      
+      msgHeightTransitionTimeout = setTimeout(() => {
+        container.style.height = 'auto';
+      }, 350);
+    }
+
+    window.openMessageModal = function() {
+      ensureIpDetected();
+      const isOpening = !msgOverlay.classList.contains('is-open');
+      msgOverlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+
+      const container = document.querySelector('.message-modal-container');
+      if (container) {
+        container.style.height = 'auto';
+        container.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
+      }
+
+      showContactMessageForm(isOpening);
+    };
+
+    window.closeMessageModal = function() {
+      msgOverlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+      msgModalBody.style.opacity = '';
+      if (msgHeightTransitionTimeout) {
+        clearTimeout(msgHeightTransitionTimeout);
+        msgHeightTransitionTimeout = null;
+      }
+    };
+
+    function showContactMessageForm(isOpening) {
+      const container = document.querySelector('.message-modal-container');
+      const prevHeight = (container && !isOpening) ? container.offsetHeight : 0;
+
+      let isAlreadySent = parseInt(localStorage.getItem('faust-submission-count') || '0', 10) >= 1;
+      let savedName = '';
+      try {
+        const saved = JSON.parse(localStorage.getItem('faust-applications') || '[]');
+        if (saved.length > 0) {
+          const lastApp = saved[saved.length - 1];
+          if (lastApp && lastApp.data && lastApp.data.name) {
+            savedName = lastApp.data.name;
+          }
+        }
+      } catch (e) {}
+
+      if (!savedName) {
+        savedName = formData.name || '';
+      }
+
+      const nameIsEditable = !isAlreadySent || !savedName;
+
+      const renderContent = () => {
+        msgModalBody.innerHTML = `
+          <div class="apply-message-form" style="display: flex; flex-direction: column; gap: 20px; padding: 10px 0; text-align: left;">
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; line-height: 1.5; margin: 0; text-align: center;">Envíanos tu consulta y te responderemos por correo electrónico.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label for="message-input-name" style="font-size: 13px; font-weight: 600; color: #fff;">Nombre</label>
+              <input type="text" id="message-input-name" class="apply-input" style="width: 100%; box-sizing: border-box;" ${!nameIsEditable ? 'readonly' : ''} value="${savedName.replace(/"/g, '&quot;')}">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label for="message-input-text" style="font-size: 13px; font-weight: 600; color: #fff;">Mensaje</label>
+              <textarea id="message-input-text" class="apply-input" rows="4" placeholder="Escribe tu mensaje aquí..." style="width: 100%; box-sizing: border-box; resize: none; height: 120px;"></textarea>
+            </div>
+          </div>
+        `;
+
+        const msgFooter = document.getElementById('message-modal-footer');
+        if (msgFooter) {
+          msgFooter.style.display = 'flex';
+          msgFooter.style.justifyContent = 'flex-end';
+          msgFooter.innerHTML = `
+            <button class="btn btn-secondary" id="message-cancel-btn">Cancelar</button>
+            <button class="btn btn-primary" id="message-submit-btn" disabled>Enviar</button>
+          `;
+        }
+
+        const nameInput = document.getElementById('message-input-name');
+        const textInput = document.getElementById('message-input-text');
+        const cancelBtn = document.getElementById('message-cancel-btn');
+        const submitBtn = document.getElementById('message-submit-btn');
+
+        const validateMessageForm = () => {
+          const nameVal = nameInput.value.trim();
+          const textVal = textInput.value.trim();
+          if (nameVal.length >= 2 && textVal.length >= 5) {
+            submitBtn.removeAttribute('disabled');
+          } else {
+            submitBtn.setAttribute('disabled', 'true');
+          }
+        };
+
+        nameInput.addEventListener('input', validateMessageForm);
+        textInput.addEventListener('input', validateMessageForm);
+
+        validateMessageForm();
+
+        cancelBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.closeMessageModal();
+        });
+
+        submitBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const nameVal = nameInput.value.trim();
+          const textVal = textInput.value.trim();
+          
+          submitBtn.setAttribute('disabled', 'true');
+          submitBtn.textContent = 'Enviando...';
+          cancelBtn.setAttribute('disabled', 'true');
+          cancelBtn.style.opacity = '0.5';
+          cancelBtn.style.pointerEvents = 'none';
+
+          const autoData = getAutomaticCollectionData();
+
+          fetch('https://splitforms.com/api/submit', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              access_key: 'f6778d6ae57e42a5a319d81048ab8db7',
+              _subject: `Mensaje de contacto Faust Partners - ${nameVal}`,
+              Nombre: nameVal,
+              Mensaje: textVal,
+              "Recopilado Automáticamente": autoData,
+              botcheck: ""
+            })
+          })
+          .then(() => {
+            showMsgSuccessScreenIndependent();
+          })
+          .catch(err => {
+            console.warn("Error sending message to Splitforms, running success fallback:", err);
+            showMsgSuccessScreenIndependent();
+          });
+        });
+
+        adjustMsgModalHeight(prevHeight);
+        msgModalBody.style.opacity = '1';
+      };
+
+      if (prevHeight === 0) {
+        renderContent();
+      } else {
+        msgModalBody.style.opacity = '0';
+        setTimeout(renderContent, 150);
+      }
+    }
+
+    function showMsgSuccessScreenIndependent() {
+      const container = document.querySelector('.message-modal-container');
+      const prevHeight = container ? container.offsetHeight : 0;
+
+      const renderContent = () => {
+        msgModalBody.innerHTML = `
+          <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
+            <div class="apply-success-icon" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px;">✓</div>
+            <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Mensaje enviado!</h3>
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tu mensaje correctamente y nos pondremos en contacto contigo lo antes posible.</p>
+          </div>
+        `;
+
+        const msgFooter = document.getElementById('message-modal-footer');
+        if (msgFooter) {
+          msgFooter.style.display = 'flex';
+          msgFooter.style.justifyContent = 'center';
+          msgFooter.innerHTML = `
+            <button class="btn btn-primary" id="msg-success-close-btn-ind" style="width: 120px; justify-content: center;">Listo</button>
+          `;
+        }
+        
+        document.getElementById('msg-success-close-btn-ind').addEventListener('click', window.closeMessageModal);
+        
+        adjustMsgModalHeight(prevHeight);
+        msgModalBody.style.opacity = '1';
+      };
+
+      if (prevHeight === 0) {
+        renderContent();
+      } else {
+        msgModalBody.style.opacity = '0';
+        setTimeout(renderContent, 150);
+      }
+    }
+
+    msgOverlay.addEventListener('click', (e) => {
+      if (e.target === msgOverlay || e.target.classList.contains('message-overlay-wrap')) {
+        window.closeMessageModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && msgOverlay.classList.contains('is-open')) {
+        window.closeMessageModal();
+      }
+    });
+
+    function checkHashAndOpen() {
+      const hash = window.location.hash;
+      if (hash === '#contacto') {
+        if (window.openMessageModal) {
+          window.openMessageModal();
+        }
+      }
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(checkHashAndOpen, 100);
+    });
+
+    window.addEventListener('hashchange', checkHashAndOpen);
 
     window.resetForm = function() {
       formData.name = '';
@@ -2580,13 +2890,24 @@
       if (!btn) return;
       
       const href = btn.getAttribute('href');
-      const hasApplyAction = btn.getAttribute('data-action') === 'apply' || btn.classList.contains('faust-apply-btn');
-      const isApplyHref = href === '#contacto' || href === '#aplicar' || href === './index.html#aplicar' || href === 'index.html#aplicar';
-      
       const text = btn.textContent.trim().toLowerCase();
+      
+      const hasApplyAction = btn.getAttribute('data-action') === 'apply' || btn.classList.contains('faust-apply-btn');
+      const isApplyHref = href === '#aplicar' || href === './index.html#aplicar' || href === 'index.html#aplicar';
       const isApplyText = text.startsWith('aplicar') || text === 'apply' || text === 'postuler' || text === 'candidatar-se' || text === '申请' || text === 'подать заявку';
 
-      if (hasApplyAction || isApplyHref || isApplyText) {
+      const hasContactAction = btn.getAttribute('data-action') === 'contact' || btn.classList.contains('faust-contact-btn');
+      const isContactHref = href === '#contacto' || href === './index.html#contacto' || href === 'index.html#contacto';
+      const isContactText = text === 'escribir un mensaje' || text === 'contacto' || text === 'contact' || text === 'escreva uma mensagem' || text === 'écrire un message' || text === 'nächste schritte' || text === 'contact us';
+
+      const isContact = (hasContactAction || isContactHref || isContactText) && !hasApplyAction && !isApplyText;
+
+      if (isContact) {
+        if (window.openMessageModal) {
+          e.preventDefault();
+          window.openMessageModal();
+        }
+      } else if (hasApplyAction || isApplyHref || isApplyText) {
         if (window.openApplyModal) {
           e.preventDefault();
           window.openApplyModal();
