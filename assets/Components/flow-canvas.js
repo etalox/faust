@@ -32,7 +32,7 @@
     }
     faust-flow-canvas.has-animations.animating .Frame13 {
       width: 152px !important;
-      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.0s;
     }
 
     /* Arrow 1 inside Frame13 (stretches) */
@@ -44,7 +44,7 @@
     faust-flow-canvas.has-animations.animating .Frame13 faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.3s ease 0.8s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: opacity 0.4s ease 1.0s, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.0s;
     }
 
     /* Frame199 (Card A + Arrow 2) */
@@ -55,8 +55,8 @@
     faust-flow-canvas.has-animations.animating .Frame199 {
       width: 312px !important;
       visibility: visible;
-      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.4s, 
-                  visibility 0s 1.4s;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.35s, 
+                  visibility 0s 1.35s;
     }
 
     /* Card A inside Frame199 (zoom + focus fade) */
@@ -69,9 +69,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 1.4s, 
-                  filter 0.5s ease 1.4s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.4s;
+      transition: opacity 0.7s ease 1.35s, 
+                  filter 0.7s ease 1.35s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.35s;
     }
 
     /* Arrow 2 inside Frame199 (stretches) */
@@ -83,7 +83,7 @@
     faust-flow-canvas.has-animations.animating .Frame199 faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.3s ease 2.0s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.0s;
+      transition: opacity 0.4s ease 2.15s, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.15s;
     }
 
     /* Frame198 (Database Flat + Arrow 3 reverse) */
@@ -94,8 +94,8 @@
     faust-flow-canvas.has-animations.animating .Frame198 {
       width: 152px !important;
       visibility: visible;
-      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.6s, 
-                  visibility 0s 2.6s;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.5s, 
+                  visibility 0s 2.5s;
     }
 
     /* Database Flat Icon inside Frame198 (zoom + focus fade) */
@@ -108,9 +108,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 2.6s, 
-                  filter 0.5s ease 2.6s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.6s;
+      transition: opacity 0.7s ease 2.5s, 
+                  filter 0.7s ease 2.5s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.5s;
     }
 
     /* Arrow 3 (reverse) inside Frame198 (stretches) */
@@ -122,7 +122,7 @@
     faust-flow-canvas.has-animations.animating .Frame198 faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.3s ease 3.2s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.2s;
+      transition: opacity 0.4s ease 3.3s, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 3.3s;
     }
 
     /* Frame201 (Card B - Blue) */
@@ -133,8 +133,8 @@
     faust-flow-canvas.has-animations.animating .Frame201 {
       width: 240px !important;
       visibility: visible;
-      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.8s, 
-                  visibility 0s 3.8s;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 3.65s, 
+                  visibility 0s 3.65s;
     }
 
     /* Card B inside Frame201 (zoom + focus fade) */
@@ -147,9 +147,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 3.8s, 
-                  filter 0.5s ease 3.8s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.8s;
+      transition: opacity 0.7s ease 3.65s, 
+                  filter 0.7s ease 3.65s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 3.65s;
     }
 
     /* Blue Card B Glow effect inside Frame201 */
@@ -160,17 +160,43 @@
     faust-flow-canvas.has-animations.animating .Frame201 faust-flow-card[bg="blue"] .Frame {
       box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
       filter: brightness(1) !important;
-      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 4.4s, 
-                  filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 4.4s;
+      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 4.45s, 
+                  filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 4.45s;
+    }
+
+    /* Labels inside Canvas 1 (fade, slide up and blur transition) */
+    faust-flow-canvas.has-animations faust-flow-label[left="80"] {
+      opacity: 0;
+      filter: blur(6px);
+      transform: translateY(10px);
+    }
+    faust-flow-canvas.has-animations.animating faust-flow-label[left="80"] {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+      transition: opacity 0.7s ease 1.35s, 
+                  filter 0.7s ease 1.35s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.35s;
+    }
+
+    faust-flow-canvas.has-animations faust-flow-label[left="560"] {
+      opacity: 0;
+      filter: blur(6px);
+      transform: translateY(10px);
+    }
+    faust-flow-canvas.has-animations.animating faust-flow-label[left="560"] {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+      transition: opacity 0.7s ease 3.65s, 
+                  filter 0.7s ease 3.65s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 3.65s;
     }
 
 
     /* --- CANVAS 2 (A/B TESTING) --- */
 
-    /* FlowDetails layout alignment - Center content dynamically on desktop */
-    faust-flow-canvas.has-animations .FlowDetails {
-      justify-content: center !important;
-    }
+    /* FlowDetails layout alignment - keep flex-start to align perfectly with the grid background */
 
     /* FlowMetricsContainer */
     faust-flow-canvas.has-animations .FlowMetricsContainer {
@@ -178,19 +204,19 @@
     }
     faust-flow-canvas.has-animations.animating .FlowMetricsContainer {
       width: 232px !important;
-      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.0s;
     }
 
     /* Split-down arrow inside FlowMetricsContainer (stretches) */
     faust-flow-canvas.has-animations .FlowMetricsContainer faust-flow-arrow-split-down {
       opacity: 0;
       transform: scale(0);
-      transform-origin: center;
+      transform-origin: left;
     }
     faust-flow-canvas.has-animations.animating .FlowMetricsContainer faust-flow-arrow-split-down {
       opacity: 1;
       transform: scale(1);
-      transition: opacity 0.3s ease 0.8s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: opacity 0.4s ease 1.0s, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.0s;
     }
 
     /* Percentages inside FlowMetricsContainer (zoom + fade) */
@@ -203,7 +229,7 @@
     faust-flow-canvas.has-animations.animating .FlowMetricsContainer .FlowPercentage1 {
       opacity: 1;
       transform: scale(1);
-      transition: opacity 0.45s ease 1.2s, transform 0.45s cubic-bezier(0.25, 1, 0.5, 1) 1.2s;
+      transition: opacity 0.6s ease 1.4s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.4s;
     }
 
     /* Column AB */
@@ -214,8 +240,8 @@
     faust-flow-canvas.has-animations.animating .AB {
       width: 80px !important;
       visibility: visible;
-      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.8s, 
-                  visibility 0s 1.8s;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.35s, 
+                  visibility 0s 1.35s;
     }
 
     /* Control A and Variant B Icons inside AB (zoom + focus fade) */
@@ -228,9 +254,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 1.8s, 
-                  filter 0.5s ease 1.8s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.8s;
+      transition: opacity 0.7s ease 1.35s, 
+                  filter 0.7s ease 1.35s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.35s;
     }
 
     /* Variant B Glow effect inside AB */
@@ -241,82 +267,182 @@
     faust-flow-canvas.has-animations.animating .AB faust-flow-icon[bg="blue"] .Frame {
       box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
       filter: brightness(1) !important;
-      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.4s, 
-                  filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.4s;
+      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.15s, 
+                  filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.15s;
     }
 
-    /* Container (Testing canvas third block) */
-    faust-flow-canvas.has-animations .FlowDetails .Container {
+    /* FrameMergeDb (Testing canvas third block) */
+    faust-flow-canvas.has-animations .FrameMergeDb {
       width: 0px !important;
       visibility: hidden;
     }
-    faust-flow-canvas.has-animations.animating .FlowDetails .Container {
-      width: 793px !important;
+    faust-flow-canvas.has-animations.animating .FrameMergeDb {
+      width: 152px !important;
       visibility: visible;
-      transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1) 2.9s, 
-                  visibility 0s 2.9s;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.15s, 
+                  visibility 0s 2.15s;
     }
 
-    /* Merge Arrow inside Container (stretches) */
-    faust-flow-canvas.has-animations .FlowDetails .Container faust-flow-arrow-merge-right {
+    /* Merge Arrow inside FrameMergeDb (stretches) */
+    faust-flow-canvas.has-animations .FrameMergeDb faust-flow-arrow-merge-right {
       opacity: 0;
       transform: scaleX(0);
       transform-origin: left;
     }
-    faust-flow-canvas.has-animations.animating .FlowDetails .Container faust-flow-arrow-merge-right {
+    faust-flow-canvas.has-animations.animating .FrameMergeDb faust-flow-arrow-merge-right {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.3s ease 2.9s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.9s;
+      transition: opacity 0.4s ease 2.15s, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.15s;
     }
 
-    /* Database Icon inside Container (zoom + focus fade) */
-    faust-flow-canvas.has-animations .FlowDetails .Container faust-flow-icon {
+    /* Database Icon inside FrameMergeDb (zoom + focus fade) */
+    faust-flow-canvas.has-animations .FrameMergeDb faust-flow-icon {
       opacity: 0;
       filter: blur(8px);
       transform: scale(0.9);
     }
-    faust-flow-canvas.has-animations.animating .FlowDetails .Container faust-flow-icon {
+    faust-flow-canvas.has-animations.animating .FrameMergeDb faust-flow-icon {
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 3.4s, 
-                  filter 0.5s ease 3.4s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.4s;
+      transition: opacity 0.7s ease 2.5s, 
+                  filter 0.7s ease 2.5s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.5s;
     }
 
-    /* Linear Arrow inside Container (stretches) */
-    faust-flow-canvas.has-animations .FlowDetails .Container faust-flow-arrow {
+    /* FrameCardMetrics (Testing canvas fourth block) */
+    faust-flow-canvas.has-animations .FrameCardMetrics {
+      width: 0px !important;
+      visibility: hidden;
+      margin-left: -8px !important;
+    }
+    faust-flow-canvas.has-animations.animating .FrameCardMetrics {
+      width: 641px !important;
+      visibility: visible;
+      margin-left: -8px !important;
+      transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 3.3s, 
+                  visibility 0s 3.3s;
+    }
+
+    /* Linear Arrow inside FrameCardMetrics (stretches) */
+    faust-flow-canvas.has-animations .FrameCardMetrics faust-flow-arrow {
       opacity: 0;
       transform: scaleX(0);
       transform-origin: left;
     }
-    faust-flow-canvas.has-animations.animating .FlowDetails .Container faust-flow-arrow {
+    faust-flow-canvas.has-animations.animating .FrameCardMetrics faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.3s ease 3.9s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.9s;
+      transition: opacity 0.4s ease 3.3s, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 3.3s;
     }
 
-    /* Card Metrics inside Container (zoom + focus fade) */
-    faust-flow-canvas.has-animations .FlowDetails .Container faust-flow-card {
+    /* Card Metrics inside FrameCardMetrics (zoom + focus fade) */
+    faust-flow-canvas.has-animations .FrameCardMetrics faust-flow-card {
       opacity: 0;
       filter: blur(8px);
       transform: scale(0.95);
     }
-    faust-flow-canvas.has-animations.animating .FlowDetails .Container faust-flow-card {
+    faust-flow-canvas.has-animations.animating .FrameCardMetrics faust-flow-card {
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.6s ease 4.4s, 
-                  filter 0.6s ease 4.4s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 4.4s;
+      transition: opacity 0.8s ease 3.65s, 
+                  filter 0.8s ease 3.65s, 
+                  transform 0.8s cubic-bezier(0.25, 1, 0.5, 1) 3.65s;
     }
 
     /* Mobile specific overrides: prevent centering alignment during entrance animations */
     @media (max-width: 980px) {
-      faust-flow-canvas.has-animations .ContentRow,
-      faust-flow-canvas.has-animations .FlowDetails {
+      faust-flow-canvas.has-animations .ContentRow {
         justify-content: flex-start !important;
       }
+    }
+
+    /* --- FAST REPLAY OVERRIDES (WITHOUT INITIAL PAUSE & CONTINUOUS FLOW) --- */
+
+    /* Canvas 1 Fast Replay */
+    faust-flow-canvas.has-animations.animating.fast-replay .Vector {
+      transition: opacity 1.0s ease;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame13 {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame13 faust-flow-arrow {
+      transition: opacity 0.3s ease 0s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame199 {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.125s, visibility 0s 0.125s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame199 faust-flow-card {
+      transition: opacity 0.5s ease 0.125s, filter 0.5s ease 0.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.125s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame199 faust-flow-arrow {
+      transition: opacity 0.3s ease 0.5s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.5s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame198 {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.625s, visibility 0s 0.625s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame198 faust-flow-icon {
+      transition: opacity 0.5s ease 0.625s, filter 0.5s ease 0.625s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.625s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame198 faust-flow-arrow {
+      transition: opacity 0.3s ease 1.0s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame201 {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.125s, visibility 0s 1.125s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame201 faust-flow-card {
+      transition: opacity 0.5s ease 1.125s, filter 0.5s ease 1.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.125s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame201 faust-flow-card[bg="blue"] .Frame {
+      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.6s, filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.6s;
+    }
+
+    /* Canvas 1 Labels Fast Replay */
+    faust-flow-canvas.has-animations.animating.fast-replay faust-flow-label[left="80"] {
+      transition: opacity 0.5s ease 0.125s, filter 0.5s ease 0.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.125s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay faust-flow-label[left="560"] {
+      transition: opacity 0.5s ease 1.125s, filter 0.5s ease 1.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.125s;
+    }
+
+    /* Canvas 2 Fast Replay */
+    faust-flow-canvas.has-animations.animating.fast-replay .FlowMetricsContainer {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FlowMetricsContainer faust-flow-arrow-split-down {
+      transition: opacity 0.3s ease 0s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FlowMetricsContainer .FlowArrowContainer2,
+    faust-flow-canvas.has-animations.animating.fast-replay .FlowMetricsContainer .FlowPercentage1 {
+      transition: opacity 0.45s ease 0.4s, transform 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.4s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .AB {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.125s, visibility 0s 0.125s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .AB faust-flow-icon {
+      transition: opacity 0.5s ease 0.125s, filter 0.5s ease 0.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.125s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .AB faust-flow-icon[bg="blue"] .Frame {
+      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.625s, filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.625s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FrameMergeDb {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.5s, visibility 0s 0.5s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FrameMergeDb faust-flow-arrow-merge-right {
+      transition: opacity 0.3s ease 0.5s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.5s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FrameMergeDb faust-flow-icon {
+      transition: opacity 0.5s ease 0.625s, filter 0.5s ease 0.625s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.625s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FrameCardMetrics {
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.0s, visibility 0s 1.0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FrameCardMetrics faust-flow-arrow {
+      transition: opacity 0.3s ease 1.0s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .FrameCardMetrics faust-flow-card {
+      transition: opacity 0.6s ease 1.125s, filter 0.6s ease 1.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.125s;
     }
   `;
   document.head.appendChild(style);
@@ -695,6 +821,9 @@ class FaustFlowCard extends HTMLElement {
  */
 class FaustFlowCanvas extends HTMLElement {
   connectedCallback() {
+    if (this._hasPlayed === undefined) {
+      this._hasPlayed = false;
+    }
     const width = parseInt(this.getAttribute('width') || '1640', 10);
     const height = parseInt(this.getAttribute('height') || '450', 10);
     const mobileWidth = parseInt(this.getAttribute('mobile-width') || '1040', 10);
@@ -760,17 +889,132 @@ class FaustFlowCanvas extends HTMLElement {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          this.classList.remove('animating');
-          void this.offsetWidth; // Force reflow to reset CSS transitions
-          this.classList.add('animating');
+          const enteredFromBelow = entry.boundingClientRect.top > 0;
+          if (!this._hasPlayed) {
+            // First play: normal animation
+            this.classList.remove('fast-replay');
+            this.classList.remove('animating');
+            void this.offsetWidth; // Force reflow
+            this.classList.add('animating');
+            
+            this.startLabelTracking();
+
+            // Clear any existing completion timer
+            if (this._playTimeout) {
+              clearTimeout(this._playTimeout);
+            }
+            // Set completion timer
+            this._playTimeout = setTimeout(() => {
+              this._hasPlayed = true;
+              this._playTimeout = null;
+              this.stopLabelTracking();
+            }, 5600);
+          } else if (enteredFromBelow) {
+            // Subsequent play from below: fast-replay animation (faster, without initial pause)
+            this.classList.remove('animating', 'fast-replay');
+            void this.offsetWidth; // Force reflow
+            this.classList.add('animating', 'fast-replay');
+
+            this.startLabelTracking();
+
+            if (this._replayTimeout) {
+              clearTimeout(this._replayTimeout);
+            }
+            this._replayTimeout = setTimeout(() => {
+              this._replayTimeout = null;
+              this.stopLabelTracking();
+            }, 2400);
+          }
+          // If entered from above, do nothing (keep completed state)
         } else {
-          this.classList.remove('animating');
+          // Leaves viewport
+          const leftToBelow = entry.boundingClientRect.top > 0;
+          if (leftToBelow) {
+            // Re-hide element when scrolled out of view to the bottom
+            this.classList.remove('animating', 'fast-replay');
+          }
+          this.stopLabelTracking();
+          // If the element leaves the viewport before completing the animation, cancel the timer
+          if (this._playTimeout) {
+            clearTimeout(this._playTimeout);
+            this._playTimeout = null;
+          }
+          if (this._replayTimeout) {
+            clearTimeout(this._replayTimeout);
+            this._replayTimeout = null;
+          }
         }
       });
     }, {
       threshold: 0.05 // Trigger early
     });
     observer.observe(this);
+  }
+
+  startLabelTracking() {
+    this.stopLabelTracking(); // Avoid duplicate loops
+    this._trackingActive = true;
+
+    const labelLeft = this.querySelector('faust-flow-label[left="80"]');
+    const compLeft1 = this.querySelector('.Frame13 faust-flow-icon');
+    const compLeft2 = this.querySelector('.Frame199 faust-flow-card');
+
+    const labelRight = this.querySelector('faust-flow-label[left="560"]');
+    const compRight1 = this.querySelector('.Frame198 faust-flow-icon');
+    const compRight2 = this.querySelector('.Frame201 faust-flow-card');
+
+    const updatePositions = () => {
+      if (!this._trackingActive) return;
+
+      const canvasRect = this.getBoundingClientRect();
+      if (canvasRect.width === 0) {
+        this._trackingFrame = requestAnimationFrame(updatePositions);
+        return;
+      }
+
+      const frame1 = this.querySelector('.Frame1');
+      const frame1Rect = frame1 ? frame1.getBoundingClientRect() : canvasRect;
+      const frameWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
+      const scale = frame1Rect.width / frameWidth || 1;
+
+      // Update Left Label
+      if (labelLeft && compLeft1 && compLeft2) {
+        const rect1 = compLeft1.getBoundingClientRect();
+        const rect2 = compLeft2.getBoundingClientRect();
+        
+        const x1Rel = (rect1.left - frame1Rect.left) / scale;
+        const x2Rel = (rect2.right - frame1Rect.left) / scale;
+        const targetRelCenter = (x1Rel + x2Rel) / 2;
+        
+        const labelWidth = parseFloat(labelLeft.getAttribute('width')) || 400;
+        labelLeft.style.left = (targetRelCenter - labelWidth / 2) + 'px';
+      }
+
+      // Update Right Label
+      if (labelRight && compRight1 && compRight2) {
+        const rect1 = compRight1.getBoundingClientRect();
+        const rect2 = compRight2.getBoundingClientRect();
+        
+        const x1Rel = (rect1.left - frame1Rect.left) / scale;
+        const x2Rel = (rect2.right - frame1Rect.left) / scale;
+        const targetRelCenter = (x1Rel + x2Rel) / 2;
+        
+        const labelWidth = parseFloat(labelRight.getAttribute('width')) || 400;
+        labelRight.style.left = (targetRelCenter - labelWidth / 2) + 'px';
+      }
+
+      this._trackingFrame = requestAnimationFrame(updatePositions);
+    };
+
+    updatePositions();
+  }
+
+  stopLabelTracking() {
+    this._trackingActive = false;
+    if (this._trackingFrame) {
+      cancelAnimationFrame(this._trackingFrame);
+      this._trackingFrame = null;
+    }
   }
 }
 
