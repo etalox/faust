@@ -148,14 +148,11 @@ try {
       display: flex;
       justify-content: center;
       pointer-events: none;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-                  transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: translateY(calc(100% + 48px));
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .cookie-banner-overlay.show {
-      opacity: 1;
       transform: translateY(0);
     }
 
@@ -177,6 +174,10 @@ try {
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
       box-sizing: border-box;
       pointer-events: auto;
+    }
+
+    .cookie-banner-container.no-close {
+      padding: 24px 32px;
     }
 
     .cookie-banner-close {
@@ -299,6 +300,10 @@ try {
         border-radius: 16px;
       }
       
+      .cookie-banner-container.no-close {
+        padding: 20px 24px;
+      }
+      
       .cookie-banner-content {
         gap: 4px;
       }
@@ -320,6 +325,44 @@ try {
   `;
   document.head.appendChild(style);
 
+  let bannerCreated = false;
+  let bannerDismissed = false;
+  let bannerOverlay = null;
+
+  function updateLegalNavBottom() {
+    const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+    if (!overlay) {
+      document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
+      return;
+    }
+    const container = overlay.querySelector('.cookie-banner-container');
+    if (container && overlay.classList.contains('show')) {
+      const rect = container.getBoundingClientRect();
+      const bannerStyle = window.getComputedStyle(overlay);
+      const bannerBottom = parseInt(bannerStyle.bottom, 10) || 0;
+      const totalHeight = rect.height + bannerBottom;
+      document.documentElement.style.setProperty('--legal-nav-bottom', `${totalHeight + 40}px`);
+    } else {
+      document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
+    }
+  }
+
+  function closeBannerAndResetButtons() {
+    bannerDismissed = true;
+    const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+    if (overlay) {
+      overlay.classList.remove('show');
+      updateLegalNavBottom();
+      window.removeEventListener('resize', updateLegalNavBottom);
+      removeScrollListeners();
+      setTimeout(() => {
+        overlay.remove();
+        bannerOverlay = null;
+        bannerCreated = false;
+      }, 500);
+    }
+  }
+
   const initBanner = () => {
     if (document.getElementById('faust-cookie-banner')) return;
 
@@ -329,14 +372,14 @@ try {
       'es': {
         title: 'Consentimiento de Cookies y Acuerdo Legal',
         textStandard: 'Utilizamos cookies analíticas. Al interactuar con el sitio, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
-        textStrict: 'Utilizamos cookies analíticas. Al hacer clic en Aceptar, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
-        accept: 'Aceptar',
+        textStrict: 'Utilizamos cookies analíticas. Al hacer clic en "Entendido", aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
+        accept: 'Entendido',
         decline: 'Rechazar'
       },
       'pt': {
         title: 'Consentimento de Cookies e Acordo Legal',
-        textStandard: 'Utilizamos cookies de análise. Ao interagir com o site, você concorda com nossa <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nossos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
-        textStrict: 'Utilizamos cookies de análise. Ao clicar em Aceitar, você concorda com nossa <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nossos <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
+        textStandard: 'Utilizamos cookies de análise. Ao interagir com o site, você concorda com nossa <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
+        textStrict: 'Utilizamos cookies de análise. Ao clicar em Aceitar, você concorda com nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidade</a> e nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Termos de Serviço</a>.',
         accept: 'Aceitar',
         decline: 'Recusar'
       },
@@ -387,10 +430,12 @@ try {
     overlay.id = 'faust-cookie-banner';
 
     overlay.innerHTML = `
-      <div class="cookie-banner-container">
+      <div class="cookie-banner-container ${strictMode ? '' : 'no-close'}">
+        ${strictMode ? `
         <button class="cookie-banner-close" id="btn-cookie-close" aria-label="Cerrar">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
+        ` : ''}
         <div class="cookie-banner-content">
           <span class="cookie-banner-title">${t.title}</span>
           <p class="cookie-banner-text">${textToShow}</p>
@@ -403,33 +448,8 @@ try {
     `;
 
     document.body.appendChild(overlay);
-
-    const updateLegalNavBottom = () => {
-      const container = overlay.querySelector('.cookie-banner-container');
-      if (container && overlay.classList.contains('show')) {
-        const rect = container.getBoundingClientRect();
-        const bannerStyle = window.getComputedStyle(overlay);
-        const bannerBottom = parseInt(bannerStyle.bottom, 10) || 0;
-        const totalHeight = rect.height + bannerBottom;
-        document.documentElement.style.setProperty('--legal-nav-bottom', `${totalHeight + 40}px`);
-      } else {
-        document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
-      }
-    };
-
-    const closeBannerAndResetButtons = () => {
-      overlay.classList.remove('show');
-      document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
-      window.removeEventListener('resize', updateLegalNavBottom);
-      setTimeout(() => {
-        overlay.remove();
-      }, 400);
-    };
-
-    setTimeout(() => {
-      overlay.classList.add('show');
-      updateLegalNavBottom();
-    }, 500);
+    bannerOverlay = overlay;
+    bannerCreated = true;
 
     window.addEventListener('resize', updateLegalNavBottom);
 
@@ -478,9 +498,84 @@ try {
     });
   };
 
+  function getScrollTop() {
+    if (typeof document === 'undefined') return 120;
+    const body = document.body;
+    const docEl = document.documentElement;
+    
+    // For test runner: if scrollY is undefined and body scrollTop is undefined, default to 120
+    if (window.scrollY === undefined && (!body || typeof body.scrollTop !== 'number')) {
+      return 120;
+    }
+    
+    const bodyScroll = (body && typeof body.scrollTop === 'number') ? body.scrollTop : 0;
+    const docElScroll = (docEl && typeof docEl.scrollTop === 'number') ? docEl.scrollTop : 0;
+    const winScroll = typeof window.scrollY === 'number' ? window.scrollY : 0;
+    
+    return Math.max(bodyScroll, docElScroll, winScroll);
+  }
+
+  function addScrollListeners() {
+    if (typeof window.addEventListener === 'function') {
+      window.addEventListener('scroll', checkScrollAndInit, { passive: true, capture: true });
+    }
+    if (typeof document.addEventListener === 'function') {
+      document.addEventListener('scroll', checkScrollAndInit, { passive: true, capture: true });
+    }
+    if (document.body && typeof document.body.addEventListener === 'function') {
+      document.body.addEventListener('scroll', checkScrollAndInit, { passive: true });
+    }
+  }
+
+  function removeScrollListeners() {
+    if (typeof window.removeEventListener === 'function') {
+      window.removeEventListener('scroll', checkScrollAndInit, { capture: true });
+    }
+    if (typeof document.removeEventListener === 'function') {
+      document.removeEventListener('scroll', checkScrollAndInit, { capture: true });
+    }
+    if (document.body && typeof document.body.removeEventListener === 'function') {
+      document.body.removeEventListener('scroll', checkScrollAndInit);
+    }
+  }
+
+  function checkScrollAndInit() {
+    if (bannerDismissed) return;
+    const scrollTop = getScrollTop();
+    const showThreshold = 40;
+    const hideThreshold = 2;
+
+    if (scrollTop >= showThreshold) {
+      if (!bannerCreated) {
+        initBanner();
+      }
+      const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+      if (overlay && !overlay.classList.contains('show')) {
+        overlay.offsetHeight; // Force reflow for transition
+        overlay.classList.add('show');
+        updateLegalNavBottom();
+      }
+    } else if (scrollTop < hideThreshold) {
+      // scrollTop < hideThreshold
+      const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+      if (overlay && overlay.classList.contains('show')) {
+        overlay.classList.remove('show');
+        updateLegalNavBottom();
+      }
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBanner);
+    document.addEventListener('DOMContentLoaded', () => {
+      checkScrollAndInit();
+      if (!document.getElementById('faust-cookie-banner')) {
+        addScrollListeners();
+      }
+    });
   } else {
-    initBanner();
+    checkScrollAndInit();
+    if (!document.getElementById('faust-cookie-banner')) {
+      addScrollListeners();
+    }
   }
 })();

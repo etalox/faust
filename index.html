@@ -1809,7 +1809,7 @@
         render: (data) => `
           <div class="apply-group">
             <label class="apply-label" for="apply-contact">Por favor, ingrese un correo electrónico o número de contacto.</label>
-            <input type="text" id="apply-contact" class="apply-input" placeholder="correo@empresa.com o número telefónico" value="${data.contact || ''}">
+            <input type="text" id="apply-contact" class="apply-input" placeholder="${buildContactPlaceholder(data)}" value="${data.contact || ''}">
             <div id="apply-contact-error" style="color: #ff4a4a; font-size: 14px; margin-top: 8px; display: none;">Por favor, verifique que el medio de contacto es válido.</div>
           </div>
         `,
@@ -2401,6 +2401,25 @@
         }
       }
       return null;
+    }
+
+    function buildContactPlaceholder(data) {
+      const nameParts = (data.name || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+      const companyVal = (data.company || '').trim().toLowerCase().replace(/\s+/g, '');
+      
+      let emailPrefix = 'correo';
+      if (nameParts.length >= 2) {
+        emailPrefix = `${nameParts[0].charAt(0)}.${nameParts[1]}`;
+      } else if (nameParts.length === 1) {
+        emailPrefix = nameParts[0];
+      }
+      
+      let domain = 'empresa';
+      if (companyVal) {
+        domain = companyVal;
+      }
+      
+      return `${emailPrefix}@${domain}.com o número de teléfono`;
     }
 
     function validateContactMethod(val) {
@@ -3004,6 +3023,7 @@
 
     // Expose internal functions for unit tests
     window.validateContactMethod = validateContactMethod;
+    window.buildContactPlaceholder = buildContactPlaceholder;
     window.checkBlockedState = checkBlockedState;
     window.recordSubmission = recordSubmission;
     window.formData = formData;
