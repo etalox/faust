@@ -342,6 +342,7 @@
     .arrow { width: 14px; height: 10px; transition: filter 240ms ease-out; }
     .arrow-light { filter: invert(1); }
     .scroll-word { transition: color 0.1s ease-out; }
+    .logo-link { all: unset; cursor: pointer; display: inline-flex; }
 
     @media (max-width: 980px) {
       html {
@@ -3452,10 +3453,17 @@
           });
           
           if (!isAnyVisible) {
-            groupElements.forEach(function(el) {
-              el.classList.remove('reveal-visible');
-              el.style.transitionDelay = '0ms';
+            var isBelowViewport = groupElements.every(function(el) {
+              var rect = el.getBoundingClientRect();
+              return rect.top >= window.innerHeight;
             });
+            
+            if (isBelowViewport) {
+              groupElements.forEach(function(el) {
+                el.classList.remove('reveal-visible');
+                el.style.transitionDelay = '0ms';
+              });
+            }
           }
         });
       }, hideObserverOptions);
