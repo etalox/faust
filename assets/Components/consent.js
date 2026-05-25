@@ -328,6 +328,8 @@ try {
   let bannerCreated = false;
   let bannerDismissed = false;
   let bannerOverlay = null;
+  let footerIntersecting = false;
+  let footerObserver = null;
 
   function updateLegalNavBottom() {
     const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
@@ -355,6 +357,10 @@ try {
       updateLegalNavBottom();
       window.removeEventListener('resize', updateLegalNavBottom);
       removeScrollListeners();
+      if (footerObserver) {
+        footerObserver.disconnect();
+        footerObserver = null;
+      }
       setTimeout(() => {
         overlay.remove();
         bannerOverlay = null;
@@ -545,6 +551,15 @@ try {
     const showThreshold = 40;
     const hideThreshold = 2;
 
+    if (footerIntersecting) {
+      const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+      if (overlay && overlay.classList.contains('show')) {
+        overlay.classList.remove('show');
+        updateLegalNavBottom();
+      }
+      return;
+    }
+
     if (scrollTop >= showThreshold) {
       if (!bannerCreated) {
         initBanner();
@@ -565,17 +580,35 @@ try {
     }
   }
 
+  function setupFooterObserver() {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const footer = document.querySelector('faust-footer');
+    if (!footer) return;
+
+    footerObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        footerIntersecting = entry.isIntersecting;
+        checkScrollAndInit();
+      });
+    }, {
+      threshold: 0
+    });
+    footerObserver.observe(footer);
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       checkScrollAndInit();
       if (!document.getElementById('faust-cookie-banner')) {
         addScrollListeners();
       }
+      setupFooterObserver();
     });
   } else {
     checkScrollAndInit();
     if (!document.getElementById('faust-cookie-banner')) {
       addScrollListeners();
     }
+    setupFooterObserver();
   }
 })();
