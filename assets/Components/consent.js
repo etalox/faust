@@ -263,22 +263,42 @@ try {
       border-radius: 999px;
       font-size: 14px;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff !important;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+      background: rgba(253, 253, 255, 0.06);
+      color: #f2f2f2 !important;
+      border: none;
+      backdrop-filter: blur(20px);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out, transform 150ms ease;
+      transition: background 240ms ease-out, color 240ms ease-out, transform 150ms ease;
       white-space: nowrap;
       flex-shrink: 0;
       text-decoration: none;
     }
 
+    .btn-cookie-decline::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      padding: 1px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      transition: opacity 180ms ease-out;
+    }
+
     .btn-cookie-decline:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(238, 238, 241, 0.10);
+      color: #fff !important;
+    }
+
+    .btn-cookie-decline:hover::before {
+      opacity: 0.5;
     }
 
     .btn-cookie-decline:active {
