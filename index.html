@@ -3329,47 +3329,116 @@
       document.documentElement.style.setProperty('--reveal-duration', '1.6s');
       window.addEventListener('scroll', updateScrollSpeed, { passive: true });
 
-      // 2. Bidirectional reveal observer
+      // 2. Group adjacent text-like elements to force sequential reveal blocks
       var revealItems = document.querySelectorAll('.reveal-item');
       if (revealItems.length === 0) return;
 
+      var groupIndex = 0;
+      var currentGroup = [];
+
+      revealItems.forEach(function(item) {
+        var isTextLike = item.tagName === 'H1' || item.tagName === 'H2' || item.tagName === 'P' ||
+                         item.classList.contains('pill') || item.classList.contains('btn-row') ||
+                         item.classList.contains('ButtonsContainer') || item.classList.contains('Frame219') ||
+                         item.classList.contains('logo-lockup');
+                         
+        if (isTextLike) {
+          if (currentGroup.length > 0) {
+            var lastItem = currentGroup[currentGroup.length - 1];
+            // Sibling in the same parent element
+            if (lastItem.parentNode === item.parentNode) {
+              currentGroup.push(item);
+            } else {
+              groupsPush(currentGroup);
+              currentGroup = [item];
+            }
+          } else {
+            currentGroup = [item];
+          }
+        } else {
+          if (currentGroup.length > 0) {
+            groupsPush(currentGroup);
+            currentGroup = [];
+          }
+          groupsPush([item]);
+        }
+      });
+      if (currentGroup.length > 0) {
+        groupsPush(currentGroup);
+      }
+
+      function groupsPush(group) {
+        groupIndex++;
+        group.forEach(function(el) {
+          el.setAttribute('data-reveal-group', 'rg-' + groupIndex);
+        });
+      }
+
+      // 3. Bidirectional reveal observer
       var observerOptions = {
         root: null,
-        rootMargin: '-50px 0px -50px 0px', // Symmetrical margins for entrance and exit triggers
+        rootMargin: '-120px 0px -120px 0px', // Trigger animations slightly higher on the screen when scrolling down
         threshold: 0.02
       };
 
       var observer = new IntersectionObserver(function(entries, obs) {
-        var entering = [];
+        var groupsToReveal = {};
+        var groupsToHide = {};
 
         entries.forEach(function(entry) {
           var el = entry.target;
+          var groupId = el.getAttribute('data-reveal-group');
+          
           if (entry.isIntersecting) {
-            if (!el.classList.contains('reveal-visible')) {
-              entering.push(el);
-            }
+            groupsToReveal[groupId] = true;
           } else {
-            // Animarse a la inversa al salir de pantalla
-            el.classList.remove('reveal-visible');
-            el.style.transitionDelay = '0ms';
+            groupsToHide[groupId] = true;
           }
         });
 
-        if (entering.length > 0) {
-          // If the page fade-in is not finished yet, defer revealing the elements
+        // Resolve entering groups
+        var enteringElements = [];
+        Object.keys(groupsToReveal).forEach(function(groupId) {
+          var groupElements = document.querySelectorAll('[data-reveal-group="' + groupId + '"]');
+          groupElements.forEach(function(el) {
+            if (!el.classList.contains('reveal-visible')) {
+              enteringElements.push(el);
+            }
+          });
+          // Remove from hide checklist if it's currently intersecting
+          delete groupsToHide[groupId];
+        });
+
+        if (enteringElements.length > 0) {
           if (!document.body.classList.contains('is-ready')) {
             setTimeout(function() {
-              var stillEntering = entering.filter(function(el) {
+              var stillEntering = enteringElements.filter(function(el) {
                 return !el.classList.contains('reveal-visible');
               });
               if (stillEntering.length > 0) {
                 revealElements(stillEntering);
               }
-            }, 550); // wait 550ms for page ready + fade overlay to fully clear
+            }, 550);
           } else {
-            revealElements(entering);
+            revealElements(enteringElements);
           }
         }
+
+        // Resolve exiting groups (hiding them only when all elements are out of viewport)
+        Object.keys(groupsToHide).forEach(function(groupId) {
+          var groupElements = Array.from(document.querySelectorAll('[data-reveal-group="' + groupId + '"]'));
+          var isAnyVisible = groupElements.some(function(el) {
+            var rect = el.getBoundingClientRect();
+            return rect.bottom > 0 && rect.top < window.innerHeight;
+          });
+          
+          if (!isAnyVisible) {
+            groupElements.forEach(function(el) {
+              el.classList.remove('reveal-visible');
+              el.style.transitionDelay = '0ms';
+            });
+          }
+        });
       }, observerOptions);
 
       function revealElements(elements) {
@@ -3377,22 +3446,41 @@
         elements.sort(function(a, b) {
           var rectA = a.getBoundingClientRect();
           var rectB = b.getBoundingClientRect();
-          // If they are on the same line (within 10px vertical difference), sort by horizontal position
           if (Math.abs(rectA.top - rectB.top) < 10) {
             return rectA.left - rectB.left;
           }
           return rectA.top - rectB.top;
         });
 
+        var currentDelay = 0;
+        var isHero = elements.length > 0 && elements[0].closest('.hero') !== null;
+        var baseStagger = isHero ? 150 : 100;
+
         elements.forEach(function(el, index) {
-          var isHero = el.closest('.hero') !== null;
-          var baseStagger = isHero ? 150 : 100;
-          el.style.transitionDelay = (index * baseStagger) + 'ms';
+          if (index > 0) {
+            var prevEl = elements[index - 1];
+            var isPrevHeader = prevEl.tagName === 'H1' || prevEl.tagName === 'H2' ||
+                               prevEl.classList.contains('headline') || prevEl.classList.contains('lead');
+            var isCurrentHeader = el.tagName === 'H1' || el.tagName === 'H2' ||
+                                  el.classList.contains('headline') || el.classList.contains('lead');
+            
+            if (isPrevHeader) {
+              // Start 400ms after the header started animating
+              currentDelay += 120;
+            } else if (isCurrentHeader) {
+              // Start 200ms after the previous element (e.g., eyebrow) started animating
+              currentDelay += 120;
+            } else {
+              // Standard stagger delay
+              currentDelay += baseStagger;
+            }
+          }
+          el.style.transitionDelay = currentDelay + 'ms';
           el.classList.add('reveal-visible');
         });
       }
 
-      // Start observing all reveal items (including hero elements)
+      // Start observing all reveal items
       revealItems.forEach(function(item) {
         observer.observe(item);
       });
