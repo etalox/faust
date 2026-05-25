@@ -210,6 +210,38 @@
       will-change: transform;
     }
     .hero h1 { margin: 0 0 50px; font-size: clamp(44px, 7vw, 86px); line-height: 1.02; letter-spacing: -1.8px; font-weight: 400; }
+    
+    /* Scroll-reveal animations */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1),
+                  transform var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    /* Refined cinematic entrance animation for main headers */
+    h1.reveal-item,
+    h2.reveal-item,
+    .headline.reveal-item {
+      transform: translateY(45px) scale(0.98);
+      transition: opacity var(--reveal-duration, 1.4s) cubic-bezier(0.16, 1, 0.3, 1),
+                  transform var(--reveal-duration, 1.4s) cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-item.reveal-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1.reveal-item.reveal-visible,
+    h2.reveal-item.reveal-visible,
+    .headline.reveal-item.reveal-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
     .responsive-br br { display: inline; }
     .no-br .responsive-br br { display: none; }
     .no-br .responsive-br::after { content: " "; }
@@ -810,17 +842,18 @@
 
   <main>
     <section class="hero wrap" id="aplicar">
-      <div class="logo-lockup" id="hero-logo">
+      <div class="logo-lockup reveal-item" id="hero-logo">
         <img src="./assets/Logotypes/Faust%20Logo.svg" alt="Faust" draggable="false">
         <span>FaustPartners™</span>
       </div>
-      <h1>Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
-      <p>Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
-      <div class="btn-row" style="justify-content:center">
+      <h1 class="reveal-item">Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
+      <p class="reveal-item">Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
+      <div class="btn-row reveal-item" style="justify-content:center">
         <faust-btn-apply></faust-btn-apply>
         <faust-btn-strategy></faust-btn-strategy>
       </div>
-      <div class="supported">
+      <div id="empresa" style="position: relative; top: -120px; height: 0; pointer-events: none; visibility: hidden;"></div>
+      <div class="supported reveal-item">
         <div class="label">Respaldado por</div>
         <div class="logos">
           <img src="./assets/Logotypes/finsus.svg" alt="Finsus" draggable="false">
@@ -831,18 +864,19 @@
     </section>
 
     <section class="section" id="gestion">
+      <div id="resultados" style="position: relative; top: -100px; height: 0; pointer-events: none; visibility: hidden;"></div>
       <div class="wrap">
-        <div class="pill">/ Gestión</div>
-        <h2 class="lead">
+        <div class="pill reveal-item">/ Gestión</div>
+        <h2 class="lead reveal-item">
           <div class="lead-title" style="display: inline;"></div>
           <div class="muted" style="display: inline;">Usamos Neurociencia Conductual y Análisis de Datos para optimizar la Tasa de Conversión (%) de tu sitio web. Cubrimos el ciclo de Análisis, Diseño y Desarrollo iterativo.</div>
         </h2>
-        <div class="btn-row">
+        <div class="btn-row reveal-item">
           <faust-btn-apply></faust-btn-apply>
           <faust-btn-strategy></faust-btn-strategy>
         </div>
         <div class="stats">
-          <article class="stat">
+          <article class="stat reveal-item">
             <div class="stat-heading">Impacto</div>
             <div class="stat-number-wrap">
               <h3>710 mil</h3>
@@ -850,7 +884,7 @@
             </div>
             <p class="desc">Impactamos la experiencia de cientos de miles de usuarios a través de nuestras optimizaciones.</p>
           </article>
-          <article class="stat">
+          <article class="stat reveal-item">
             <div class="stat-heading">Partners</div>
             <div class="stat-number-wrap">
               <h3>5</h3>
@@ -858,7 +892,7 @@
             </div>
             <p class="desc">Nos asociamos con una selecto número de empresas en México y el resto del continente.</p>
           </article>
-          <article class="stat">
+          <article class="stat reveal-item">
             <div class="stat-heading">Resultados</div>
             <div class="stat-number-wrap">
               <h3>+35.9%</h3>
@@ -872,10 +906,10 @@
 
     <section class="section centered" id="estrategia">
       <div class="wrap wrap-narrow">
-        <div class="pill">/ Optimización</div>
-        <h2 class="headline">Desarrollamos arquitectura que escala volumen de conversión.</h2>
-        <p class="sub">Optimizamos las plataformas de empresas de todo el país para aumentar sus ventas mediante decisiones basadas en datos.</p>
-        <div class="canvas-outer gradient-border">
+        <div class="pill reveal-item">/ Optimización</div>
+        <h2 class="headline reveal-item">Desarrollamos arquitectura que escala volumen de conversión.</h2>
+        <p class="sub reveal-item">Optimizamos las plataformas de empresas de todo el país para aumentar sus ventas mediante decisiones basadas en datos.</p>
+        <div class="canvas-outer gradient-border reveal-item">
           <div class="flow-wrapper">
             <div data-layer="Flow" class="Flow" style="width: 1640px; height: 450px; position: relative; flex-shrink: 0; margin: 0 auto;">
               <div data-layer="Frame 1" class="Frame1" style="width: 1360px; height: 320px; left: 140px; top: 80px; position: absolute">
@@ -994,11 +1028,12 @@
     </section>
 
     <section class="section centered">
+      <div id="expertos" style="position: relative; top: -100px; height: 0; pointer-events: none; visibility: hidden;"></div>
       <div class="wrap wrap-narrow">
-        <div class="pill">/ Testing</div>
-        <h2 class="headline">Decisiones basadas en datos.<br>Impacto cuantificable.</h2>
-        <p class="sub">Redirigimos tu tráfico gradualmente entre tu sitio web actual y nuestra interfaz experimental, de forma completamente segura.<br>Cuando nuestra interfaz genere conversiones consistentemente mayores, aumentaremos el tráfico.</p>
-        <div class="canvas-outer gradient-border">
+        <div class="pill reveal-item">/ Testing</div>
+        <h2 class="headline reveal-item">Decisiones basadas en datos.<br>Impacto cuantificable.</h2>
+        <p class="sub reveal-item">Redirigimos tu tráfico gradualmente entre tu sitio web actual y nuestra interfaz experimental, de forma completamente segura.<br>Cuando nuestra interfaz genere conversiones consistentemente mayores, aumentaremos el tráfico.</p>
+        <div class="canvas-outer gradient-border reveal-item">
           <div class="flow-wrapper">
             <div data-layer="Flow" class="Flow" style="width: 1640px; height: 530px; position: relative; flex-shrink: 0; margin: 0 auto;">
               <div data-layer="Frame 1" class="Frame1" style="width: 1280px; height: 400px; left: 180px; top: 80px; position: absolute">
@@ -1132,7 +1167,7 @@
     <section class="cta section" id="contacto">
       <div class="wrap" style="display: flex; justify-content: center;">
         <div data-layer="Bloque" class="Bloque" style="width: 100%; flex-direction: column; justify-content: flex-start; align-items: center; gap: 50px; display: flex">
-          <div data-layer="Frame 219" data-propiedad-1="Variante 3" class="Frame219" style="width: 322px; height: 20px; position: relative">
+          <div data-layer="Frame 219" data-propiedad-1="Variante 3" class="Frame219 reveal-item" style="width: 322px; height: 20px; position: relative">
             <div data-layer="Title" class="Title" style="left: 131px; top: 5px; position: absolute; opacity: 0.01; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: #F2F2F2; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word; filter: blur(50px)">Optimización CRO</div>
             <div data-layer="Rectangle 11" class="Rectangle11" style="width: 173px; height: 20px; left: 85px; top: 0px; position: absolute"></div>
             <div data-layer="Line" class="Line" style="width: 2px; height: 20px; left: 258px; top: 0px; position: absolute; opacity: 0; background: #F2F2F2"></div>
@@ -1146,8 +1181,8 @@
               <div data-layer="Title" class="Title" style="text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: flex-end; display: flex; flex-direction: column; color: #F2F2F2; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">FaustPartners™</div>
             </div>
           </div>
-          <h2 data-layer="Financing Text 3" class="FinancingText3 headline" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #F2F2F2; font-size: clamp(38px, 5vw, 68px); font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 1.08; letter-spacing: -1.6px; word-wrap: break-word; margin: 0;">Maximiza tus ingresos.<br/>Cero riesgos.</h2>
-          <div data-layer="Buttons Container" class="ButtonsContainer btn-row" style="justify-content: center;">
+          <h2 data-layer="Financing Text 3" class="FinancingText3 headline reveal-item" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #F2F2F2; font-size: clamp(44px, 7vw, 86px); font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 1.02; letter-spacing: -1.8px; word-wrap: break-word; margin: 0;">Maximiza tus ingresos.<br/>Cero riesgos.</h2>
+          <div data-layer="Buttons Container" class="ButtonsContainer btn-row reveal-item" style="justify-content: center;">
             <faust-btn-apply></faust-btn-apply>
             <faust-btn-message></faust-btn-message>
           </div>
@@ -3251,6 +3286,117 @@
       window.addEventListener('load', delayInitHeroVideo);
     }
   })();
+  </script>
+
+  <script>
+    /* ── Scroll-triggered reveal animations with dynamic speed and bidirectionality ── */
+    (function() {
+      // 1. Dynamic scroll speed calculation
+      var lastScroll = window.scrollY;
+      var lastTime = Date.now();
+      var scrollSpeed = 0;
+      var scrollTimeout = null;
+
+      function updateScrollSpeed() {
+        var currentScroll = window.scrollY;
+        var currentTime = Date.now();
+        var deltaY = Math.abs(currentScroll - lastScroll);
+        var deltaTime = currentTime - lastTime;
+        
+        if (deltaTime > 0) {
+          // Calculate speed in px/ms
+          var instantSpeed = deltaY / deltaTime;
+          // Apply EMA (exponential moving average) for smoothing
+          scrollSpeed = scrollSpeed * 0.65 + instantSpeed * 0.35;
+        }
+        
+        lastScroll = currentScroll;
+        lastTime = currentTime;
+
+        // Map scroll speed (0 to 3.5 px/ms) to animation duration (1.6s down to 0.5s)
+        var duration = 1.6 - Math.min(1.1, scrollSpeed / 3.2) * 1.0;
+        document.documentElement.style.setProperty('--reveal-duration', duration.toFixed(2) + 's');
+
+        // Reset speed to 0 when scrolling stops
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function() {
+          scrollSpeed = 0;
+          document.documentElement.style.setProperty('--reveal-duration', '1.6s');
+        }, 150);
+      }
+
+      // Initialize default duration
+      document.documentElement.style.setProperty('--reveal-duration', '1.6s');
+      window.addEventListener('scroll', updateScrollSpeed, { passive: true });
+
+      // 2. Bidirectional reveal observer
+      var revealItems = document.querySelectorAll('.reveal-item');
+      if (revealItems.length === 0) return;
+
+      var observerOptions = {
+        root: null,
+        rootMargin: '-50px 0px -50px 0px', // Symmetrical margins for entrance and exit triggers
+        threshold: 0.02
+      };
+
+      var observer = new IntersectionObserver(function(entries, obs) {
+        var entering = [];
+
+        entries.forEach(function(entry) {
+          var el = entry.target;
+          if (entry.isIntersecting) {
+            if (!el.classList.contains('reveal-visible')) {
+              entering.push(el);
+            }
+          } else {
+            // Animarse a la inversa al salir de pantalla
+            el.classList.remove('reveal-visible');
+            el.style.transitionDelay = '0ms';
+          }
+        });
+
+        if (entering.length > 0) {
+          // If the page fade-in is not finished yet, defer revealing the elements
+          if (!document.body.classList.contains('is-ready')) {
+            setTimeout(function() {
+              var stillEntering = entering.filter(function(el) {
+                return !el.classList.contains('reveal-visible');
+              });
+              if (stillEntering.length > 0) {
+                revealElements(stillEntering);
+              }
+            }, 550); // wait 550ms for page ready + fade overlay to fully clear
+          } else {
+            revealElements(entering);
+          }
+        }
+      }, observerOptions);
+
+      function revealElements(elements) {
+        // Sort entering elements: top-to-bottom, then left-to-right (horizontal stagger)
+        elements.sort(function(a, b) {
+          var rectA = a.getBoundingClientRect();
+          var rectB = b.getBoundingClientRect();
+          // If they are on the same line (within 10px vertical difference), sort by horizontal position
+          if (Math.abs(rectA.top - rectB.top) < 10) {
+            return rectA.left - rectB.left;
+          }
+          return rectA.top - rectB.top;
+        });
+
+        elements.forEach(function(el, index) {
+          var isHero = el.closest('.hero') !== null;
+          var baseStagger = isHero ? 150 : 100;
+          el.style.transitionDelay = (index * baseStagger) + 'ms';
+          el.classList.add('reveal-visible');
+        });
+      }
+
+      // Start observing all reveal items (including hero elements)
+      revealItems.forEach(function(item) {
+        observer.observe(item);
+      });
+    })();
   </script>
 
 </body></html>
