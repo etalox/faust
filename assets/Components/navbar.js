@@ -87,10 +87,58 @@ class FaustNavbar extends HTMLElement {
         .arrow { width: 14px; height: 10px; transition: filter 240ms ease-out; }
         .arrow-light { filter: invert(1); }
 
-        .nav-links a, #nav-contacto {
+        .nav-links a {
+          position: relative;
+          padding: 6px 14px;
+          border-radius: 999px;
+          text-decoration: none;
+          color: #7c7f84;
+          transition: color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .nav-links a::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          opacity: 0;
+          transform: scale(0.9);
+          transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      background 0.3s ease,
+                      border-color 0.3s ease,
+                      box-shadow 0.3s ease;
+          z-index: -1;
+        }
+
+        .nav-links a:hover {
+          color: #ffffff !important;
+        }
+
+        .nav-links a:hover::before {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        /* Active link highlight state (ScrollSpy) */
+        .nav-links a.is-active-link {
+          color: #ffffff !important;
+        }
+
+        .nav-links a.is-active-link::before {
+          opacity: 1 !important;
+          transform: scale(1) !important;
+          background: rgba(255, 255, 255, 0.08) !important;
+          border-color: rgba(255, 255, 255, 0.12) !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        #nav-contacto {
           transition: opacity 0.2s ease, color 0.2s ease;
         }
-        .nav-links a:hover, #nav-contacto:hover {
+        #nav-contacto:hover {
           color: #ffffff !important;
         }
 
@@ -98,34 +146,79 @@ class FaustNavbar extends HTMLElement {
           position: sticky;
           top: 0;
           z-index: 20;
-          border-bottom: 1px solid var(--line);
+          border-bottom: 1px solid transparent !important; /* starts transparent */
           --nav-transition-dur: 0.5s;
           background: transparent !important;
           backdrop-filter: none !important;
           -webkit-backdrop-filter: none !important;
+          
+          /* Entrance Animation initial state */
+          opacity: 0;
+          transform: translateY(-100%);
+          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.4s ease,
+                      background-color 0.4s ease;
         }
+
+        .nav.is-active {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Staggered entrance for children elements */
+        .nav .logo-lockup,
+        .nav .nav-links a,
+        .nav .nav-right {
+          opacity: 0;
+          transform: translateY(-10px);
+          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav.is-active .logo-lockup,
+        .nav.is-active .nav-links a,
+        .nav.is-active .nav-right {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .nav.is-active .logo-lockup { transition-delay: 150ms; }
+        .nav.is-active .nav-links a:nth-child(1) { transition-delay: 250ms; }
+        .nav.is-active .nav-links a:nth-child(2) { transition-delay: 300ms; }
+        .nav.is-active .nav-links a:nth-child(3) { transition-delay: 350ms; }
+        .nav.is-active .nav-links a:nth-child(4) { transition-delay: 400ms; }
+        .nav.is-active .nav-right { transition-delay: 500ms; }
 
         .nav::before {
           content: "";
           position: absolute;
           inset: 0;
           z-index: -1;
-          background: rgb(8, 9, 10) !important; 
+          background: transparent !important; 
           backdrop-filter: blur(0px) !important;
           -webkit-backdrop-filter: blur(0px) !important;
-          transition: background var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1), 
+          opacity: 0;
+          transition: opacity var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1), 
+                      background var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1),
                       backdrop-filter var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1),
                       -webkit-backdrop-filter var(--nav-transition-dur) cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .nav.is-active::before {
+        /* Scrolled state */
+        .nav.nav-scrolled {
+          border-bottom: 1px solid var(--line) !important;
+        }
+
+        .nav.nav-scrolled::before {
+          opacity: 1 !important;
           background: rgba(9, 10, 11, 0.88) !important; 
           backdrop-filter: blur(20px) !important;
           -webkit-backdrop-filter: blur(20px) !important;
         }
 
         .nav-inner { height: 80px; display: flex; justify-content: space-between; align-items: center; position: relative; }
-        .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; user-select: none !important; }
+        .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; color: #7c7f84; font-size: 14px; user-select: none !important; align-items: center; }
         .nav.nav-contacto-hidden #nav-contacto { display: none; }
         .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
 
@@ -454,6 +547,85 @@ class FaustNavbar extends HTMLElement {
           internalNav.classList.add('is-active');
         }, 120);
       }
+
+      // Helper to retrieve correct scroll position across different engines
+      const getScrollTop = () => {
+        const body = document.body;
+        const docEl = document.documentElement;
+        const bodyScroll = (body && typeof body.scrollTop === 'number') ? body.scrollTop : 0;
+        const docElScroll = (docEl && typeof docEl.scrollTop === 'number') ? docEl.scrollTop : 0;
+        const winScroll = typeof window.scrollY === 'number' ? window.scrollY : 0;
+        return Math.max(bodyScroll, docElScroll, winScroll);
+      };
+
+      // Transparent-to-Glassmorphic Scroll Background Handler
+      const handleNavbarScroll = () => {
+        const scrollTop = getScrollTop();
+        if (scrollTop > 20) {
+          internalNav.classList.add('nav-scrolled');
+        } else {
+          internalNav.classList.remove('nav-scrolled');
+        }
+      };
+
+      window.addEventListener('scroll', handleNavbarScroll, { passive: true, capture: true });
+      document.addEventListener('scroll', handleNavbarScroll, { passive: true, capture: true });
+      if (document.body) {
+        document.body.addEventListener('scroll', handleNavbarScroll, { passive: true });
+      }
+      handleNavbarScroll(); // Initial check
+      this._scrollHandler = handleNavbarScroll;
+
+      // ScrollSpy: highlight active link in navigation
+      const updateScrollSpy = () => {
+        const sections = [
+          { id: 'estrategia', linkSelector: 'a[href*="#estrategia"]' },
+          { id: 'resultados', linkSelector: 'a[href*="#resultados"]' },
+          { id: 'expertos', linkSelector: 'a[href*="#expertos"]' },
+          { id: 'empresa', linkSelector: 'a[href*="#empresa"]' }
+        ];
+
+        let activeId = '';
+        const scrollPos = getScrollTop() + 120; // trigger active link slightly early
+
+        sections.forEach(sec => {
+          const el = document.getElementById(sec.id);
+          if (el) {
+            const top = el.offsetTop;
+            const height = el.offsetHeight;
+            if (scrollPos >= top && scrollPos < top + height) {
+              activeId = sec.id;
+            }
+          }
+        });
+
+        // Near the bottom, prioritize Contacto
+        const totalHeight = Math.max(
+          document.documentElement.scrollHeight,
+          document.body.scrollHeight
+        );
+        const viewHeight = window.innerHeight;
+        if ((viewHeight + getScrollTop()) >= totalHeight - 50) {
+          activeId = 'contacto';
+        }
+
+        const spyLinks = this.querySelectorAll('.nav-links a');
+        spyLinks.forEach(link => {
+          const href = link.getAttribute('href') || '';
+          link.classList.remove('is-active-link');
+          if (activeId && href.includes('#' + activeId)) {
+            link.classList.add('is-active-link');
+          }
+        });
+      };
+
+      window.addEventListener('scroll', updateScrollSpy, { passive: true, capture: true });
+      document.addEventListener('scroll', updateScrollSpy, { passive: true, capture: true });
+      if (document.body) {
+        document.body.addEventListener('scroll', updateScrollSpy, { passive: true });
+      }
+      updateScrollSpy(); // Initial check
+      this._spyHandler = updateScrollSpy;
     }
 
     const navLangBtn = this.querySelector('#nav-lang-btn');
@@ -626,6 +798,22 @@ class FaustNavbar extends HTMLElement {
     if (this._ctaObserver) {
       this._ctaObserver.disconnect();
       this._ctaObserver = null;
+    }
+    if (this._scrollHandler) {
+      window.removeEventListener('scroll', this._scrollHandler, { capture: true });
+      document.removeEventListener('scroll', this._scrollHandler, { capture: true });
+      if (document.body) {
+        document.body.removeEventListener('scroll', this._scrollHandler);
+      }
+      this._scrollHandler = null;
+    }
+    if (this._spyHandler) {
+      window.removeEventListener('scroll', this._spyHandler, { capture: true });
+      document.removeEventListener('scroll', this._spyHandler, { capture: true });
+      if (document.body) {
+        document.body.removeEventListener('scroll', this._spyHandler);
+      }
+      this._spyHandler = null;
     }
   }
 
