@@ -3380,6 +3380,188 @@
         });
       }
 
+        // 4. Smooth scroll dampening when canvas animations are running (Desktop only)
+      (function() {
+        var currentMultiplier = 1.0;
+        var targetMultiplier = 1.0;
+        var lastTouchY = 0;
+        var touchAccumulator = 0;
+        var targetScrollY = 0;
+        var isSmoothing = false;
+        var lastWheelTime = 0;
+        var isTrackpad = false;
+
+        function isMobileOrTablet() {
+          if (window.innerWidth <= 1024) return true;
+          var userAgent = navigator.userAgent.toLowerCase();
+          var isMobileUA = /mobi|android|iphone|ipad|ipod|windows phone|iemobile|opera mini/i.test(userAgent);
+          if (isMobileUA) return true;
+          var isiPad = navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /macintosh/i.test(userAgent);
+          if (isiPad) return true;
+          return false;
+        }
+
+        function getActiveScrollElement() {
+          if (document.body && document.body.scrollHeight > document.body.clientHeight) {
+            var style = window.getComputedStyle(document.body);
+            if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+              return document.body;
+            }
+          }
+          if (document.documentElement && document.documentElement.scrollHeight > document.documentElement.clientHeight) {
+            return document.documentElement;
+          }
+          return document.body || document.documentElement;
+        }
+
+        function getActiveScrollTop() {
+          var el = getActiveScrollElement();
+          return el ? el.scrollTop : window.scrollY;
+        }
+
+        function setActiveScrollTop(val) {
+          var el = getActiveScrollElement();
+          if (el) {
+            el.scrollTop = val;
+          } else {
+            window.scrollTo(0, val);
+          }
+        }
+
+        function getMaxScrollTop() {
+          var el = getActiveScrollElement();
+          return el ? (el.scrollHeight - el.clientHeight) : 10000;
+        }
+
+        function performScroll(amount) {
+          var el = getActiveScrollElement();
+          if (el) {
+            el.scrollTop += amount;
+          } else {
+            window.scrollBy(0, amount);
+          }
+        }
+
+        function smoothScrollLoop() {
+          if (!isSmoothing) return;
+
+          var current = getActiveScrollTop();
+          var diff = targetScrollY - current;
+
+          if (Math.abs(diff) > 1.0) {
+            var next = current + diff * 0.15;
+            setActiveScrollTop(next);
+            requestAnimationFrame(smoothScrollLoop);
+          } else {
+            setActiveScrollTop(targetScrollY);
+            isSmoothing = false;
+          }
+        }
+
+        function updateMultiplierLoop() {
+          var animating = false;
+          
+          if (!isMobileOrTablet()) {
+            var canvases = document.querySelectorAll('faust-flow-canvas');
+            var viewportHeight = window.innerHeight || 800;
+
+            for (var i = 0; i < canvases.length; i++) {
+              var canvas = canvases[i];
+              // Only slow down during the initial slow animation
+              if (canvas.classList.contains('animating') && !canvas.classList.contains('fast-replay') && canvas._playTimeout) {
+                var rect = canvas.getBoundingClientRect();
+                var centerY = rect.top + rect.height / 2;
+                if (centerY <= viewportHeight * 0.75 && centerY >= viewportHeight * 0.4) {
+                  animating = true;
+                  break;
+                }
+              }
+            }
+          }
+          
+          targetMultiplier = animating ? 0.25 : 1.0;
+          
+          if (Math.abs(currentMultiplier - targetMultiplier) > 0.001) {
+            currentMultiplier += (targetMultiplier - currentMultiplier) * 0.08;
+          } else {
+            currentMultiplier = targetMultiplier;
+          }
+          requestAnimationFrame(updateMultiplierLoop);
+        }
+        requestAnimationFrame(updateMultiplierLoop);
+
+        window.addEventListener('wheel', function(e) {
+          if (isMobileOrTablet()) return;
+
+          var now = Date.now();
+          if (now - lastWheelTime > 500) {
+            isTrackpad = false;
+          }
+          lastWheelTime = now;
+
+          var absDeltaY = Math.abs(e.deltaY);
+          if (absDeltaY > 0 && !isTrackpad) {
+            // Check if delta matches trackpad characteristics:
+            // - Less than 50
+            // - Fractional delta (non-integer)
+            // - Not a multiple of 100 or 120
+            if (absDeltaY < 50 || absDeltaY % 1 !== 0 || (absDeltaY % 100 !== 0 && absDeltaY % 120 !== 0)) {
+              isTrackpad = true;
+            }
+          }
+
+          // If it is not a trackpad, completely bypass scroll dampening/slowing
+          if (!isTrackpad) return;
+
+          if (currentMultiplier < 0.99 || isSmoothing) {
+            e.preventDefault();
+            var currentScroll = getActiveScrollTop();
+            if (!isSmoothing) {
+              targetScrollY = currentScroll;
+              isSmoothing = true;
+              requestAnimationFrame(smoothScrollLoop);
+            } else {
+              // If direction of scroll is opposite to current smoothing direction,
+              // reset targetScrollY to current scroll top to prevent bounces/lag.
+              if (e.deltaY > 0 && targetScrollY < currentScroll) {
+                targetScrollY = currentScroll;
+              } else if (e.deltaY < 0 && targetScrollY > currentScroll) {
+                targetScrollY = currentScroll;
+              }
+            }
+            targetScrollY += e.deltaY * currentMultiplier;
+            targetScrollY = Math.max(0, Math.min(getMaxScrollTop(), targetScrollY));
+          }
+        }, { passive: false });
+
+        window.addEventListener('touchstart', function(e) {
+          if (isMobileOrTablet()) return;
+          if (e.touches.length === 1) {
+            lastTouchY = e.touches[0].clientY;
+            touchAccumulator = 0;
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', function(e) {
+          if (isMobileOrTablet()) return;
+          if (e.touches.length === 1) {
+            var touchY = e.touches[0].clientY;
+            var deltaY = lastTouchY - touchY;
+            lastTouchY = touchY;
+            
+            if (currentMultiplier < 0.99) {
+              e.preventDefault();
+              touchAccumulator += deltaY * currentMultiplier;
+              var scrollToMove = Math.trunc(touchAccumulator);
+              touchAccumulator -= scrollToMove;
+              if (scrollToMove !== 0) {
+                performScroll(scrollToMove);
+              }
+            }
+          }
+        }, { passive: false });
+      })();
+
       revealItems.forEach(function(item) {
         revealObserver.observe(item);
         hideObserver.observe(item);
