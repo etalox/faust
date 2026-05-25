@@ -397,6 +397,10 @@
     }
     .apply-modal,
     .message-modal {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
       flex: 1;
       background: rgba(21, 21, 21, 0.1);
       backdrop-filter: blur(0px);
@@ -420,6 +424,19 @@
       -webkit-backdrop-filter: blur(20px);
       border-color: rgba(255, 255, 255, 0);
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
+    }
+    .apply-modal input,
+    .apply-modal textarea,
+    .apply-modal select,
+    .apply-modal [contenteditable="true"],
+    .message-modal input,
+    .message-modal textarea,
+    .message-modal select,
+    .message-modal [contenteditable="true"] {
+      user-select: text;
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
     }
 
     .apply-modal-header,
@@ -1141,7 +1158,7 @@
   <div class="apply-overlay" id="apply-overlay">
     <div class="wrap apply-overlay-wrap">
       <div class="apply-modal-container">
-        <div class="apply-modal notranslate" translate="no">
+        <div class="apply-modal">
           <div class="apply-modal-header">
             <div class="apply-modal-title-row">
               <span>Aplicar</span>
@@ -1165,7 +1182,7 @@
   <div class="message-overlay" id="message-overlay">
     <div class="wrap message-overlay-wrap">
       <div class="message-modal-container">
-        <div class="message-modal notranslate" translate="no">
+        <div class="message-modal">
           <div class="message-modal-header">
             <div class="message-modal-title-row">
               <span>Escribir un mensaje</span>
@@ -2654,6 +2671,7 @@
       }
 
       const nameIsEditable = !isAlreadySent || !savedName;
+      const savedMessage = localStorage.getItem('faust-contact-message-draft') || '';
 
       const renderContent = () => {
         msgModalBody.innerHTML = `
@@ -2667,7 +2685,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <label for="message-input-text" style="font-size: 13px; font-weight: 600; color: #fff;">Mensaje</label>
-              <textarea id="message-input-text" class="apply-input" rows="4" placeholder="Escribe tu mensaje aquí..." style="width: 100%; box-sizing: border-box; resize: none; height: 120px;"></textarea>
+              <textarea id="message-input-text" class="apply-input" rows="4" placeholder="Escribe tu mensaje aquí..." style="width: 100%; box-sizing: border-box; resize: none; height: 120px;">${savedMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
             </div>
           </div>
         `;
@@ -2698,7 +2716,10 @@
         };
 
         nameInput.addEventListener('input', validateMessageForm);
-        textInput.addEventListener('input', validateMessageForm);
+        textInput.addEventListener('input', () => {
+          localStorage.setItem('faust-contact-message-draft', textInput.value);
+          validateMessageForm();
+        });
 
         validateMessageForm();
 
@@ -2736,10 +2757,12 @@
             })
           })
           .then(() => {
+            localStorage.removeItem('faust-contact-message-draft');
             showMsgSuccessScreenIndependent();
           })
           .catch(err => {
             console.warn("Error sending message to Splitforms, running success fallback:", err);
+            localStorage.removeItem('faust-contact-message-draft');
             showMsgSuccessScreenIndependent();
           });
         });
