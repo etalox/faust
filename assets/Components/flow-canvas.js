@@ -21,7 +21,7 @@
     }
     faust-flow-canvas.has-animations.animating .Vector {
       opacity: 1;
-      transition: opacity 1.2s ease;
+      transition: opacity 1.0s ease;
     }
 
     /* --- CANVAS 1 (CRO STRATEGY) --- */
@@ -32,7 +32,7 @@
     }
     faust-flow-canvas.has-animations.animating .Frame13 {
       width: 152px !important;
-      transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
     }
 
     /* Arrow 1 inside Frame13 (stretches) */
@@ -44,7 +44,7 @@
     faust-flow-canvas.has-animations.animating .Frame13 faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.4s ease 0.8s, transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: opacity 0.3s ease 0.8s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
     }
 
     /* Frame199 (Card A + Arrow 2) */
@@ -55,8 +55,8 @@
     faust-flow-canvas.has-animations.animating .Frame199 {
       width: 312px !important;
       visibility: visible;
-      transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1) 1.5s, 
-                  visibility 0s 1.5s;
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.4s, 
+                  visibility 0s 1.4s;
     }
 
     /* Card A inside Frame199 (zoom + focus fade) */
@@ -69,9 +69,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 1.5s, 
-                  filter 0.5s ease 1.5s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.5s;
+      transition: opacity 0.5s ease 1.4s, 
+                  filter 0.5s ease 1.4s, 
+                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.4s;
     }
 
     /* Arrow 2 inside Frame199 (stretches) */
@@ -83,7 +83,7 @@
     faust-flow-canvas.has-animations.animating .Frame199 faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.4s ease 2.3s, transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) 2.3s;
+      transition: opacity 0.3s ease 2.0s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.0s;
     }
 
     /* Frame198 (Database Flat + Arrow 3 reverse) */
@@ -94,8 +94,8 @@
     faust-flow-canvas.has-animations.animating .Frame198 {
       width: 152px !important;
       visibility: visible;
-      transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1) 3.0s, 
-                  visibility 0s 3.0s;
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.6s, 
+                  visibility 0s 2.6s;
     }
 
     /* Database Flat Icon inside Frame198 (zoom + focus fade) */
@@ -108,9 +108,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 3.0s, 
-                  filter 0.5s ease 3.0s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.0s;
+      transition: opacity 0.5s ease 2.6s, 
+                  filter 0.5s ease 2.6s, 
+                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.6s;
     }
 
     /* Arrow 3 (reverse) inside Frame198 (stretches) */
@@ -122,7 +122,7 @@
     faust-flow-canvas.has-animations.animating .Frame198 faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.4s ease 3.8s, transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) 3.8s;
+      transition: opacity 0.3s ease 3.2s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.2s;
     }
 
     /* Frame201 (Card B - Blue) */
@@ -133,8 +133,8 @@
     faust-flow-canvas.has-animations.animating .Frame201 {
       width: 240px !important;
       visibility: visible;
-      transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1) 4.5s, 
-                  visibility 0s 4.5s;
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.8s, 
+                  visibility 0s 3.8s;
     }
 
     /* Card B inside Frame201 (zoom + focus fade) */
@@ -147,9 +147,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 4.5s, 
-                  filter 0.5s ease 4.5s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 4.5s;
+      transition: opacity 0.5s ease 3.8s, 
+                  filter 0.5s ease 3.8s, 
+                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.8s;
     }
 
     /* Blue Card B Glow effect inside Frame201 */
@@ -160,14 +160,14 @@
     faust-flow-canvas.has-animations.animating .Frame201 faust-flow-card[bg="blue"] .Frame {
       box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
       filter: brightness(1) !important;
-      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 5.2s, 
-                  filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 5.2s;
+      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 4.4s, 
+                  filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 4.4s;
     }
 
 
     /* --- CANVAS 2 (A/B TESTING) --- */
 
-    /* FlowDetails layout alignment - Center content dynamically */
+    /* FlowDetails layout alignment - Center content dynamically on desktop */
     faust-flow-canvas.has-animations .FlowDetails {
       justify-content: center !important;
     }
@@ -178,7 +178,7 @@
     }
     faust-flow-canvas.has-animations.animating .FlowMetricsContainer {
       width: 232px !important;
-      transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
     }
 
     /* Split-down arrow inside FlowMetricsContainer (stretches) */
@@ -190,7 +190,7 @@
     faust-flow-canvas.has-animations.animating .FlowMetricsContainer faust-flow-arrow-split-down {
       opacity: 1;
       transform: scale(1);
-      transition: opacity 0.5s ease 0.8s, transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
+      transition: opacity 0.3s ease 0.8s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.8s;
     }
 
     /* Percentages inside FlowMetricsContainer (zoom + fade) */
@@ -203,7 +203,7 @@
     faust-flow-canvas.has-animations.animating .FlowMetricsContainer .FlowPercentage1 {
       opacity: 1;
       transform: scale(1);
-      transition: opacity 0.5s ease 1.3s, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) 1.3s;
+      transition: opacity 0.45s ease 1.2s, transform 0.45s cubic-bezier(0.25, 1, 0.5, 1) 1.2s;
     }
 
     /* Column AB */
@@ -214,8 +214,8 @@
     faust-flow-canvas.has-animations.animating .AB {
       width: 80px !important;
       visibility: visible;
-      transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1) 2.0s, 
-                  visibility 0s 2.0s;
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.8s, 
+                  visibility 0s 1.8s;
     }
 
     /* Control A and Variant B Icons inside AB (zoom + focus fade) */
@@ -228,9 +228,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 2.0s, 
-                  filter 0.5s ease 2.0s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.0s;
+      transition: opacity 0.5s ease 1.8s, 
+                  filter 0.5s ease 1.8s, 
+                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.8s;
     }
 
     /* Variant B Glow effect inside AB */
@@ -241,8 +241,8 @@
     faust-flow-canvas.has-animations.animating .AB faust-flow-icon[bg="blue"] .Frame {
       box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
       filter: brightness(1) !important;
-      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.7s, 
-                  filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.7s;
+      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.4s, 
+                  filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 2.4s;
     }
 
     /* Container (Testing canvas third block) */
@@ -253,8 +253,8 @@
     faust-flow-canvas.has-animations.animating .FlowDetails .Container {
       width: 793px !important;
       visibility: visible;
-      transition: width 1.8s cubic-bezier(0.25, 1, 0.5, 1) 3.2s, 
-                  visibility 0s 3.2s;
+      transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1) 2.9s, 
+                  visibility 0s 2.9s;
     }
 
     /* Merge Arrow inside Container (stretches) */
@@ -266,7 +266,7 @@
     faust-flow-canvas.has-animations.animating .FlowDetails .Container faust-flow-arrow-merge-right {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.4s ease 3.2s, transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) 3.2s;
+      transition: opacity 0.3s ease 2.9s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 2.9s;
     }
 
     /* Database Icon inside Container (zoom + focus fade) */
@@ -279,9 +279,9 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.5s ease 3.8s, 
-                  filter 0.5s ease 3.8s, 
-                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.8s;
+      transition: opacity 0.5s ease 3.4s, 
+                  filter 0.5s ease 3.4s, 
+                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.4s;
     }
 
     /* Linear Arrow inside Container (stretches) */
@@ -293,7 +293,7 @@
     faust-flow-canvas.has-animations.animating .FlowDetails .Container faust-flow-arrow {
       opacity: 1;
       transform: scaleX(1);
-      transition: opacity 0.4s ease 4.4s, transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) 4.4s;
+      transition: opacity 0.3s ease 3.9s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 3.9s;
     }
 
     /* Card Metrics inside Container (zoom + focus fade) */
@@ -306,9 +306,17 @@
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
-      transition: opacity 0.6s ease 5.0s, 
-                  filter 0.6s ease 5.0s, 
-                  transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) 5.0s;
+      transition: opacity 0.6s ease 4.4s, 
+                  filter 0.6s ease 4.4s, 
+                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 4.4s;
+    }
+
+    /* Mobile specific overrides: prevent centering alignment during entrance animations */
+    @media (max-width: 980px) {
+      faust-flow-canvas.has-animations .ContentRow,
+      faust-flow-canvas.has-animations .FlowDetails {
+        justify-content: flex-start !important;
+      }
     }
   `;
   document.head.appendChild(style);
