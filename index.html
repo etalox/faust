@@ -3486,10 +3486,10 @@
             
             if (isPrevHeader) {
               // Start 120ms after the header started animating
-              currentDelay += 120;
+              currentDelay += 160;
             } else if (isCurrentHeader) {
               // Start 120ms after the previous element (e.g., eyebrow) started animating
-              currentDelay += 120;
+              currentDelay += 160;
             } else {
               // Standard stagger delay
               currentDelay += baseStagger;
