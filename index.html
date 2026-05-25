@@ -35,15 +35,24 @@
       --chip: rgba(253,253,255,.06);
       --sb-v: 0;
       --lead-font-size: clamp(32px, 4.2vw, 54px);
+      --canvas-scale: 1;
       overflow: hidden;
       height: 100%;
     }
     * { box-sizing: border-box; }
     ::selection { background: var(--blue); color: #fff; }
     
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar,
     ::-webkit-scrollbar { width: 2px; height: 2px; }
+    html::-webkit-scrollbar-track,
+    body::-webkit-scrollbar-track,
     ::-webkit-scrollbar-track { background: rgba(0,0,0,calc(var(--sb-v) * 0.4)); margin-top: 80px; }
+    html::-webkit-scrollbar-thumb,
+    body::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,calc(var(--sb-v) * 0.3)); border-radius: 2px; }
+    html::-webkit-scrollbar-thumb:hover,
+    body::-webkit-scrollbar-thumb:hover,
     ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,calc(var(--sb-v) * 0.5)); }
 
     .btn, .btn-primary, .btn-secondary, .btn-nav, .canvas-outer, .flow-wrapper, .Flow, .Frame1, [data-layer] { user-select: none; }
@@ -299,19 +308,34 @@
       border-radius: 24px;
       display: flex;
     }
+    .flow-scaler {
+      width: calc(var(--base-width, 1640px) * var(--canvas-scale, 1));
+      height: calc(var(--base-height, 450px) * var(--canvas-scale, 1));
+      position: relative;
+      flex-shrink: 0;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .flow-scaler > .Flow {
+      transform: scale(var(--canvas-scale, 1));
+      transform-origin: top left;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
     .flow-wrapper::-webkit-scrollbar {
-      height: 6px;
+      height: 2px;
     }
     .flow-wrapper::-webkit-scrollbar-track {
       background: rgba(255, 255, 255, 0.02);
-      border-radius: 99px;
+      border-radius: 2px;
     }
     .flow-wrapper::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
     }
     .flow-wrapper::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.6);
     }
     @media (min-width: 981px) {
       .flow-wrapper::-webkit-scrollbar { display: none; }
@@ -320,6 +344,15 @@
     .canvas-outer { position: relative; border-radius: 24px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.03) 100%); overflow: hidden; }
     .canvas-legend { margin: 0 auto; padding: 30px 20px 40px; width: 100%; max-width: 1200px; text-align: center; color: rgba(255,255,255,.5); font-size: 14px; font-weight: 400; line-height: 1.4; pointer-events: none; }
     @media (max-width: 980px) {
+      html {
+        --canvas-scale: 0.6;
+      }
+      .flow-scaler {
+        width: calc(var(--mobile-width, var(--base-width, 1640px)) * var(--canvas-scale, 0.6));
+      }
+      .flow-scaler > .Flow {
+        left: calc(var(--mobile-shift, 0px) * var(--canvas-scale, 0.6));
+      }
       .canvas-legend { padding: 25px 20px 30px; font-size: 13px; }
       .canvas-outer { border-radius: 16px; }
     }
@@ -922,23 +955,24 @@
         <p class="sub reveal-item">Optimizamos las plataformas de empresas de todo el país para aumentar sus ventas mediante decisiones basadas en datos.</p>
         <div class="canvas-outer gradient-border reveal-item">
           <div class="flow-wrapper">
-            <div data-layer="Flow" class="Flow" style="width: 1640px; height: 450px; position: relative; flex-shrink: 0; margin: 0 auto;">
-              <div data-layer="Frame 1" class="Frame1" style="width: 1360px; height: 320px; left: 140px; top: 80px; position: absolute">
-              <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
-                <svg width="1361" height="320" viewBox="0 0 1361 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4" d="M0.5 320L0.5 0M80.5 320V0M160.5 320V0M240.5 320V0M320.5 320V0M400.5 320V0M480.5 320V0M560.5 320V0M640.5 320V0M720.5 320V0M800.5 320V0M880.5 320V0M960.5 320V0M1040.5 320V0M1120.5 320V0M1200.5 320V0M1280.5 320V0M1360.5 320V0" stroke="url(#paint0_linear_1302_753)"/>
-                <defs>
-                <linearGradient id="paint0_linear_1302_753" x1="1361.44" y1="1.49776e-06" x2="1361.44" y2="320" gradientUnits="userSpaceOnUse">
-                <stop stop-color="white" stop-opacity="0.1"/>
-                <stop offset="0.4" stop-color="white" stop-opacity="0.15"/>
-                <stop offset="1" stop-color="white" stop-opacity="0.05"/>
-                </linearGradient>
-                </defs>
-                </svg>
-              </div>
-              <div data-layer="Label" class="Label" style="width: 400px; left: 240px; top: 224px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center"><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Tu empresa proporciona el Sitio </span><span style="color: white; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Web Original </span></div>
-              <div data-layer="Label" class="Label" style="width: 400px; left: 720px; top: 224px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center"><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Faust crea una </span><span style="color: white; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Versión Optimizada</span><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word"> específicamente para aumentar la conversión (%)</span></div>
-              <div data-layer="Content Row" class="ContentRow" style="width: 880px; left: 240px; top: 110px; position: absolute; justify-content: center; align-items: center; gap: 8px; display: inline-flex">
+            <div class="flow-scaler" style="--base-width: 1320px; --mobile-width: 1040px; --mobile-shift: -140px; --base-height: 450px;">
+              <div data-layer="Flow" class="Flow" style="width: 1320px; height: 450px; position: relative;">
+                <div data-layer="Frame 1" class="Frame1" style="width: 1040px; height: 320px; left: 140px; top: 80px; position: absolute">
+                <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
+                  <svg width="1041" height="320" viewBox="0 0 1041 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4" d="M0.5 320L0.5 0M80.5 320V0M160.5 320V0M240.5 320V0M320.5 320V0M400.5 320V0M480.5 320V0M560.5 320V0M640.5 320V0M720.5 320V0M800.5 320V0M880.5 320V0M960.5 320V0M1040.5 320V0" stroke="url(#paint0_linear_1302_753)"/>
+                  <defs>
+                  <linearGradient id="paint0_linear_1302_753" x1="1041.44" y1="1.49776e-06" x2="1041.44" y2="320" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="white" stop-opacity="0.1"/>
+                  <stop offset="0.4" stop-color="white" stop-opacity="0.15"/>
+                  <stop offset="1" stop-color="white" stop-opacity="0.05"/>
+                  </linearGradient>
+                  </defs>
+                  </svg>
+                </div>
+              <div data-layer="Label" class="Label" style="width: 400px; left: 80px; top: 224px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center"><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Tu empresa proporciona el Sitio </span><span style="color: white; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Web Original </span></div>
+              <div data-layer="Label" class="Label" style="width: 400px; left: 560px; top: 224px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center"><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Faust crea una </span><span style="color: white; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word">Versión Optimizada</span><span style="color: #8B8D91; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 21px; letter-spacing: 0.28px; word-wrap: break-word"> específicamente para aumentar la conversión (%)</span></div>
+              <div data-layer="Content Row" class="ContentRow" style="width: 880px; left: 80px; top: 110px; position: absolute; justify-content: center; align-items: center; gap: 8px; display: inline-flex">
                 <div data-layer="Frame 13" class="Frame13" style="width: 152px; height: 80px; position: relative">
                   <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
                     <div data-layer="Frame" class="Frame" style="width: 80px; height: 80px; position: relative; background: #D3D7D6; overflow: hidden; border-radius: 40px">
@@ -949,7 +983,7 @@
                       </div>
                     </div>
                   </div>
-                  <div data-svg-wrapper data-layer="SVG100" class="Svg100" style="left: 80px; top: 40px; position: absolute">
+                  <div data-svg-wrapper data-layer="SVG100" class="Svg100" style="left: 80px; top: 32.5px; position: absolute">
                     <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112ZM0 7.36401V8.36401H72V7.36401V6.36401H0V7.36401Z" fill="url(#paint0_linear_1067_4179)"/>
                     <defs>
@@ -975,7 +1009,7 @@
                       <div data-layer="Amount" class="Amount" style="left: 75.89px; top: 26px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic"><span style="color: white; font-size: 16px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 22.40px; letter-spacing: 0.32px; word-wrap: break-word">9 mil ventas</span><span style="color: rgba(255, 255, 255, 0.50); font-size: 16px; font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 22.40px; letter-spacing: 0.32px; word-wrap: break-word">/mes</span></div>
                     </div>
                   </div>
-                  <div data-svg-wrapper data-layer="SVG101" class="Svg101" style="left: 240px; top: 32px; position: absolute">
+                  <div data-svg-wrapper data-layer="SVG101" class="Svg101" style="left: 240px; top: 24.5px; position: absolute">
                     <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112ZM0 7.36401V8.36401H72V7.36401V6.36401H0V7.36401Z" fill="url(#paint0_linear_1067_4190)"/>
                     <defs>
@@ -1000,7 +1034,7 @@
                       </div>
                     </div>
                   </div>
-                  <div data-svg-wrapper data-layer="SVG102" class="Svg102" style="left: 80px; top: 40px; position: absolute">
+                  <div data-svg-wrapper data-layer="SVG102" class="Svg102" style="left: 80px; top: 32.5px; position: absolute">
                     <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M72.7071 6.65691C73.0976 7.04743 73.0976 7.6806 72.7071 8.07112L66.3431 14.4351C65.9526 14.8256 65.3195 14.8256 64.9289 14.4351C64.5384 14.0446 64.5384 13.4114 64.9289 13.0209L70.5858 7.36401L64.9289 1.70716C64.5384 1.31664 64.5384 0.68347 64.9289 0.292946C65.3195 -0.0975785 65.9526 -0.0975785 66.3431 0.292946L72.7071 6.65691ZM72 7.36401V8.36401H0V7.36401V6.36401H72V7.36401Z" fill="url(#paint0_linear_1067_4197)"/>
                     <defs>
@@ -1031,6 +1065,7 @@
             </div>
           </div>
           </div>
+          </div>
           <div class="canvas-legend">
             Las métricas capturadas determinan automáticamente cuándo B supera consistentemente a A, activando el escalamiento gradual del tráfico
           </div>
@@ -1046,7 +1081,8 @@
         <p class="sub reveal-item">Redirigimos tu tráfico gradualmente entre tu sitio web actual y nuestra interfaz experimental, de forma completamente segura.<br>Cuando nuestra interfaz genere conversiones consistentemente mayores, aumentaremos el tráfico.</p>
         <div class="canvas-outer gradient-border reveal-item">
           <div class="flow-wrapper">
-            <div data-layer="Flow" class="Flow" style="width: 1640px; height: 530px; position: relative; flex-shrink: 0; margin: 0 auto;">
+            <div class="flow-scaler" style="--base-width: 1640px; --mobile-width: 1280px; --mobile-shift: -180px; --base-height: 530px;">
+              <div data-layer="Flow" class="Flow" style="width: 1640px; height: 530px; position: relative;">
               <div data-layer="Frame 1" class="Frame1" style="width: 1280px; height: 400px; left: 180px; top: 80px; position: absolute">
               <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
                 <svg width="1281" height="400" viewBox="0 0 1281 400" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1060,7 +1096,7 @@
                 </defs>
                 </svg>
               </div>
-              <div data-layer="Flow Details" class="FlowDetails" style="width: 1127px; left: 78.78px; top: 80px; position: absolute; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
+              <div data-layer="Flow Details" class="FlowDetails" style="width: 1127px; left: 80px; top: 80px; position: absolute; justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
                 <div data-layer="Flow Metrics Container" class="FlowMetricsContainer" style="width: 232px; height: 160.03px; position: relative">
                   <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 40.02px; position: absolute">
                     <div data-layer="Frame" class="Frame gradient-border" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; background: #1A1A1A; overflow: hidden; border-radius: 40px;">
@@ -1070,7 +1106,7 @@
                         </svg>
                       </div>
                     </div>
-                    <div data-layer="Label" class="Label" style="left: 16.50px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Tráfico</div>
+                    <div data-layer="Label" class="Label" style="left: 0px; width: 80px; text-align: center; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Tráfico</div>
                   </div>
                   <div data-svg-wrapper data-layer="SVG1" class="Svg1" style="left: 80px; top: 0px; position: absolute">
                     <svg width="153" height="175" viewBox="0 0 153 175" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1119,7 +1155,7 @@
                         </div>
                       </div>
                     </div>
-                    <div data-layer="Label" class="Label" style="left: 11px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Variante</div>
+                    <div data-layer="Label" class="Label" style="left: 0px; width: 80px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Variante</div>
                   </div>
                 </div>
                 <div data-layer="Container" class="Container" style="width: 793px; height: 102px; position: relative">
@@ -1143,9 +1179,9 @@
                           </svg>
                         </div>
                       </div>
-                      <div data-layer="Label" class="Label" style="left: -7px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Métricas<br>almacenadas</div>
+                      <div data-layer="Label" class="Label" style="left: 0px; width: 80px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">Métricas<br>almacenadas</div>
                     </div>
-                    <div data-svg-wrapper data-layer="SVG3" class="Svg3" style="left: 80px; top: 40px; position: absolute">
+                    <div data-svg-wrapper data-layer="SVG3" class="Svg3" style="left: 80px; top: 32.5px; position: absolute">
                       <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112ZM0 7.36401V8.36401H72V7.36401V6.36401H0V7.36401Z" fill="url(#paint0_linear_1058_1434)"/>
                       <defs>
@@ -1166,6 +1202,7 @@
                 </div>
               </div>
             </div>
+          </div>
           </div>
           </div>
           <div class="canvas-legend">
