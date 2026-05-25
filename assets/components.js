@@ -10,7 +10,8 @@
     'Components/consent.js',
     'Components/navbar.js',
     'Components/footer.js',
-    'Components/buttons.js'
+    'Components/buttons.js',
+    'Components/flow-canvas.js'
   ];
 
   scripts.forEach(src => {
