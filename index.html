@@ -1810,16 +1810,36 @@
           <div class="apply-group">
             <label class="apply-label" for="apply-contact">Por favor, ingrese un correo electrónico o número de contacto.</label>
             <input type="text" id="apply-contact" class="apply-input" placeholder="correo@empresa.com o número telefónico" value="${data.contact || ''}">
+            <div id="apply-contact-error" style="color: #ff4a4a; font-size: 14px; margin-top: 8px; display: none;">Por favor, verifique que el medio de contacto es válido.</div>
           </div>
         `,
         validate: (data) => {
-          return data.contact && data.contact.trim().length > 0;
+          return true;
         },
         bind: (data, updateValid) => {
           const contactInput = document.getElementById('apply-contact');
+          const errorMsg = document.getElementById('apply-contact-error');
+
+          function checkContactValidity() {
+            const val = contactInput ? contactInput.value : '';
+            data.contact = val;
+            if (errorMsg) {
+              if (val.trim() === '') {
+                errorMsg.style.display = 'none';
+              } else {
+                const isValid = validateContactMethod(val);
+                if (isValid) {
+                  errorMsg.style.display = 'none';
+                } else {
+                  errorMsg.style.display = 'block';
+                }
+              }
+            }
+          }
+
           if (contactInput) {
             contactInput.addEventListener('input', () => {
-              data.contact = contactInput.value;
+              checkContactValidity();
               updateValid();
             });
             contactInput.addEventListener('keydown', (e) => {
@@ -1829,6 +1849,8 @@
               }
             });
           }
+
+          checkContactValidity();
         }
       },
       {
@@ -2210,6 +2232,12 @@
         } else {
           btnNext.textContent = 'Omitir';
         }
+      } else if (currentStep === 4) {
+        if (formData.contact && formData.contact.trim() !== '') {
+          btnNext.textContent = 'Siguiente';
+        } else {
+          btnNext.textContent = 'Omitir';
+        }
       } else {
         btnNext.textContent = 'Siguiente';
       }
@@ -2375,6 +2403,29 @@
       return null;
     }
 
+    function validateContactMethod(val) {
+      if (!val || val.trim() === '') {
+        return true;
+      }
+      const text = val.trim();
+      
+      if (text.includes('@')) {
+        // 1. Correo: [texto] + @ + [texto] + [.] + [texto]
+        const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+        return emailRegex.test(text);
+      }
+      
+      // 2. Num. de teléfono: 10 dígitos sin texto intermedio, permitiendo únicamente espacios entre ellos
+      const phoneRegex = /\d(?:\s*\d){9}/;
+      if (phoneRegex.test(text)) return true;
+      
+      // 3. Un sitio web: [texto] + [.] + [texto]
+      const webRegex = /[^\s.@]+\.[^\s.@]+/;
+      if (webRegex.test(text)) return true;
+      
+      return false;
+    }
+
     function checkBlockedState() {
       const ninetyDays = 90 * 24 * 60 * 60 * 1000;
       let blockedIps = {};
@@ -2395,9 +2446,13 @@
       }
 
       const localBlockTime = parseInt(localStorage.getItem('faust-local-blocked-at') || '0', 10);
-      if (localBlockTime && (now - localBlockTime >= ninetyDays)) {
-        localStorage.removeItem('faust-local-blocked-at');
-        localStorage.setItem('faust-submission-count', '0');
+      if (localBlockTime) {
+        if (now - localBlockTime >= ninetyDays) {
+          localStorage.removeItem('faust-local-blocked-at');
+          localStorage.setItem('faust-submission-count', '0');
+        } else {
+          return true;
+        }
       }
 
       const submissionCount = parseInt(localStorage.getItem('faust-submission-count') || '0', 10);
@@ -2417,7 +2472,11 @@
       const newCount = parseInt(localStorage.getItem('faust-submission-count') || '0', 10) + 1;
       localStorage.setItem('faust-submission-count', newCount);
 
-      if (newCount >= 2) {
+      const contactVal = formData.contact || '';
+      const isContactValid = validateContactMethod(contactVal);
+      const limit = isContactValid ? 2 : 1;
+
+      if (newCount >= limit) {
         localStorage.setItem('faust-local-blocked-at', Date.now().toString());
         
         let clientIp = localStorage.getItem('faust-detected-ip');
@@ -2941,6 +3000,17 @@
           window.openApplyModal();
         }
       }
+    });
+
+    // Expose internal functions for unit tests
+    window.validateContactMethod = validateContactMethod;
+    window.checkBlockedState = checkBlockedState;
+    window.recordSubmission = recordSubmission;
+    window.formData = formData;
+    window.checkValidation = checkValidation;
+    Object.defineProperty(window, 'currentStep', {
+      get() { return currentStep; },
+      set(val) { currentStep = val; }
     });
   })();
   </script>
