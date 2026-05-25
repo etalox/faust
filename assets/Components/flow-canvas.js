@@ -705,9 +705,12 @@ class FaustFlowIcon extends HTMLElement {
     // Extract label node if present in child DOM to preserve translation
     let labelHtml = '';
     const labelNode = this.querySelector('.icon-label, [slot="label"]');
+    const labelWidth = parseInt(this.getAttribute('label-width') || '80', 10);
+    const labelLeft = (80 - labelWidth) / 2;
+
     if (labelNode) {
       labelHtml = `
-        <div data-layer="Label" class="Label" style="left: 0px; width: 80px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
+        <div data-layer="Label" class="Label" style="left: ${labelLeft}px; width: ${labelWidth}px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
           ${labelNode.innerHTML}
         </div>
       `;
@@ -716,7 +719,7 @@ class FaustFlowIcon extends HTMLElement {
       const labelAttr = this.getAttribute('label') || '';
       if (labelAttr) {
         labelHtml = `
-          <div data-layer="Label" class="Label" style="left: 0px; width: 80px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
+          <div data-layer="Label" class="Label" style="left: ${labelLeft}px; width: ${labelWidth}px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
             ${labelAttr}
           </div>
         `;
