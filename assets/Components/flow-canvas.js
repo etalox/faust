@@ -703,27 +703,24 @@ class FaustFlowIcon extends HTMLElement {
     };
 
     // Extract label node if present in child DOM to preserve translation
-    let labelHtml = '';
+    let labelText = '';
     const labelNode = this.querySelector('.icon-label, [slot="label"]');
-    const labelWidth = parseInt(this.getAttribute('label-width') || '80', 10);
-    const labelLeft = (80 - labelWidth) / 2;
-
     if (labelNode) {
-      labelHtml = `
-        <div data-layer="Label" class="Label" style="left: ${labelLeft}px; width: ${labelWidth}px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
-          ${labelNode.innerHTML}
-        </div>
-      `;
+      labelText = labelNode.innerHTML;
       labelNode.remove();
     } else {
-      const labelAttr = this.getAttribute('label') || '';
-      if (labelAttr) {
-        labelHtml = `
-          <div data-layer="Label" class="Label" style="left: ${labelLeft}px; width: ${labelWidth}px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
-            ${labelAttr}
-          </div>
-        `;
-      }
+      labelText = this.getAttribute('label') || '';
+    }
+
+    let labelHtml = '';
+    if (labelText) {
+      const labelWidth = parseInt(this.getAttribute('label-width') || '80', 10);
+      const labelLeft = (80 - labelWidth) / 2;
+      labelHtml = `
+        <div data-layer="Label" class="Label" style="left: ${labelLeft}px; width: ${labelWidth}px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
+          ${labelText}
+        </div>
+      `;
     }
 
     let innerContent = '';
@@ -1063,6 +1060,19 @@ class FaustFlowCanvas extends HTMLElement {
     const compRight1 = this.querySelector('.Frame198 faust-flow-icon');
     const compRight2 = this.querySelector('.Frame201 faust-flow-card');
 
+    const alignLabel = (label, comp1, comp2, frame1Rect, scale) => {
+      if (!label || !comp1 || !comp2) return;
+      const rect1 = comp1.getBoundingClientRect();
+      const rect2 = comp2.getBoundingClientRect();
+      
+      const x1Rel = (rect1.left - frame1Rect.left) / scale;
+      const x2Rel = (rect2.right - frame1Rect.left) / scale;
+      const targetRelCenter = (x1Rel + x2Rel) / 2;
+      
+      const labelWidth = parseFloat(label.getAttribute('width')) || 400;
+      label.style.left = (targetRelCenter - labelWidth / 2) + 'px';
+    };
+
     const updatePositions = () => {
       if (!this._trackingActive) return;
 
@@ -1077,31 +1087,8 @@ class FaustFlowCanvas extends HTMLElement {
       const frameWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
       const scale = frame1Rect.width / frameWidth || 1;
 
-      // Update Left Label
-      if (labelLeft && compLeft1 && compLeft2) {
-        const rect1 = compLeft1.getBoundingClientRect();
-        const rect2 = compLeft2.getBoundingClientRect();
-        
-        const x1Rel = (rect1.left - frame1Rect.left) / scale;
-        const x2Rel = (rect2.right - frame1Rect.left) / scale;
-        const targetRelCenter = (x1Rel + x2Rel) / 2;
-        
-        const labelWidth = parseFloat(labelLeft.getAttribute('width')) || 400;
-        labelLeft.style.left = (targetRelCenter - labelWidth / 2) + 'px';
-      }
-
-      // Update Right Label
-      if (labelRight && compRight1 && compRight2) {
-        const rect1 = compRight1.getBoundingClientRect();
-        const rect2 = compRight2.getBoundingClientRect();
-        
-        const x1Rel = (rect1.left - frame1Rect.left) / scale;
-        const x2Rel = (rect2.right - frame1Rect.left) / scale;
-        const targetRelCenter = (x1Rel + x2Rel) / 2;
-        
-        const labelWidth = parseFloat(labelRight.getAttribute('width')) || 400;
-        labelRight.style.left = (targetRelCenter - labelWidth / 2) + 'px';
-      }
+      alignLabel(labelLeft, compLeft1, compLeft2, frame1Rect, scale);
+      alignLabel(labelRight, compRight1, compRight2, frame1Rect, scale);
 
       this._trackingFrame = requestAnimationFrame(updatePositions);
     };
