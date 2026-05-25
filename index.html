@@ -3387,7 +3387,7 @@
       // 3. Bidirectional reveal observer (split into reveal and hide observers for perfect cross-browser reliability)
       var revealObserverOptions = {
         root: null,
-        rootMargin: '-120px 0px -120px 0px', // Trigger animations slightly higher on the screen when scrolling down
+        rootMargin: '-120px 0px -180px 0px',
         threshold: 0.02
       };
 
@@ -3444,7 +3444,6 @@
           }
         });
 
-        // Resolve exiting groups (hiding them only when all elements are out of viewport)
         Object.keys(groupsToHide).forEach(function(groupId) {
           var groupElements = Array.from(document.querySelectorAll('[data-reveal-group="' + groupId + '"]'));
           var isAnyVisible = groupElements.some(function(el) {
@@ -3462,7 +3461,6 @@
       }, hideObserverOptions);
 
       function revealElements(elements) {
-        // Sort entering elements: top-to-bottom, then left-to-right (horizontal stagger)
         elements.sort(function(a, b) {
           var rectA = a.getBoundingClientRect();
           var rectB = b.getBoundingClientRect();
@@ -3485,13 +3483,10 @@
                                   el.classList.contains('headline') || el.classList.contains('lead');
             
             if (isPrevHeader) {
-              // Start 120ms after the header started animating
               currentDelay += 160;
             } else if (isCurrentHeader) {
-              // Start 120ms after the previous element (e.g., eyebrow) started animating
               currentDelay += 160;
             } else {
-              // Standard stagger delay
               currentDelay += baseStagger;
             }
           }
@@ -3500,7 +3495,6 @@
         });
       }
 
-      // Start observing all reveal items with both observers
       revealItems.forEach(function(item) {
         revealObserver.observe(item);
         hideObserver.observe(item);
