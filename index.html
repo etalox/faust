@@ -218,8 +218,13 @@
     .logo-lockup img { width: 34px; height: 20px; }
     .supported { margin-top: 100px; }
     .supported .label { font-size: 14px; color: rgba(255,255,255,.7); margin-bottom: 20px; }
-    .supported .logos { display: flex; gap: 40px; justify-content: center; align-items: center; flex-wrap: wrap; }
-    .supported .logos img { height: 32px; object-fit: contain; opacity: .8; }
+    .supported .logos { display: flex; gap: 40px; justify-content: center; align-items: center; flex-wrap: nowrap; }
+    .supported .logos img { height: 32px; max-width: calc((100% - 80px) / 3); object-fit: contain; opacity: .8; }
+
+    @media (max-width: 360px) {
+      .supported .logos { gap: 20px; }
+      .supported .logos img { max-width: calc((100% - 40px) / 3); }
+    }
     .lead { font-size: var(--lead-font-size); line-height: 1.15; letter-spacing: -1.2px; margin: 0 0 50px; font-weight: 300;}
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0px; margin-top: 70px; }
     .stat { padding: 50px 100px 50px 100px; display: flex; flex-direction: column; gap: 50px; border-left: 1px solid var(--line); }
