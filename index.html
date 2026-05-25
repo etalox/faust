@@ -242,6 +242,16 @@
       transform: translateY(0) scale(1);
     }
 
+    /* Lead paragraph headers do not scale */
+    h2.lead.reveal-item {
+      transform: translateY(35px);
+      transition: opacity var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1),
+                  transform var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    h2.lead.reveal-item.reveal-visible {
+      transform: translateY(0);
+    }
+
     .responsive-br br { display: inline; }
     .no-br .responsive-br br { display: none; }
     .no-br .responsive-br::after { content: " "; }
