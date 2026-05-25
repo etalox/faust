@@ -564,7 +564,7 @@ class FaustFooter extends HTMLElement {
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
                   <div style="display: flex; flex-direction: column; gap: 4px;">
                     <span style="font-size: 15px; font-weight: 600; color: #fff;">Otras cookies analíticas</span>
-                    <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Google Analytics para comprender el uso general del sitio y medir visitas.</span>
+                    <span style="font-size: 12px; color: #8b8d91; line-height: 1.4;">Google Analytics para comprender el uso general del sitio y medir tráfico.</span>
                   </div>
                   <label class="faust-switch">
                     <input type="checkbox" id="overlay-cookie-analytics-toggle" ${faustIsAnalyticsEnabled() ? 'checked' : ''}>
