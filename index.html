@@ -628,6 +628,19 @@
       return html;
     }
 
+    function validateFullName(name) {
+      if (!name) return false;
+      const nameVal = name.trim();
+      const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
+      const isChinese = activeLang.startsWith('zh');
+      if (isChinese) {
+        return nameVal.length >= 1;
+      } else {
+        const words = nameVal.split(/\s+/).filter(Boolean);
+        return words.length >= 2 && words[0].length >= 3;
+      }
+    }
+
     const steps = [
       {
         // Step 1: Name and Cargo
@@ -649,14 +662,7 @@
           </div>
         `,
         validate: (data) => {
-          const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
-          const isChinese = activeLang.startsWith('zh');
-          if (isChinese) {
-            return data.name && data.name.trim().length >= 1;
-          } else {
-            const words = data.name ? data.name.trim().split(/\s+/).filter(Boolean) : [];
-            return words.length >= 2 && words[0].length >= 3;
-          }
+          return validateFullName(data.name);
         },
         bind: (data, updateValid) => {
           const nameInput = document.getElementById('apply-name');
@@ -665,12 +671,7 @@
 
           function checkRoleVisibility(forceNoTransition) {
             if (!roleContainer) return;
-            const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
-            const isChinese = activeLang.startsWith('zh');
-            const words = data.name ? data.name.trim().split(/\s+/).filter(Boolean) : [];
-            const isNameValid = isChinese 
-              ? (data.name && data.name.trim().length >= 1)
-              : (words.length >= 2 && words[0].length >= 3);
+            const isNameValid = validateFullName(data.name);
 
             const shouldShow = isNameValid || (data.role && data.role !== '');
             const currentlyVisible = roleContainer.style.display !== 'none';
@@ -701,12 +702,7 @@
             nameInput.addEventListener('keydown', (e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
-                const activeLang = (localStorage.getItem('faust-lang-selection-code') || '').toLowerCase();
-                const isChinese = activeLang.startsWith('zh');
-                const words = data.name ? data.name.trim().split(/\s+/).filter(Boolean) : [];
-                const isNameValid = isChinese 
-                  ? (data.name && data.name.trim().length >= 1)
-                  : (words.length >= 2 && words[0].length >= 3);
+                const isNameValid = validateFullName(data.name);
                 
                 if (isNameValid) {
                   if (roleContainer && roleContainer.style.display !== 'none' && roleSelect) {
@@ -1850,7 +1846,7 @@
             
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <label for="message-input-name" style="font-size: 13px; font-weight: 600; color: #fff;">Nombre</label>
-              <input type="text" id="message-input-name" class="apply-input" style="width: 100%; box-sizing: border-box;" ${!nameIsEditable ? 'readonly' : ''} value="${savedName.replace(/"/g, '&quot;')}">
+              <input type="text" id="message-input-name" class="apply-input" placeholder="Nombre completo" style="width: 100%; box-sizing: border-box;" ${!nameIsEditable ? 'readonly' : ''} value="${savedName.replace(/"/g, '&quot;')}">
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -1887,6 +1883,8 @@
           const contactVal = contactInput.value.trim();
           const textVal = textInput.value.trim();
 
+          const isNameValid = validateFullName(nameVal);
+
           let isContactValid = false;
           const errorMsg = document.getElementById('message-contact-error');
           if (contactVal === '') {
@@ -1898,7 +1896,7 @@
             }
           }
 
-          if (nameVal.length >= 2 && textVal.length >= 5 && contactVal !== '' && isContactValid) {
+          if (isNameValid && textVal.length >= 5 && contactVal !== '' && isContactValid) {
             submitBtn.removeAttribute('disabled');
           } else {
             submitBtn.setAttribute('disabled', 'true');
@@ -2135,6 +2133,7 @@
 
     // Expose internal functions for unit tests
     window.validateContactMethod = validateContactMethod;
+    window.validateFullName = validateFullName;
     window.buildContactPlaceholder = buildContactPlaceholder;
     window.checkBlockedState = checkBlockedState;
     window.recordSubmission = recordSubmission;

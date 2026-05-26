@@ -163,15 +163,19 @@
     }
 
     /* Blue Card B Glow effect inside Frame201 */
-    faust-flow-canvas.has-animations .Frame201 faust-flow-card[bg="blue"] .Frame {
+    faust-flow-canvas.has-animations .Frame201 faust-flow-card[bg="blue"] {
       box-shadow: 0 0 0px rgba(0, 48, 255, 0) !important;
+    }
+    faust-flow-canvas.has-animations.animating .Frame201 faust-flow-card[bg="blue"] {
+      box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
+      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 4.45s;
+    }
+    faust-flow-canvas.has-animations .Frame201 faust-flow-card[bg="blue"] .Frame {
       filter: brightness(0.6);
     }
     faust-flow-canvas.has-animations.animating .Frame201 faust-flow-card[bg="blue"] .Frame {
-      box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
       filter: brightness(1) !important;
-      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 4.45s, 
-                  filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 4.45s;
+      transition: filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 4.45s;
     }
 
     /* Labels inside Canvas 1 (fade, slide up and blur transition) */
@@ -270,15 +274,19 @@
     }
 
     /* Variant B Glow effect inside AB */
-    faust-flow-canvas.has-animations .AB faust-flow-icon[bg="blue"] .Frame {
+    faust-flow-canvas.has-animations .AB faust-flow-icon[bg="blue"] {
       box-shadow: 0 0 0px rgba(0, 48, 255, 0) !important;
+    }
+    faust-flow-canvas.has-animations.animating .AB faust-flow-icon[bg="blue"] {
+      box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
+      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.15s;
+    }
+    faust-flow-canvas.has-animations .AB faust-flow-icon[bg="blue"] .Frame {
       filter: brightness(0.6);
     }
     faust-flow-canvas.has-animations.animating .AB faust-flow-icon[bg="blue"] .Frame {
-      box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.90) !important;
       filter: brightness(1) !important;
-      transition: box-shadow 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.15s, 
-                  filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.15s;
+      transition: filter 1.0s cubic-bezier(0.25, 1, 0.5, 1) 2.15s;
     }
 
     /* FrameMergeDb (Testing canvas third block) */
@@ -407,8 +415,11 @@
     faust-flow-canvas.has-animations.animating.fast-replay .Frame201 faust-flow-card {
       transition: opacity 0.5s ease 1.125s, filter 0.5s ease 1.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.125s;
     }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame201 faust-flow-card[bg="blue"] {
+      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.6s;
+    }
     faust-flow-canvas.has-animations.animating.fast-replay .Frame201 faust-flow-card[bg="blue"] .Frame {
-      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.6s, filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.6s;
+      transition: filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.6s;
     }
 
     /* Canvas 1 Labels Fast Replay */
@@ -436,8 +447,11 @@
     faust-flow-canvas.has-animations.animating.fast-replay .AB faust-flow-icon {
       transition: opacity 0.5s ease 0.125s, filter 0.5s ease 0.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.125s;
     }
+    faust-flow-canvas.has-animations.animating.fast-replay .AB faust-flow-icon[bg="blue"] {
+      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.625s;
+    }
     faust-flow-canvas.has-animations.animating.fast-replay .AB faust-flow-icon[bg="blue"] .Frame {
-      transition: box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.625s, filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.625s;
+      transition: filter 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.625s;
     }
     faust-flow-canvas.has-animations.animating.fast-replay .FrameMergeDb {
       transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.5s, visibility 0s 0.5s;
@@ -456,6 +470,79 @@
     }
     faust-flow-canvas.has-animations.animating.fast-replay .FrameCardMetrics faust-flow-card {
       transition: opacity 0.6s ease 1.125s, filter 0.6s ease 1.125s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 1.125s;
+    }
+
+    /* --- PROJECTOR GLOW SWEEP EFFECT --- */
+
+    faust-flow-card .Frame::before,
+    faust-flow-icon .Frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -70%;
+      width: 240%;
+      height: 100%;
+      background: linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.01) 30%,
+        rgba(255, 255, 255, 0.08) 45%,
+        rgba(255, 255, 255, 0.20) 50%,
+        rgba(255, 255, 255, 0.08) 55%,
+        rgba(255, 255, 255, 0.01) 70%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: translate3d(-100%, 0, 0) skewX(-20deg);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+      mix-blend-mode: screen;
+      filter: blur(12px);
+    }
+
+    /* Special tinted gradient for blue cards and icons */
+    faust-flow-card[bg="blue"] .Frame::before,
+    faust-flow-icon[bg="blue"] .Frame::before {
+      background: linear-gradient(
+        115deg,
+        rgba(0, 48, 255, 0) 0%,
+        rgba(100, 150, 255, 0.03) 30%,
+        rgba(170, 210, 255, 0.15) 45%,
+        rgba(255, 255, 255, 0.40) 50%,
+        rgba(170, 210, 255, 0.15) 55%,
+        rgba(100, 150, 255, 0.03) 70%,
+        rgba(0, 48, 255, 0) 100%
+      );
+      mix-blend-mode: screen;
+      filter: blur(12px);
+    }
+
+    faust-flow-card.sweep-active .Frame::before,
+    faust-flow-icon.sweep-active .Frame::before {
+      animation: projector-sweep-local var(--sweep-duration, 1s) linear forwards;
+    }
+
+    /* Loop the projector light sweep when hovered */
+    faust-flow-card:hover .Frame::before,
+    faust-flow-icon:hover .Frame::before {
+      animation: projector-sweep-local var(--sweep-duration, 1s) linear infinite !important;
+    }
+
+    @keyframes projector-sweep-local {
+      0% {
+        transform: translate3d(-70%, 0, 0) skewX(-20deg);
+        opacity: 0;
+      }
+      5% {
+        opacity: 1;
+      }
+      95% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(70%, 0, 0) skewX(-20deg);
+        opacity: 0;
+      }
     }
   `;
   document.head.appendChild(style);
@@ -704,8 +791,10 @@ class FaustFlowIcon extends HTMLElement {
       bgStyle = 'background: #1A1A1A;';
       extraClass = 'gradient-border';
     } else if (bg === 'blue') {
-      bgStyle = 'background: #0030FF; box-shadow: 0px 4px 160px rgba(0, 48, 255, 0.80);';
+      bgStyle = 'background: #0030FF;';
       extraClass = 'gradient-border gradient-border-blue';
+      this.style.boxShadow = '0px 4px 160px rgba(0, 48, 255, 0.80)';
+      this.style.borderRadius = radius + 'px';
     }
 
     const svgs = {
@@ -757,7 +846,7 @@ class FaustFlowIcon extends HTMLElement {
       this.style.height = '80px';
     }
 
-    const overflowVal = bg === 'blue' ? 'visible' : 'hidden';
+    const overflowVal = 'hidden';
 
     this.innerHTML = `
       <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute">
@@ -817,7 +906,6 @@ class FaustFlowCard extends HTMLElement {
       bgStyle = 'background: #171819;';
     }
 
-    let shadowStyle = shadow ? 'box-shadow: 0px 4px 200px rgba(0, 48, 255, 0.80);' : '';
     let radius = width > 400 ? '30px' : '40px';
 
     this.style.width = width + 'px';
@@ -826,6 +914,11 @@ class FaustFlowCard extends HTMLElement {
     this.style.top = top + 'px';
     this.style.position = 'absolute';
     this.style.display = 'block';
+
+    if (bg === 'blue' || shadow) {
+      this.style.boxShadow = '0px 4px 200px rgba(0, 48, 255, 0.80)';
+      this.style.borderRadius = radius;
+    }
 
     // Build the content HTML, supporting both translatable children (preferred) and attributes
     let contentHtml = '';
@@ -854,11 +947,11 @@ class FaustFlowCard extends HTMLElement {
     }
 
     const frameHeight = bg === 'gray-dark' ? height - 2 : height;
-    const overflowVal = bg === 'blue' ? 'visible' : 'hidden';
+    const overflowVal = 'hidden';
 
     this.innerHTML = `
       <div data-layer="Item Details" class="ItemDetails" style="width: ${width}px; height: ${height}px; left: 0px; top: 0px; position: absolute">
-        <div data-layer="Frame" class="Frame ${extraClass}" style="width: ${width}px; height: ${frameHeight}px; left: 0px; top: 0px; position: absolute; ${bgStyle} ${shadowStyle} overflow: ${overflowVal}; border-radius: ${radius};">
+        <div data-layer="Frame" class="Frame ${extraClass}" style="width: ${width}px; height: ${frameHeight}px; left: 0px; top: 0px; position: absolute; ${bgStyle} overflow: ${overflowVal}; border-radius: ${radius};">
           ${innerContent}
         </div>
       </div>
@@ -872,6 +965,65 @@ class FaustFlowCard extends HTMLElement {
  * Controls scaled rendering for desktop and mobile devices.
  */
 class FaustFlowCanvas extends HTMLElement {
+  stopSweepLoop() {
+    if (this._sweepInterval) {
+      clearInterval(this._sweepInterval);
+      this._sweepInterval = null;
+    }
+    const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
+    components.forEach(comp => {
+      if (comp._sweepTimeout) {
+        clearTimeout(comp._sweepTimeout);
+        comp._sweepTimeout = null;
+      }
+      if (comp._sweepEndTimeout) {
+        clearTimeout(comp._sweepEndTimeout);
+        comp._sweepEndTimeout = null;
+      }
+      comp.classList.remove('sweep-active');
+    });
+  }
+
+  startSweepLoop() {
+    this.stopSweepLoop();
+    
+    const runSweep = () => {
+      const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
+      const flow = this.querySelector('.Flow');
+      if (!flow) return;
+      
+      const W_beam = 300; // Width of the projector beam in pixels
+      const V = 250; // Speed of the beam in pixels/second
+      
+      components.forEach(comp => {
+        // Calculate absolute horizontal offset relative to the .Flow container
+        let leftPx = 0;
+        let curr = comp;
+        while (curr && curr !== flow) {
+          leftPx += curr.offsetLeft || 0;
+          curr = curr.offsetParent;
+        }
+        
+        const w = comp.offsetWidth || 80;
+        const t_start = leftPx / V;
+        const t_duration = (w + W_beam) / V;
+        
+        comp.style.setProperty('--sweep-duration', `${t_duration.toFixed(4)}s`);
+        
+        // Trigger the sweep class after t_start delay
+        comp._sweepTimeout = setTimeout(() => {
+          comp.classList.add('sweep-active');
+          
+          comp._sweepEndTimeout = setTimeout(() => {
+            comp.classList.remove('sweep-active');
+          }, t_duration * 1000);
+        }, t_start * 1000);
+      });
+    };
+    
+    runSweep();
+  }
+
   clearTimers() {
     if (this._seenTimeout) {
       clearTimeout(this._seenTimeout);
@@ -885,6 +1037,7 @@ class FaustFlowCanvas extends HTMLElement {
       clearTimeout(this._replayTimeout);
       this._replayTimeout = null;
     }
+    this.stopSweepLoop();
   }
 
   checkAndTriggerAnimation(enteredFromBelow) {
@@ -921,6 +1074,7 @@ class FaustFlowCanvas extends HTMLElement {
         this._hasPlayed = true;
         this._playTimeout = null;
         this.stopLabelTracking();
+        this.startSweepLoop();
       }, 5600);
     } else if (enteredFromBelow) {
       // Subsequent play from below: fast-replay animation
@@ -934,6 +1088,7 @@ class FaustFlowCanvas extends HTMLElement {
       this._replayTimeout = setTimeout(() => {
         this._replayTimeout = null;
         this.stopLabelTracking();
+        this.startSweepLoop();
       }, 2400);
     }
   }
@@ -1004,6 +1159,28 @@ class FaustFlowCanvas extends HTMLElement {
 
     const mount = this.querySelector('.flow-content-mount');
     children.forEach(child => mount.appendChild(child));
+
+    // Pre-calculate sweep durations immediately for hover states
+    const setupSweepDurations = () => {
+      const flow = this.querySelector('.Flow');
+      if (!flow) return;
+      const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
+      const W_beam = 300;
+      const V = 250;
+      components.forEach(comp => {
+        let leftPx = 0;
+        let curr = comp;
+        while (curr && curr !== flow) {
+          leftPx += curr.offsetLeft || 0;
+          curr = curr.offsetParent;
+        }
+        const w = comp.offsetWidth || 80;
+        const t_duration = (w + W_beam) / V;
+        comp.style.setProperty('--sweep-duration', `${t_duration.toFixed(4)}s`);
+      });
+    };
+    setTimeout(setupSweepDurations, 100);
+    setTimeout(setupSweepDurations, 500);
 
     // Setup intersection observer to toggle the animation class
     this.classList.add('has-animations');
