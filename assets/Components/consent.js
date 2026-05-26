@@ -164,7 +164,7 @@ try {
       background: rgba(20, 21, 23, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 20px;
       padding: 24px 44px 24px 32px;
       display: flex;
