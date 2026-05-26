@@ -757,9 +757,11 @@ class FaustFlowIcon extends HTMLElement {
       this.style.height = '80px';
     }
 
+    const overflowVal = bg === 'blue' ? 'visible' : 'hidden';
+
     this.innerHTML = `
       <div data-layer="Icon Container" class="IconContainer" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute">
-        <div data-layer="Frame" class="Frame ${extraClass}" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; ${bgStyle} overflow: hidden; border-radius: ${radius}px; display: flex; align-items: center; justify-content: center;">
+        <div data-layer="Frame" class="Frame ${extraClass}" style="width: 80px; height: 80px; left: 0px; top: 0px; position: absolute; ${bgStyle} overflow: ${overflowVal}; border-radius: ${radius}px; display: flex; align-items: center; justify-content: center;">
           ${innerContent}
         </div>
       </div>
@@ -852,10 +854,11 @@ class FaustFlowCard extends HTMLElement {
     }
 
     const frameHeight = bg === 'gray-dark' ? height - 2 : height;
+    const overflowVal = bg === 'blue' ? 'visible' : 'hidden';
 
     this.innerHTML = `
       <div data-layer="Item Details" class="ItemDetails" style="width: ${width}px; height: ${height}px; left: 0px; top: 0px; position: absolute">
-        <div data-layer="Frame" class="Frame ${extraClass}" style="width: ${width}px; height: ${frameHeight}px; left: 0px; top: 0px; position: absolute; ${bgStyle} ${shadowStyle} overflow: hidden; border-radius: ${radius};">
+        <div data-layer="Frame" class="Frame ${extraClass}" style="width: ${width}px; height: ${frameHeight}px; left: 0px; top: 0px; position: absolute; ${bgStyle} ${shadowStyle} overflow: ${overflowVal}; border-radius: ${radius};">
           ${innerContent}
         </div>
       </div>
@@ -978,7 +981,7 @@ class FaustFlowCanvas extends HTMLElement {
       <div class="flow-wrapper">
         <div class="flow-scaler" style="--base-width: ${frameWidth}px; --mobile-width: ${frameWidth}px; --mobile-shift: 0px; --base-height: ${height}px;">
           <div data-layer="Flow" class="Flow" style="width: ${frameWidth}px; height: ${height}px; position: relative;">
-            <div data-layer="Frame 1" class="Frame1" style="width: ${frameWidth}px; height: ${frameHeight}px; left: 0px; top: ${frameTop}px; position: absolute;">
+            <div data-layer="Frame 1" class="Frame1" style="width: ${frameWidth}px; height: ${frameHeight}px; left: 0px; top: ${frameTop}px; position: absolute">
               <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
                 <svg width="${frameWidth + 1}" height="${frameHeight}" viewBox="0 0 ${frameWidth + 1} ${frameHeight}" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path opacity="0.4" d="${pathD}" stroke="url(#${gridId})"/>

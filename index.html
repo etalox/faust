@@ -1800,12 +1800,14 @@
 
       let isAlreadySent = parseInt(localStorage.getItem('faust-submission-count') || '0', 10) >= 1;
       let savedName = '';
+      let savedContact = '';
       try {
         const saved = JSON.parse(localStorage.getItem('faust-applications') || '[]');
         if (saved.length > 0) {
           const lastApp = saved[saved.length - 1];
-          if (lastApp && lastApp.data && lastApp.data.name) {
-            savedName = lastApp.data.name;
+          if (lastApp && lastApp.data) {
+            if (lastApp.data.name) savedName = lastApp.data.name;
+            if (lastApp.data.contact) savedContact = lastApp.data.contact;
           }
         }
       } catch (e) {}
@@ -1813,18 +1815,48 @@
       if (!savedName) {
         savedName = formData.name || '';
       }
+      if (!savedContact) {
+        savedContact = formData.contact || '';
+      }
 
+      function extractContactMethod(val) {
+        if (!val) return '';
+        const trimmed = val.trim();
+        
+        // 1. Correo electrónico
+        const emailMatch = trimmed.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9.-]+/);
+        if (emailMatch) return emailMatch[0];
+
+        // 2. Número de teléfono (10 dígitos permitiendo espacios)
+        const phoneMatch = trimmed.match(/\d(?:\s*\d){9}/);
+        if (phoneMatch) return phoneMatch[0];
+
+        // 3. Sitio web
+        const webMatch = trimmed.match(/[a-zA-Z0-9-]+\.[a-zA-Z0-9.-]+/);
+        if (webMatch) return webMatch[0];
+
+        return '';
+      }
+
+      const extractedContact = extractContactMethod(savedContact);
       const nameIsEditable = !isAlreadySent || !savedName;
+      const contactIsEditable = !isAlreadySent || !extractedContact;
       const savedMessage = localStorage.getItem('faust-contact-message-draft') || '';
 
       const renderContent = () => {
         msgModalBody.innerHTML = `
           <div class="apply-message-form" style="display: flex; flex-direction: column; gap: 20px; padding: 10px 0; text-align: left;">
-            <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; line-height: 1.5; margin: 0; text-align: center;">Envíanos tu consulta y te responderemos por correo electrónico.</p>
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; line-height: 1.5; margin: 0; text-align: center;">Envíanos tu consulta y le responderemos a través del medio de contacto proporcionado.</p>
             
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <label for="message-input-name" style="font-size: 13px; font-weight: 600; color: #fff;">Nombre</label>
               <input type="text" id="message-input-name" class="apply-input" style="width: 100%; box-sizing: border-box;" ${!nameIsEditable ? 'readonly' : ''} value="${savedName.replace(/"/g, '&quot;')}">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label for="message-input-contact" style="font-size: 13px; font-weight: 600; color: #fff;">Medio de contacto</label>
+              <input type="text" id="message-input-contact" class="apply-input" placeholder="Correo, teléfono o sitio web" style="width: 100%; box-sizing: border-box;" ${!contactIsEditable ? 'readonly' : ''} value="${extractedContact.replace(/"/g, '&quot;')}">
+              <div id="message-contact-error" style="color: #ff4a4a; font-size: 13px; margin-top: 4px; display: none;">Por favor, ingrese un medio de contacto válido.</div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -1845,14 +1877,28 @@
         }
 
         const nameInput = document.getElementById('message-input-name');
+        const contactInput = document.getElementById('message-input-contact');
         const textInput = document.getElementById('message-input-text');
         const cancelBtn = document.getElementById('message-cancel-btn');
         const submitBtn = document.getElementById('message-submit-btn');
 
         const validateMessageForm = () => {
           const nameVal = nameInput.value.trim();
+          const contactVal = contactInput.value.trim();
           const textVal = textInput.value.trim();
-          if (nameVal.length >= 2 && textVal.length >= 5) {
+
+          let isContactValid = false;
+          const errorMsg = document.getElementById('message-contact-error');
+          if (contactVal === '') {
+            if (errorMsg) errorMsg.style.display = 'none';
+          } else {
+            isContactValid = validateContactMethod(contactVal);
+            if (errorMsg) {
+              errorMsg.style.display = isContactValid ? 'none' : 'block';
+            }
+          }
+
+          if (nameVal.length >= 2 && textVal.length >= 5 && contactVal !== '' && isContactValid) {
             submitBtn.removeAttribute('disabled');
           } else {
             submitBtn.setAttribute('disabled', 'true');
@@ -1860,6 +1906,7 @@
         };
 
         nameInput.addEventListener('input', validateMessageForm);
+        contactInput.addEventListener('input', validateMessageForm);
         textInput.addEventListener('input', () => {
           localStorage.setItem('faust-contact-message-draft', textInput.value);
           validateMessageForm();
@@ -1875,6 +1922,7 @@
         submitBtn.addEventListener('click', (e) => {
           e.preventDefault();
           const nameVal = nameInput.value.trim();
+          const contactVal = contactInput.value.trim();
           const textVal = textInput.value.trim();
           
           submitBtn.setAttribute('disabled', 'true');
@@ -1895,6 +1943,7 @@
               access_key: 'f6778d6ae57e42a5a319d81048ab8db7',
               _subject: `Mensaje de contacto Faust Partners - ${nameVal}`,
               Nombre: nameVal,
+              Contacto: contactVal,
               Mensaje: textVal,
               "Recopilado Automáticamente": autoData,
               botcheck: ""
@@ -2416,6 +2465,17 @@
           if (entry.isIntersecting) {
             var groupId = entry.target.getAttribute('data-reveal-group');
             groupsToReveal[groupId] = true;
+
+            // If the first block (rg-1) is intersecting, we also schedule the "supported" block to reveal!
+            if (groupId === 'rg-1') {
+              var supportedEl = document.querySelector('.supported.reveal-item');
+              if (supportedEl) {
+                var supportedGroupId = supportedEl.getAttribute('data-reveal-group');
+                if (supportedGroupId) {
+                  groupsToReveal[supportedGroupId] = true;
+                }
+              }
+            }
           }
         });
 
