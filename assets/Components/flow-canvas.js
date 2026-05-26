@@ -624,7 +624,7 @@ class FaustFlowLabel extends HTMLElement {
 
     if (companyName && companyName.trim() !== '' && companyName.length <= 24) {
       const nameEscaped = companyName.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      const spanReplacement = `<span class="notranslate" translate="no" style="color: white; font-weight: 500;">${nameEscaped}</span>`;
+      const spanReplacement = `<span class="notranslate" translate="no" style="color: white;">${nameEscaped}</span>`;
       const newHTML = this._originalHTML.replace(/Tu\s+empresa/gi, spanReplacement);
       labelDiv.innerHTML = newHTML;
     } else {
@@ -717,7 +717,7 @@ class FaustFlowIcon extends HTMLElement {
       const labelWidth = parseInt(this.getAttribute('label-width') || '80', 10);
       const labelLeft = (80 - labelWidth) / 2;
       labelHtml = `
-        <div data-layer="Label" class="Label" style="left: ${labelLeft}px; width: ${labelWidth}px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
+        <div data-layer="Label" class="Label" style="left: ${labelLeft}px; width: ${labelWidth}px; top: 104px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">
           ${labelText}
         </div>
       `;
@@ -786,7 +786,7 @@ class FaustFlowCard extends HTMLElement {
       const descAttr = this.getAttribute('desc') || '';
       if (descAttr) {
         descHtml = `
-          <div data-layer="Description" class="Description" style="width: ${width}px; left: 0px; top: 124px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">${descAttr}</div>
+          <div data-layer="Description" class="Description" style="width: ${width}px; left: 0px; top: 124px; position: absolute; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: BDO Grotesk, sans-serif; line-height: 19.60px; letter-spacing: 0.28px; word-wrap: break-word">${descAttr}</div>
         `;
       }
     }
@@ -1033,11 +1033,123 @@ class FaustFlowCanvas extends HTMLElement {
     });
     observer.observe(this);
     this._intersectionObserver = observer;
+
+    // Centrar scroll horizontal por defecto y al redimensionar la ventana
+    const wrapper = this.querySelector('.flow-wrapper');
+    const updateScaleAndCenter = () => {
+      const w = window.innerWidth;
+      let scale = 1.0;
+      if (w <= 980) {
+        scale = 0.6;
+      } else if (w >= 1440) {
+        scale = 1.0;
+      } else {
+        const t = (w - 980) / (1440 - 980);
+        // Curva de aceleración pronunciada (Power of 12 Ease-Out) para favorecer tamaños más grandes en tablet.
+        // Hacemos que la interpolación comience desde 0.90 (0.72 físico en body con 80% zoom) en vez de 0.75 (0.60 físico)
+        // para que en tablet (ej. 1024px) se vea mucho más grande (cercano al tamaño de desktop).
+        const tEased = 1 - Math.pow(1 - t, 12);
+        scale = 0.90 + 0.10 * tEased;
+      }
+      this.style.setProperty('--canvas-scale', scale.toFixed(4));
+      
+      if (wrapper) {
+        wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+      }
+    };
+
+    updateScaleAndCenter();
+    setTimeout(updateScaleAndCenter, 0);
+    setTimeout(updateScaleAndCenter, 100);
+    setTimeout(updateScaleAndCenter, 300);
+
+    this._onResize = updateScaleAndCenter;
+    window.addEventListener('resize', this._onResize);
+
+    // Revertir scroll manual al centro suavemente después de 400ms de inactividad (solo tablet/no-mobile)
+    if (wrapper) {
+      let revertTimeout = null;
+      let isReverting = false;
+
+      const clearRevert = () => {
+        if (revertTimeout) {
+          clearTimeout(revertTimeout);
+          revertTimeout = null;
+        }
+        isReverting = false;
+        if (this._revertAnimationFrame) {
+          cancelAnimationFrame(this._revertAnimationFrame);
+          this._revertAnimationFrame = null;
+        }
+      };
+
+      const scheduleRevert = () => {
+        clearRevert();
+        if (window.innerWidth <= 980) return;
+
+        const target = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+        if (Math.abs(wrapper.scrollLeft - target) <= 5) return;
+
+        revertTimeout = setTimeout(() => {
+          const currentTarget = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
+          if (Math.abs(wrapper.scrollLeft - currentTarget) > 5) {
+            isReverting = true;
+
+            // Animación suave personalizada usando requestAnimationFrame y Ease-Out Quartic para máxima fluidez
+            const startLeft = wrapper.scrollLeft;
+            const change = currentTarget - startLeft;
+            const duration = 1600; // Duración de la transición en ms (más lenta y suave)
+            const startTime = performance.now();
+
+            const animate = (currentTime) => {
+              if (!isReverting) return;
+
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const ease = 1 - Math.pow(1 - progress, 4); // Ease-Out Quartic
+
+              wrapper.scrollLeft = startLeft + change * ease;
+
+              if (progress < 1) {
+                this._revertAnimationFrame = requestAnimationFrame(animate);
+              } else {
+                isReverting = false;
+                this._revertAnimationFrame = null;
+              }
+            };
+
+            this._revertAnimationFrame = requestAnimationFrame(animate);
+          }
+        }, 400); // 400ms de inactividad
+      };
+
+      const scrollHandler = () => {
+        if (isReverting) return;
+        scheduleRevert();
+      };
+
+      const interruptHandler = () => {
+        clearRevert();
+      };
+
+      wrapper.addEventListener('scroll', scrollHandler, { passive: true });
+      wrapper.addEventListener('touchstart', interruptHandler, { passive: true });
+      wrapper.addEventListener('wheel', interruptHandler, { passive: true });
+      wrapper.addEventListener('mousedown', interruptHandler, { passive: true });
+
+      // Guardar referencias para desmontar y evitar fugas de memoria
+      this._scrollHandler = scrollHandler;
+      this._interruptHandler = interruptHandler;
+      this._clearRevert = clearRevert;
+    }
   }
 
   disconnectedCallback() {
     this.clearTimers();
     this.stopLabelTracking();
+    if (this._clearRevert) {
+      this._clearRevert();
+    }
     if (this._revealObserver) {
       this._revealObserver.disconnect();
       this._revealObserver = null;
@@ -1045,6 +1157,23 @@ class FaustFlowCanvas extends HTMLElement {
     if (this._intersectionObserver) {
       this._intersectionObserver.disconnect();
       this._intersectionObserver = null;
+    }
+    if (this._onResize) {
+      window.removeEventListener('resize', this._onResize);
+      this._onResize = null;
+    }
+
+    // Quitar listeners de revert scroll
+    const wrapper = this.querySelector('.flow-wrapper');
+    if (wrapper) {
+      if (this._scrollHandler) {
+        wrapper.removeEventListener('scroll', this._scrollHandler);
+      }
+      if (this._interruptHandler) {
+        wrapper.removeEventListener('touchstart', this._interruptHandler);
+        wrapper.removeEventListener('wheel', this._interruptHandler);
+        wrapper.removeEventListener('mousedown', this._interruptHandler);
+      }
     }
   }
 
