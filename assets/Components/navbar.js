@@ -159,10 +159,11 @@ class FaustNavbar extends HTMLElement {
           .nav { position: fixed; top: 0; left: 0; right: 0; }
         }
 
-        .logo-lockup {
+        .nav .logo-lockup {
           display: inline-flex;
           align-items: center;
           gap: 10px;
+          margin: 0;
           font-size: 14px;
           letter-spacing: .28px;
           user-select: none !important;
@@ -172,7 +173,7 @@ class FaustNavbar extends HTMLElement {
           -webkit-user-drag: none !important;
           user-drag: none !important;
         }
-        .logo-lockup img {
+        .nav .logo-lockup img {
           width: 34px;
           height: 20px;
         }
@@ -446,9 +447,8 @@ class FaustNavbar extends HTMLElement {
 
       <nav class="nav">
         <div class="wrap nav-inner">
-          <a class="logo-lockup" href="./index.html" style="margin:0">
-            <img id="nav-isotipo" class="nav-logo-icon" src="./assets/Logotypes/Faust Logo.svg" alt="Faust" draggable="false">
-            <span id="nav-logo-text">FaustPartners™</span>
+          <a href="./index.html" style="margin:0; display: inline-flex;">
+            <faust-logo-lockup is-nav></faust-logo-lockup>
           </a>
           <div class="nav-links">
             <a href="./index.html#estrategia">Estrategia</a>
@@ -545,13 +545,13 @@ class FaustNavbar extends HTMLElement {
   }
 
   initLogoObserver() {
-    const navIcon = this.querySelector('#nav-isotipo');
     const heroLogo = document.getElementById('hero-logo');
     const ctaLogo = document.querySelector('.cta .FaustLogo');
-    if (!navIcon) return;
     let isHeroIntersecting = false;
     let isCtaIntersecting = false;
     const updateLogoColor = () => {
+      const navIcon = this.querySelector('#nav-isotipo');
+      if (!navIcon) return;
       if (isHeroIntersecting || isCtaIntersecting) {
         navIcon.classList.remove('is-blue');
       } else {
