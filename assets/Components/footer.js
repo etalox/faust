@@ -462,7 +462,7 @@ class FaustFooter extends HTMLElement {
             <div class="footer-col">
               <h4>General</h4>
               <a class="faust-apply-btn" data-action="apply" href="./index.html#">Aplicar</a>
-              <a href="./index.html#">Diseño web</a>
+              <a href="./index.html#">UX/UI Design</a>
               <a href="./index.html#">Consultoría</a>
               <a href="./index.html#">Software</a>
               <a href="./index.html#">Estrategia de crecimiento</a>
