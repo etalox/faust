@@ -465,7 +465,6 @@ class FaustFooter extends HTMLElement {
               <a href="./index.html#">Diseño web</a>
               <a href="./index.html#">Consultoría</a>
               <a href="./index.html#">Software</a>
-              <a href="./index.html#">Nuestra visión</a>
               <a href="./index.html#">Estrategia de crecimiento</a>
               <a href="./index.html#">Faust Max</a>
             </div>
@@ -478,8 +477,9 @@ class FaustFooter extends HTMLElement {
             </div>
             <div class="footer-col">
               <h4>Empresa</h4>
-              <a href="./index.html#">Acerca de nosotros</a>
-              <a href="./index.html#">Proyectos</a>
+              <a href="./index.html#">Sobre nosotros</a>
+              <a href="./index.html#">Nuestra visión</a>
+              <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Proyectos</a>
               <a href="./index.html#">Expert Network</a>
             </div>
           </div>
