@@ -1053,7 +1053,7 @@ class FaustFlowCanvas extends HTMLElement {
       }
       this.style.setProperty('--canvas-scale', scale.toFixed(4));
       
-      if (wrapper) {
+      if (wrapper && w > 980) {
         wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
       }
     };
