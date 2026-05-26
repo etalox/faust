@@ -35,6 +35,16 @@
       transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.0s;
     }
 
+    /* First User Icon inside Frame13 (starts scaled and returns to normal size immediately) */
+    faust-flow-canvas.has-animations .Frame13 faust-flow-icon {
+      transform: scale(1.25) !important;
+      transform-origin: center;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    faust-flow-canvas.has-animations.animating .Frame13 faust-flow-icon {
+      transform: scale(1) !important;
+    }
+
     /* Arrow 1 inside Frame13 (stretches) */
     faust-flow-canvas.has-animations .Frame13 faust-flow-arrow {
       opacity: 0;
@@ -366,6 +376,9 @@
     }
     faust-flow-canvas.has-animations.animating.fast-replay .Frame13 {
       transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0s;
+    }
+    faust-flow-canvas.has-animations.animating.fast-replay .Frame13 faust-flow-icon {
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) 0s;
     }
     faust-flow-canvas.has-animations.animating.fast-replay .Frame13 faust-flow-arrow {
       transition: opacity 0.3s ease 0s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0s;
@@ -963,7 +976,7 @@ class FaustFlowCanvas extends HTMLElement {
 
     this.innerHTML = `
       <div class="flow-wrapper">
-        <div class="flow-scaler" style="--base-width: ${frameWidth}px; --mobile-width: ${frameWidth}px; --mobile-shift: 0px; --base-height: ${height}px;">
+        <div class="flow-scaler" style="--base-width: ${frameWidth}px; --mobile-width: ${mobileWidth}px; --mobile-shift: ${mobileShift}px; --base-height: ${height}px;">
           <div data-layer="Flow" class="Flow" style="width: ${frameWidth}px; height: ${height}px; position: relative;">
             <div data-layer="Frame 1" class="Frame1" style="width: ${frameWidth}px; height: ${frameHeight}px; left: 0px; top: ${frameTop}px; position: absolute">
               <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
