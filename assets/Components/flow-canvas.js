@@ -523,8 +523,8 @@
     }
 
     /* Loop the projector light sweep when hovered */
-    faust-flow-card:hover .Frame::before,
-    faust-flow-icon:hover .Frame::before {
+    faust-flow-card.hover-active .Frame::before,
+    faust-flow-icon.hover-active .Frame::before {
       animation: projector-sweep-local var(--sweep-duration, 1s) linear infinite !important;
     }
 
@@ -1181,6 +1181,35 @@ class FaustFlowCanvas extends HTMLElement {
     };
     setTimeout(setupSweepDurations, 100);
     setTimeout(setupSweepDurations, 500);
+
+    // Setup interactive hover listeners with loop completion tracking
+    const setupHoverListeners = () => {
+      const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
+      components.forEach(comp => {
+        comp._isMouseOver = false;
+        
+        comp.addEventListener('mouseenter', () => {
+          comp._isMouseOver = true;
+          comp.classList.add('hover-active');
+        });
+        
+        comp.addEventListener('mouseleave', () => {
+          comp._isMouseOver = false;
+        });
+        
+        const frame = comp.querySelector('.Frame');
+        if (frame) {
+          frame.addEventListener('animationiteration', (e) => {
+            if (e.animationName === 'projector-sweep-local') {
+              if (!comp._isMouseOver) {
+                comp.classList.remove('hover-active');
+              }
+            }
+          });
+        }
+      });
+    };
+    setTimeout(setupHoverListeners, 200);
 
     // Setup intersection observer to toggle the animation class
     this.classList.add('has-animations');
