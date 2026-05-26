@@ -976,7 +976,7 @@ class FaustFlowCanvas extends HTMLElement {
 
     this.innerHTML = `
       <div class="flow-wrapper">
-        <div class="flow-scaler" style="--base-width: ${frameWidth}px; --mobile-width: ${mobileWidth}px; --mobile-shift: ${mobileShift}px; --base-height: ${height}px;">
+        <div class="flow-scaler" style="--base-width: ${frameWidth}px; --mobile-width: ${frameWidth}px; --mobile-shift: 0px; --base-height: ${height}px;">
           <div data-layer="Flow" class="Flow" style="width: ${frameWidth}px; height: ${height}px; position: relative;">
             <div data-layer="Frame 1" class="Frame1" style="width: ${frameWidth}px; height: ${frameHeight}px; left: 0px; top: ${frameTop}px; position: absolute">
               <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">

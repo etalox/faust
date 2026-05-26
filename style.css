@@ -292,7 +292,7 @@ h2.lead.reveal-item.reveal-visible {
   position: relative;
   flex-shrink: 0;
   margin: 0 auto;
-  overflow: visible;
+  overflow: hidden;
 }
 .flow-scaler > .Flow {
   transform: scale(var(--canvas-scale, 1));
@@ -870,7 +870,8 @@ html.legal-page {
 html.legal-page body {
   zoom: var(--zoom);
   height: auto !important;
-  overflow: visible !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 .legal-page .legal-content {
   max-width: 800px;
