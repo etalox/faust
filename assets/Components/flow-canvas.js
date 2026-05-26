@@ -1053,6 +1053,11 @@ class FaustFlowCanvas extends HTMLElement {
   }
 
   triggerActualAnimation(enteredFromBelow) {
+    const width = parseInt(this.getAttribute('width') || '1640', 10);
+    const isCanvas2 = width > 1300;
+    const normalDuration = isCanvas2 ? 4500 : 5500;
+    const replayDuration = isCanvas2 ? 1800 : 2400;
+
     if (!this._hasPlayed) {
       // First play: normal animation
       this.classList.remove('fast-replay');
@@ -1075,7 +1080,7 @@ class FaustFlowCanvas extends HTMLElement {
         this._playTimeout = null;
         this.stopLabelTracking();
         this.startSweepLoop();
-      }, 5600);
+      }, normalDuration);
     } else if (enteredFromBelow) {
       // Subsequent play from below: fast-replay animation
       this.classList.remove('animating', 'fast-replay');
@@ -1089,7 +1094,7 @@ class FaustFlowCanvas extends HTMLElement {
         this._replayTimeout = null;
         this.stopLabelTracking();
         this.startSweepLoop();
-      }, 2400);
+      }, replayDuration);
     }
   }
 
