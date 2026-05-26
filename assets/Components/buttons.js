@@ -41,6 +41,7 @@ customElements.define('faust-logo-lockup', FaustLogoLockup);
 
 class FaustLegalNav extends HTMLElement {
   connectedCallback() {
+    this.style.display = 'contents';
     const nextHref = this.getAttribute('next-href') || './index.html';
     const nextLabel = this.getAttribute('next-label') || '';
     
