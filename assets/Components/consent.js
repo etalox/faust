@@ -75,10 +75,17 @@ const faustIsAnalyticsEnabled = () => {
 (function() {
   try {
     const visited = JSON.parse(localStorage.getItem('faust-visited-pages') || '[]');
-    let current = window.location.pathname.split('/').pop() || 'index.html';
-    // Clean up empty, root or directory paths to index.html
-    if (current === '' || current === 'es-MX' || current === 'en-US' || current === 'es-LA' || current === 'es-ES' || current === 'en-GB' || current === 'zh-CN' || current === 'pt' || current === 'fr' || current === 'ru') {
-      current = 'index.html';
+    const path = window.location.pathname.toLowerCase();
+    let current;
+    if (path.includes('/start/') || path.endsWith('/start')) {
+      current = 'start/index.html';
+    } else if (path.includes('/careers/') || path.endsWith('/careers')) {
+      current = 'careers/index.html';
+    } else {
+      current = window.location.pathname.split('/').pop() || 'index.html';
+      if (current === '' || current === 'es-MX' || current === 'en-US' || current === 'es-LA' || current === 'es-ES' || current === 'en-GB' || current === 'zh-CN' || current === 'pt' || current === 'fr' || current === 'ru') {
+        current = 'index.html';
+      }
     }
     if (visited.length === 0 || visited[visited.length - 1] !== current) {
       visited.push(current);
@@ -392,6 +399,15 @@ try {
   const initBanner = () => {
     if (document.getElementById('faust-cookie-banner')) return;
 
+    const getRootPrefix = () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+        return '../';
+      }
+      return './';
+    };
+    const rootPrefix = getRootPrefix();
+
     const activeCode = (typeof getSelectedCode === 'function') ? getSelectedCode() : 'es-LA';
 
     const translations = {
@@ -438,6 +454,19 @@ try {
         decline: '拒绝'
       }
     };
+
+    for (const lang in translations) {
+      if (translations[lang].textStandard) {
+        translations[lang].textStandard = translations[lang].textStandard
+          .replace(/\.\/privacy\.html/g, rootPrefix + 'privacy.html')
+          .replace(/\.\/terms\.html/g, rootPrefix + 'terms.html');
+      }
+      if (translations[lang].textStrict) {
+        translations[lang].textStrict = translations[lang].textStrict
+          .replace(/\.\/privacy\.html/g, rootPrefix + 'privacy.html')
+          .replace(/\.\/terms\.html/g, rootPrefix + 'terms.html');
+      }
+    }
 
     let baseLang = 'es';
     if (activeCode.startsWith('en')) baseLang = 'en';

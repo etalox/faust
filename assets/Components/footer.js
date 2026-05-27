@@ -9,6 +9,15 @@ class FaustFooter extends HTMLElement {
   }
 
   render() {
+    const getRootPrefix = () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+        return '../';
+      }
+      return './';
+    };
+    const rootPrefix = getRootPrefix();
+
     // 1. Check if the modal overlay was open before rendering
     const overlay = this.querySelector('#lang-menu-overlay');
     const wasOpen = overlay ? overlay.classList.contains('is-open') : false;
@@ -460,34 +469,37 @@ class FaustFooter extends HTMLElement {
         <div class="wrap">
           <div class="footer-grid">
             <div class="footer-col">
-              <h4>General</h4>
-              <a class="faust-apply-btn" data-action="apply" href="./index.html#">Aplicar</a>
-              <a href="./index.html#">UX/UI Design</a>
-              <a href="./index.html#">Consultoría</a>
-              <a href="./index.html#">Software</a>
-              <a href="./index.html#">Estrategia de crecimiento</a>
-              <a href="./index.html#">Faust Max</a>
+              <h4>Soluciones</h4>
+              <a class="faust-apply-btn" data-action="apply" href="${rootPrefix}start/index.html#">Aplicar</a>
+              <a href="${rootPrefix}start/index.html#">Partnering</a>
+              <a href="${rootPrefix}start/index.html#">Revenue Share</a>
+              <a href="${rootPrefix}start/index.html#">Licenciamiento</a>
+              <a href="${rootPrefix}start/index.html#">Consultoría</a>
+              <a href="${rootPrefix}start/index.html#">Faust Max</a>
             </div>
             <div class="footer-col">
-              <h4>Resultados</h4>
-              <a href="./index.html#">Reportes de crecimiento</a>
-              <a href="./index.html#">Carreras</a>
-              <a href="./index.html#">Faust OS</a>
-              <a href="./index.html#">Inversionistas</a>
+              <h4>Enfoque</h4>
+              <a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>
+              <a href="${rootPrefix}start/index.html#">Neurociencia Conductual</a>
+              <a href="${rootPrefix}start/index.html#">UX/UI Design</a>
+              <a href="${rootPrefix}start/index.html#">Desarrollo Web</a>
+              <a href="${rootPrefix}start/index.html#">Inteligencia Artificial</a>
+              <a href="${rootPrefix}start/index.html#">Ética</a>
             </div>
             <div class="footer-col">
               <h4>Empresa</h4>
-              <a href="./index.html#">Sobre nosotros</a>
-              <a href="./index.html#">Nuestra visión</a>
-              <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Proyectos</a>
-              <a href="./index.html#">Expert Network</a>
+              <a href="${rootPrefix}start/index.html#">Sobre nosotros</a>
+              <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
+              <a href="${rootPrefix}start/index.html#">Deseo Invertir</a>
+              <a href="${rootPrefix}careers/index.html">Carreras</a>
+              <a href="${rootPrefix}start/index.html#">Faust OS</a>
             </div>
           </div>
           <div class="footer-bottom">
             <div class="footer-logo" style="color: #fff !important;">Faust Partners™ © 2026</div>
             <div style="display:flex;gap:24px;">
-              <a href="./privacy.html">Privacidad</a>
-              <a href="./terms.html">Términos y condiciones</a>
+              <a href="${rootPrefix}privacy.html">Privacidad</a>
+              <a href="${rootPrefix}terms.html">Términos y condiciones</a>
             </div>
             <div style="display:flex;gap:20px;align-items:center;">
               <a href="#" id="footer-cookie-trigger" style="text-decoration:underline;color:#fff;">Gestionar cookies</a>
@@ -595,7 +607,7 @@ class FaustFooter extends HTMLElement {
 
     const openCookieModal = (e) => {
       e.preventDefault();
-      
+
       const clarityInput = this.querySelector('#overlay-cookie-clarity-toggle');
       if (clarityInput) clarityInput.checked = faustIsClarityEnabled();
 
@@ -746,7 +758,7 @@ class FaustFooter extends HTMLElement {
     if (!langBtn || !overlay || !listoBtn) return;
 
     const activeCode = getSelectedCode();
-    
+
     this.currentLangCode = getTranslateCodeForSelection(activeCode);
 
     this.triggerGoogleTranslate(this.currentLangCode);
@@ -855,7 +867,7 @@ class FaustFooter extends HTMLElement {
 
     langBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      
+
       syncActiveItem();
 
       const isDesktop = window.innerWidth >= 981;
@@ -917,7 +929,7 @@ class FaustFooter extends HTMLElement {
       }
     };
     document.addEventListener('keydown', this._keydownListener);
-    
+
     const langItems = this.querySelectorAll('.lang-item');
     langItems.forEach(item => {
       item.addEventListener('click', () => {

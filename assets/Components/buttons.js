@@ -1,7 +1,16 @@
+const getRootPrefix = () => {
+  const path = window.location.pathname.toLowerCase();
+  if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+    return '../';
+  }
+  return './';
+};
+
 class FaustBtnApply extends HTMLElement {
   connectedCallback() {
+    const rootPrefix = getRootPrefix();
     this.style.display = 'contents';
-    this.innerHTML = `<a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="./assets/Icons/button_arrow.svg" alt=""></a>`;
+    this.innerHTML = `<a class="btn btn-primary faust-apply-btn" data-action="apply" href="#contacto">Aplicar <img class="arrow" src="${rootPrefix}assets/Icons/button_arrow.svg" alt=""></a>`;
   }
 }
 customElements.define('faust-btn-apply', FaustBtnApply);
@@ -24,11 +33,12 @@ customElements.define('faust-btn-strategy', FaustBtnStrategy);
 
 class FaustLogoLockup extends HTMLElement {
   connectedCallback() {
+    const rootPrefix = getRootPrefix();
     const isNav = this.hasAttribute('is-nav');
     const imgId = isNav ? 'id="nav-isotipo"' : '';
     const imgClass = isNav ? 'class="nav-logo-icon is-blue"' : '';
     const spanId = isNav ? 'id="nav-logo-text"' : '';
-    const src = this.getAttribute('src') || './assets/Logotypes/Faust Logo.svg';
+    const src = this.getAttribute('src') || (rootPrefix + 'assets/Logotypes/Faust Logo.svg');
     
     this.classList.add('logo-lockup');
     this.innerHTML = `
@@ -41,16 +51,16 @@ customElements.define('faust-logo-lockup', FaustLogoLockup);
 
 class FaustLegalNav extends HTMLElement {
   connectedCallback() {
-    const nextHref = this.getAttribute('next-href') || './index.html';
+    const rootPrefix = getRootPrefix();
+    const nextHref = this.getAttribute('next-href') || (rootPrefix + 'start/index.html');
     const nextLabel = this.getAttribute('next-label') || '';
     
     this.innerHTML = `
       <div class="legal-nav-buttons">
-        <a class="btn btn-secondary" href="./index.html">Salir</a>
+        <a class="btn btn-secondary" href="${rootPrefix}start/index.html">Salir</a>
         <a class="btn btn-secondary" href="${nextHref}">${nextLabel}</a>
       </div>
     `;
   }
 }
 customElements.define('faust-legal-nav', FaustLegalNav);
-

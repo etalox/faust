@@ -1,5 +1,6 @@
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
+    this.style.display = 'contents';
     this._onLanguageChanged = () => {
       this.render();
     };
@@ -10,6 +11,17 @@ class FaustNavbar extends HTMLElement {
 
   render() {
     this.cleanup();
+
+    const path = window.location.pathname.toLowerCase();
+    const getRootPrefix = () => {
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+        return '../';
+      }
+      return './';
+    };
+    const rootPrefix = getRootPrefix();
+    const isStartPage = path.includes('/start/') || path.endsWith('/start');
+    const startHref = isStartPage ? '' : `${rootPrefix}start/index.html`;
 
     const activeCode = getSelectedCode();
     const isLATAM = (activeCode === 'es-LA');
@@ -98,22 +110,15 @@ class FaustNavbar extends HTMLElement {
           position: sticky;
           top: 0;
           z-index: 20;
-          border-bottom: 1px solid var(--line) !important;
-          --nav-transition-dur: 0.5s;
+          border-bottom: 1px solid transparent !important;
           background: transparent !important;
           backdrop-filter: none !important;
           -webkit-backdrop-filter: none !important;
-          
-          /* Entrance Animation initial state */
-          opacity: 0;
-          transform: translateY(-100%);
-          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .nav.is-active {
-          opacity: 1;
-          transform: translateY(0);
+          border-bottom-color: var(--line) !important;
         }
 
         /* Staggered entrance for children elements */
@@ -145,6 +150,15 @@ class FaustNavbar extends HTMLElement {
           position: absolute;
           inset: 0;
           z-index: -1;
+          background: rgba(9, 10, 11, 0) !important; 
+          backdrop-filter: blur(0px) !important;
+          -webkit-backdrop-filter: blur(0px) !important;
+          transition: background 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                      backdrop-filter 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                      -webkit-backdrop-filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav.is-active::before {
           background: rgba(9, 10, 11, 0.88) !important; 
           backdrop-filter: blur(20px) !important;
           -webkit-backdrop-filter: blur(20px) !important;
@@ -154,6 +168,17 @@ class FaustNavbar extends HTMLElement {
         .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; user-select: none !important; }
         .nav.nav-contacto-hidden #nav-contacto { display: none; }
         .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
+
+        /* Global layout overrides to ensure sticky/fixed navbar behaves correctly on all pages */
+        html {
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
+          height: auto !important;
+        }
+        body {
+          overflow: visible !important;
+          height: auto !important;
+        }
 
         @media (max-width: 980px) {
           .nav { position: fixed; top: 0; left: 0; right: 0; }
@@ -447,21 +472,21 @@ class FaustNavbar extends HTMLElement {
 
       <nav class="nav">
         <div class="wrap nav-inner">
-          <a href="./index.html" style="margin:0; display: inline-flex;">
+          <a href="${rootPrefix}start/index.html" style="margin:0; display: inline-flex;">
             <faust-logo-lockup is-nav></faust-logo-lockup>
           </a>
           <div class="nav-links">
-            <a href="./index.html#estrategia">Estrategia</a>
-            <a href="./index.html#resultados">Resultados</a>
-            <a href="./index.html#expertos">Expertos</a>
-            <a href="./index.html#empresa">Empresa</a>
+            <a href="${startHref}#estrategia">Estrategia</a>
+            <a href="${startHref}#resultados">Resultados</a>
+            <a href="${startHref}#expertos">Expertos</a>
+            <a href="${startHref}#empresa">Empresa</a>
           </div>
           <div class="nav-right">
-            <a id="nav-contacto" href="./index.html#contacto" style="user-select: none !important;">Contacto</a>
+            <a id="nav-contacto" href="${startHref}#contacto" style="user-select: none !important;">Contacto</a>
             ${navLangHtml}
-            <a class="${aplicarBtnClass}" data-action="apply" href="./index.html#aplicar">
+            <a class="${aplicarBtnClass}" data-action="apply" href="${startHref}#aplicar">
               Aplicar
-              <img class="${arrowClass}" src="./assets/Icons/button_arrow.svg" alt="">
+              <img class="${arrowClass}" src="${rootPrefix}assets/Icons/button_arrow.svg" alt="">
             </a>
           </div>
         </div>
