@@ -1046,6 +1046,43 @@ class FaustFlowCanvas extends HTMLElement {
     
     if (this._isIntersecting && isParentVisible) {
       if (this.classList.contains('animating')) {
+        // Animation was already triggered but we might have scrolled it off-screen and back in.
+        // Check if the animation has finished visually (time elapsed >= duration).
+        const elapsed = this._animationStartTime ? (Date.now() - this._animationStartTime) : 99999;
+        const duration = this._animationDuration || 5500;
+
+        if (elapsed >= duration) {
+          // Animation finished while off-screen
+          this._hasPlayed = true;
+          this.clearTimers();
+          this.stopLabelTracking();
+          this.alignLabelsOnce();
+          this.startSweepLoop();
+        } else {
+          // Animation is still running, resume tracking and recreate the remaining completion timer
+          this.startLabelTracking();
+          
+          const remaining = duration - elapsed;
+          const isReplay = this.classList.contains('fast-replay');
+          
+          this.clearTimers(); // Clear any stale timers first
+          if (isReplay) {
+            this._replayTimeout = setTimeout(() => {
+              this._replayTimeout = null;
+              this.stopLabelTracking();
+              this.alignLabelsOnce();
+              this.startSweepLoop();
+            }, remaining);
+          } else {
+            this._playTimeout = setTimeout(() => {
+              this._hasPlayed = true;
+              this._playTimeout = null;
+              this.stopLabelTracking();
+              this.alignLabelsOnce();
+              this.startSweepLoop();
+            }, remaining);
+          }
+        }
         return;
       }
       this.triggerActualAnimation(enteredFromBelow);
@@ -1065,6 +1102,9 @@ class FaustFlowCanvas extends HTMLElement {
       void this.offsetWidth; // Force reflow
       this.classList.add('animating');
       
+      this._animationStartTime = Date.now();
+      this._animationDuration = normalDuration;
+
       this.startLabelTracking();
       this.clearTimers();
 
@@ -1079,6 +1119,7 @@ class FaustFlowCanvas extends HTMLElement {
         this._hasPlayed = true;
         this._playTimeout = null;
         this.stopLabelTracking();
+        this.alignLabelsOnce();
         this.startSweepLoop();
       }, normalDuration);
     } else if (enteredFromBelow) {
@@ -1087,12 +1128,16 @@ class FaustFlowCanvas extends HTMLElement {
       void this.offsetWidth; // Force reflow
       this.classList.add('animating', 'fast-replay');
 
+      this._animationStartTime = Date.now();
+      this._animationDuration = replayDuration;
+
       this.startLabelTracking();
       this.clearTimers();
 
       this._replayTimeout = setTimeout(() => {
         this._replayTimeout = null;
         this.stopLabelTracking();
+        this.alignLabelsOnce();
         this.startSweepLoop();
       }, replayDuration);
     }
@@ -1458,6 +1503,40 @@ class FaustFlowCanvas extends HTMLElement {
       cancelAnimationFrame(this._trackingFrame);
       this._trackingFrame = null;
     }
+  }
+
+  alignLabelsOnce() {
+    const labelLeft = this.querySelector('faust-flow-label[left="80"]');
+    const compLeft1 = this.querySelector('.Frame13 faust-flow-icon');
+    const compLeft2 = this.querySelector('.Frame199 faust-flow-card');
+
+    const labelRight = this.querySelector('faust-flow-label[left="560"]');
+    const compRight1 = this.querySelector('.Frame198 faust-flow-icon');
+    const compRight2 = this.querySelector('.Frame201 faust-flow-card');
+
+    const alignLabel = (label, comp1, comp2, frame1Rect, scale) => {
+      if (!label || !comp1 || !comp2) return;
+      const rect1 = comp1.getBoundingClientRect();
+      const rect2 = comp2.getBoundingClientRect();
+      
+      const x1Rel = (rect1.left - frame1Rect.left) / scale;
+      const x2Rel = (rect2.right - frame1Rect.left) / scale;
+      const targetRelCenter = (x1Rel + x2Rel) / 2;
+      
+      const labelWidth = parseFloat(label.getAttribute('width')) || 400;
+      label.style.left = (targetRelCenter - labelWidth / 2) + 'px';
+    };
+
+    const canvasRect = this.getBoundingClientRect();
+    if (canvasRect.width === 0) return;
+
+    const frame1 = this.querySelector('.Frame1');
+    const frame1Rect = frame1 ? frame1.getBoundingClientRect() : canvasRect;
+    const frameWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
+    const scale = frame1Rect.width / frameWidth || 1;
+
+    alignLabel(labelLeft, compLeft1, compLeft2, frame1Rect, scale);
+    alignLabel(labelRight, compRight1, compRight2, frame1Rect, scale);
   }
 }
 

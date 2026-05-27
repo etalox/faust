@@ -25,7 +25,11 @@
         document.cookie = "googtrans=" + cookieVal + "; path=/; domain=." + domain + ";";
       }
 
-      window.location.replace('../');
+      var target = '../start/';
+      if (window.location.protocol === 'file:') {
+        target = '../start/index.html';
+      }
+      window.location.replace(target);
     })();
   </script>
 </head>
