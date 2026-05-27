@@ -1,6 +1,12 @@
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
     this.style.display = 'contents';
+    
+    if (!document.querySelector('faust-apply-modal')) {
+      const modal = document.createElement('faust-apply-modal');
+      document.body.appendChild(modal);
+    }
+
     this._onLanguageChanged = () => {
       this.render();
     };

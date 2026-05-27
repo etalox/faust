@@ -1,4 +1,6 @@
 class FaustFooter extends HTMLElement {
+  /* ── Feature flag: scroll-expand footer link spacing (tablet/desktop) ── */
+  static ENABLE_SCROLL_EXPAND = false;
   connectedCallback() {
     this._onLanguageChanged = () => {
       this.render();
@@ -44,8 +46,11 @@ class FaustFooter extends HTMLElement {
         footer { border-top: 1px solid var(--line); padding: 80px 0 15px; }
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 80px; }
         .footer-col h4 { margin: 0 0 24px; font-family: "BDO Grotesk", sans-serif; font-weight: 500; font-size: 18px; color: #fff; }
-        .footer-col a { display: block; color: #7c7f84; margin: 10px 0; font-size: 16px; text-decoration: none; }
+        .footer-col a { display: block; color: #7c7f84; font-size: 16px; text-decoration: none; }
         .footer-col a:hover { color: #fff; }
+        .footer-col-links { display: flex; flex-direction: column; gap: 10px; }
+        .footer-col-links a { margin: 0; } /* neutralize global style.css margin rule */
+
         .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; color: #7c7f84; font-size: 16px; }
         .lang { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 16px 20px; background: var(--chip); color:white; cursor: pointer; }
         .lang img { width: 16px; height: 16px; }
@@ -470,29 +475,35 @@ class FaustFooter extends HTMLElement {
           <div class="footer-grid">
             <div class="footer-col">
               <h4>Soluciones</h4>
-              <a class="faust-apply-btn" data-action="apply" href="${rootPrefix}start/index.html#">Aplicar</a>
-              <a href="${rootPrefix}start/index.html#">Partnering</a>
-              <a href="${rootPrefix}start/index.html#">Revenue Share</a>
-              <a href="${rootPrefix}start/index.html#">Licenciamiento</a>
-              <a href="${rootPrefix}start/index.html#">Consultoría</a>
-              <a href="${rootPrefix}start/index.html#">Faust Max</a>
+              <div class="footer-col-links">
+                <a class="faust-apply-btn" data-action="apply" href="${rootPrefix}start/index.html#">Aplicar</a>
+                <a href="${rootPrefix}start/index.html#">Partnering</a>
+                <a href="${rootPrefix}start/index.html#">Revenue Share</a>
+                <a href="${rootPrefix}start/index.html#">Licenciamiento</a>
+                <a href="${rootPrefix}start/index.html#">Consultoría</a>
+                <a href="${rootPrefix}start/index.html#">Faust Max</a>
+              </div>
             </div>
             <div class="footer-col">
               <h4>Enfoque</h4>
-              <a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>
-              <a href="${rootPrefix}start/index.html#">Neurociencia Conductual</a>
-              <a href="${rootPrefix}start/index.html#">UX/UI Design</a>
-              <a href="${rootPrefix}start/index.html#">Desarrollo Web</a>
-              <a href="${rootPrefix}start/index.html#">Inteligencia Artificial</a>
-              <a href="${rootPrefix}start/index.html#">Ética</a>
+              <div class="footer-col-links">
+                <a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>
+                <a href="${rootPrefix}start/index.html#">Neurociencia Conductual</a>
+                <a href="${rootPrefix}start/index.html#">UX/UI Design</a>
+                <a href="${rootPrefix}start/index.html#">Desarrollo Web</a>
+                <a href="${rootPrefix}start/index.html#">Inteligencia Artificial</a>
+                <a href="${rootPrefix}start/index.html#">Ética</a>
+              </div>
             </div>
             <div class="footer-col">
               <h4>Empresa</h4>
-              <a href="${rootPrefix}start/index.html#">Sobre nosotros</a>
-              <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
-              <a href="${rootPrefix}start/index.html#">Deseo Invertir</a>
-              <a href="${rootPrefix}careers/index.html">Carreras</a>
-              <a href="${rootPrefix}start/index.html#">Faust OS</a>
+              <div class="footer-col-links">
+                <a href="${rootPrefix}start/index.html#">Sobre nosotros</a>
+                <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
+                <a href="${rootPrefix}start/index.html#">Deseo Invertir</a>
+                <a href="${rootPrefix}careers/index.html">Carreras</a>
+                <a href="${rootPrefix}start/index.html#">Faust OS</a>
+              </div>
             </div>
           </div>
           <div class="footer-bottom">
@@ -596,6 +607,7 @@ class FaustFooter extends HTMLElement {
     this.initLanguageModal(wasOpen, savedScrollTop);
     this.initCookieModal();
     this.initResizeHandler();
+    this.initScrollExpand();
   }
 
   initCookieModal() {
@@ -990,7 +1002,267 @@ class FaustFooter extends HTMLElement {
     window.addEventListener('resize', this._resizeHandler);
   }
 
+  initScrollExpand() {
+    if (!FaustFooter.ENABLE_SCROLL_EXPAND) return;
+
+    const footerGrid = this.querySelector('.footer-grid');
+    const footerEl   = this.querySelector('footer');
+    if (!footerGrid || !footerEl) return;
+
+    const GAP_COLLAPSED = 10;
+    const GAP_EXPANDED  = 22;
+    const GRID_MARGIN_COLLAPSED = 80;
+    const GRID_MARGIN_EXPANDED = 150;
+    const LERP_SPEED    = 0.14;  // 0–1, how fast current chases target per frame
+    const SNAP_THRESHOLD = 0.5;  // px – snap to target when close enough
+    const WHEEL_SENSITIVITY = 1.25;
+    const MAX_WHEEL_STEP_RATIO = 0.46;
+    const START_SCROLL_THRESHOLD = 20;
+    const BOTTOM_THRESHOLD = 8;
+    const AUTO_COLLAPSE_DELAY = 100;
+    const AUTO_COLLAPSE_DURATION = 700;
+
+    // ── Siblings to push upward (everything except navbar and the footer itself) ──
+    const parent = this.parentElement;
+    const pushTargets = parent
+      ? [...parent.children].filter(el =>
+          el !== this && el.tagName.toLowerCase() !== 'faust-navbar'
+        )
+      : [];
+    // Max height delta in px (based on longest column)
+    const cols = [...footerGrid.querySelectorAll('.footer-col-links')];
+    const maxLinks = Math.max(...cols.map(c => c.querySelectorAll('a').length), 0);
+    const maxDelta = (maxLinks - 1) * (GAP_EXPANDED - GAP_COLLAPSED);
+    if (maxDelta <= 0) return;
+
+    let target  = 0;  // desired expansion px – set instantly by wheel input
+    let current = 0;  // rendered expansion px – lerps toward target each frame
+    let rafId   = null;
+    let autoCollapseTimer = null;
+    let autoCollapseRafId = null;
+    let startScrollAccum = 0;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+    const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+    // ── Render a specific expansion amount ──
+    const applyExpansion = (px) => {
+      const t = px / maxDelta;
+      const easedT = easeOutQuart(t);
+      const easedPx = easedT * maxDelta;
+      const gap = GAP_COLLAPSED + easedT * (GAP_EXPANDED - GAP_COLLAPSED);
+      const gridMargin = GRID_MARGIN_COLLAPSED + easedT * (GRID_MARGIN_EXPANDED - GRID_MARGIN_COLLAPSED);
+      const visualDelta = easedPx + (gridMargin - GRID_MARGIN_COLLAPSED);
+      cols.forEach(cl => { cl.style.gap = `${gap}px`; });
+      footerGrid.style.marginBottom = `${gridMargin}px`;
+      footerEl.style.marginTop = visualDelta > 0 ? `-${visualDelta}px` : '';
+      pushTargets.forEach(el => {
+        el.style.transform = visualDelta > 0 ? `translateY(-${visualDelta}px)` : '';
+      });
+    };
+
+    const resetStyles = () => {
+      cols.forEach(cl => { cl.style.gap = ''; });
+      footerGrid.style.marginBottom = '';
+      footerEl.style.marginTop = '';
+      pushTargets.forEach(el => {
+        el.style.transform = '';
+      });
+    };
+
+    // ── Animation loop: interpolate current → target ──
+    const tick = () => {
+      const diff = target - current;
+      if (Math.abs(diff) < SNAP_THRESHOLD) {
+        // Close enough – snap exactly
+        current = target;
+        if (current === 0) {
+          resetStyles();
+        } else {
+          applyExpansion(current);
+        }
+        rafId = null;
+        return;
+      }
+      current += diff * LERP_SPEED;
+      applyExpansion(current);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const startAnimation = () => {
+      if (rafId === null) rafId = requestAnimationFrame(tick);
+    };
+
+    const cancelAutoCollapseAnimation = () => {
+      if (autoCollapseRafId) {
+        cancelAnimationFrame(autoCollapseRafId);
+        autoCollapseRafId = null;
+      }
+    };
+
+    const clearAutoCollapse = () => {
+      if (autoCollapseTimer) {
+        clearTimeout(autoCollapseTimer);
+        autoCollapseTimer = null;
+      }
+    };
+
+    const scheduleAutoCollapse = () => {
+      clearAutoCollapse();
+      if (target <= 0) return;
+      autoCollapseTimer = setTimeout(() => {
+        autoCollapseTimer = null;
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        target = 0;
+        const startValue = current;
+        const startTime = performance.now();
+        const collapseTick = (now) => {
+          const progress = Math.min((now - startTime) / AUTO_COLLAPSE_DURATION, 1);
+          current = startValue * (1 - easeOutCubic(progress));
+          if (current <= SNAP_THRESHOLD || progress >= 1) {
+            current = 0;
+            resetStyles();
+            autoCollapseRafId = null;
+            return;
+          }
+          applyExpansion(current);
+          autoCollapseRafId = requestAnimationFrame(collapseTick);
+        };
+        cancelAutoCollapseAnimation();
+        autoCollapseRafId = requestAnimationFrame(collapseTick);
+      }, AUTO_COLLAPSE_DELAY);
+    };
+
+    const distFromBottom = () =>
+      document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+
+    const handleScrollDelta = (rawDy) => {
+      // Tablet/desktop only
+      if (window.innerWidth < 768) {
+        clearAutoCollapse();
+        cancelAutoCollapseAnimation();
+        if (target > 0 || current > SNAP_THRESHOLD) {
+          target = 0; current = 0;
+          if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+          resetStyles();
+        }
+        return;
+      }
+
+      const dy = rawDy * WHEEL_SENSITIVITY;
+      const maxWheelStep = maxDelta * MAX_WHEEL_STEP_RATIO;
+      const step = Math.sign(dy) * Math.min(Math.abs(dy), maxWheelStep);
+
+      const atBottom = distFromBottom() <= BOTTOM_THRESHOLD;
+      const isActive = target > 0 || current > SNAP_THRESHOLD || rafId !== null;
+
+      if (step <= 0 || (!atBottom && !isActive)) {
+        startScrollAccum = 0;
+      }
+
+      // ── Expanding: at bottom + scrolling down, or already active + scrolling down ──
+      if (step > 0 && target < maxDelta && (atBottom || isActive)) {
+        clearAutoCollapse();
+        cancelAutoCollapseAnimation();
+        let expansionStep = step;
+        if (!isActive) {
+          const remainingThreshold = Math.max(START_SCROLL_THRESHOLD - startScrollAccum, 0);
+          const consumed = Math.min(expansionStep, remainingThreshold);
+          startScrollAccum += consumed;
+          expansionStep -= consumed;
+        }
+        if (expansionStep <= 0) return;
+        target = Math.max(target, current);
+        target = Math.min(target + expansionStep, maxDelta);
+        startAnimation();
+        scheduleAutoCollapse();
+        return;
+      }
+
+      // ── Fully expanded + still scrolling down → eat the event ──
+      if (step > 0 && target >= maxDelta) {
+        scheduleAutoCollapse();
+        return;
+      }
+
+      // ── Contracting: let page scroll continue while the footer visually collapses ──
+      if (step < 0 && isActive) {
+        clearAutoCollapse();
+        cancelAutoCollapseAnimation();
+        startScrollAccum = 0;
+        target = Math.max(target + step, 0);
+        startAnimation();
+        return;
+      }
+
+      if (isActive) {
+        scheduleAutoCollapse();
+        return;
+      }
+
+      // Otherwise: normal page scroll
+    };
+
+    // ── Wheel handler ──
+    this._scrollExpandWheelHandler = (e) => {
+      // Normalize deltaY to pixels
+      let dy = e.deltaY;
+      if (e.deltaMode === 1) dy *= 16;
+      else if (e.deltaMode === 2) dy *= window.innerHeight;
+      handleScrollDelta(dy);
+    };
+
+    let lastTouchY = null;
+    this._scrollExpandTouchStartHandler = (e) => {
+      if (e.touches.length !== 1) {
+        lastTouchY = null;
+        return;
+      }
+      lastTouchY = e.touches[0].clientY;
+    };
+
+    this._scrollExpandTouchMoveHandler = (e) => {
+      if (e.touches.length !== 1 || lastTouchY === null) {
+        lastTouchY = e.touches.length === 1 ? e.touches[0].clientY : null;
+        return;
+      }
+      const nextTouchY = e.touches[0].clientY;
+      const dy = lastTouchY - nextTouchY;
+      lastTouchY = nextTouchY;
+      handleScrollDelta(dy);
+    };
+
+    window.addEventListener('wheel', this._scrollExpandWheelHandler, { passive: true });
+    window.addEventListener('touchstart', this._scrollExpandTouchStartHandler, { passive: true });
+    window.addEventListener('touchmove', this._scrollExpandTouchMoveHandler, { passive: true });
+
+    this._scrollExpandCleanup = () => {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      clearAutoCollapse();
+      cancelAutoCollapseAnimation();
+      target = 0; current = 0;
+      startScrollAccum = 0;
+      resetStyles();
+    };
+  }
+
   cleanup() {
+    if (this._scrollExpandCleanup) {
+      this._scrollExpandCleanup();
+      this._scrollExpandCleanup = null;
+    }
+    if (this._scrollExpandWheelHandler) {
+      window.removeEventListener('wheel', this._scrollExpandWheelHandler);
+      this._scrollExpandWheelHandler = null;
+    }
+    if (this._scrollExpandTouchStartHandler) {
+      window.removeEventListener('touchstart', this._scrollExpandTouchStartHandler);
+      this._scrollExpandTouchStartHandler = null;
+    }
+    if (this._scrollExpandTouchMoveHandler) {
+      window.removeEventListener('touchmove', this._scrollExpandTouchMoveHandler);
+      this._scrollExpandTouchMoveHandler = null;
+    }
     if (this._resizeHandler) {
       window.removeEventListener('resize', this._resizeHandler);
       this._resizeHandler = null;
