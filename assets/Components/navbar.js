@@ -80,7 +80,8 @@ class FaustNavbar extends HTMLElement {
           background: var(--chip); 
           border: 0 !important;
           color: #f2f2f2; 
-          backdrop-filter: blur(20px); 
+          backdrop-filter: blur(40px); 
+          -webkit-backdrop-filter: blur(40px); 
           transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
         }
         .btn-secondary::before { 

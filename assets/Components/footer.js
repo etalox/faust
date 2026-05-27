@@ -108,8 +108,8 @@ class FaustFooter extends HTMLElement {
           background: var(--chip); 
           border: 0 !important;
           color: var(--fg); 
-          backdrop-filter: blur(20px); 
-          -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(40px); 
+          -webkit-backdrop-filter: blur(40px);
           transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
         }
         faust-footer .btn-secondary::before { 
@@ -1006,14 +1006,14 @@ class FaustFooter extends HTMLElement {
     if (!FaustFooter.ENABLE_SCROLL_EXPAND) return;
 
     const footerGrid = this.querySelector('.footer-grid');
-    const footerEl   = this.querySelector('footer');
+    const footerEl = this.querySelector('footer');
     if (!footerGrid || !footerEl) return;
 
     const GAP_COLLAPSED = 10;
-    const GAP_EXPANDED  = 22;
+    const GAP_EXPANDED = 22;
     const GRID_MARGIN_COLLAPSED = 80;
     const GRID_MARGIN_EXPANDED = 150;
-    const LERP_SPEED    = 0.14;  // 0–1, how fast current chases target per frame
+    const LERP_SPEED = 0.14;  // 0–1, how fast current chases target per frame
     const SNAP_THRESHOLD = 0.5;  // px – snap to target when close enough
     const WHEEL_SENSITIVITY = 1.25;
     const MAX_WHEEL_STEP_RATIO = 0.46;
@@ -1026,8 +1026,8 @@ class FaustFooter extends HTMLElement {
     const parent = this.parentElement;
     const pushTargets = parent
       ? [...parent.children].filter(el =>
-          el !== this && el.tagName.toLowerCase() !== 'faust-navbar'
-        )
+        el !== this && el.tagName.toLowerCase() !== 'faust-navbar'
+      )
       : [];
     // Max height delta in px (based on longest column)
     const cols = [...footerGrid.querySelectorAll('.footer-col-links')];
@@ -1035,9 +1035,9 @@ class FaustFooter extends HTMLElement {
     const maxDelta = (maxLinks - 1) * (GAP_EXPANDED - GAP_COLLAPSED);
     if (maxDelta <= 0) return;
 
-    let target  = 0;  // desired expansion px – set instantly by wheel input
+    let target = 0;  // desired expansion px – set instantly by wheel input
     let current = 0;  // rendered expansion px – lerps toward target each frame
-    let rafId   = null;
+    let rafId = null;
     let autoCollapseTimer = null;
     let autoCollapseRafId = null;
     let startScrollAccum = 0;
