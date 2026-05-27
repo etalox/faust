@@ -44,7 +44,7 @@ class FaustFooter extends HTMLElement {
         }
         
         footer { border-top: 1px solid var(--line); padding: 80px 0 15px; }
-        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 80px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 120px; }
         .footer-col h4 { margin: 0 0 24px; font-family: "BDO Grotesk", sans-serif; font-weight: 500; font-size: 18px; color: #fff; }
         .footer-col a { display: block; color: #7c7f84; font-size: 16px; text-decoration: none; }
         .footer-col a:hover { color: #fff; }
@@ -501,7 +501,7 @@ class FaustFooter extends HTMLElement {
                 <a href="${rootPrefix}start/index.html#">Sobre nosotros</a>
                 <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
                 <a href="${rootPrefix}start/index.html#">Deseo Invertir</a>
-                <a href="${rootPrefix}careers/index.html">Carreras</a>
+                <a href="${rootPrefix}start/index.html#">Carreras</a>
                 <a href="${rootPrefix}start/index.html#">Faust OS</a>
               </div>
             </div>
