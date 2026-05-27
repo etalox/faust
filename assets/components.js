@@ -11,7 +11,9 @@
     'Components/navbar.js',
     'Components/footer.js',
     'Components/buttons.js',
-    'Components/flow-canvas.js'
+    'Components/flow-canvas.js',
+    'Components/apply-modal.js',
+    'Components/logo-lockup.js'
   ];
 
   scripts.forEach(src => {
