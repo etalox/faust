@@ -45,7 +45,7 @@ class FaustFooter extends HTMLElement {
         
         footer { border-top: 1px solid var(--line); padding: 80px 0 15px; }
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 120px; }
-        .footer-col h4 { margin: 0 0 24px; font-family: "BDO Grotesk", sans-serif; font-weight: 500; font-size: 18px; color: #fff; }
+        .footer-col h4 { margin: 0 0 32px; font-family: "BDO Grotesk", sans-serif; font-weight: 500; font-size: 18px; color: #fff; }
         .footer-col a { display: block; color: #7c7f84; font-size: 16px; text-decoration: none; }
         .footer-col a:hover { color: #fff; }
         .footer-col-links { display: flex; flex-direction: column; gap: 10px; }
@@ -474,9 +474,9 @@ class FaustFooter extends HTMLElement {
         <div class="wrap">
           <div class="footer-grid">
             <div class="footer-col">
-              <h4>Soluciones</h4>
+              <h4>Comenzar</h4>
               <div class="footer-col-links">
-                <a class="faust-apply-btn" data-action="apply" href="${rootPrefix}start/index.html#">Aplicar</a>
+              <a href="${rootPrefix}start/index.html#">Inicio</a>
                 <a href="${rootPrefix}start/index.html#">Partnering</a>
                 <a href="${rootPrefix}start/index.html#">Revenue Share</a>
                 <a href="${rootPrefix}start/index.html#">Licenciamiento</a>
@@ -485,20 +485,20 @@ class FaustFooter extends HTMLElement {
               </div>
             </div>
             <div class="footer-col">
-              <h4>Enfoque</h4>
+              <h4>Estrategia</h4>
               <div class="footer-col-links">
                 <a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>
                 <a href="${rootPrefix}start/index.html#">Neurociencia Conductual</a>
                 <a href="${rootPrefix}start/index.html#">UX/UI Design</a>
                 <a href="${rootPrefix}start/index.html#">Desarrollo Web</a>
                 <a href="${rootPrefix}start/index.html#">Inteligencia Artificial</a>
-                <a href="${rootPrefix}start/index.html#">Ética</a>
               </div>
             </div>
             <div class="footer-col">
               <h4>Empresa</h4>
               <div class="footer-col-links">
                 <a href="${rootPrefix}start/index.html#">Sobre nosotros</a>
+                <a href="${rootPrefix}start/index.html#">Contacto</a>
                 <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
                 <a href="${rootPrefix}start/index.html#">Deseo Invertir</a>
                 <a href="${rootPrefix}start/index.html#">Carreras</a>
