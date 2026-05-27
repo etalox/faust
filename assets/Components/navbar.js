@@ -1,5 +1,6 @@
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
+    this.style.display = 'contents';
     this._onLanguageChanged = () => {
       this.render();
     };
@@ -95,25 +96,20 @@ class FaustNavbar extends HTMLElement {
         }
 
         .nav {
-          position: sticky;
+          position: fixed;
           top: 0;
+          left: 0;
+          right: 0;
           z-index: 20;
-          border-bottom: 1px solid var(--line) !important;
-          --nav-transition-dur: 0.5s;
-          background: transparent !important;
-          backdrop-filter: none !important;
-          -webkit-backdrop-filter: none !important;
-          
-          /* Entrance Animation initial state */
-          opacity: 0;
-          transform: translateY(-100%);
-          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          border-bottom: 1px solid transparent !important;
+          background: rgba(9, 10, 11, 0.88) !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+          transition: border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .nav.is-active {
-          opacity: 1;
-          transform: translateY(0);
+          border-bottom-color: var(--line) !important;
         }
 
         /* Staggered entrance for children elements */
@@ -140,24 +136,10 @@ class FaustNavbar extends HTMLElement {
         .nav.is-active .nav-links a:nth-child(4) { transition-delay: 400ms; }
         .nav.is-active .nav-right { transition-delay: 500ms; }
 
-        .nav::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          background: rgba(9, 10, 11, 0.88) !important; 
-          backdrop-filter: blur(20px) !important;
-          -webkit-backdrop-filter: blur(20px) !important;
-        }
-
         .nav-inner { height: 80px; display: flex; justify-content: space-between; align-items: center; position: relative; }
         .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; user-select: none !important; }
         .nav.nav-contacto-hidden #nav-contacto { display: none; }
         .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
-
-        @media (max-width: 980px) {
-          .nav { position: fixed; top: 0; left: 0; right: 0; }
-        }
 
         .nav .logo-lockup {
           display: inline-flex;

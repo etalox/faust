@@ -462,25 +462,26 @@ class FaustFooter extends HTMLElement {
             <div class="footer-col">
               <h4>General</h4>
               <a class="faust-apply-btn" data-action="apply" href="./index.html#">Aplicar</a>
-              <a href="./index.html#">UX/UI Design</a>
+              <a href="./index.html#">Partnering</a>
               <a href="./index.html#">Consultoría</a>
-              <a href="./index.html#">Software</a>
               <a href="./index.html#">Estrategia de crecimiento</a>
+              <a href="./index.html#">Neurociencia conductual</a>
+              <a href="./index.html#">UX/UI Design</a>
               <a href="./index.html#">Faust Max</a>
             </div>
             <div class="footer-col">
-              <h4>Resultados</h4>
+              <h4>Impacto</h4>
+              <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Proyectos</a>
               <a href="./index.html#">Reportes de crecimiento</a>
-              <a href="./index.html#">Carreras</a>
-              <a href="./index.html#">Faust OS</a>
-              <a href="./index.html#">Inversionistas</a>
             </div>
             <div class="footer-col">
               <h4>Empresa</h4>
               <a href="./index.html#">Sobre nosotros</a>
               <a href="./index.html#">Nuestra visión</a>
-              <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Proyectos</a>
               <a href="./index.html#">Expert Network</a>
+              <a href="./careers.html">Carreras</a>
+              <a href="./index.html#">Inversión</a>
+              <a href="./index.html#">Faust OS</a>
             </div>
           </div>
           <div class="footer-bottom">
