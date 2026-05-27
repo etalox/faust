@@ -331,10 +331,19 @@ function getDetectedCountryName(locale) {
 }
 
 function getButtonLabelHtml(code) {
+  const getRootPrefix = () => {
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+      return '../';
+    }
+    return './';
+  };
+  const rootPrefix = getRootPrefix();
+
   if (code === 'auto') {
     const detectedLangCode = getBrowserLangCode();
     const detectedName = getLanguageName(detectedLangCode, 'en');
-    return `<img src="./assets/Icons/Globe.svg" alt=""> Automatic <span style="color: #8B8D91 !important;">(${detectedName})</span>`;
+    return `<img src="${rootPrefix}assets/Icons/Globe.svg" alt=""> Automatic <span style="color: #8B8D91 !important;">(${detectedName})</span>`;
   }
   const lang = FAUST_LANGUAGES.find(l => l.code === code) || FAUST_LANGUAGES.find(l => l.code === 'en-US');
   
@@ -344,7 +353,7 @@ function getButtonLabelHtml(code) {
   }
   
   const countryText = country ? ` <span style="color: #8B8D91 !important;">${country}</span>` : '';
-  return `<img src="./assets/Icons/Globe.svg" alt=""> ${lang.engLang}${countryText}`;
+  return `<img src="${rootPrefix}assets/Icons/Globe.svg" alt=""> ${lang.engLang}${countryText}`;
 }
 
 function setTranslateCookie(code) {
