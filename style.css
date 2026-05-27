@@ -109,7 +109,8 @@ h1, h2, h3, h4, h5, h6, p, .lead, .sub, .pill {
   background: var(--chip); 
   border: 0 !important;
   color: var(--fg); 
-  backdrop-filter: blur(20px); 
+  backdrop-filter: blur(40px); 
+  -webkit-backdrop-filter: blur(40px); 
   transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
 }
 .btn-secondary::before { 
@@ -146,8 +147,6 @@ h1, h2, h3, h4, h5, h6, p, .lead, .sub, .pill {
   pointer-events: none;
   opacity: 0;
   transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
 }
 .hero-video-container.is-loaded {
   opacity: 1;
@@ -161,9 +160,6 @@ h1, h2, h3, h4, h5, h6, p, .lead, .sub, .pill {
   object-fit: cover;
   opacity: 0.05;
   display: block;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform;
 }
 
 #gestion {
@@ -220,14 +216,16 @@ h2.reveal-item,
 
 .reveal-item.reveal-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
+  will-change: auto;
 }
 
 h1.reveal-item.reveal-visible,
 h2.reveal-item.reveal-visible,
 .headline.reveal-item.reveal-visible {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: none;
+  will-change: auto;
 }
 
 /* Lead paragraph headers do not scale */
@@ -237,7 +235,8 @@ h2.lead.reveal-item {
               transform var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1);
 }
 h2.lead.reveal-item.reveal-visible {
-  transform: translateY(0);
+  transform: none;
+  will-change: auto;
 }
 
 .responsive-br br { display: inline; }
