@@ -412,9 +412,9 @@ try {
 
     const translations = {
       'es': {
-        title: 'Consentimiento de Cookies y Acuerdo Legal',
-        textStandard: 'Utilizamos cookies analíticas. Al interactuar con el sitio, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
-        textStrict: 'Utilizamos cookies analíticas. Al hacer clic en "Entendido", aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
+        title: 'Utilizamos Cookies Analíticas',
+        textStandard: 'Al interactuar con el sitio, aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
+        textStrict: 'Al hacer clic en "Entendido", aceptas nuestra <a href="./privacy.html" target="_blank" style="color: #fff; text-decoration: underline;">Política de Privacidad</a> y nuestros <a href="./terms.html" target="_blank" style="color: #fff; text-decoration: underline;">Términos y Condiciones</a>.',
         accept: 'Entendido',
         decline: 'Rechazar'
       },
