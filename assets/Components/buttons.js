@@ -26,7 +26,14 @@ customElements.define('faust-btn-message', FaustBtnMessage);
 class FaustBtnStrategy extends HTMLElement {
   connectedCallback() {
     this.style.display = 'contents';
-    this.innerHTML = `<a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>`;
+    const isTalent = localStorage.getItem('faust-user-role') === 'Talento';
+    const rootPrefix = getRootPrefix();
+    
+    if (isTalent) {
+      this.innerHTML = `<a class="btn btn-secondary" href="${rootPrefix}careers/index.html">Unirme al equipo</a>`;
+    } else {
+      this.innerHTML = `<a class="btn btn-secondary" href="#estrategia">Estrategia<span class="hide-mobile"> de crecimiento</span></a>`;
+    }
   }
 }
 customElements.define('faust-btn-strategy', FaustBtnStrategy);

@@ -78,10 +78,14 @@ const faustIsAnalyticsEnabled = () => {
     const path = window.location.pathname.toLowerCase();
     const isCareers = path.includes('/careers/') || path.endsWith('/careers');
     
-    if (!localStorage.getItem('faust-user-role')) {
-      if (isCareers && (visited.length === 0 || (visited.length > 0 && visited[0] === 'careers/index.html'))) {
-        localStorage.setItem('faust-user-role', 'Talento');
-      } else if (visited.length > 0 && visited[0] !== 'careers/index.html') {
+    if (localStorage.getItem('faust-user-role') !== 'Talento') {
+      if (isCareers) {
+        if (visited.length === 0 || (visited.length === 1 && visited[0] !== 'careers/index.html')) {
+          localStorage.setItem('faust-user-role', 'Talento');
+        } else {
+          localStorage.setItem('faust-user-role', 'Standard');
+        }
+      } else {
         localStorage.setItem('faust-user-role', 'Standard');
       }
     }
