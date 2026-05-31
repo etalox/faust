@@ -213,29 +213,78 @@
         gap: 16px;
       }
 
-      .vacancy-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-        padding: 24px;
-      }
-
-      .vacancy-action {
-        width: 100%;
-      }
-
-      .vacancy-action .btn {
-        width: 100%;
-        justify-content: center;
-      }
-
       .filter-row {
         width: 100%;
+        margin-top: 24px;
+        margin-bottom: 24px;
+        justify-content: flex-start;
+        gap: 8px;
       }
 
       .filter-btn {
         flex-grow: 1;
         text-align: center;
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: 12px;
+      }
+
+      .filter-btn.is-active {
+        transform: scale(1.02);
+      }
+
+      .vacancy-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+        padding: 24px;
+        background: rgba(253, 253, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 18px;
+      }
+
+      .vacancy-item:active {
+        transform: scale(0.98);
+        background: rgba(253, 253, 255, 0.04);
+      }
+
+      .vacancy-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .vacancy-title {
+        font-size: 19px;
+        line-height: 1.35;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+      }
+
+      .vacancy-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 6px;
+      }
+
+      .vacancy-action {
+        width: 100%;
+        margin-top: 4px;
+      }
+
+      .vacancy-action .btn {
+        width: 100%;
+        height: 48px;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 12px;
       }
     }
   </style>
@@ -259,7 +308,7 @@
 
     <section class="section" id="vacantes">
       <div class="wrap">
-        <div class="pill reveal-item">/ Oportunidades actuales</div>
+        <div class="pill reveal-item">/ Vacantes disponibles</div>
         <h2 class="reveal-item" style="font-size: 36px; font-weight: 500; color: #fff; margin: 0;">Únete al equipo</h2>
 
         <div class="filter-row reveal-item">
@@ -476,48 +525,27 @@
       document.documentElement.style.setProperty('--reveal-duration', '1.6s');
       window.addEventListener('scroll', updateScrollSpeed, { passive: true });
 
-      // 2. Group adjacent text-like elements to force sequential reveal blocks
+      // 2. Group reveal elements by their closest section to force them to animate as a single coordinated wave
       var revealItems = document.querySelectorAll('.reveal-item');
       if (revealItems.length === 0) return;
 
-      var groupIndex = 0;
-      var currentGroup = [];
-
+      var sectionsMap = {};
       revealItems.forEach(function (item) {
-        var isTextLike = item.tagName === 'H1' || item.tagName === 'H2' || item.tagName === 'P' ||
-          item.classList.contains('pill') || item.classList.contains('btn-row') ||
-          item.classList.contains('logo-lockup');
-
-        if (isTextLike) {
-          if (currentGroup.length > 0) {
-            var lastItem = currentGroup[currentGroup.length - 1];
-            if (lastItem.parentNode === item.parentNode) {
-              currentGroup.push(item);
-            } else {
-              groupsPush(currentGroup);
-              currentGroup = [item];
-            }
-          } else {
-            currentGroup = [item];
-          }
-        } else {
-          if (currentGroup.length > 0) {
-            groupsPush(currentGroup);
-            currentGroup = [];
-          }
-          groupsPush([item]);
+        var section = item.closest('section') || item.closest('footer') || document.body;
+        var sectionId = section.id || section.className || 'default-section';
+        if (!sectionsMap[sectionId]) {
+          sectionsMap[sectionId] = [];
         }
+        sectionsMap[sectionId].push(item);
       });
-      if (currentGroup.length > 0) {
-        groupsPush(currentGroup);
-      }
 
-      function groupsPush(group) {
+      var groupIndex = 0;
+      Object.keys(sectionsMap).forEach(function (sectionId) {
         groupIndex++;
-        group.forEach(function (el) {
+        sectionsMap[sectionId].forEach(function (el) {
           el.setAttribute('data-reveal-group', 'rg-' + groupIndex);
         });
-      }
+      });
 
       // 3. Bidirectional reveal observer (split into reveal and hide observers for perfect cross-browser reliability)
       var revealObserverOptions = {
