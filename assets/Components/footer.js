@@ -19,6 +19,7 @@ class FaustFooter extends HTMLElement {
       return './';
     };
     const rootPrefix = getRootPrefix();
+    const isTalent = localStorage.getItem('faust-user-role') === 'Talento';
 
     // 1. Check if the modal overlay was open before rendering
     const overlay = this.querySelector('#lang-menu-overlay');
@@ -478,7 +479,7 @@ class FaustFooter extends HTMLElement {
               <div class="footer-col-links">
               <a href="${rootPrefix}start/index.html#">Inicio</a>
                 <a href="${rootPrefix}start/index.html#">Partnering</a>
-                <a href="${rootPrefix}start/index.html#">Revenue Share</a>
+                ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Revenue Share</a>`}
                 <a href="${rootPrefix}start/index.html#">Licenciamiento</a>
                 <a href="${rootPrefix}start/index.html#">Consultoría</a>
                 <a href="${rootPrefix}start/index.html#">Faust Max</a>
@@ -487,7 +488,7 @@ class FaustFooter extends HTMLElement {
             <div class="footer-col">
               <h4>Estrategia</h4>
               <div class="footer-col-links">
-                <a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>
+                ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>`}
                 <a href="${rootPrefix}start/index.html#">Neurociencia Conductual</a>
                 <a href="${rootPrefix}start/index.html#">UX/UI Design</a>
                 <a href="${rootPrefix}start/index.html#">Desarrollo Web</a>
@@ -500,7 +501,7 @@ class FaustFooter extends HTMLElement {
                 <a href="${rootPrefix}start/index.html#">Sobre nosotros</a>
                 <a href="${rootPrefix}start/index.html#">Contacto</a>
                 <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
-                <a href="${rootPrefix}start/index.html#">Deseo Invertir</a>
+                ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Deseo Invertir</a>`}
                 <a href="${rootPrefix}careers/index.html#">Carreras</a>
                 <a href="${rootPrefix}start/index.html#">Faust OS</a>
               </div>

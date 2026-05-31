@@ -76,6 +76,16 @@ const faustIsAnalyticsEnabled = () => {
   try {
     const visited = JSON.parse(localStorage.getItem('faust-visited-pages') || '[]');
     const path = window.location.pathname.toLowerCase();
+    const isCareers = path.includes('/careers/') || path.endsWith('/careers');
+    
+    if (!localStorage.getItem('faust-user-role')) {
+      if (isCareers && (visited.length === 0 || (visited.length > 0 && visited[0] === 'careers/index.html'))) {
+        localStorage.setItem('faust-user-role', 'Talento');
+      } else if (visited.length > 0 && visited[0] !== 'careers/index.html') {
+        localStorage.setItem('faust-user-role', 'Standard');
+      }
+    }
+
     let current;
     if (path.includes('/start/') || path.endsWith('/start')) {
       current = 'start/index.html';
