@@ -234,35 +234,6 @@
   <faust-apply-modal></faust-apply-modal>
   <script>
 
-    /* Automatically manage responsive line breaks (<br>) on headings and paragraphs */
-    (() => {
-      const targets = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6, p'))
-        .filter(el => el.querySelector('br'));
-
-      targets.forEach(el => {
-        el.innerHTML = el.innerHTML.replace(/<br\s*\/?>/gi, '<span class="responsive-br"><br></span>');
-      });
-
-      function checkWraps() {
-        targets.forEach(el => {
-          el.classList.remove('no-br');
-          
-          const brs = el.querySelectorAll('.responsive-br');
-          const computedStyle = window.getComputedStyle(el);
-          const lineHeight = parseFloat(computedStyle.lineHeight);
-          const height = el.clientHeight;
-          const expectedHeight = lineHeight * (brs.length + 1.2);
-          
-          if (height > expectedHeight) {
-            el.classList.add('no-br');
-          }
-        });
-      }
-
-      checkWraps();
-      window.addEventListener('resize', checkWraps);
-    })();
-
     /* Scroll-driven text lighting up effect */
     (() => {
       let leadSpan = document.querySelector('.lead .muted');

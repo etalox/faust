@@ -29,58 +29,6 @@
       margin-right: auto;
     }
 
-    /* 2. Collaboration Modalities */
-    .modalities-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    .modality-card {
-      background: rgba(253, 253, 255, 0.02);
-      border-radius: 20px;
-      padding: 40px 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      transition: background 0.3s ease, transform 0.3s ease;
-      position: relative;
-    }
-
-    .modality-card:hover {
-      background: rgba(253, 253, 255, 0.04);
-      transform: translateY(-4px);
-    }
-
-    .modality-card h3 {
-      font-size: 20px;
-      font-weight: 500;
-      color: #fff;
-      margin: 0;
-    }
-
-    .modality-card p {
-      font-size: 14px;
-      line-height: 1.52;
-      color: rgba(255, 255, 255, 0.6);
-      margin: 0;
-      flex-grow: 1;
-    }
-
-    .modality-icon {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      background: rgba(0, 34, 255, 0.1);
-      color: #4466ff;
-      font-weight: bold;
-      font-size: 20px;
-      border: 1px solid rgba(0, 34, 255, 0.2);
-    }
-
     /* 3. Active vacancies layout & filters */
     .filter-row {
       display: flex;
@@ -92,7 +40,7 @@
 
     .filter-btn {
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 0px solid transparent;
       border-radius: 99px;
       color: rgba(255, 255, 255, 0.6);
       padding: 10px 24px;
@@ -112,13 +60,14 @@
       border-color: #fff;
       color: #000;
       font-weight: 500;
+      transform: scale(1.05);
     }
 
     /* 4. Vacancy cards & premium hover micro-interactions */
     .vacancies-list {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 0;
       min-height: 200px;
     }
 
@@ -130,11 +79,36 @@
       justify-content: space-between;
       align-items: center;
       gap: 32px;
-      transition: background 0.3s ease;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease,
+                  opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.3s ease;
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      max-height: 200px;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .vacancy-item.is-hidden {
+      opacity: 0;
+      transform: scale(0.96) translateY(-12px);
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      pointer-events: none;
     }
 
     .vacancy-item:hover {
-      background: rgba(253, 253, 255, 0.025);
+      background: rgba(253, 253, 255, 0.035);
+      transform: scale(1.005) translateY(-2px);
+      box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
     /* Hovering over the item activates button styles organic state change */
@@ -158,7 +132,7 @@
     }
 
     .vacancy-title {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 500;
       color: #fff;
       margin: 0;
@@ -286,7 +260,7 @@
     <section class="section" id="vacantes">
       <div class="wrap">
         <div class="pill reveal-item">/ Oportunidades actuales</div>
-        <h2 class="headline reveal-item">Únete al equipo</h2>
+        <h2 class="reveal-item" style="font-size: 36px; font-weight: 500; color: #fff; margin: 0;">Únete al equipo</h2>
 
         <div class="filter-row reveal-item">
           <button class="filter-btn is-active" id="filter-all" data-filter="all">Todos</button>
@@ -858,22 +832,56 @@
   <!-- Careers Form & Dynamic Modal logic script -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. Vacancy Filters
+      // 1. Vacancy Filters with smooth animations
       const filterButtons = document.querySelectorAll('.filter-btn');
 
       filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
+          if (btn.classList.contains('is-active')) return;
+
           filterButtons.forEach(b => b.classList.remove('is-active'));
           btn.classList.add('is-active');
 
           const filter = btn.getAttribute('data-filter');
-          const vacancyItems = document.querySelectorAll('.vacancy-item');
+          const vacancyItems = Array.from(document.querySelectorAll('.vacancy-item'));
+          
+          let visibleCount = 0;
+
           vacancyItems.forEach(item => {
             const types = item.getAttribute('data-type').split(' ');
-            if (filter === 'all' || types.includes(filter)) {
-              item.style.display = 'flex';
+            const shouldShow = (filter === 'all' || types.includes(filter));
+
+            if (item._transitionTimeout) {
+              clearTimeout(item._transitionTimeout);
+              item._transitionTimeout = null;
+            }
+
+            if (shouldShow) {
+              item.style.transitionDelay = '0ms';
+              
+              if (item.style.display === 'none' || item.classList.contains('is-hidden')) {
+                item.style.display = 'flex';
+                // Force layout reflow
+                item.offsetHeight;
+                
+                // Add staggered animation delay
+                item.style.transitionDelay = `${visibleCount * 60}ms`;
+                visibleCount++;
+                
+                item.classList.remove('is-hidden');
+              } else {
+                item.classList.remove('is-hidden');
+              }
             } else {
-              item.style.display = 'none';
+              if (item.style.display !== 'none' && !item.classList.contains('is-hidden')) {
+                item.classList.add('is-hidden');
+                
+                item._transitionTimeout = setTimeout(() => {
+                  if (item.classList.contains('is-hidden')) {
+                    item.style.display = 'none';
+                  }
+                }, 400);
+              }
             }
           });
         });
@@ -990,13 +998,16 @@
         openCareersModal('Candidatura Espontánea / Otro', 'full-time');
       });
 
-      // Active role application triggers (using delegation to support dynamic component loading)
+      // Active role application triggers (using delegation to support clicking anywhere on the card)
       document.addEventListener('click', (e) => {
-        const trigger = e.target.closest('.careers-apply-trigger');
-        if (trigger) {
-          const role = trigger.getAttribute('data-role');
-          const modality = trigger.getAttribute('data-modality');
-          openCareersModal(role, modality);
+        const item = e.target.closest('.vacancy-item');
+        if (item) {
+          const trigger = item.querySelector('.careers-apply-trigger');
+          if (trigger) {
+            const role = trigger.getAttribute('data-role');
+            const modality = trigger.getAttribute('data-modality');
+            openCareersModal(role, modality);
+          }
         }
       });
 
