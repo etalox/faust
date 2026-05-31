@@ -507,7 +507,7 @@ class FaustFooter extends HTMLElement {
             </div>
           </div>
           <div class="footer-bottom">
-            <div class="footer-logo" style="color: #fff !important;">Faust Partners™ © 2026</div>
+            <div class="footer-logo" style="color: #fff !important;">© ${new Date().getFullYear()} Faust Partners™</div>
             <div style="display:flex;gap:24px;">
               <a href="${rootPrefix}privacy.html">Privacidad</a>
               <a href="${rootPrefix}terms.html">Términos y condiciones</a>

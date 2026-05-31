@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carreras | Faust Partners™</title>
-  <meta name="description" content="Únete a Faust Partners™. Buscamos profesionales a tiempo completo, freelancers y consultores para liderar el crecimiento y optimización CRO de empresas líderes en México y LATAM.">
+  <meta name="description"
+    content="Únete a Faust Partners™. Buscamos profesionales a tiempo completo, freelancers y consultores para liderar el crecimiento y optimización CRO de empresas líderes en México y LATAM.">
   <link rel="icon" type="image/png" href="../assets/Icons/tab_icon.png">
   <link rel="stylesheet" href="../style.css">
   <script src="../assets/translation.js" defer></script>
   <script src="../assets/components.js" defer></script>
   <style>
     /* Careers specific stylesheet overrides */
-    
+
 
     /* 1.5. Hero Content styling for optimal layout readability (Careers page only) */
     .hero h1 {
@@ -20,6 +22,7 @@
       margin-left: auto;
       margin-right: auto;
     }
+
     .hero p {
       max-width: 800px;
       margin-left: auto;
@@ -32,6 +35,7 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
+
     .modality-card {
       background: rgba(253, 253, 255, 0.02);
       border-radius: 20px;
@@ -42,16 +46,19 @@
       transition: background 0.3s ease, transform 0.3s ease;
       position: relative;
     }
+
     .modality-card:hover {
       background: rgba(253, 253, 255, 0.04);
       transform: translateY(-4px);
     }
+
     .modality-card h3 {
       font-size: 20px;
       font-weight: 500;
       color: #fff;
       margin: 0;
     }
+
     .modality-card p {
       font-size: 14px;
       line-height: 1.52;
@@ -59,6 +66,7 @@
       margin: 0;
       flex-grow: 1;
     }
+
     .modality-icon {
       width: 44px;
       height: 44px;
@@ -81,6 +89,7 @@
       margin-bottom: 40px;
       justify-content: flex-end;
     }
+
     .filter-btn {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.05);
@@ -92,10 +101,12 @@
       font-family: inherit;
       transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     }
+
     .filter-btn:hover {
       background: rgba(255, 255, 255, 0.08);
       color: #fff;
     }
+
     .filter-btn.is-active {
       background: #fff;
       border-color: #fff;
@@ -110,6 +121,7 @@
       gap: 16px;
       min-height: 200px;
     }
+
     .vacancy-item {
       background: rgba(253, 253, 255, 0.015);
       border-radius: 16px;
@@ -120,36 +132,43 @@
       gap: 32px;
       transition: background 0.3s ease;
     }
+
     .vacancy-item:hover {
       background: rgba(253, 253, 255, 0.025);
     }
+
     /* Hovering over the item activates button styles organic state change */
     .vacancy-item:hover .btn-secondary {
       background: rgba(238, 238, 241, 0.15);
       color: #fff;
     }
+
     .vacancy-info {
       display: flex;
       flex-direction: column;
       gap: 12px;
       flex-grow: 1;
     }
+
     .vacancy-title-row {
       display: flex;
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
     }
+
     .vacancy-title {
       font-size: 22px;
       font-weight: 500;
       color: #fff;
       margin: 0;
     }
+
     .vacancy-tags {
       display: flex;
       gap: 8px;
     }
+
     .tag {
       font-size: 11px;
       font-weight: 600;
@@ -158,22 +177,27 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+
     .tag-fulltime {
-      background: rgba(0, 34, 255, 0.1);
-      color: #6688ff;
+      background: rgba(0, 0, 255);
+      color: #ffffff;
     }
+
     .tag-freelance {
       background: rgba(255, 255, 255, 0.06);
       color: rgba(255, 255, 255, 0.8);
     }
+
     .tag-consulting {
-      background: rgba(255, 170, 0, 0.1);
-      color: #ffbb33;
+      background: #F2F2F2;
+      color: #08090A;
     }
+
     .tag-location {
       background: rgba(255, 255, 255, 0.03);
       color: rgba(255, 255, 255, 0.4);
     }
+
     .vacancy-desc {
       font-size: 14px;
       line-height: 1.5;
@@ -181,6 +205,7 @@
       max-width: 800px;
       margin: 0;
     }
+
     .vacancy-action {
       flex-shrink: 0;
     }
@@ -192,12 +217,15 @@
       gap: 12px;
       width: 100%;
     }
+
     .careers-form-step .apply-group {
       margin-top: 16px;
     }
+
     .careers-form-step .apply-group:first-child {
       margin-top: 0;
     }
+
     .careers-error-msg {
       color: #ff4a4a;
       font-size: 14px;
@@ -210,22 +238,27 @@
         grid-template-columns: 1fr;
         gap: 16px;
       }
+
       .vacancy-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 20px;
         padding: 24px;
       }
+
       .vacancy-action {
         width: 100%;
       }
+
       .vacancy-action .btn {
         width: 100%;
         justify-content: center;
       }
+
       .filter-row {
         width: 100%;
       }
+
       .filter-btn {
         flex-grow: 1;
         text-align: center;
@@ -233,57 +266,28 @@
     }
   </style>
 </head>
+
 <body>
   <div class="page-fade-overlay"></div>
   <faust-navbar></faust-navbar>
 
   <main>
-    <!-- Cinematic Full Viewport Hero (Matches landing styling precisely) -->
     <section class="hero wrap">
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
-      <h1 class="reveal-item">Diseñemos el futuro<br>de la conversión.</h1>
-      <p class="reveal-item">Colabora con nosotros bajo el esquema que mejor se adapte a tu estilo de vida. Buscamos talento de nivel mundial en neurociencia conductual, diseño UX/UI y desarrollo front-end.</p>
+      <h1 class="reveal-item">Reunimos al top 1%<br>del talento en México</h1>
+      <p class="reveal-item">Buscamos talento de clase mundial en CRO, UX/UI y desarrollo de software. Únete a nuestro
+        ecosistema para colaborar con nosotros bajo el esquema que mejor se adapte a tu estilo de vida.</p>
       <div class="btn-row reveal-item" style="justify-content: center;">
-        <a href="#vacantes" class="btn btn-primary">Ver vacantes</a>
+        <a href="#vacantes" class="btn btn-primary">Unirme al equipo</a>
         <button class="btn btn-secondary" id="btn-careers-spontaneous">Candidatura espontánea</button>
       </div>
     </section>
 
-    <section class="section">
-      <div class="wrap">
-        <div class="pill reveal-item">/ Modelos de trabajo</div>
-        <h2 class="lead reveal-item">
-          <span class="muted">Tres formas de colaborar, diseñadas para los mejores profesionales de la industria.</span>
-        </h2>
-        
-        <div class="modalities-grid reveal-item">
-          <div class="modality-card gradient-border">
-            <div class="modality-icon">TC</div>
-            <h3>Tiempo Completo</h3>
-            <p>Forma parte de nuestro equipo permanente liderando optimizaciones y flujos experimentales. Diseñado para un crecimiento sostenido, beneficios superiores y liderazgo de productos de gran impacto.</p>
-          </div>
-
-          <div class="modality-card gradient-border">
-            <div class="modality-icon">FL</div>
-            <h3>Servicios Freelance</h3>
-            <p>Colabora por proyectos específicos con total flexibilidad. Buscamos diseñadores interactivos, animadores, redactores y especialistas de soporte con contratos bien remunerados por entregas.</p>
-          </div>
-
-          <div class="modality-card gradient-border">
-            <div class="modality-icon">CS</div>
-            <h3>Consultorías Individuales</h3>
-            <p>Dirigido a expertos especializados con mentalidad analítica. Brinda auditorías puntuales, estudios de comportamiento o asesoría por horas. Ideal para profesionales independientes y académicos.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Vacancies List Section with Headline Consistency -->
     <section class="section" id="vacantes">
       <div class="wrap">
         <div class="pill reveal-item">/ Oportunidades actuales</div>
-        <h2 class="headline reveal-item">Vacantes disponibles</h2>
-        
+        <h2 class="headline reveal-item">Únete al equipo</h2>
+
         <div class="filter-row reveal-item">
           <button class="filter-btn is-active" id="filter-all" data-filter="all">Todos</button>
           <button class="filter-btn" id="filter-fulltime" data-filter="fulltime">Tiempo Completo</button>
@@ -292,82 +296,16 @@
         </div>
 
         <div class="vacancies-list reveal-item" id="vacancies-container">
-          <!-- Vacancy 1 -->
-          <div class="vacancy-item" data-type="fulltime">
-            <div class="vacancy-info">
-              <div class="vacancy-title-row">
-                <h3 class="vacancy-title">Lead Behavioral CRO Analyst</h3>
-                <div class="vacancy-tags">
-                  <span class="tag tag-fulltime">Tiempo Completo</span>
-                </div>
-              </div>
-            </div>
-            <div class="vacancy-action">
-              <button class="btn btn-secondary careers-apply-trigger" data-role="Lead Behavioral CRO Analyst" data-modality="full-time">Postularse</button>
-            </div>
-          </div>
-
-          <!-- Vacancy 2 -->
-          <div class="vacancy-item" data-type="fulltime freelance">
-            <div class="vacancy-info">
-              <div class="vacancy-title-row">
-                <h3 class="vacancy-title">Senior UX/UI Designer</h3>
-                <div class="vacancy-tags">
-                  <span class="tag tag-fulltime">Tiempo Completo</span>
-                  <span class="tag tag-freelance">Freelance</span>
-                </div>
-              </div>
-            </div>
-            <div class="vacancy-action">
-              <button class="btn btn-secondary careers-apply-trigger" data-role="Senior UX/UI Designer" data-modality="full-time">Postularse</button>
-            </div>
-          </div>
-
-          <!-- Vacancy 3 -->
-          <div class="vacancy-item" data-type="fulltime freelance">
-            <div class="vacancy-info">
-              <div class="vacancy-title-row">
-                <h3 class="vacancy-title">Growth Front-End Engineer</h3>
-                <div class="vacancy-tags">
-                  <span class="tag tag-fulltime">Tiempo Completo</span>
-                  <span class="tag tag-freelance">Freelance</span>
-                </div>
-              </div>
-            </div>
-            <div class="vacancy-action">
-              <button class="btn btn-secondary careers-apply-trigger" data-role="Growth Front-End Engineer" data-modality="full-time">Postularse</button>
-            </div>
-          </div>
-
-          <!-- Vacancy 4 -->
-          <div class="vacancy-item" data-type="freelance">
-            <div class="vacancy-info">
-              <div class="vacancy-title-row">
-                <h3 class="vacancy-title">Direct Response Copywriter</h3>
-                <div class="vacancy-tags">
-                  <span class="tag tag-freelance">Freelance</span>
-                </div>
-              </div>
-            </div>
-            <div class="vacancy-action">
-              <button class="btn btn-secondary careers-apply-trigger" data-role="Direct Response Copywriter" data-modality="freelance">Postularse</button>
-            </div>
-          </div>
-
-          <!-- Vacancy 5 -->
-          <div class="vacancy-item" data-type="consulting">
-            <div class="vacancy-info">
-              <div class="vacancy-title-row">
-                <h3 class="vacancy-title">Consultor Experto en Economía Conductual</h3>
-                <div class="vacancy-tags">
-                  <span class="tag tag-consulting">Consultoría</span>
-                </div>
-              </div>
-            </div>
-            <div class="vacancy-action">
-              <button class="btn btn-secondary careers-apply-trigger" data-role="Consultor Experto en Economía Conductual" data-modality="consulting">Postularse</button>
-            </div>
-          </div>
+          <faust-vacancy-card title="Lead Behavioral CRO Analyst" types="fulltime"
+            modality="full-time"></faust-vacancy-card>
+          <faust-vacancy-card title="Senior UX/UI Designer" types="fulltime freelance"
+            modality="full-time"></faust-vacancy-card>
+          <faust-vacancy-card title="Growth Front-End Engineer" types="fulltime freelance"
+            modality="full-time"></faust-vacancy-card>
+          <faust-vacancy-card title="Direct Response Copywriter" types="freelance"
+            modality="freelance"></faust-vacancy-card>
+          <faust-vacancy-card title="Consultor Experto en Economía Conductual" types="consulting"
+            modality="consulting"></faust-vacancy-card>
         </div>
       </div>
     </section>
@@ -397,18 +335,21 @@
               <div class="apply-group">
                 <label class="apply-label" for="careers-input-name">Nombre completo</label>
                 <input type="text" id="careers-input-name" class="apply-input" placeholder="Nombre completo">
-                <div id="careers-name-error" class="careers-error-msg">Por favor, ingrese un nombre y apellido válidos.</div>
+                <div id="careers-name-error" class="careers-error-msg">Por favor, ingrese un nombre y apellido válidos.
+                </div>
               </div>
 
               <div class="apply-group">
                 <label class="apply-label" for="careers-input-contact">Medio de contacto (Email o WhatsApp)</label>
-                <input type="text" id="careers-input-contact" class="apply-input" placeholder="Ej. correo@empresa.com o 4428767130">
+                <input type="text" id="careers-input-contact" class="apply-input"
+                  placeholder="Ej. correo@empresa.com o 4428767130">
                 <div id="careers-contact-error" class="careers-error-msg">Ingrese un medio de contacto válido.</div>
               </div>
 
               <div class="apply-group">
                 <label class="apply-label" for="careers-input-portfolio">Portafolio / LinkedIn URL</label>
-                <input type="text" id="careers-input-portfolio" class="apply-input" placeholder="Ej. linkedin.com/in/usuario o behance.net/usuario">
+                <input type="text" id="careers-input-portfolio" class="apply-input"
+                  placeholder="Ej. linkedin.com/in/usuario o behance.net/usuario">
                 <div id="careers-portfolio-error" class="careers-error-msg">Ingrese una dirección URL válida.</div>
               </div>
             </div>
@@ -440,7 +381,8 @@
                   <option value="Senior UX/UI Designer">Senior UX/UI Designer</option>
                   <option value="Growth Front-End Engineer">Growth Front-End Engineer</option>
                   <option value="Direct Response Copywriter">Direct Response Copywriter</option>
-                  <option value="Consultor Experto en Economía Conductual">Consultor Experto en Economía Conductual</option>
+                  <option value="Consultor Experto en Economía Conductual">Consultor Experto en Economía Conductual
+                  </option>
                   <option value="Candidatura Espontánea / Otro">Candidatura Espontánea / Otro</option>
                 </select>
               </div>
@@ -449,41 +391,60 @@
             <!-- STEP 3 -->
             <div class="careers-form-step" id="careers-step-3" style="display: none;">
               <div class="apply-group">
-                <label class="apply-label" id="careers-label-expectation">Expectativa salarial mensual (MXN / USD)</label>
-                <input type="text" id="careers-input-expectation" class="apply-input" placeholder="Ej. $45,000 MXN o $3,000 USD">
+                <label class="apply-label" id="careers-label-expectation">Expectativa salarial mensual (MXN /
+                  USD)</label>
+                <input type="text" id="careers-input-expectation" class="apply-input"
+                  placeholder="Ej. $45,000 MXN o $3,000 USD">
                 <div id="careers-expectation-error" class="careers-error-msg">Por favor ingrese una expectativa.</div>
               </div>
 
               <div class="apply-group">
-                <label class="apply-label" for="careers-input-pitch">Tu experiencia o enfoque en CRO / Psicología</label>
-                <textarea id="careers-input-pitch" class="apply-input" rows="4" placeholder="Cuéntanos brevemente cómo abordas los problemas de conversión o optimización visual..." style="resize: none; font-family: inherit;"></textarea>
+                <label class="apply-label" for="careers-input-pitch">Tu experiencia o enfoque en CRO /
+                  Psicología</label>
+                <textarea id="careers-input-pitch" class="apply-input" rows="4"
+                  placeholder="Cuéntanos brevemente cómo abordas los problemas de conversión o optimización visual..."
+                  style="resize: none; font-family: inherit;"></textarea>
                 <div id="careers-pitch-error" class="careers-error-msg">Ingrese su resumen profesional.</div>
               </div>
             </div>
 
             <!-- SUCCESS SCREEN -->
-            <div class="careers-form-step" id="careers-step-success" style="display: none; text-align: center; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
-              <div style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px; font-weight: 400;">✓</div>
+            <div class="careers-form-step" id="careers-step-success"
+              style="display: none; text-align: center; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
+              <div
+                style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px; font-weight: 400;">
+                ✓</div>
               <h3 style="font-size: 20px; font-weight: 500; color: #fff; margin: 0;">¡Gracias por aplicar!</h3>
-              <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Tu perfil ha sido registrado en nuestra base de datos. Nos pondremos en contacto contigo a la brevedad si coincide con nuestras necesidades operativas.</p>
+              <p
+                style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">
+                Tu perfil ha sido registrado en nuestra base de datos. Nos pondremos en contacto contigo a la brevedad
+                si coincide con nuestras necesidades operativas.</p>
               <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
-                <button class="btn btn-primary careers-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
+                <button class="btn btn-primary careers-success-close-btn"
+                  style="background: #fff; color: #000; border-color: #fff;">Listo</button>
               </div>
             </div>
-            
+
             <!-- BLOCKED SCREEN -->
-            <div class="careers-form-step" id="careers-step-blocked" style="display: none; text-align: center; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
-              <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 74, 74, 0.1); border: 1px solid #ff4a4a; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: #ff4a4a;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="careers-form-step" id="careers-step-blocked"
+              style="display: none; text-align: center; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
+              <div
+                style="width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 74, 74, 0.1); border: 1px solid #ff4a4a; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: #ff4a4a;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="15" y1="9" x2="9" y2="15"></line>
                   <line x1="9" y1="9" x2="15" y2="15"></line>
                 </svg>
               </div>
               <h3 style="font-size: 20px; font-weight: 500; color: #ff4a4a; margin: 0;">Límite excedido</h3>
-              <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; line-height: 1.5; margin: 0; max-width: 320px;">Has alcanzado el límite máximo de postulaciones permitidas (2 envíos) en las últimas 24 horas. Por favor, inténtalo de nuevo mañana.</p>
+              <p
+                style="color: rgba(255, 255, 255, 0.6); font-size: 14px; line-height: 1.5; margin: 0; max-width: 320px;">
+                Has alcanzado el límite máximo de postulaciones permitidas (2 envíos) en las últimas 24 horas. Por
+                favor, inténtalo de nuevo mañana.</p>
               <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
-                <button class="btn btn-secondary careers-blocked-close-btn" style="border: 1px solid rgba(255,255,255,0.15) !important; background: transparent; color: #fff; cursor: pointer;">Cerrar</button>
+                <button class="btn btn-secondary careers-blocked-close-btn"
+                  style="border: 1px solid rgba(255,255,255,0.15) !important; background: transparent; color: #fff; cursor: pointer;">Cerrar</button>
               </div>
             </div>
           </div>
@@ -502,7 +463,7 @@
 
   <!-- 4. High-Fidelity Scroll-Triggered Reveal Animations Script (Precision Match with index.html) -->
   <script>
-    (function() {
+    (function () {
       // 1. Dynamic scroll speed calculation
       var lastScroll = window.scrollY;
       var lastTime = Date.now();
@@ -514,14 +475,14 @@
         var currentTime = Date.now();
         var deltaY = Math.abs(currentScroll - lastScroll);
         var deltaTime = currentTime - lastTime;
-        
+
         if (deltaTime > 0) {
           // Calculate speed in px/ms
           var instantSpeed = deltaY / deltaTime;
           // Apply EMA (exponential moving average) for smoothing
           scrollSpeed = scrollSpeed * 0.65 + instantSpeed * 0.35;
         }
-        
+
         lastScroll = currentScroll;
         lastTime = currentTime;
 
@@ -531,7 +492,7 @@
 
         // Reset speed to 0 when scrolling stops
         if (scrollTimeout) clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(function() {
+        scrollTimeout = setTimeout(function () {
           scrollSpeed = 0;
           document.documentElement.style.setProperty('--reveal-duration', '1.6s');
         }, 150);
@@ -548,11 +509,11 @@
       var groupIndex = 0;
       var currentGroup = [];
 
-      revealItems.forEach(function(item) {
+      revealItems.forEach(function (item) {
         var isTextLike = item.tagName === 'H1' || item.tagName === 'H2' || item.tagName === 'P' ||
-                         item.classList.contains('pill') || item.classList.contains('btn-row') ||
-                         item.classList.contains('logo-lockup');
-                         
+          item.classList.contains('pill') || item.classList.contains('btn-row') ||
+          item.classList.contains('logo-lockup');
+
         if (isTextLike) {
           if (currentGroup.length > 0) {
             var lastItem = currentGroup[currentGroup.length - 1];
@@ -579,7 +540,7 @@
 
       function groupsPush(group) {
         groupIndex++;
-        group.forEach(function(el) {
+        group.forEach(function (el) {
           el.setAttribute('data-reveal-group', 'rg-' + groupIndex);
         });
       }
@@ -591,10 +552,10 @@
         threshold: 0.02
       };
 
-      var revealObserver = new IntersectionObserver(function(entries) {
+      var revealObserver = new IntersectionObserver(function (entries) {
         var groupsToReveal = {};
 
-        entries.forEach(function(entry) {
+        entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             var groupId = entry.target.getAttribute('data-reveal-group');
             groupsToReveal[groupId] = true;
@@ -603,9 +564,9 @@
 
         // Resolve entering groups
         var enteringElements = [];
-        Object.keys(groupsToReveal).forEach(function(groupId) {
+        Object.keys(groupsToReveal).forEach(function (groupId) {
           var groupElements = document.querySelectorAll('[data-reveal-group="' + groupId + '"]');
-          groupElements.forEach(function(el) {
+          groupElements.forEach(function (el) {
             if (!el.classList.contains('reveal-visible')) {
               enteringElements.push(el);
             }
@@ -614,8 +575,8 @@
 
         if (enteringElements.length > 0) {
           if (!document.body.classList.contains('is-ready')) {
-            setTimeout(function() {
-              var stillEntering = enteringElements.filter(function(el) {
+            setTimeout(function () {
+              var stillEntering = enteringElements.filter(function (el) {
                 return !el.classList.contains('reveal-visible');
               });
               if (stillEntering.length > 0) {
@@ -634,31 +595,31 @@
         threshold: 0
       };
 
-      var hideObserver = new IntersectionObserver(function(entries) {
+      var hideObserver = new IntersectionObserver(function (entries) {
         var groupsToHide = {};
 
-        entries.forEach(function(entry) {
+        entries.forEach(function (entry) {
           if (!entry.isIntersecting) {
             var groupId = entry.target.getAttribute('data-reveal-group');
             groupsToHide[groupId] = true;
           }
         });
 
-        Object.keys(groupsToHide).forEach(function(groupId) {
+        Object.keys(groupsToHide).forEach(function (groupId) {
           var groupElements = Array.from(document.querySelectorAll('[data-reveal-group="' + groupId + '"]'));
-          var isAnyVisible = groupElements.some(function(el) {
+          var isAnyVisible = groupElements.some(function (el) {
             var rect = el.getBoundingClientRect();
             return rect.bottom > 0 && rect.top < window.innerHeight;
           });
-          
+
           if (!isAnyVisible) {
-            var isBelowViewport = groupElements.every(function(el) {
+            var isBelowViewport = groupElements.every(function (el) {
               var rect = el.getBoundingClientRect();
               return rect.top >= window.innerHeight;
             });
-            
+
             if (isBelowViewport) {
-              groupElements.forEach(function(el) {
+              groupElements.forEach(function (el) {
                 el.classList.remove('reveal-visible');
                 el.style.transitionDelay = '0ms';
               });
@@ -668,7 +629,7 @@
       }, hideObserverOptions);
 
       function revealElements(elements) {
-        elements.sort(function(a, b) {
+        elements.sort(function (a, b) {
           var rectA = a.getBoundingClientRect();
           var rectB = b.getBoundingClientRect();
           if (Math.abs(rectA.top - rectB.top) < 10) {
@@ -681,14 +642,14 @@
         var isHero = elements.length > 0 && elements[0].closest('.hero') !== null;
         var baseStagger = isHero ? 150 : 100;
 
-        elements.forEach(function(el, index) {
+        elements.forEach(function (el, index) {
           if (index > 0) {
             var prevEl = elements[index - 1];
             var isPrevHeader = prevEl.tagName === 'H1' || prevEl.tagName === 'H2' ||
-                               prevEl.classList.contains('headline') || prevEl.classList.contains('lead');
+              prevEl.classList.contains('headline') || prevEl.classList.contains('lead');
             var isCurrentHeader = el.tagName === 'H1' || el.tagName === 'H2' ||
-                                  el.classList.contains('headline') || el.classList.contains('lead');
-            
+              el.classList.contains('headline') || el.classList.contains('lead');
+
             if (isPrevHeader) {
               currentDelay += 160;
             } else if (isCurrentHeader) {
@@ -702,7 +663,7 @@
         });
       }
 
-      revealItems.forEach(function(item) {
+      revealItems.forEach(function (item) {
         revealObserver.observe(item);
         hideObserver.observe(item);
       });
@@ -749,10 +710,10 @@
         var text = leadSpan.textContent;
         var cleanText = text.trim().replace(/\s+/g, ' ');
         if (cleanText === lastText) return;
-        
+
         lastText = cleanText;
         var chunks = tokenizeText(cleanText);
-        
+
         if (observer) observer.disconnect();
 
         var newLeadSpan = document.createElement(leadSpan.tagName.toLowerCase());
@@ -760,7 +721,7 @@
         if (leadSpan.hasAttribute('style')) {
           newLeadSpan.setAttribute('style', leadSpan.getAttribute('style'));
         }
-        
+
         var savedNative = localStorage.getItem('faust-lang-native') || 'Español';
         var isSpanish = (savedNative === 'Español');
         var originalSpanishText = "tres formas de colaborar, diseñadas para los mejores profesionales de la industria.";
@@ -775,12 +736,12 @@
         }
 
         wordSpans = [];
-        chunks.forEach(function(chunk) {
+        chunks.forEach(function (chunk) {
           if (chunk) {
             var span = document.createElement('span');
             span.className = 'scroll-word';
             var isCjk = cjkRegex.test(chunk);
-            span.textContent = chunk + (isCjk ? '' : ' '); 
+            span.textContent = chunk + (isCjk ? '' : ' ');
             span.style.color = '#4A4B4F';
             span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
             newLeadSpan.appendChild(span);
@@ -792,7 +753,7 @@
         leadSpan = newLeadSpan;
 
         if (observer) observer.observe(leadSpan, { childList: true, subtree: true, characterData: true });
-        
+
         updateScrollText();
       }
 
@@ -800,7 +761,7 @@
         if (!wordSpans.length || !targetElement) return;
         var rect = targetElement.getBoundingClientRect();
         var viewportHeight = window.innerHeight;
-        
+
         var start = viewportHeight * 0.60;
         var end = viewportHeight * 0.35;
 
@@ -810,7 +771,7 @@
         var W = wordSpans.length;
         var targetWordsLit = globalProgress * W;
 
-        wordSpans.forEach(function(span, i) {
+        wordSpans.forEach(function (span, i) {
           var wordProgress = targetWordsLit - i;
           wordProgress = Math.max(0, Math.min(1, wordProgress));
 
@@ -828,9 +789,9 @@
       }
 
       if (leadSpan && targetElement) {
-        observer = new MutationObserver(function() {
+        observer = new MutationObserver(function () {
           if (rebuildTimeout) clearTimeout(rebuildTimeout);
-          rebuildTimeout = setTimeout(function() {
+          rebuildTimeout = setTimeout(function () {
             rebuildSpans();
           }, 100);
         });
@@ -848,7 +809,7 @@
         history.scrollRestoration = 'manual';
       }
 
-      window.addEventListener('pageshow', function(event) {
+      window.addEventListener('pageshow', function (event) {
         var isReload = false;
         try {
           var navs = performance.getEntriesByType('navigation');
@@ -857,9 +818,9 @@
           } else if (performance.navigation) {
             isReload = performance.navigation.type === 1;
           }
-        } catch (e) {}
+        } catch (e) { }
 
-        setTimeout(function() {
+        setTimeout(function () {
           try {
             if (isReload) {
               var savedScrollTop = sessionStorage.getItem('careersScrollPosition');
@@ -886,7 +847,7 @@
         }, 100);
       });
 
-      window.addEventListener('beforeunload', function() {
+      window.addEventListener('beforeunload', function () {
         var currentScroll = document.body.scrollTop || (document.documentElement ? document.documentElement.scrollTop : 0);
         sessionStorage.setItem('careersScrollPosition', currentScroll);
       });
@@ -899,14 +860,14 @@
     window.addEventListener('DOMContentLoaded', () => {
       // 1. Vacancy Filters
       const filterButtons = document.querySelectorAll('.filter-btn');
-      const vacancyItems = document.querySelectorAll('.vacancy-item');
-      
+
       filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           filterButtons.forEach(b => b.classList.remove('is-active'));
           btn.classList.add('is-active');
 
           const filter = btn.getAttribute('data-filter');
+          const vacancyItems = document.querySelectorAll('.vacancy-item');
           vacancyItems.forEach(item => {
             const types = item.getAttribute('data-type').split(' ');
             if (filter === 'all' || types.includes(filter)) {
@@ -924,13 +885,13 @@
       const modalTitle = document.getElementById('careers-modal-title');
       const progressContainer = document.getElementById('careers-progress-container');
       const modalFooter = document.getElementById('careers-modal-footer');
-      
+
       const step1 = document.getElementById('careers-step-1');
       const step2 = document.getElementById('careers-step-2');
       const step3 = document.getElementById('careers-step-3');
       const stepSuccess = document.getElementById('careers-step-success');
       const stepBlocked = document.getElementById('careers-step-blocked');
-      
+
       const line1 = document.getElementById('careers-step-line-1');
       const line2 = document.getElementById('careers-step-line-2');
       const line3 = document.getElementById('careers-step-line-3');
@@ -997,7 +958,7 @@
         }
         container.style.height = 'auto';
         const targetHeight = container.offsetHeight;
-        
+
         if (prevHeight === 0 || prevHeight === targetHeight) {
           container.style.height = 'auto';
           return;
@@ -1029,19 +990,20 @@
         openCareersModal('Candidatura Espontánea / Otro', 'full-time');
       });
 
-      // Active role application triggers
-      document.querySelectorAll('.careers-apply-trigger').forEach(trigger => {
-        trigger.addEventListener('click', () => {
+      // Active role application triggers (using delegation to support dynamic component loading)
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.careers-apply-trigger');
+        if (trigger) {
           const role = trigger.getAttribute('data-role');
           const modality = trigger.getAttribute('data-modality');
           openCareersModal(role, modality);
-        });
+        }
       });
 
       function checkBlockedState() {
         const submissionCount = parseInt(localStorage.getItem('faust-careers-submission-count') || '0', 10);
         const lastSubmitTime = parseInt(localStorage.getItem('faust-careers-last-submit') || '0', 10);
-        
+
         if (Date.now() - lastSubmitTime > 24 * 60 * 60 * 1000) {
           localStorage.setItem('faust-careers-submission-count', '0');
           return false;
@@ -1068,7 +1030,7 @@
         currentStep = 1;
         careerData.role = role || 'Lead Behavioral CRO Analyst';
         careerData.modality = modality || 'full-time';
-        
+
         inputRole.value = careerData.role;
         modalityOptions.forEach(opt => {
           if (opt.getAttribute('data-value') === careerData.modality) {
@@ -1084,11 +1046,11 @@
         step3.style.display = 'none';
         stepSuccess.style.display = 'none';
         stepBlocked.style.display = 'none';
-        
+
         progressContainer.style.display = 'flex';
         modalFooter.style.display = 'flex';
         modalTitle.textContent = `Aplicar a ${careerData.role}`;
-        
+
         // Reset progress bar
         line1.className = 'apply-step-line is-active';
         line2.className = 'apply-step-line';
@@ -1122,7 +1084,7 @@
         opt.addEventListener('click', () => {
           modalityOptions.forEach(o => o.classList.remove('is-selected'));
           opt.classList.add('is-selected');
-          
+
           careerData.modality = opt.getAttribute('data-value');
           saveDraft();
         });
@@ -1138,7 +1100,7 @@
           careerData.role = inputRole.value;
           careerData.expectation = inputExpectation.value;
           careerData.pitch = inputPitch.value;
-          
+
           // Clear error fields dynamically as user types
           hideErrors();
           saveDraft();
@@ -1189,7 +1151,7 @@
 
         if (currentStep === 1) {
           let hasError = false;
-          
+
           if (!validateFullName(careerData.name)) {
             document.getElementById('careers-name-error').style.display = 'block';
             hasError = true;
@@ -1211,10 +1173,10 @@
           currentStep = 2;
           step1.style.display = 'none';
           step2.style.display = 'flex';
-          
+
           line1.className = 'apply-step-line is-completed';
           line2.className = 'apply-step-line is-active';
-          
+
           btnBack.style.display = 'inline-flex';
           adjustModalHeight(prevHeight);
 
@@ -1224,10 +1186,10 @@
           step3.style.display = 'flex';
 
           updateExpectationLabel();
-          
+
           line2.className = 'apply-step-line is-completed';
           line3.className = 'apply-step-line is-active';
-          
+
           btnNext.textContent = 'Enviar Solicitud';
           adjustModalHeight(prevHeight);
 
@@ -1258,10 +1220,10 @@
           currentStep = 1;
           step2.style.display = 'none';
           step1.style.display = 'flex';
-          
+
           line1.className = 'apply-step-line is-active';
           line2.className = 'apply-step-line';
-          
+
           btnBack.style.display = 'none';
           adjustModalHeight(prevHeight);
 
@@ -1269,11 +1231,11 @@
           currentStep = 2;
           step3.style.display = 'none';
           step2.style.display = 'flex';
-          
+
           line1.className = 'apply-step-line is-completed';
           line2.className = 'apply-step-line is-active';
           line3.className = 'apply-step-line';
-          
+
           btnNext.textContent = 'Siguiente';
           adjustModalHeight(prevHeight);
         }
@@ -1285,19 +1247,19 @@
         const visitedPages = (JSON.parse(localStorage.getItem('faust-visited-pages') || '[]')).join(' -> ') || 'Ninguna';
         const lang = localStorage.getItem('faust-lang-native') || document.documentElement.lang || navigator.language || 'No detectado';
         const countryCode = localStorage.getItem('faust-detected-country-code') || 'Desconocido';
-        
+
         const ua = navigator.userAgent;
         let os = "Otro OS";
         if (ua.includes("Windows")) os = "Windows";
         else if (ua.includes("Macintosh")) os = "macOS";
         else if (ua.includes("iPhone")) os = "iOS (iPhone)";
         else if (ua.includes("Android")) os = "Android";
-        
+
         let type = "Desktop";
         if (/mobile|android|iphone|ipod/i.test(ua.toLowerCase())) type = "Mobile";
-        
+
         const totalSeconds = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
-        
+
         return `IP: ${ip} | Páginas: ${visitedPages} | Idioma: ${lang} | País: ${countryCode} | Disp: ${type} (${os}) | Tiempo: ${totalSeconds}s`;
       }
 
@@ -1329,13 +1291,13 @@
             botcheck: ""
           })
         })
-        .then(() => {
-          recordSubmissionSuccess();
-        })
-        .catch(err => {
-          console.warn("Splitforms post failed, showing success fallback", err);
-          recordSubmissionSuccess();
-        });
+          .then(() => {
+            recordSubmissionSuccess();
+          })
+          .catch(err => {
+            console.warn("Splitforms post failed, showing success fallback", err);
+            recordSubmissionSuccess();
+          });
       }
 
       function recordSubmissionSuccess() {
@@ -1346,7 +1308,7 @@
 
         // Clear draft
         localStorage.removeItem('faust-careers-draft');
-        
+
         // Reset form variables
         careerData = {
           name: '',
@@ -1360,7 +1322,7 @@
         formFields.forEach(f => f.value = '');
 
         const prevHeight = container.offsetHeight;
-        
+
         step3.style.display = 'none';
         stepSuccess.style.display = 'flex';
         progressContainer.style.display = 'none';
@@ -1372,4 +1334,5 @@
     });
   </script>
 </body>
+
 </html>
