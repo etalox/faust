@@ -51,7 +51,12 @@
   <main>
     <section class="hero wrap" id="aplicar">
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
-      <h1 class="reveal-item">Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
+      <h1 class="reveal-item" id="hero-title">Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
+      <script>
+        if (localStorage.getItem('faust-user-role') === 'Talento') {
+          document.getElementById('hero-title').innerHTML = 'Construimos las plataformas <br>de las empresas más grandes <br>de México.';
+        }
+      </script>
       <p class="reveal-item">Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
       <div class="btn-row reveal-item" style="justify-content:center">
         <faust-btn-apply></faust-btn-apply>
