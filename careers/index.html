@@ -36,6 +36,18 @@
       flex-wrap: wrap;
       margin-bottom: 40px;
       justify-content: flex-end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .filter-indicator {
+      position: absolute;
+      background: #fff;
+      z-index: 1;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 99px;
     }
 
     .filter-btn {
@@ -47,7 +59,11 @@
       font-size: 14px;
       cursor: pointer;
       font-family: inherit;
-      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+      position: relative;
+      z-index: 2;
+      transition: color 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                  background 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                  transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     .filter-btn:hover {
@@ -56,10 +72,10 @@
     }
 
     .filter-btn.is-active {
-      background: #fff;
-      border-color: #fff;
+      background: transparent !important;
+      border-color: transparent !important;
       color: #000;
-      font-weight: 500;
+      font-weight: 600;
       transform: scale(1.05);
     }
 
@@ -74,7 +90,7 @@
     .vacancy-item {
       background: rgba(253, 253, 255, 0.015);
       border-radius: 16px;
-      padding: 24px 32px;
+      padding: 32px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -90,7 +106,7 @@
                   box-shadow 0.3s ease;
       opacity: 1;
       transform: scale(1) translateY(0);
-      max-height: 200px;
+      max-height: 220px;
       overflow: hidden;
       box-sizing: border-box;
     }
@@ -111,10 +127,25 @@
       box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
-    /* Hovering over the item activates button styles organic state change */
-    .vacancy-item:hover .btn-secondary {
-      background: rgba(238, 238, 241, 0.15);
+    /* Hovering over the item triggers link arrow shift */
+    .vacancy-apply-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .vacancy-apply-link .arrow {
+      width: 14px;
+      height: 10px;
+      transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .vacancy-item:hover .vacancy-apply-link .arrow {
+      transform: translateX(4px);
     }
 
     .vacancy-info {
@@ -221,6 +252,10 @@
         gap: 8px;
       }
 
+      .filter-indicator {
+        border-radius: 12px;
+      }
+
       .filter-btn {
         flex-grow: 1;
         text-align: center;
@@ -237,9 +272,9 @@
         flex-direction: column;
         align-items: stretch;
         gap: 20px;
-        padding: 24px;
+        padding: 30px 24px;
         background: rgba(253, 253, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.04);
+        border: 0px;
         border-radius: 18px;
       }
 
@@ -275,16 +310,9 @@
 
       .vacancy-action {
         width: 100%;
-        margin-top: 4px;
-      }
-
-      .vacancy-action .btn {
-        width: 100%;
-        height: 48px;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: 600;
-        border-radius: 12px;
+        margin-top: 8px;
+        display: flex;
+        justify-content: flex-start;
       }
     }
   </style>
@@ -312,6 +340,7 @@
         <h2 class="reveal-item" style="font-size: 36px; font-weight: 500; color: #fff; margin: 0;">Únete al equipo</h2>
 
         <div class="filter-row reveal-item">
+          <div class="filter-indicator"></div>
           <button class="filter-btn is-active" id="filter-all" data-filter="all">Todos</button>
           <button class="filter-btn" id="filter-fulltime" data-filter="fulltime">Tiempo Completo</button>
           <button class="filter-btn" id="filter-freelance" data-filter="freelance">Freelance</button>
@@ -862,6 +891,30 @@
     window.addEventListener('DOMContentLoaded', () => {
       // 1. Vacancy Filters with smooth animations
       const filterButtons = document.querySelectorAll('.filter-btn');
+      const filterIndicator = document.querySelector('.filter-indicator');
+
+      function updateIndicator() {
+        const activeBtn = document.querySelector('.filter-btn.is-active');
+        if (activeBtn && filterIndicator) {
+          filterIndicator.style.left = `${activeBtn.offsetLeft}px`;
+          filterIndicator.style.top = `${activeBtn.offsetTop}px`;
+          filterIndicator.style.width = `${activeBtn.offsetWidth}px`;
+          filterIndicator.style.height = `${activeBtn.offsetHeight}px`;
+        }
+      }
+
+      // Initialize position on load, resize, and container size changes
+      updateIndicator();
+      window.addEventListener('load', updateIndicator);
+      window.addEventListener('resize', updateIndicator);
+
+      if (window.ResizeObserver && filterIndicator) {
+        const filterRow = document.querySelector('.filter-row');
+        if (filterRow) {
+          const ro = new ResizeObserver(() => updateIndicator());
+          ro.observe(filterRow);
+        }
+      }
 
       filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -869,6 +922,7 @@
 
           filterButtons.forEach(b => b.classList.remove('is-active'));
           btn.classList.add('is-active');
+          updateIndicator();
 
           const filter = btn.getAttribute('data-filter');
           const vacancyItems = Array.from(document.querySelectorAll('.vacancy-item'));
