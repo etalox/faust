@@ -501,7 +501,7 @@ class FaustFooter extends HTMLElement {
                 <a href="${rootPrefix}start/index.html#">Contacto</a>
                 <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
                 <a href="${rootPrefix}start/index.html#">Deseo Invertir</a>
-                <a href="${rootPrefix}start/index.html#">Carreras</a>
+                <a href="${rootPrefix}careers/index.html#">Carreras</a>
                 <a href="${rootPrefix}start/index.html#">Faust OS</a>
               </div>
             </div>

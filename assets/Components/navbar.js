@@ -30,16 +30,19 @@ class FaustNavbar extends HTMLElement {
     const isCareersPage = path.includes('/careers/') || path.endsWith('/careers');
     const startHref = isStartPage ? '' : `${rootPrefix}start/index.html`;
     const applyLabel = isCareersPage ? 'Unirme' : 'Aplicar';
+    const applyHref = isCareersPage ? '#vacantes' : `${startHref}#aplicar`;
+    const applyAction = isCareersPage ? '' : 'apply';
+    const applyBtnBaseClass = isCareersPage ? '' : 'faust-apply-btn';
 
     const activeCode = getSelectedCode();
     const isLATAM = (activeCode === 'es-LA');
 
     let navLangHtml = '';
-    let aplicarBtnClass = 'btn btn-secondary btn-nav faust-apply-btn';
+    let aplicarBtnClass = `btn btn-secondary btn-nav ${applyBtnBaseClass}`.trim();
     let arrowClass = 'arrow arrow-light';
 
     if (!isLATAM) {
-      aplicarBtnClass = 'btn btn-primary btn-nav faust-apply-btn';
+      aplicarBtnClass = `btn btn-primary btn-nav ${applyBtnBaseClass}`.trim();
       arrowClass = 'arrow';
 
       const buttonLabel = getButtonLabelHtml(activeCode);
@@ -493,7 +496,7 @@ class FaustNavbar extends HTMLElement {
           <div class="nav-right">
             <a id="nav-contacto" href="${startHref}#contacto" style="user-select: none !important;">Contacto</a>
             ${navLangHtml}
-            <a class="${aplicarBtnClass}" data-action="apply" href="${startHref}#aplicar">
+            <a class="${aplicarBtnClass}" ${applyAction ? `data-action="${applyAction}"` : ''} href="${applyHref}">
               ${applyLabel}
               <img class="${arrowClass}" src="${rootPrefix}assets/Icons/button_arrow.svg" alt="">
             </a>
