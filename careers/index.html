@@ -121,6 +121,16 @@
       pointer-events: none;
     }
 
+    .vacancy-item.reveal-item:not(.reveal-visible) {
+      opacity: 0;
+      transform: translateY(35px);
+      pointer-events: none;
+    }
+
+    .vacancy-item.reveal-animating {
+      pointer-events: none;
+    }
+
     .vacancy-item:hover {
       background: rgba(253, 253, 255, 0.035);
       transform: scale(1.005) translateY(-2px);
@@ -347,7 +357,7 @@
           <button class="filter-btn" id="filter-consulting" data-filter="consulting">Consultoría</button>
         </div>
 
-        <div class="vacancies-list reveal-item" id="vacancies-container">
+        <div class="vacancies-list" id="vacancies-container">
           <faust-vacancy-card title="Lead Behavioral CRO Analyst" types="fulltime"
             modality="full-time"></faust-vacancy-card>
           <faust-vacancy-card title="Senior UX/UI Designer" types="fulltime freelance"
@@ -554,28 +564,6 @@
       document.documentElement.style.setProperty('--reveal-duration', '1.6s');
       window.addEventListener('scroll', updateScrollSpeed, { passive: true });
 
-      // 2. Group reveal elements by their closest section to force them to animate as a single coordinated wave
-      var revealItems = document.querySelectorAll('.reveal-item');
-      if (revealItems.length === 0) return;
-
-      var sectionsMap = {};
-      revealItems.forEach(function (item) {
-        var section = item.closest('section') || item.closest('footer') || document.body;
-        var sectionId = section.id || section.className || 'default-section';
-        if (!sectionsMap[sectionId]) {
-          sectionsMap[sectionId] = [];
-        }
-        sectionsMap[sectionId].push(item);
-      });
-
-      var groupIndex = 0;
-      Object.keys(sectionsMap).forEach(function (sectionId) {
-        groupIndex++;
-        sectionsMap[sectionId].forEach(function (el) {
-          el.setAttribute('data-reveal-group', 'rg-' + groupIndex);
-        });
-      });
-
       // 3. Bidirectional reveal observer (split into reveal and hide observers for perfect cross-browser reliability)
       var revealObserverOptions = {
         root: null,
@@ -691,13 +679,71 @@
           }
           el.style.transitionDelay = currentDelay + 'ms';
           el.classList.add('reveal-visible');
+
+          if (el.classList.contains('vacancy-item')) {
+            el.classList.add('reveal-animating');
+            (function (element, delay) {
+              setTimeout(function () {
+                element.classList.remove('reveal-animating');
+                element.style.transitionDelay = '';
+              }, delay + 400);
+            })(el, currentDelay);
+          } else {
+            (function (element, delay) {
+              setTimeout(function () {
+                element.style.transitionDelay = '';
+              }, delay + 1200);
+            })(el, currentDelay);
+          }
         });
       }
 
-      revealItems.forEach(function (item) {
-        revealObserver.observe(item);
-        hideObserver.observe(item);
-      });
+      function initReveal() {
+        var revealItems = document.querySelectorAll('.reveal-item:not([data-reveal-observed])');
+        if (revealItems.length === 0) return;
+
+        var sectionsMap = {};
+        revealItems.forEach(function (item) {
+          item.setAttribute('data-reveal-observed', 'true');
+          var section = item.closest('section') || item.closest('footer') || document.body;
+          var sectionId = section.id || section.className || 'default-section';
+          // Clean up whitespaces/commas/hashes for standard selector
+          var cleanId = sectionId.replace(/[\s,#]/g, '-');
+          if (!sectionsMap[cleanId]) {
+            sectionsMap[cleanId] = [];
+          }
+          sectionsMap[cleanId].push(item);
+        });
+
+        Object.keys(sectionsMap).forEach(function (sectionId) {
+          var section = document.getElementById(sectionId) || document.querySelector('.' + sectionId) || document.body;
+          var groupIndex = section.getAttribute('data-reveal-group-idx');
+          if (!groupIndex) {
+            window.globalGroupIndex = (window.globalGroupIndex || 0) + 1;
+            groupIndex = 'rg-' + window.globalGroupIndex;
+            section.setAttribute('data-reveal-group-idx', groupIndex);
+          }
+
+          sectionsMap[sectionId].forEach(function (el) {
+            el.setAttribute('data-reveal-group', groupIndex);
+            revealObserver.observe(el);
+            hideObserver.observe(el);
+          });
+        });
+      }
+
+      // Run immediately for parsed static items
+      initReveal();
+
+      // Hook events
+      window.addEventListener('DOMContentLoaded', initReveal);
+      window.addEventListener('load', initReveal);
+
+      if (window.customElements) {
+        customElements.whenDefined('faust-vacancy-card').then(function () {
+          setTimeout(initReveal, 50);
+        });
+      }
 
       // 4. Scroll-driven text lighting up effect (lead paragraph)
       var leadSpan = document.querySelector('.lead .muted');
