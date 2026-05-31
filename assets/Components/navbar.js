@@ -27,7 +27,9 @@ class FaustNavbar extends HTMLElement {
     };
     const rootPrefix = getRootPrefix();
     const isStartPage = path.includes('/start/') || path.endsWith('/start');
+    const isCareersPage = path.includes('/careers/') || path.endsWith('/careers');
     const startHref = isStartPage ? '' : `${rootPrefix}start/index.html`;
+    const applyLabel = isCareersPage ? 'Unirme' : 'Aplicar';
 
     const activeCode = getSelectedCode();
     const isLATAM = (activeCode === 'es-LA');
@@ -492,7 +494,7 @@ class FaustNavbar extends HTMLElement {
             <a id="nav-contacto" href="${startHref}#contacto" style="user-select: none !important;">Contacto</a>
             ${navLangHtml}
             <a class="${aplicarBtnClass}" data-action="apply" href="${startHref}#aplicar">
-              Aplicar
+              ${applyLabel}
               <img class="${arrowClass}" src="${rootPrefix}assets/Icons/button_arrow.svg" alt="">
             </a>
           </div>

@@ -13,7 +13,8 @@
     'Components/buttons.js',
     'Components/flow-canvas.js',
     'Components/apply-modal.js',
-    'Components/logo-lockup.js'
+    'Components/logo-lockup.js',
+    'Components/vacancy-card.js'
   ];
 
   scripts.forEach(src => {
