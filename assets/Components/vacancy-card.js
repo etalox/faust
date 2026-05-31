@@ -26,7 +26,7 @@
       }).filter(Boolean).join('');
 
       this.innerHTML = `
-        <div class="vacancy-item" data-type="${types}">
+        <div class="vacancy-item reveal-item" data-type="${types}">
           <div class="vacancy-info">
             <div class="vacancy-title-row">
               <h3 class="vacancy-title">${title}</h3>

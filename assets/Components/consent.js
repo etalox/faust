@@ -610,6 +610,18 @@ try {
 
   function checkScrollAndInit() {
     if (bannerDismissed) return;
+
+    const path = window.location.pathname.toLowerCase();
+    const isCareers = path.includes('/careers/') || path.endsWith('/careers');
+    if (isCareers && !faustIsStrictRegion()) {
+      const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
+      if (overlay && overlay.classList.contains('show')) {
+        overlay.classList.remove('show');
+        updateLegalNavBottom();
+      }
+      return;
+    }
+
     const scrollTop = getScrollTop();
     const showThreshold = 40;
     const hideThreshold = 2;
