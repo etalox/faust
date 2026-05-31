@@ -1,5 +1,15 @@
 (function() {
-  const currentScript = document.currentScript;
+  let currentScript = document.currentScript;
+  if (!currentScript) {
+    const allScripts = document.getElementsByTagName('script');
+    for (let i = 0; i < allScripts.length; i++) {
+      if (allScripts[i].src && allScripts[i].src.includes('components.js')) {
+        currentScript = allScripts[i];
+        break;
+      }
+    }
+  }
+
   let basePath = 'assets/';
   if (currentScript && currentScript.src) {
     const src = currentScript.src;
@@ -14,7 +24,8 @@
     'Components/flow-canvas.js',
     'Components/apply-modal.js',
     'Components/logo-lockup.js',
-    'Components/vacancy-card.js'
+    'Components/vacancy-card.js',
+    'Components/responsive-br.js'
   ];
 
   scripts.forEach(src => {
