@@ -358,17 +358,92 @@
         </div>
 
         <div class="vacancies-list" id="vacancies-container">
-          <faust-vacancy-card title="Lead Behavioral CRO Analyst" types="fulltime"
-            modality="full-time"></faust-vacancy-card>
-          <faust-vacancy-card title="Senior UX/UI Designer" types="fulltime freelance"
-            modality="full-time"></faust-vacancy-card>
-          <faust-vacancy-card title="Growth Front-End Engineer" types="fulltime freelance"
-            modality="full-time"></faust-vacancy-card>
-          <faust-vacancy-card title="Direct Response Copywriter" types="freelance"
-            modality="freelance"></faust-vacancy-card>
-          <faust-vacancy-card title="Consultor Experto en Economía Conductual" types="consulting"
-            modality="consulting"></faust-vacancy-card>
+          <!-- Vacancies will be loaded dynamically by the script below -->
         </div>
+        <script>
+          (function() {
+            var container = document.getElementById('vacancies-container');
+            if (!container) return;
+
+            var fallbackVacancies = [
+              { title: "Lead Behavioral CRO Analyst", types: "fulltime", modality: "full-time" },
+              { title: "Senior UX/UI Designer", types: "fulltime freelance", modality: "full-time" },
+              { title: "Growth Front-End Engineer", types: "fulltime freelance", modality: "full-time" },
+              { title: "Direct Response Copywriter", types: "freelance", modality: "freelance" },
+              { title: "Consultor Experto en Economía Conductual", types: "consulting", modality: "consulting" }
+            ];
+
+            function renderVacancies(vacancies) {
+              container.innerHTML = '';
+              vacancies.forEach(function(v) {
+                var card = document.createElement('faust-vacancy-card');
+                card.setAttribute('title', v.title);
+                card.setAttribute('types', v.types);
+                card.setAttribute('modality', v.modality);
+                container.appendChild(card);
+              });
+
+              // Trigger reveal animations for the newly added items
+              if (window.initReveal) {
+                window.initReveal();
+              }
+            }
+
+            function parseVacanciesText(text) {
+              var lines = text.split('\n');
+              var vacancies = [];
+              for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (!line || line.indexOf('#') === 0) continue;
+
+                var lastHyphenIdx = line.lastIndexOf('-');
+                if (lastHyphenIdx === -1) continue;
+
+                var title = line.substring(0, lastHyphenIdx).trim();
+                var rawTypes = line.substring(lastHyphenIdx + 1).trim();
+
+                var typesArray = rawTypes.split(',').map(function(t) {
+                  return t.trim().replace('-', '');
+                }).filter(Boolean);
+                var types = typesArray.join(' ');
+
+                var modality = 'full-time';
+                if (types.indexOf('fulltime') !== -1) {
+                  modality = 'full-time';
+                } else if (types.indexOf('freelance') !== -1) {
+                  modality = 'freelance';
+                } else if (types.indexOf('consulting') !== -1) {
+                  modality = 'consulting';
+                }
+
+                vacancies.push({ title: title, types: types, modality: modality });
+              }
+              return vacancies;
+            }
+
+            if (window.location.protocol === 'file:') {
+              renderVacancies(fallbackVacancies);
+            } else {
+              fetch('../live/vacancies.txt')
+                .then(function(res) {
+                  if (!res.ok) throw new Error('Failed to load vacancies.txt');
+                  return res.text();
+                })
+                .then(function(text) {
+                  var vacancies = parseVacanciesText(text);
+                  if (vacancies.length > 0) {
+                    renderVacancies(vacancies);
+                  } else {
+                    renderVacancies(fallbackVacancies);
+                  }
+                })
+                .catch(function(err) {
+                  console.warn("Could not fetch vacancies.txt from live, using fallback:", err);
+                  renderVacancies(fallbackVacancies);
+                });
+            }
+          })();
+        </script>
       </div>
     </section>
   </main>
@@ -734,6 +809,7 @@
 
       // Run immediately for parsed static items
       initReveal();
+      window.initReveal = initReveal;
 
       // Hook events
       window.addEventListener('DOMContentLoaded', initReveal);
