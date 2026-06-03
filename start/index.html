@@ -85,32 +85,93 @@
           <faust-btn-apply></faust-btn-apply>
           <faust-btn-strategy></faust-btn-strategy>
         </div>
-        <div class="stats">
-          <article class="stat reveal-item">
-            <div class="stat-heading">Impacto</div>
-            <div class="stat-number-wrap">
-              <h3>710 mil</h3>
-              <p class="title">Usuarios Impactados</p>
-            </div>
-            <p class="desc">Impactamos la experiencia de cientos de miles de usuarios a través de nuestras optimizaciones.</p>
-          </article>
-          <article class="stat reveal-item">
-            <div class="stat-heading">Partners</div>
-            <div class="stat-number-wrap">
-              <h3>5</h3>
-              <p class="title">Empresas en México</p>
-            </div>
-            <p class="desc">Nos asociamos con un selecto número de empresas en México y el resto del continente.</p>
-          </article>
-          <article class="stat reveal-item">
-            <div class="stat-heading">Resultados</div>
-            <div class="stat-number-wrap">
-              <h3>+35.9%</h3>
-              <p class="title">CRO (Conversión)</p>
-            </div>
-            <p class="desc">Es el porcentaje de tráfico que realiza una acción determinada en la plataforma.</p>
-          </article>
+        <div class="stats" id="stats-container">
+          <!-- Stats will be loaded dynamically by the script below -->
         </div>
+        <script>
+          (function() {
+            var container = document.getElementById('stats-container');
+            if (!container) return;
+
+            var fallbackStats = [
+              { name: "Impacto", number: "710 mil", title: "Usuarios Impactados", desc: "Impactamos la experiencia de cientos de miles de usuarios a través de nuestras optimizaciones." },
+              { name: "Partners", number: "5", title: "Empresas en México", desc: "Nos asociamos con un selecto número de empresas en México y el resto del continente." },
+              { name: "Resultados", number: "+35.9%", title: "CRO (Conversión)", desc: "Es el porcentaje de tráfico que realiza una acción determinada en la plataforma." }
+            ];
+
+            function renderStats(stats) {
+              container.innerHTML = '';
+              stats.forEach(function(s) {
+                var article = document.createElement('article');
+                article.className = 'stat reveal-item';
+                article.innerHTML = 
+                  '<div class="stat-heading">' + s.name + '</div>' +
+                  '<div class="stat-number-wrap">' +
+                    '<h3>' + s.number + '</h3>' +
+                    '<p class="title">' + s.title + '</p>' +
+                  '</div>' +
+                  '<p class="desc">' + s.desc + '</p>';
+                container.appendChild(article);
+              });
+
+              // Re-run reveal animations setup
+              if (window.initReveal) {
+                window.initReveal();
+              }
+            }
+
+            function parseStatsText(text) {
+              var lines = text.split('\n');
+              var stats = [];
+              for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (!line || line.indexOf('#') === 0) continue;
+
+                var lastHyphenIdx = line.lastIndexOf('-');
+                if (lastHyphenIdx === -1) continue;
+
+                var name = line.substring(0, lastHyphenIdx).trim();
+                var remaining = line.substring(lastHyphenIdx + 1).trim();
+
+                var parts = remaining.split('|').map(function(p) {
+                  return p.trim();
+                });
+
+                if (parts.length >= 3) {
+                  stats.push({
+                    name: name,
+                    number: parts[0],
+                    title: parts[1],
+                    desc: parts[2]
+                  });
+                }
+              }
+              return stats;
+            }
+
+            if (window.location.protocol === 'file:') {
+              renderStats(fallbackStats);
+            } else {
+              fetch('../live/metrics.txt')
+                .then(function(res) {
+                  if (!res.ok) throw new Error('Failed to load metrics.txt');
+                  return res.text();
+                })
+                .then(function(text) {
+                  var stats = parseStatsText(text);
+                  if (stats.length > 0) {
+                    renderStats(stats);
+                  } else {
+                    renderStats(fallbackStats);
+                  }
+                })
+                .catch(function(err) {
+                  console.warn("Could not fetch metrics.txt from live, using fallback:", err);
+                  renderStats(fallbackStats);
+                });
+            }
+          })();
+        </script>
       </div>
     </section>
 
@@ -895,10 +956,20 @@
         });
       }
 
-      revealItems.forEach(function(item) {
-        revealObserver.observe(item);
-        hideObserver.observe(item);
-      });
+      function initReveal() {
+        var items = document.querySelectorAll('.reveal-item:not([data-reveal-observed])');
+        items.forEach(function(item) {
+          item.setAttribute('data-reveal-observed', 'true');
+          if (!item.getAttribute('data-reveal-group')) {
+            groupIndex++;
+            item.setAttribute('data-reveal-group', 'rg-' + groupIndex);
+          }
+          revealObserver.observe(item);
+          hideObserver.observe(item);
+        });
+      }
+      window.initReveal = initReveal;
+      initReveal();
     })();
   </script>
 
