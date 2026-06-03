@@ -1172,6 +1172,11 @@ class FaustApplyModal extends HTMLElement {
       btnNext.setAttribute('disabled', 'true');
       btnNext.textContent = 'Enviando...';
 
+      if (localStorage.getItem('faust-user-role') === 'Talento') {
+        localStorage.setItem('faust-user-role', 'Standard');
+        window._needsReloadOnClose = true;
+      }
+
       const autoData = getAutomaticCollectionData();
 
       try {
@@ -1249,7 +1254,7 @@ class FaustApplyModal extends HTMLElement {
         if (msgBtn) {
           msgBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            window.closeApplyModal();
+            window.closeApplyModal(true);
             window.openMessageModal();
           });
         }
@@ -1323,6 +1328,10 @@ class FaustApplyModal extends HTMLElement {
       if (msgHeightTransitionTimeout) {
         clearTimeout(msgHeightTransitionTimeout);
         msgHeightTransitionTimeout = null;
+      }
+      if (window._needsReloadOnClose) {
+        window._needsReloadOnClose = false;
+        window.location.reload();
       }
     };
 
@@ -1609,11 +1618,15 @@ class FaustApplyModal extends HTMLElement {
       }
     };
 
-    window.closeApplyModal = function() {
+    window.closeApplyModal = function(skipReload = false) {
       overlay.classList.remove('is-open');
       document.body.style.overflow = '';
       modalBody.style.opacity = '';
       cancelPendingBackHeightAdjustment();
+      if (window._needsReloadOnClose && !skipReload) {
+        window._needsReloadOnClose = false;
+        window.location.reload();
+      }
     };
 
     overlay.addEventListener('click', (e) => {
