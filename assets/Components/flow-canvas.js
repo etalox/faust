@@ -548,6 +548,35 @@
   document.head.appendChild(style);
 })();
 
+// Global scroll speed tracker for flow canvases
+let globalScrollSpeed = 0;
+let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+let lastScrollTime = Date.now();
+let globalScrollTimeout = null;
+let globalDumbScrollTriggered = false;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY || 0;
+    const currentTime = Date.now();
+    const deltaY = Math.abs(currentScrollY - lastScrollY);
+    const deltaTime = currentTime - lastScrollTime;
+
+    if (deltaTime > 0) {
+      const instantSpeed = deltaY / deltaTime; // px/ms
+      globalScrollSpeed = globalScrollSpeed * 0.65 + instantSpeed * 0.35;
+    }
+
+    lastScrollY = currentScrollY;
+    lastScrollTime = currentTime;
+
+    if (globalScrollTimeout) clearTimeout(globalScrollTimeout);
+    globalScrollTimeout = setTimeout(() => {
+      globalScrollSpeed = 0;
+    }, 150);
+  }, { passive: true });
+}
+
 /* ==========================================================================
    ATOMS (ÁTOMOS)
    ========================================================================== */
@@ -1068,6 +1097,7 @@ class FaustFlowCanvas extends HTMLElement {
           this.clearTimers(); // Clear any stale timers first
           if (isReplay) {
             this._replayTimeout = setTimeout(() => {
+              this._hasPlayed = true;
               this._replayTimeout = null;
               this.stopLabelTracking();
               this.alignLabelsOnce();
@@ -1096,6 +1126,30 @@ class FaustFlowCanvas extends HTMLElement {
     const replayDuration = isCanvas2 ? 1800 : 2400;
 
     if (!this._hasPlayed) {
+      // If user scrolls fast (dumb scroll) before canvas enters, or if dumb scroll was triggered globally, trigger fast animation immediately
+      const isFastScroll = globalScrollSpeed > 1.5 || globalDumbScrollTriggered;
+      if (isFastScroll) {
+        globalDumbScrollTriggered = true;
+        this.classList.remove('animating', 'fast-replay');
+        void this.offsetWidth; // Force reflow
+        this.classList.add('animating', 'fast-replay');
+
+        this._animationStartTime = Date.now();
+        this._animationDuration = replayDuration;
+
+        this.startLabelTracking();
+        this.clearTimers();
+
+        this._replayTimeout = setTimeout(() => {
+          this._hasPlayed = true;
+          this._replayTimeout = null;
+          this.stopLabelTracking();
+          this.alignLabelsOnce();
+          this.startSweepLoop();
+        }, replayDuration);
+        return;
+      }
+
       // First play: normal animation
       this.classList.remove('fast-replay');
       this.classList.remove('animating');
@@ -1135,6 +1189,7 @@ class FaustFlowCanvas extends HTMLElement {
       this.clearTimers();
 
       this._replayTimeout = setTimeout(() => {
+        this._hasPlayed = true;
         this._replayTimeout = null;
         this.stopLabelTracking();
         this.alignLabelsOnce();

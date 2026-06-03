@@ -97,6 +97,11 @@
         const parent = node.parentNode;
         if (!parent) return;
 
+        const parentTagName = parent.tagName ? parent.tagName.toUpperCase() : '';
+        if (parentTagName === 'TITLE' || skipTags.includes(parentTagName) || (parent.closest && parent.closest('title, head, script, style, iframe, textarea'))) {
+          return;
+        }
+
         if (parent.closest && parent.closest('.notranslate, [translate="no"]')) {
           return;
         }
