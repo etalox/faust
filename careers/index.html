@@ -1703,7 +1703,7 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       
       // Render smaller and denser ASCII characters (approx 17px, matching body text) with a transparent background
-      const effect = new CustomAsciiEffect(renderer, ' .:-+/*=,', { 
+      const effect = new CustomAsciiEffect(renderer, ' .:-+/*=', { 
         resolution: 0.1176
       });
       effect.domElement.style.color = 'var(--fg)';
