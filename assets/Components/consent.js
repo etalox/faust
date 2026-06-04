@@ -95,6 +95,8 @@ const faustIsAnalyticsEnabled = () => {
       current = 'start/index.html';
     } else if (path.includes('/careers/') || path.endsWith('/careers')) {
       current = 'careers/index.html';
+    } else if (path.includes('/about/') || path.endsWith('/about')) {
+      current = 'about/index.html';
     } else {
       current = window.location.pathname.split('/').pop() || 'index.html';
       if (current === '' || current === 'es-MX' || current === 'en-US' || current === 'es-LA' || current === 'es-ES' || current === 'en-GB' || current === 'zh-CN' || current === 'pt' || current === 'fr' || current === 'ru') {
@@ -415,7 +417,7 @@ try {
 
     const getRootPrefix = () => {
       const path = window.location.pathname.toLowerCase();
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about')) {
         return '../';
       }
       return './';
