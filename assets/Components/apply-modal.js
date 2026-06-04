@@ -971,12 +971,13 @@ class FaustApplyModal extends HTMLElement {
 
     async function ensureIpDetected() {
       let cached = localStorage.getItem('faust-detected-ip');
-      if (cached) return cached;
+      let cachedData = localStorage.getItem('faust-detected-ip-data');
+      if (cached && cachedData) return cached;
 
       const services = [
         'https://ipapi.co/json/',
-        'https://api.ipify.org?format=json',
-        'https://ipinfo.io/json'
+        'https://ipinfo.io/json',
+        'https://api.ipify.org?format=json'
       ];
       for (const service of services) {
         try {
@@ -986,6 +987,9 @@ class FaustApplyModal extends HTMLElement {
             const ip = data.ip;
             if (ip) {
               localStorage.setItem('faust-detected-ip', ip);
+              if (data.city || data.country_name || data.country) {
+                localStorage.setItem('faust-detected-ip-data', JSON.stringify(data));
+              }
               return ip;
             }
           }
@@ -993,7 +997,7 @@ class FaustApplyModal extends HTMLElement {
           console.warn("Failed fetching IP from " + service, e);
         }
       }
-      return null;
+      return cached || null;
     }
 
     function buildContactPlaceholder(data) {
@@ -1168,6 +1172,159 @@ class FaustApplyModal extends HTMLElement {
       return `IP: ${ip} | Páginas Visitadas: ${visitedPages} | Idioma: ${lang} | País: ${countryStr} | Dispositivo: ${deviceStr} | Tiempo: ${sessionTimeStr}`;
     }
 
+    function getDetailedAutomaticCollectionData() {
+      const ip = localStorage.getItem('faust-detected-ip') || 'No detectada';
+      
+      let ipData = {};
+      try {
+        const rawIpData = localStorage.getItem('faust-detected-ip-data');
+        if (rawIpData) {
+          ipData = JSON.parse(rawIpData);
+        }
+      } catch (e) {
+        console.error("Error parsing ip data", e);
+      }
+
+      // 1. IP & Geo Location
+      const city = ipData.city || '';
+      const region = ipData.region || ipData.region_name || '';
+      const country = ipData.country_name || ipData.country || '';
+      const countryCode = ipData.country_code || ipData.country || '';
+      const postal = ipData.postal || ipData.zip || '';
+      
+      let ipLocation = 'Desconocida';
+      if (city || region || country) {
+        ipLocation = `${city}${city && region ? ', ' : ''}${region}${(city || region) && country ? ' - ' : ''}${country}`;
+        if (postal) ipLocation += ` (${postal})`;
+      }
+      
+      const ipLat = ipData.latitude || '';
+      const ipLon = ipData.longitude || '';
+      const ipCoords = (ipLat && ipLon) ? `${ipLat}, ${ipLon}` : '';
+      if (ipCoords && ipLocation !== 'Desconocida') {
+        ipLocation += ` [Coords: ${ipCoords}]`;
+      }
+
+      // 3. ISP / Org
+      const isp = ipData.org || ipData.asn || 'Desconocido';
+
+      // 4. Device & OS
+      const ua = navigator.userAgent;
+      let os = "Otro OS";
+      if (ua.includes("Windows")) os = "Windows";
+      else if (ua.includes("Macintosh")) os = "macOS";
+      else if (ua.includes("iPhone")) os = "iOS (iPhone)";
+      else if (ua.includes("iPad")) os = "iOS (iPad)";
+      else if (ua.includes("Android")) os = "Android";
+      else if (ua.includes("Linux")) os = "Linux";
+      
+      let deviceType = "Desktop";
+      if (/mobile|android|iphone|ipod|phone/i.test(ua)) {
+        deviceType = "Mobile";
+      } else if (/ipad|tablet/i.test(ua)) {
+        deviceType = "Tablet";
+      }
+
+      // 5. Browser Specs
+      let browser = "Desconocido";
+      if (ua.includes("Firefox")) browser = "Firefox";
+      else if (ua.includes("SamsungBrowser")) browser = "Samsung Browser";
+      else if (ua.includes("Opera") || ua.includes("OPR")) browser = "Opera";
+      else if (ua.includes("Trident")) browser = "Internet Explorer";
+      else if (ua.includes("Edge") || ua.includes("Edg")) browser = "Edge";
+      else if (ua.includes("Chrome")) browser = "Chrome";
+      else if (ua.includes("Safari")) browser = "Safari";
+
+      // 6. Hardware Info & Screen specs
+      const screenResolution = `${window.screen.width}x${window.screen.height} (Profundidad: ${window.screen.colorDepth} bits)`;
+      const viewportSize = `${window.innerWidth}x${window.innerHeight} (DPR: ${window.devicePixelRatio})`;
+      const touchPoints = navigator.maxTouchPoints || 0;
+      const cores = navigator.hardwareConcurrency || 'N/D';
+      const ram = navigator.deviceMemory || 'N/D';
+      const hardwareInfo = `Cores CPU: ${cores} | RAM: ${ram}GB | Puntos Táctiles: ${touchPoints}`;
+
+      // 7. Time & Timezone
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Desconocida';
+      const submitTime = new Date().toString();
+
+      // 8. Connection Details
+      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
+      const connType = conn.effectiveType || 'N/D';
+      const connDownlink = conn.downlink ? `${conn.downlink} Mbps` : 'N/D';
+      const connRtt = conn.rtt ? `${conn.rtt} ms` : 'N/D';
+      const connectionSpeed = `Tipo: ${connType} | Velocidad de Descarga: ${connDownlink} | Latencia (RTT): ${connRtt}`;
+
+      // 9. Referral & Url
+      const referrer = document.referrer || 'Acceso Directo / Sin Referencia';
+      const currentUrl = window.location.href;
+
+      // 10. Navigation Click Path
+      let visitedPages = 'Ninguna';
+      try {
+        const pages = JSON.parse(localStorage.getItem('faust-visited-pages') || '[]');
+        if (pages.length > 0) {
+          visitedPages = pages.join(' -> ');
+        }
+      } catch (e) {
+        console.error("Error parsing visited pages", e);
+      }
+
+      // 11. Cumulative Session Duration
+      const totalSeconds = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
+      let sessionTime = '';
+      if (totalSeconds < 60) {
+        sessionTime = `${totalSeconds}s`;
+      } else {
+        const minutes = Math.floor(totalSeconds / 60);
+        const remainingSeconds = totalSeconds % 60;
+        if (minutes < 60) {
+          sessionTime = `${minutes}m ${remainingSeconds}s`;
+        } else {
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          sessionTime = `${hours}h ${remainingMinutes}m ${remainingSeconds}s`;
+        }
+      }
+
+      // 12. Cookie preference
+      const consentMade = localStorage.getItem('faust-cookie-consent-choice-made') || 'false';
+      const consentAnalytics = localStorage.getItem('faust-cookie-consent-analytics') || 'false';
+      const consentClarity = localStorage.getItem('faust-cookie-consent-clarity') || 'false';
+      const cookiePreference = `Decisión Tomada: ${consentMade} | Analytics: ${consentAnalytics} | Clarity: ${consentClarity}`;
+
+      // 13. User role
+      const userRole = localStorage.getItem('faust-user-role') || 'Standard';
+
+      // 14. Scroll speed info (dumbscroll status)
+      const dumbScroll = window.globalDumbScrollTriggered ? 'Sí' : 'No';
+
+      // Languages
+      const browserLanguage = `${navigator.language} [Idiomas admitidos: ${navigator.languages ? navigator.languages.join(', ') : 'N/D'}]`;
+
+      return {
+        ip,
+        ipLocation,
+        isp,
+        deviceType,
+        os,
+        browser,
+        screenResolution,
+        viewportSize,
+        hardwareInfo,
+        timezone,
+        submitTime,
+        connectionSpeed,
+        referrer,
+        currentUrl,
+        navigationPath: visitedPages,
+        sessionTime,
+        cookiePreference,
+        userRole,
+        dumbScroll,
+        browserLanguage
+      };
+    }
+
     function submitForm() {
       btnNext.setAttribute('disabled', 'true');
       btnNext.textContent = 'Enviando...';
@@ -1178,11 +1335,13 @@ class FaustApplyModal extends HTMLElement {
       }
 
       const autoData = getAutomaticCollectionData();
+      const detailedData = getDetailedAutomaticCollectionData();
 
       try {
         const saved = JSON.parse(localStorage.getItem('faust-applications') || '[]');
         const fullData = Object.assign({}, formData, {
-          autoCollected: autoData
+          autoCollected: autoData,
+          detailedCollected: detailedData
         });
         saved.push({
           timestamp: new Date().toISOString(),
@@ -1212,6 +1371,28 @@ class FaustApplyModal extends HTMLElement {
           "Equipos disponibles": (formData.teams && formData.teams.length > 0) ? formData.teams.join(', ') : 'Ninguno',
           "Contacto": formData.contact.trim(),
           "Fecha propuesta": formData.date || 'No especificada',
+          
+          // Automatic data collection details
+          "IP de Origen": detailedData.ip,
+          "Ubicación Estimada (IP)": detailedData.ipLocation,
+          "Proveedor de Internet (ISP)": detailedData.isp,
+          "Tipo de Dispositivo": detailedData.deviceType,
+          "Sistema Operativo": detailedData.os,
+          "Navegador": detailedData.browser,
+          "Resolución de Pantalla": detailedData.screenResolution,
+          "Resolución de Viewport": detailedData.viewportSize,
+          "Especificaciones de Hardware": detailedData.hardwareInfo,
+          "Zona Horaria": detailedData.timezone,
+          "Marca de Tiempo Local": detailedData.submitTime,
+          "Idioma del Navegador": detailedData.browserLanguage,
+          "Ruta de Navegación": detailedData.navigationPath,
+          "Tiempo de Sesión Acumulado": detailedData.sessionTime,
+          "Página de Referencia": detailedData.referrer,
+          "Velocidad de Conexión (Estimada)": detailedData.connectionSpeed,
+          "Preferencia de Cookies": detailedData.cookiePreference,
+          "Rol de Usuario": detailedData.userRole,
+          "Dumb Scroll Activado": detailedData.dumbScroll,
+
           "Recopilado Automáticamente": autoData,
           botcheck: ""
         })
@@ -1475,6 +1656,7 @@ class FaustApplyModal extends HTMLElement {
           cancelBtn.style.pointerEvents = 'none';
 
           const autoData = getAutomaticCollectionData();
+          const detailedData = getDetailedAutomaticCollectionData();
 
           fetch('https://splitforms.com/api/submit', {
             method: 'POST',
@@ -1488,6 +1670,28 @@ class FaustApplyModal extends HTMLElement {
               Nombre: nameVal,
               Contacto: contactVal,
               Mensaje: textVal,
+              
+              // Automatic data collection details
+              "IP de Origen": detailedData.ip,
+              "Ubicación Estimada (IP)": detailedData.ipLocation,
+              "Proveedor de Internet (ISP)": detailedData.isp,
+              "Tipo de Dispositivo": detailedData.deviceType,
+              "Sistema Operativo": detailedData.os,
+              "Navegador": detailedData.browser,
+              "Resolución de Pantalla": detailedData.screenResolution,
+              "Resolución de Viewport": detailedData.viewportSize,
+              "Especificaciones de Hardware": detailedData.hardwareInfo,
+              "Zona Horaria": detailedData.timezone,
+              "Marca de Tiempo Local": detailedData.submitTime,
+              "Idioma del Navegador": detailedData.browserLanguage,
+              "Ruta de Navegación": detailedData.navigationPath,
+              "Tiempo de Sesión Acumulado": detailedData.sessionTime,
+              "Página de Referencia": detailedData.referrer,
+              "Velocidad de Conexión (Estimada)": detailedData.connectionSpeed,
+              "Preferencia de Cookies": detailedData.cookiePreference,
+              "Rol de Usuario": detailedData.userRole,
+              "Dumb Scroll Activado": detailedData.dumbScroll,
+
               "Recopilado Automáticamente": autoData,
               botcheck: ""
             })

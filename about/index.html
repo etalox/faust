@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Faust Partners™ es el Growth Partner de Optimización CRO #1 en México. Conoce más sobre nuestra filosofía, nuestra metodología basada en neurociencia conductual y nuestro enfoque científico de conversión A/B.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre nosotros | Faust Partners™</title>
+  <link rel="icon" type="image/png" href="../assets/Icons/tab_icon.png">
+  <script src="../assets/translation.js" defer></script>
+  <script src="../assets/components.js" defer></script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Page specific overrides or styles */
+    .about-hero {
+      padding-top: 180px;
+      padding-bottom: 120px;
+      text-align: center;
+    }
+    
+    .about-hero h1 {
+      margin-bottom: 24px;
+    }
+    
+    .about-hero p {
+      max-width: 800px;
+      margin: 0 auto 48px;
+      font-size: 20px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .about-hero .btn-row {
+      justify-content: center;
+    }
+    
+    /* Grid system for pillars */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 60px;
+    }
+    
+    .pillar-card {
+      background: rgba(253, 253, 255, 0.04);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 40px;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+    
+    .pillar-card:hover {
+      background: rgba(253, 253, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-4px);
+    }
+    
+    .pillar-number {
+      font-size: 14px;
+      color: var(--blue);
+      font-weight: 600;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .pillar-card h3 {
+      font-size: 24px;
+      font-weight: 500;
+      margin: 0 0 16px 0;
+      color: #fff;
+    }
+    
+    .pillar-card p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0;
+    }
+    
+    /* Selectivity section layout */
+    .focus-block {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 80px;
+    }
+    
+    .focus-content {
+      flex: 1;
+    }
+    
+    .focus-stat {
+      flex-shrink: 0;
+      width: 320px;
+      background: rgba(253, 253, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .focus-stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    }
+    
+    .focus-stat h3 {
+      font-size: 96px;
+      font-weight: 400;
+      line-height: 1;
+      margin: 0 0 16px 0;
+      background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.4) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .focus-stat p {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    @media (max-width: 1024px) {
+      .pillars-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .focus-block {
+        flex-direction: column;
+        gap: 40px;
+      }
+      .focus-stat {
+        width: 100%;
+        padding: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-fade-overlay"></div>
+  
+  <faust-navbar></faust-navbar>
+  
+  <main>
+    <!-- Section 1: Hero -->
+    <section class="hero wrap about-hero" id="hero">
+      <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
+      <h1 class="reveal-item">Ciencia y diseño para<br>escalar la conversión.</h1>
+      <p class="reveal-item">Ayudamos a las empresas más grandes de México a eliminar la incertidumbre en sus canales digitales.</p>
+      <div class="btn-row reveal-item">
+        <faust-btn-apply></faust-btn-apply>
+        <faust-btn-message></faust-btn-message>
+      </div>
+    </section>
+
+    <!-- Section 2: Philosophy (Sequential Text Lighting Effect) -->
+    <section class="section" id="filosofia">
+      <div class="wrap wrap-narrow">
+        <div class="pill reveal-item">/ Filosofía</div>
+        <h2 class="lead reveal-item">
+          <div class="lead-title" style="display: inline;">Nuestra Filosofía. </div>
+          <div class="muted" style="display: inline;">Combinamos el rigor científico de la neurociencia conductual con el diseño de interfaces de alta fidelidad. No operamos bajo intuición. Cada cambio, cada flujo y cada palabra se valida a través de testing A/B riguroso para asegurar que tu plataforma alcance su máximo potencial de conversión.</div>
+        </h2>
+        <div class="btn-row reveal-item" style="margin-top: 40px;">
+          <faust-btn-strategy></faust-btn-strategy>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Core Pillars -->
+    <section class="section" id="pilares">
+      <div class="wrap">
+        <div class="pill reveal-item">/ Pilares</div>
+        <h2 class="headline reveal-item">Metodología de tres capas.</h2>
+        <div class="pillars-grid">
+          <div class="pillar-card reveal-item">
+            <div class="pillar-number">01 / Psicología</div>
+            <h3>Neurociencia Conductual</h3>
+            <p>Modelamos y alineamos flujos digitales basándonos en cómo decide el cerebro humano. Aplicamos sesgos cognitivos e incentivos del comportamiento para reducir la fricción en el momento exacto.</p>
+          </div>
+          <div class="pillar-card reveal-item">
+            <div class="pillar-number">02 / Datos</div>
+            <h3>Testing A/B Científico</h3>
+            <p>No adivinamos ni nos basamos en tendencias pasajeras. Cada optimización se valida de forma controlada mediante experimentos A/B que demuestran significancia estadística inequívoca.</p>
+          </div>
+          <div class="pillar-card reveal-item">
+            <div class="pillar-number">03 / Código</div>
+            <h3>Ingeniería Growth</h3>
+            <p>Escribimos código eficiente y ágil para asegurar una performance premium. La velocidad de carga y la estabilidad técnica de las interfaces de variantes impactan de forma directa en las conversiones.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Focus & Selectivity -->
+    <section class="section" id="enfoque">
+      <div class="wrap">
+        <div class="pill reveal-item">/ Selectividad</div>
+        <div class="focus-block">
+          <div class="focus-content">
+            <h2 class="headline reveal-item" style="margin-bottom: 24px;">Enfoque absoluto.<br>Menos partners, más impacto.</h2>
+            <p class="sub reveal-item" style="max-width: 680px; margin: 0; font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.6);">A diferencia de las agencias tradicionales, no trabajamos con docenas de clientes a la vez. Limitamos nuestra capacidad a un selecto número de partners en México para involucrarnos al 100% en el diseño, análisis e ingeniería de sus plataformas.</p>
+          </div>
+          <div class="focus-stat reveal-item">
+            <h3>5</h3>
+            <p>Empresas simultáneas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Call to Action -->
+    <section class="cta section" id="contacto">
+      <div class="wrap" style="display: flex; justify-content: center;">
+        <div class="Bloque" style="width: 100%; flex-direction: column; justify-content: flex-start; align-items: center; gap: 50px; display: flex">
+          <div class="Frame219 reveal-item" style="width: 322px; height: 20px; position: relative">
+            <div class="LogoContainer" style="left: 85px; top: 0px; position: absolute; justify-content: center; align-items: center; gap: 10px; display: inline-flex; color: white;">
+              <svg class="FaustLogo" width="34" height="20" viewBox="0 0 34 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 34px; height: 20px; flex-shrink: 0; color: white;">
+                <path d="M0 6.00006V10.0001L34 4.00006V0L0 6.00006Z" fill="currentColor"/>
+                <path d="M4.95729 11.1252C2.09014 11.6312 0 14.1225 0 17.0339V20H4V15.2941L34 10.0001V6.00006L4.95729 11.1252Z" fill="currentColor"/>
+              </svg>
+              <span class="Title" style="color: #F2F2F2; font-size: 14px; font-family: BDO Grotesk, sans-serif; font-weight: 500; letter-spacing: 0.28px; line-height: normal; word-wrap: break-word;">FaustPartners™</span>
+            </div>
+          </div>
+          <h2 class="FinancingText3 headline reveal-item" style="align-self: stretch; text-box-trim: trim-both; text-box-edge: cap alphabetic; text-align: center; justify-content: center; display: flex; flex-direction: column; color: #F2F2F2; font-size: clamp(44px, 7vw, 86px); font-family: BDO Grotesk, sans-serif; font-weight: 400; line-height: 1.02; letter-spacing: -1.8px; word-wrap: break-word; margin: 0;">Maximiza tus ingresos.<br/>Cero riesgos.</h2>
+          <div class="ButtonsContainer btn-row reveal-item" style="justify-content: center;">
+            <faust-btn-apply></faust-btn-apply>
+            <faust-btn-message></faust-btn-message>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <faust-footer></faust-footer>
+  <faust-apply-modal></faust-apply-modal>
+
+  <!-- Page Fade Script -->
+  <script>
+    if (document.readyState === 'complete') {
+      document.body.classList.add('is-ready');
+    } else {
+      window.addEventListener('load', function() {
+        document.body.classList.add('is-ready');
+      });
+    }
+  </script>
+
+  <!-- Text highlight scroll animation -->
+  <script>
+    (() => {
+      let leadSpan = document.querySelector('.lead .muted');
+      const targetElement = document.querySelector('.lead');
+      if (!leadSpan || !targetElement) return;
+
+      const originalSpanishText = leadSpan.textContent.trim().replace(/\s+/g, ' ').toLowerCase();
+      let observer;
+      let wordSpans = [];
+      let lastText = '';
+      let rebuildTimeout = null;
+      const cjkRegex = /[\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff]/;
+
+      function tokenizeText(text) {
+        const tokens = [];
+        let currentWord = "";
+        const normalized = text.trim().replace(/\s+/g, " ");
+
+        for (let i = 0; i < normalized.length; i++) {
+          const char = normalized[i];
+          if (cjkRegex.test(char)) {
+            if (currentWord) {
+              tokens.push(currentWord);
+              currentWord = "";
+            }
+            tokens.push(char);
+          } else if (char === " ") {
+            if (currentWord) {
+              tokens.push(currentWord);
+              currentWord = "";
+            }
+          } else {
+            currentWord += char;
+          }
+        }
+        if (currentWord) {
+          tokens.push(currentWord);
+        }
+        return tokens;
+      }
+
+      function rebuildSpans() {
+        const text = leadSpan.textContent;
+        const cleanText = text.trim().replace(/\s+/g, ' ');
+        if (cleanText === lastText) return;
+        
+        lastText = cleanText;
+        const chunks = tokenizeText(cleanText);
+        
+        if (observer) observer.disconnect();
+
+        // Create a new clone to avoid Google Translate's observer restoration loop
+        const newLeadSpan = document.createElement(leadSpan.tagName.toLowerCase());
+        newLeadSpan.className = leadSpan.className;
+        if (leadSpan.hasAttribute('style')) {
+          newLeadSpan.setAttribute('style', leadSpan.getAttribute('style'));
+        }
+        
+        const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
+        const isSpanish = (savedNative === 'Español');
+        const isTextOriginal = (cleanText.toLowerCase() === originalSpanishText);
+
+        // Only block translations (adding notranslate) once Google Translate has successfully translated the text
+        if (!isSpanish && !isTextOriginal) {
+          newLeadSpan.classList.add('notranslate');
+          newLeadSpan.setAttribute('translate', 'no');
+        } else {
+          newLeadSpan.classList.remove('notranslate');
+          newLeadSpan.removeAttribute('translate');
+        }
+
+        wordSpans = [];
+        chunks.forEach(chunk => {
+          if (chunk) {
+            const span = document.createElement('span');
+            span.className = 'scroll-word';
+            const isCjk = cjkRegex.test(chunk);
+            span.textContent = chunk + (isCjk ? '' : ' '); 
+            span.style.color = '#4A4B4F';
+            span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+            newLeadSpan.appendChild(span);
+            wordSpans.push(span);
+          }
+        });
+
+        leadSpan.parentNode.replaceChild(newLeadSpan, leadSpan);
+        leadSpan = newLeadSpan;
+
+        if (observer) observer.observe(leadSpan, { childList: true, subtree: true, characterData: true });
+        
+        updateScrollText();
+      }
+
+      function updateScrollText() {
+        if (!wordSpans.length) return;
+        const rect = targetElement.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        const start = viewportHeight * 0.60;
+        const end = viewportHeight * 0.35;
+
+        let globalProgress = (start - rect.top) / (start - end);
+        globalProgress = Math.max(0, Math.min(1, globalProgress));
+
+        const W = wordSpans.length;
+        const targetWordsLit = globalProgress * W;
+
+        wordSpans.forEach((span, i) => {
+          let wordProgress = targetWordsLit - i;
+          wordProgress = Math.max(0, Math.min(1, wordProgress));
+
+          if (wordProgress === 1) {
+            span.style.color = 'rgb(255, 255, 255)';
+          } else if (wordProgress === 0) {
+            span.style.color = 'rgb(74, 75, 79)';
+          } else {
+            const r = Math.round(74 + (255 - 74) * wordProgress);
+            const g = Math.round(75 + (255 - 75) * wordProgress);
+            const b = Math.round(79 + (255 - 79) * wordProgress);
+            span.style.color = `rgb(${r}, ${g}, ${b})`;
+          }
+        });
+      }
+
+      // Observe mutations (e.g. from Google Translate)
+      observer = new MutationObserver(() => {
+        if (rebuildTimeout) clearTimeout(rebuildTimeout);
+        rebuildTimeout = setTimeout(() => {
+          rebuildSpans();
+        }, 100);
+      });
+
+      // Initial build
+      rebuildSpans();
+
+      document.body.addEventListener('scroll', updateScrollText, { passive: true });
+      window.addEventListener('scroll', updateScrollText, { passive: true });
+      window.addEventListener('resize', updateScrollText);
+
+      updateScrollText();
+
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+
+      window.addEventListener('pageshow', (event) => {
+        let isReload = false;
+        if (event.persisted) {
+          isReload = true;
+        } else {
+          const perfEntries = performance.getEntriesByType("navigation");
+          if (perfEntries.length > 0 && perfEntries[0].type === "reload") {
+            isReload = true;
+          }
+        }
+        if (isReload) {
+          const style = document.getElementById('faust-no-transitions-style');
+          if (style) style.remove();
+        }
+      });
+    })();
+  </script>
+
+  <!-- Scroll-triggered reveal animations script (Precision Match with careers/index.html) -->
+  <script>
+    (function () {
+      // 1. Dynamic scroll speed calculation
+      var lastScroll = window.scrollY;
+      var lastTime = Date.now();
+      var scrollSpeed = 0;
+      var scrollTimeout = null;
+
+      function updateScrollSpeed() {
+        var currentScroll = window.scrollY;
+        var currentTime = Date.now();
+        var deltaY = Math.abs(currentScroll - lastScroll);
+        var deltaTime = currentTime - lastTime;
+
+        if (deltaTime > 0) {
+          var instantSpeed = deltaY / deltaTime;
+          scrollSpeed = scrollSpeed * 0.65 + instantSpeed * 0.35;
+        }
+
+        lastScroll = currentScroll;
+        lastTime = currentTime;
+
+        var duration = 1.6 - Math.min(1.1, scrollSpeed / 3.2) * 1.0;
+        document.documentElement.style.setProperty('--reveal-duration', duration.toFixed(2) + 's');
+
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function () {
+          scrollSpeed = 0;
+          document.documentElement.style.setProperty('--reveal-duration', '1.6s');
+        }, 150);
+      }
+
+      document.documentElement.style.setProperty('--reveal-duration', '1.6s');
+      window.addEventListener('scroll', updateScrollSpeed, { passive: true });
+
+      // 3. Bidirectional reveal observer
+      var revealObserverOptions = {
+        root: null,
+        rootMargin: '-120px 0px -180px 0px',
+        threshold: 0.02
+      };
+
+      var revealObserver = new IntersectionObserver(function (entries) {
+        var groupsToReveal = {};
+
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var groupId = entry.target.getAttribute('data-reveal-group');
+            groupsToReveal[groupId] = true;
+          }
+        });
+
+        var enteringElements = [];
+        Object.keys(groupsToReveal).forEach(function (groupId) {
+          var groupElements = document.querySelectorAll('[data-reveal-group="' + groupId + '"]');
+          groupElements.forEach(function (el) {
+            if (!el.classList.contains('reveal-visible')) {
+              enteringElements.push(el);
+            }
+          });
+        });
+
+        if (enteringElements.length > 0) {
+          if (!document.body.classList.contains('is-ready')) {
+            setTimeout(function () {
+              var stillEntering = enteringElements.filter(function (el) {
+                return !el.classList.contains('reveal-visible');
+              });
+              if (stillEntering.length > 0) {
+                revealElements(stillEntering);
+              }
+            }, 550);
+          } else {
+            revealElements(enteringElements);
+          }
+        }
+      }, revealObserverOptions);
+
+      var hideObserverOptions = {
+        root: null,
+        rootMargin: '0px 0px 0px 0px',
+        threshold: 0
+      };
+
+      var hideObserver = new IntersectionObserver(function (entries) {
+        var groupsToHide = {};
+
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) {
+            var groupId = entry.target.getAttribute('data-reveal-group');
+            groupsToHide[groupId] = true;
+          }
+        });
+
+        Object.keys(groupsToHide).forEach(function (groupId) {
+          var groupElements = Array.from(document.querySelectorAll('[data-reveal-group="' + groupId + '"]'));
+          var isAnyVisible = groupElements.some(function (el) {
+            var rect = el.getBoundingClientRect();
+            return rect.bottom > 0 && rect.top < window.innerHeight;
+          });
+
+          if (!isAnyVisible) {
+            var isBelowViewport = groupElements.every(function (el) {
+              var rect = el.getBoundingClientRect();
+              return rect.top >= window.innerHeight;
+            });
+
+            if (isBelowViewport) {
+              groupElements.forEach(function (el) {
+                el.classList.remove('reveal-visible');
+                el.style.transitionDelay = '0ms';
+              });
+            }
+          }
+        });
+      }, hideObserverOptions);
+
+      function revealElements(elements) {
+        elements.sort(function (a, b) {
+          var rectA = a.getBoundingClientRect();
+          var rectB = b.getBoundingClientRect();
+          if (Math.abs(rectA.top - rectB.top) < 10) {
+            return rectA.left - rectB.left;
+          }
+          return rectA.top - rectB.top;
+        });
+
+        var currentDelay = 0;
+        var isHero = elements.length > 0 && elements[0].closest('.hero') !== null;
+        var baseStagger = isHero ? 150 : 100;
+
+        elements.forEach(function (el, index) {
+          if (index > 0) {
+            var prevEl = elements[index - 1];
+            var isPrevHeader = prevEl.tagName === 'H1' || prevEl.tagName === 'H2' ||
+              prevEl.classList.contains('headline') || prevEl.classList.contains('lead');
+            var isCurrentHeader = el.tagName === 'H1' || el.tagName === 'H2' ||
+              el.classList.contains('headline') || el.classList.contains('lead');
+
+            if (isPrevHeader) {
+              currentDelay += 160;
+            } else if (isCurrentHeader) {
+              currentDelay += 160;
+            } else {
+              currentDelay += baseStagger;
+            }
+          }
+          el.style.transitionDelay = currentDelay + 'ms';
+          el.classList.add('reveal-visible');
+
+          (function (element, delay) {
+            setTimeout(function () {
+              element.style.transitionDelay = '';
+            }, delay + 1200);
+          })(el, currentDelay);
+        });
+      }
+
+      function initReveal() {
+        var revealItems = document.querySelectorAll('.reveal-item:not([data-reveal-observed])');
+        if (revealItems.length === 0) return;
+
+        var sectionsMap = {};
+        revealItems.forEach(function (item) {
+          item.setAttribute('data-reveal-observed', 'true');
+          var section = item.closest('section') || item.closest('footer') || document.body;
+          var sectionId = section.id || section.className || 'default-section';
+          var cleanId = sectionId.replace(/[\s,#]/g, '-');
+          if (!sectionsMap[cleanId]) {
+            sectionsMap[cleanId] = [];
+          }
+          sectionsMap[cleanId].push(item);
+        });
+
+        Object.keys(sectionsMap).forEach(function (sectionId) {
+          var section = document.getElementById(sectionId) || document.querySelector('.' + sectionId) || document.body;
+          var groupIndex = section.getAttribute('data-reveal-group-idx');
+          if (!groupIndex) {
+            window.globalGroupIndex = (window.globalGroupIndex || 0) + 1;
+            groupIndex = 'rg-' + window.globalGroupIndex;
+            section.setAttribute('data-reveal-group-idx', groupIndex);
+          }
+
+          sectionsMap[sectionId].forEach(function (el) {
+            el.setAttribute('data-reveal-group', groupIndex);
+            revealObserver.observe(el);
+            hideObserver.observe(el);
+          });
+        });
+      }
+
+      initReveal();
+      window.initReveal = initReveal;
+
+      window.addEventListener('DOMContentLoaded', initReveal);
+      window.addEventListener('load', initReveal);
+    })();
+  </script>
+</body>
+</html>

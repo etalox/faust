@@ -13,7 +13,7 @@ class FaustFooter extends HTMLElement {
   render() {
     const getRootPrefix = () => {
       const path = window.location.pathname.toLowerCase();
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about')) {
         return '../';
       }
       return './';
@@ -498,7 +498,7 @@ class FaustFooter extends HTMLElement {
             <div class="footer-col">
               <h4>Empresa</h4>
               <div class="footer-col-links">
-                <a href="${rootPrefix}start/index.html#">Sobre nosotros</a>
+                <a href="${rootPrefix}about/index.html">Sobre nosotros</a>
                 <a href="${rootPrefix}start/index.html#">Contacto</a>
                 <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
                 ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Deseo Invertir</a>`}

@@ -20,7 +20,7 @@ class FaustNavbar extends HTMLElement {
 
     const path = window.location.pathname.toLowerCase();
     const getRootPrefix = () => {
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers')) {
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about')) {
         return '../';
       }
       return './';
@@ -491,7 +491,7 @@ class FaustNavbar extends HTMLElement {
             <a href="${startHref}#estrategia">Estrategia</a>
             <a href="${startHref}#resultados">Resultados</a>
             <a href="${startHref}#expertos">Expertos</a>
-            <a href="${startHref}#empresa">Empresa</a>
+            <a href="${rootPrefix}about/index.html">Empresa</a>
           </div>
           <div class="nav-right">
             <a id="nav-contacto" href="${startHref}#contacto" style="user-select: none !important;">Contacto</a>
