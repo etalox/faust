@@ -238,7 +238,7 @@
       const fpsInterval = 1000 / fps;
 
       function animate(now) {
-        if (!isVisible) {
+        if (!isVisible || document.hidden) {
           animFrameId = null;
           return;
         }
@@ -286,10 +286,18 @@
         }
       }
 
+      const handleVisibilityChange = () => {
+        if (!document.hidden && isVisible && !animFrameId) {
+          lastTime = performance.now();
+          animate(lastTime);
+        }
+      };
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           isVisible = entry.isIntersecting;
-          if (isVisible && !animFrameId) {
+          if (isVisible && !document.hidden && !animFrameId) {
             lastTime = performance.now();
             animate(lastTime);
           }
@@ -305,6 +313,7 @@
         }
         window.removeEventListener('mousemove', this._onMouseMove);
         window.removeEventListener('resize', this._onResize);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
         observer.disconnect();
         try {
           renderer.dispose();
