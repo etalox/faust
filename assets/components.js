@@ -25,7 +25,8 @@
     'Components/apply-modal.js',
     'Components/logo-lockup.js',
     'Components/vacancy-card.js',
-    'Components/responsive-br.js'
+    'Components/responsive-br.js',
+    'Components/ascii-bg.js'
   ];
 
   scripts.forEach(src => {
