@@ -30,8 +30,8 @@
       if (!window.THREE) {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
       }
-      if (!window.THREE.GLTFLoader) {
-        await loadScript('https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js');
+      if (!window.THREE.STLLoader) {
+        await loadScript('https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/STLLoader.js');
       }
     })();
     return loadingPromise;
@@ -186,7 +186,7 @@
         const sphere = geometry.boundingSphere;
         const radius = sphere.radius;
         
-        const scaleFactor = 300 / radius;
+        const scaleFactor = 100 / radius;
         mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
         
         // Tilt forward slightly for a nice 3D presentation angle
@@ -195,41 +195,17 @@
         group.add(mesh);
       }
 
-      const loader = new THREE.GLTFLoader();
+      const loader = new THREE.STLLoader();
       if (window.location.protocol === 'file:') {
         // Fallback geometry if opened locally via file:// due to CORS
-        const geometry = new THREE.SphereGeometry(15, 16, 16);
+        const geometry = new THREE.TorusKnotGeometry(12, 3.5, 120, 16);
         createMesh(geometry);
       } else {
-        loader.load(rootPrefix + 'assets/fibonacci_sphere.glb', function (gltf) {
-          const model = gltf.scene;
-          
-          model.traverse((child) => {
-            if (child.isMesh) {
-              child.material = new THREE.MeshPhongMaterial({ 
-                color: 0xffffff, 
-                specular: 0x222222, 
-                shininess: 120,
-                flatShading: true
-              });
-            }
-          });
-
-          // Scale and center the model
-          const box = new THREE.Box3().setFromObject(model);
-          const size = box.getSize(new THREE.Vector3());
-          const maxDim = Math.max(size.x, size.y, size.z);
-          const scaleFactor = 300 / maxDim;
-          model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-          
-          const center = box.getCenter(new THREE.Vector3());
-          model.position.sub(center.multiplyScalar(scaleFactor));
-          
-          group.add(model);
-          mesh = model; // Set it as mesh so rotation/updates work
+        loader.load(rootPrefix + 'assets/Logotypes/3dsvg.stl', function (geometry) {
+          createMesh(geometry);
         }, undefined, function (error) {
-          console.warn("Could not load GLB, loading Sphere fallback:", error);
-          const geometry = new THREE.SphereGeometry(15, 16, 16);
+          console.warn("Could not load STL, loading TorusKnot fallback:", error);
+          const geometry = new THREE.TorusKnotGeometry(12, 3.5, 120, 16);
           createMesh(geometry);
         });
       }
