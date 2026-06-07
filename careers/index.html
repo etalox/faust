@@ -541,18 +541,45 @@
               animationFrameId = requestAnimationFrame(updateProgress);
             }
 
-            // Click handlers
+            // Click handlers (ignored on mobile for scroll-only interaction)
             items.forEach(function(item, idx) {
               item.addEventListener('click', function() {
+                if (window.innerWidth <= 980) {
+                  return; // Scroll-only on mobile
+                }
                 if (animationFrameId) {
                   cancelAnimationFrame(animationFrameId);
                 }
-                
-                // On mobile, if we click an already active accordion row, we can optionally let it be,
-                // but since it's an accordion toggle, clicking another one will collapse the old.
                 setActiveStep(idx);
               });
             });
+
+            // Scroll handler for mobile accordion scroll-driven activation
+            function handleScroll() {
+              if (window.innerWidth > 980) {
+                return;
+              }
+              
+              var viewportCenter = window.innerHeight / 2;
+              var closestIndex = -1;
+              var closestDistance = Infinity;
+              
+              items.forEach(function(item, idx) {
+                var rect = item.getBoundingClientRect();
+                var itemCenter = rect.top + rect.height / 2;
+                var distance = Math.abs(itemCenter - viewportCenter);
+                if (distance < closestDistance) {
+                  closestDistance = distance;
+                  closestIndex = idx;
+                }
+              });
+              
+              if (closestIndex !== -1 && closestIndex !== currentIndex) {
+                setActiveStep(closestIndex);
+              }
+            }
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
 
             // Handle window resizing to restart or stop animation appropriately
             window.addEventListener('resize', function() {
@@ -565,6 +592,7 @@
                   var fill = item.querySelector('.perk-row-progress-fill');
                   if (fill) fill.style.width = '0%';
                 });
+                handleScroll(); // Align active state with scroll position immediately on resize
               } else {
                 // Restart animation if resizing back to desktop
                 startProgressAnimation();
@@ -572,7 +600,15 @@
             });
 
             // Start
-            setActiveStep(0);
+            if (window.innerWidth <= 980) {
+              currentIndex = -1;
+              handleScroll();
+              if (currentIndex === -1) {
+                setActiveStep(0);
+              }
+            } else {
+              setActiveStep(0);
+            }
           })();
         </script>
       </div>
