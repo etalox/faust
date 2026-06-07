@@ -1951,6 +1951,96 @@ body.hide-page-grid .section-grid-bg::after {
   50%      { transform: translateX(170px); opacity: 0.25; }
 }
 
+/* Dynamic growing and shrinking animation of isometric bars */
+.perk-preview-svg.is-active .evidence-bar-iso path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso path {
+  animation-delay: var(--bar-delay, 0s) !important;
+  animation-duration: 4s !important;
+  animation-iteration-count: infinite !important;
+  animation-timing-function: ease-in-out !important;
+}
+
+/* Bar 1 (Short) path animations */
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(1) {
+  animation-name: growBar1Left;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(2),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(2) {
+  animation-name: growBar1Right;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(3),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(3) {
+  animation-name: growBar1Top;
+}
+
+/* Bar 2 (Medium) path animations */
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path:nth-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(1) {
+  animation-name: growBar2Left;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path:nth-child(2),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(2) {
+  animation-name: growBar2Right;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path:nth-child(3),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(3) {
+  animation-name: growBar2Top;
+}
+
+/* Bar 3 (Tall) path animations */
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(1) {
+  animation-name: growBar3Left;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(2),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(2) {
+  animation-name: growBar3Right;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(3),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(3) {
+  animation-name: growBar3Top;
+}
+
+@keyframes growBar1Left {
+  0%, 100% { d: path('M 54,101 L 72,110 L 72,128 L 54,119 Z'); }
+  50%      { d: path('M 54,89 L 72,98 L 72,128 L 54,119 Z'); }
+}
+@keyframes growBar1Right {
+  0%, 100% { d: path('M 72,110 L 90,101 L 90,119 L 72,128 Z'); }
+  50%      { d: path('M 72,98 L 90,89 L 90,119 L 72,128 Z'); }
+}
+@keyframes growBar1Top {
+  0%, 100% { d: path('M 72,92 L 90,101 L 72,110 L 54,101 Z'); }
+  50%      { d: path('M 72,80 L 90,89 L 72,98 L 54,89 Z'); }
+}
+
+@keyframes growBar2Left {
+  0%, 100% { d: path('M 102,87 L 120,96 L 120,128 L 102,119 Z'); }
+  50%      { d: path('M 102,71 L 120,80 L 120,128 L 102,119 Z'); }
+}
+@keyframes growBar2Right {
+  0%, 100% { d: path('M 120,96 L 138,87 L 138,119 L 120,128 Z'); }
+  50%      { d: path('M 120,80 L 138,71 L 138,119 L 120,128 Z'); }
+}
+@keyframes growBar2Top {
+  0%, 100% { d: path('M 120,78 L 138,87 L 120,96 L 102,87 Z'); }
+  50%      { d: path('M 120,62 L 138,71 L 120,80 L 102,71 Z'); }
+}
+
+@keyframes growBar3Left {
+  0%, 100% { d: path('M 150,69 L 168,78 L 168,128 L 150,119 Z'); }
+  50%      { d: path('M 150,49 L 168,58 L 168,128 L 150,119 Z'); }
+}
+@keyframes growBar3Right {
+  0%, 100% { d: path('M 168,78 L 186,69 L 186,119 L 168,128 Z'); }
+  50%      { d: path('M 168,58 L 186,49 L 186,119 L 168,128 Z'); }
+}
+@keyframes growBar3Top {
+  0%, 100% { d: path('M 168,60 L 186,69 L 168,78 L 150,69 Z'); }
+  50%      { d: path('M 168,40 L 186,49 L 168,58 L 150,49 Z'); }
+}
+
 /* ── Perk 4: High-Ticket — Stacked server layers ── */
 /* Top layer lifts and glows */
 .perk-preview-svg.is-active .infra-top,
@@ -1961,6 +2051,22 @@ body.hide-page-grid .section-grid-bg::after {
 @keyframes liftInfraTop {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-3px); }
+}
+
+/* ── Blue Accent Highlight for Illustrations (Vibrant Tech Blue with White Borders - ONLY when background is light in mobile active state) ── */
+.perk-interactive-item.is-active .perk-mobile-visual .revenue-layer path,
+.perk-interactive-item.is-active .perk-mobile-visual .auto-accent path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-accent path,
+.perk-interactive-item.is-active .perk-mobile-visual .infra-top path {
+  fill: #0066FF !important; /* Premium tech blue fill */
+  stroke: #ffffff !important; /* Clean white border */
+  stroke-opacity: 0.95 !important;
+}
+
+.perk-interactive-item.is-active .perk-mobile-visual .auto-accent circle,
+.perk-interactive-item.is-active .perk-mobile-visual .infra-top ellipse {
+  stroke: #ffffff !important;
+  opacity: 0.8 !important;
 }
 
 
@@ -2368,7 +2474,8 @@ body.hide-page-grid .section-grid-bg::after {
     flex-direction: column;
     gap: 12px;
     padding: 36px 0;
-    opacity: 0.5; /* Higher base opacity for mobile readability */
+    opacity: 0.55; /* Higher base opacity for mobile readability */
+    transition: opacity 0.5s ease;
   }
 
   .perk-interactive-item.is-active {
@@ -2379,43 +2486,58 @@ body.hide-page-grid .section-grid-bg::after {
     margin-top: 0;
   }
 
-  /* Mobile accordion behavior: hide description when not active */
+  /* Mobile accordion behavior: keep description always expanded */
   .perk-interactive-item .perk-item-content p {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, margin-top 0.4s ease;
-    margin-top: 0;
-  }
-
-  .perk-interactive-item.is-active .perk-item-content p {
-    max-height: 300px;
+    max-height: none;
     opacity: 1;
+    overflow: visible;
     margin-top: 18px;
+    transition: none;
   }
 
-  /* Inline SVG container inside item on mobile */
+  /* Inline SVG container inside item on mobile: always expanded, transitions color/bg */
   .perk-mobile-visual {
     display: flex;
     width: 100%;
     height: 180px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    background: var(--bg);
+    background-color: var(--bg);
+    color: rgba(255, 255, 255, 0.85); /* Default white strokes */
+    --illustration-fill: #08090a; /* Default dark fill */
     align-items: center;
     justify-content: center;
     margin-top: 16px;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transform: scale(0.98);
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, transform 0.4s ease;
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+    transform: scale(1);
+    transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
+  /* Synchronized transitions for SVG visual elements to match container speed */
+  .perk-mobile-visual path,
+  .perk-mobile-visual circle,
+  .perk-mobile-visual line,
+  .perk-mobile-visual ellipse {
+    transition: fill 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke-opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Active visual state: background becomes light gray, borders dark-gray, strokes black */
   .perk-interactive-item.is-active .perk-mobile-visual {
-    max-height: 200px;
-    opacity: 1;
-    transform: scale(1);
+    background-color: #f4f4f6; /* Premium light gray background */
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #08090a; /* Dark strokes */
+    --illustration-fill: #e5e5ea; /* Shaded gray fill for 3D visual weight */
+  }
+
+  .perk-interactive-item.is-active .perk-mobile-visual svg {
+    filter: contrast(1.15) brightness(0.95); /* Boosts lines contrast and weight */
   }
 
   .perk-row-progress {
