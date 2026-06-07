@@ -2389,10 +2389,7 @@ html.legal-page body {
 
 /* 7. Canvas Traffic Particles (Pulse Overlay) */
 .flow-line-pulse {
-  stroke-dasharray: 6, 20;
-  animation: flowTraffic 2.5s linear infinite;
-  opacity: 0.9;
-  filter: drop-shadow(0 0 2px var(--blue));
+  display: none;
 }
 
 @keyframes flowTraffic {
