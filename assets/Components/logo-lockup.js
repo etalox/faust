@@ -11,7 +11,9 @@ class FaustLogoLockup extends HTMLElement {
     const rootPrefix = getRootPrefixForLogo();
     const isNav = this.hasAttribute('is-nav');
     const imgId = isNav ? 'id="nav-isotipo"' : '';
-    const imgClass = isNav ? 'class="nav-logo-icon is-blue"' : '';
+    const path = window.location.pathname.toLowerCase();
+    const isStartOrCareers = path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers');
+    const imgClass = isNav ? `class="nav-logo-icon${isStartOrCareers ? '' : ' is-blue'}"` : '';
     const spanId = isNav ? 'id="nav-logo-text"' : '';
     const src = this.getAttribute('src') || (rootPrefix + 'assets/Logotypes/Faust Logo.svg');
     

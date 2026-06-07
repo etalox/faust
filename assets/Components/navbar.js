@@ -682,12 +682,27 @@ class FaustNavbar extends HTMLElement {
   initLogoObserver() {
     const heroLogo = document.getElementById('hero-logo');
     const ctaLogo = document.querySelector('.cta .FaustLogo');
+    const perksSection = document.getElementById('perks');
+    const vacantesSection = document.getElementById('vacantes');
+    
+    const path = window.location.pathname.toLowerCase();
+    const isCareers = path.includes('/careers/') || path.endsWith('/careers');
+
     let isHeroIntersecting = false;
     let isCtaIntersecting = false;
+    let isPerksIntersecting = false;
+    let isVacantesIntersecting = false;
+
     const updateLogoColor = () => {
       const navIcon = this.querySelector('#nav-isotipo');
       if (!navIcon) return;
-      if (isHeroIntersecting || isCtaIntersecting) {
+      
+      let shouldBeWhite = isHeroIntersecting || isCtaIntersecting;
+      if (isCareers) {
+        shouldBeWhite = isHeroIntersecting || isPerksIntersecting || isVacantesIntersecting;
+      }
+
+      if (shouldBeWhite) {
         navIcon.classList.remove('is-blue');
       } else {
         navIcon.classList.add('is-blue');
@@ -725,6 +740,29 @@ class FaustNavbar extends HTMLElement {
         { threshold: 0, rootMargin: '0px 0px -30% 0px' }
       );
       this._ctaObserver.observe(ctaLogo);
+    }
+
+    if (isCareers) {
+      if (perksSection) {
+        this._perksObserver = new IntersectionObserver(
+          ([entry]) => {
+            isPerksIntersecting = entry.isIntersecting;
+            updateLogoColor();
+          },
+          { threshold: 0, rootMargin: '-80px 0px 0px 0px' }
+        );
+        this._perksObserver.observe(perksSection);
+      }
+      if (vacantesSection) {
+        this._vacantesObserver = new IntersectionObserver(
+          ([entry]) => {
+            isVacantesIntersecting = entry.isIntersecting;
+            updateLogoColor();
+          },
+          { threshold: 0, rootMargin: '-80px 0px 0px 0px' }
+        );
+        this._vacantesObserver.observe(vacantesSection);
+      }
     }
   }
 
@@ -804,6 +842,14 @@ class FaustNavbar extends HTMLElement {
     if (this._ctaObserver) {
       this._ctaObserver.disconnect();
       this._ctaObserver = null;
+    }
+    if (this._perksObserver) {
+      this._perksObserver.disconnect();
+      this._perksObserver = null;
+    }
+    if (this._vacantesObserver) {
+      this._vacantesObserver.disconnect();
+      this._vacantesObserver = null;
     }
   }
 
