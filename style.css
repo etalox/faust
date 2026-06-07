@@ -573,6 +573,14 @@ h2.lead.reveal-item.reveal-visible {
   letter-spacing: -1.6px;
 }
 
+.section-title {
+  font-size: 36px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
 .sub {
   margin: 0 0 100px;
   color: rgba(255, 255, 255, .7);
@@ -659,8 +667,11 @@ h2.lead.reveal-item.reveal-visible {
 
 .canvas-outer {
   position: relative;
+  z-index: 1;
   border-radius: 24px;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
 }
 
@@ -1440,6 +1451,7 @@ font *:hover,
 /* ── Legal Page Styles ── */
 html.legal-page {
   --muted: #8B8D91;
+  scroll-behavior: smooth;
 }
 
 html.legal-page body {
@@ -1488,14 +1500,15 @@ html.legal-page body {
 
 .legal-page .legal-nav-buttons {
   position: sticky;
-  bottom: var(--legal-nav-bottom, 40px);
-  margin-top: 60px;
+  bottom: 40px; /* Fijo a 40px del viewport (sin desplazamiento por cookie banner) */
+  margin-top: 80px;
+  margin-bottom: 80px; /* Margen inferior para evitar que quede pegado al footer en su posición final */
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
   z-index: 100;
-  transition: bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 100%;
 }
 
 @media (max-width: 980px) {
@@ -1515,4 +1528,856 @@ html.legal-page body {
   .legal-page .legal-content h2 {
     font-size: 16px;
   }
+}
+
+/* ==========================================================================
+   NUEVAS CLASES DE DISEÑO UX/UI PREMIUM
+   ========================================================================== */
+
+/* 1. Líneas de Margen Laterales y Iluminación Radial */
+.section-grid-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-grid-bg::before,
+.section-grid-bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: clamp(4vw, 16.26vw - 120.13px, 140px);
+  right: clamp(4vw, 16.26vw - 120.13px, 140px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.section-grid-bg::before {
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.section-grid-bg::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='16.666%25' y1='0' x2='16.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='33.333%25' y1='0' x2='33.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='50%25' y1='0' x2='50%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='66.666%25' y1='0' x2='66.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='83.333%25' y1='0' x2='83.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 981px) and (max-width: 1440px) {
+  .section-grid-bg::before,
+  .section-grid-bg::after {
+    left: 4vw;
+    right: 4vw;
+  }
+}
+
+.radial-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(120px);
+  opacity: 0.04;
+}
+
+.radial-glow-blue {
+  background: var(--blue);
+  opacity: 0.05;
+}
+
+.radial-glow-white {
+  background: #ffffff;
+  opacity: 0.02;
+}
+
+/* 2. Acordeón FAQ Interactivo (Start) */
+.faq-section {
+  padding: 140px 0;
+}
+
+.faq-grid {
+  max-width: 900px;
+  margin: 60px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+  padding: 28px 0;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.faq-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-family: inherit;
+  font-size: clamp(18px, 2.5vw, 22px);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+}
+
+.faq-icon {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  flex-shrink: 0;
+  color: #8B8D91;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Horizontal line */
+.faq-icon::before {
+  top: 11px;
+  left: 3px;
+  width: 18px;
+  height: 2px;
+}
+
+/* Vertical line */
+.faq-icon::after {
+  top: 3px;
+  left: 11px;
+  width: 2px;
+  height: 18px;
+}
+
+.faq-item.is-open .faq-icon {
+  transform: rotate(135deg);
+  color: #fff;
+}
+
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+              opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              margin-top 0.4s;
+}
+
+.faq-item.is-open .faq-content {
+  max-height: 240px;
+  opacity: 1;
+  margin-top: 16px;
+}
+
+.faq-content p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 3. Clean Feature List Perks (Careers List Rows - AgentPilot Style) */
+.perks-showcase-container {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 100px;
+  align-items: start;
+  margin-top: 60px;
+}
+
+.perks-interactive-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.perk-interactive-item {
+  display: flex;
+  gap: 32px;
+  padding: 48px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+  position: relative;
+  flex-direction: row;
+}
+
+.perk-interactive-item:hover {
+  opacity: 0.7;
+}
+
+.perk-interactive-item.is-active {
+  opacity: 1;
+}
+
+.perk-num {
+  font-family: monospace;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 6px;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.perk-item-content {
+  flex-grow: 1;
+}
+
+.perk-item-content h3 {
+  font-size: 24px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 18px 0;
+  letter-spacing: -0.02em;
+}
+
+.perk-item-content p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #8B8D91;
+  margin: 0;
+  max-width: 580px;
+}
+
+/* Row Progress Indicator at the bottom of the item */
+.perk-row-progress {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.0);
+  overflow: hidden;
+}
+
+.perk-interactive-item.is-active .perk-row-progress {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.perk-row-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #fff;
+}
+
+/* Right side preview panel */
+.perks-preview-pane {
+  position: sticky;
+  top: 120px;
+  width: 100%;
+}
+
+.mockup-window {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  width: 100%;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mockup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.mockup-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.mockup-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mockup-filename {
+  font-family: monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.05em;
+}
+
+.mockup-body {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.perk-preview-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  color: #8B8D91;
+}
+
+.perk-preview-svg.is-active {
+  opacity: 1;
+  visibility: visible;
+  color: #fff;
+}
+
+.perk-technical-svg {
+  width: 100%;
+  height: 100%;
+  max-width: 280px;
+  max-height: 180px;
+  overflow: visible;
+}
+
+.perk-mobile-visual {
+  display: none;
+}
+
+/* 4. Metodología Timeline (About Nosotros) */
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 70px;
+  position: relative;
+}
+
+.timeline-card {
+  background: rgba(253, 253, 255, 0.015);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.timeline-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.timeline-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(253, 253, 255, 0.025);
+  transform: translateY(-2px);
+}
+
+.timeline-step-number {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+  background: rgba(0, 34, 255, 0.1);
+  border: 1px solid rgba(0, 34, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+}
+
+.timeline-icon-box {
+  width: 48px;
+  height: 48px;
+  color: #8B8D91;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.timeline-card:hover .timeline-icon-box {
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.timeline-card h3 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 12px 0;
+}
+
+.timeline-card p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #8B8D91;
+  margin: 0;
+}
+
+/* 5. Split Layout Legal Pages */
+.legal-split-container {
+  display: flex;
+  gap: 80px;
+  margin-top: 140px;
+  margin-bottom: 80px;
+  position: relative;
+  align-items: flex-start;
+}
+
+.legal-sidebar {
+  width: 250px;
+  position: sticky;
+  top: 120px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 162px; /* Alinea "Capítulos" con el inicio del texto del párrafo, no con el título H1 */
+}
+
+.legal-sidebar h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8B8D91;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.legal-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-left: 1px solid var(--line);
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.legal-toc-item a {
+  display: block;
+  font-size: 14px;
+  color: #8B8D91;
+  padding-left: 16px;
+  border-left: 2px solid transparent;
+  margin-left: -1.5px;
+  transition: color 0.25s ease, border-color 0.25s ease, padding-left 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  line-height: 1.3;
+}
+
+.legal-toc-item.is-active a {
+  color: #fff;
+  border-color: var(--blue);
+  font-weight: 500;
+  padding-left: 22px; /* Smooth slide right when active */
+}
+
+.legal-toc-item a:hover {
+  color: #fff;
+  padding-left: 22px; /* Smooth slide right on hover */
+}
+
+.legal-body-content {
+  flex-grow: 1;
+  max-width: 750px;
+}
+
+.legal-body-content h1 {
+  font-size: 42px !important;
+  font-weight: 500;
+  margin: 0 0 16px 0 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.legal-body-content h2 {
+  font-size: 22px !important;
+  font-weight: 500;
+  margin: 48px 0 16px 0 !important;
+  border-top: 1px solid var(--line);
+  padding-top: 32px;
+  scroll-margin-top: 160px; /* Evita que el navbar tape el título al hacer scroll */
+}
+
+.legal-body-content p,
+.legal-body-content li {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+  margin-bottom: 20px !important;
+}
+
+/* ── Cláusula Legal Container ── */
+.legal-clause {
+  position: relative;
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Efecto de enfoque de cláusulas (dimming) */
+.legal-body-content.has-focused-clause .legal-clause {
+  opacity: 0.35;
+}
+
+.legal-body-content.has-focused-clause .legal-clause.is-focused {
+  opacity: 1;
+}
+
+.legal-body-content.has-focused-clause .legal-clause:hover {
+  opacity: 0.8;
+}
+
+.legal-body-content.has-focused-clause .legal-clause.is-focused:hover {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  /* Ocultar por defecto en desktop y colapsar altura/márgenes/padding para no ocupar espacio */
+  .legal-clause .legal-tldr-box {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    max-height: 0;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-color: transparent;
+    transform: translateY(5px);
+    transition: opacity 0.35s ease,
+                max-height 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                margin 0.35s ease,
+                padding 0.35s ease,
+                border-color 0.35s ease,
+                transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                visibility 0.35s;
+  }
+
+  /* Mostrar y abrir a la altura de la cabecera (summary) al hacer hover sobre la cláusula */
+  .legal-clause:hover .legal-tldr-box {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    max-height: 60px; /* Altura suficiente para el summary */
+    margin: 20px 0 28px 0;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-color: #e1e3e6;
+    transform: translateY(0);
+  }
+
+  /* Expandir a la altura completa del texto del resumen cuando el cursor entra a la tarjeta */
+  .legal-clause:hover .legal-tldr-box.is-active {
+    max-height: 500px; /* Altura suficiente para el texto completo sin recortes */
+  }
+}
+
+/* Caja de resumen TL;DR (Desplegable, contenedor blanco con texto negro) */
+.legal-tldr-box {
+  background: #ffffff;
+  border: 1px solid #e1e3e6;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 20px 0 28px 0;
+  color: #08090a;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  max-height: 60px; /* Colapsado por defecto en móvil */
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.legal-tldr-box.is-active {
+  max-height: 500px; /* Expandido en móvil / click sin recortes */
+}
+
+.legal-tldr-summary {
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #08090a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+/* Custom interactive indicator (+ / -) */
+.legal-tldr-summary::after {
+  content: "+";
+  font-size: 18px;
+  font-weight: 500;
+  color: #08090a;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.legal-tldr-box.is-active .legal-tldr-summary::after {
+  content: "−"; /* unicode minus sign */
+  transform: rotate(180deg);
+}
+
+.legal-tldr-box p {
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  color: #2b2d31 !important; /* Soft black for readability */
+  margin: 0 !important;
+  padding-top: 0;
+  border-top: 1px solid transparent;
+  opacity: 0;
+  transition: opacity 0.35s ease,
+              padding 0.35s ease,
+              margin 0.35s ease,
+              border-color 0.35s ease;
+}
+
+.legal-tldr-box.is-active p {
+  opacity: 1;
+  margin-top: 12px !important;
+  padding-top: 8px;
+  border-top: 1px solid #f0f1f2;
+}
+
+/* 6. Animaciones CSS para Íconos SVG */
+@keyframes eyeBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  55% { transform: scaleY(0.1); }
+}
+
+.anim-eye-pupil {
+  transition: transform 0.3s ease;
+}
+
+.timeline-card:hover .anim-eye-pupil {
+  transform: translate(1px, -1px);
+}
+
+.timeline-card:hover .anim-eye-lid {
+  animation: eyeBlink 1.5s infinite;
+}
+
+@keyframes bubbleUp {
+  0% { transform: translateY(3px) scale(0.8); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-8px) scale(1.2); opacity: 0; }
+}
+
+.anim-bubble {
+  transform-origin: bottom center;
+}
+
+.timeline-card:hover .anim-bubble-1 {
+  animation: bubbleUp 1.2s infinite ease-in-out;
+}
+
+.timeline-card:hover .anim-bubble-2 {
+  animation: bubbleUp 1.6s infinite ease-in-out 0.4s;
+}
+
+@keyframes growBar {
+  from { transform: scaleY(0.2); }
+  to { transform: scaleY(1); }
+}
+
+.anim-grow-bar {
+  transform-origin: bottom center;
+}
+
+.timeline-card:hover .anim-grow-bar,
+.stat:hover .anim-grow-bar {
+  animation: growBar 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes laserPulse {
+  0%, 100% { stroke-dashoffset: 0; opacity: 0.3; }
+  50% { stroke-dashoffset: -12; opacity: 1; }
+}
+
+.anim-laser-line {
+  stroke-dasharray: 4, 8;
+}
+
+.timeline-card:hover .anim-laser-line,
+.stat:hover .anim-laser-line {
+  animation: laserPulse 1.5s linear infinite;
+}
+
+/* 7. Canvas Traffic Particles (Pulse Overlay) */
+.flow-line-pulse {
+  stroke-dasharray: 6, 20;
+  animation: flowTraffic 2.5s linear infinite;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 2px var(--blue));
+}
+
+@keyframes flowTraffic {
+  to {
+    stroke-dashoffset: -26;
+  }
+}
+
+/* Responsive adjustments for new classes */
+@media (max-width: 980px) {
+  .faq-section {
+    padding: 80px 0;
+  }
+
+  .perks-showcase-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .perks-preview-pane {
+    display: none; /* Hide preview pane on mobile */
+  }
+
+  .perk-interactive-item {
+    flex-direction: column;
+    gap: 12px;
+    padding: 36px 0;
+    opacity: 0.5; /* Higher base opacity for mobile readability */
+  }
+
+  .perk-interactive-item.is-active {
+    opacity: 1;
+  }
+
+  .perk-num {
+    margin-top: 0;
+  }
+
+  /* Mobile accordion behavior: hide description when not active */
+  .perk-interactive-item .perk-item-content p {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, margin-top 0.4s ease;
+    margin-top: 0;
+  }
+
+  .perk-interactive-item.is-active .perk-item-content p {
+    max-height: 300px;
+    opacity: 1;
+    margin-top: 18px;
+  }
+
+  /* Inline SVG container inside item on mobile */
+  .perk-mobile-visual {
+    display: flex;
+    width: 100%;
+    height: 180px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.01);
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: scale(0.98);
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .perk-interactive-item.is-active .perk-mobile-visual {
+    max-height: 200px;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .perk-row-progress {
+    display: none; /* No row progress indicator on mobile */
+  }
+
+  .colspan-2 {
+    grid-column: span 1;
+  }
+
+  .timeline-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .legal-split-container {
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 100px;
+    margin-bottom: 80px;
+  }
+
+  .legal-sidebar {
+    width: 100%;
+    position: static;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 24px;
+    margin-top: 0; /* Restablece el margen en móviles */
+  }
+
+  .legal-toc {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-left: none;
+  }
+
+  .legal-toc-item a {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    padding-left: 0;
+    padding-bottom: 4px;
+    margin-left: 0;
+  }
+
+  .legal-toc-item.is-active a {
+    border-bottom-color: var(--blue);
+  }
+}
+
+/* ── Nota de Descargo Legal (Disclaimer) ── */
+.legal-disclaimer {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.legal-disclaimer p {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  color: var(--muted) !important;
+  margin-bottom: 0 !important;
 }

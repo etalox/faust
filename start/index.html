@@ -49,7 +49,7 @@
   <div class="page-fade-overlay"></div>
   <faust-navbar></faust-navbar>
   <main>
-    <section class="hero wrap" id="aplicar">
+    <section class="hero wrap section-grid-bg" id="aplicar">
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
       <h1 class="reveal-item" id="hero-title">Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
       <script>
@@ -73,7 +73,7 @@
       </div>
     </section>
 
-    <section class="section" id="gestion">
+    <section class="section section-grid-bg" id="gestion">
       <div id="Sobre nosotros" style="position: relative; top: -100px; height: 0; pointer-events: none; visibility: hidden;"></div>
       <div class="wrap">
         <div class="pill reveal-item">/ Sobre nosotros</div>
@@ -175,7 +175,7 @@
       </div>
     </section>
 
-    <section class="section centered" id="estrategia">
+    <section class="section centered section-grid-bg" id="estrategia">
       <div class="wrap wrap-narrow">
         <div class="pill reveal-item">/ Optimización</div>
         <h2 class="headline reveal-item">Desarrollamos arquitectura que escala volumen de conversión.</h2>
@@ -217,7 +217,7 @@
       </div>
     </section>
 
-    <section class="section centered">
+    <section class="section centered section-grid-bg">
       <div id="Testing" style="position: relative; top: -100px; height: 0; pointer-events: none; visibility: hidden;"></div>
       <div class="wrap wrap-narrow">
         <div class="pill reveal-item">/ Testing</div>
@@ -268,7 +268,66 @@
       </div>
     </section>
 
-    <section class="cta section" id="CTA">
+    <section class="section section-grid-bg" id="faq">
+      <div class="wrap">
+        <div class="pill reveal-item">/ Preguntas frecuentes</div>
+        <h2 class="section-title reveal-item" style="margin: 0 0 40px 0;">Respuestas a tus dudas sobre Growth Partnering</h2>
+        
+        <div class="faq-grid">
+          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+            <button class="faq-trigger" aria-expanded="false">
+              <span>¿Qué es un Growth Partner CRO y en qué se diferencia de una agencia?</span>
+              <div class="faq-icon" aria-hidden="true"></div>
+            </button>
+            <div class="faq-content">
+              <p>A diferencia de las agencias tradicionales que cobran tarifas fijas por entregables (como diseños o reportes), nosotros nos integramos como socios de crecimiento. Trabajamos bajo un modelo de Revenue Share (participación de ingresos), lo que significa que solo ganamos cuando tú aumentas tus ventas. Diseñamos, probamos y desarrollamos iterativamente la versión optimizada de tu sitio web asumiendo todo el riesgo financiero y técnico.</p>
+            </div>
+          </div>
+
+          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+            <button class="faq-trigger" aria-expanded="false">
+              <span>¿Cómo funciona exactamente el modelo de Revenue Share?</span>
+              <div class="faq-icon" aria-hidden="true"></div>
+            </button>
+            <div class="faq-content">
+              <p>Establecemos una línea de base de ingresos y conversiones de tu sitio web original mediante analítica avanzada. Al implementar nuestra variante optimizada en un test A/B, medimos con precisión el incremento neto de ventas generado directamente por Faust. Cobramos un porcentaje acordado de este ingreso incremental. Si no hay mejora medible en tu MRR o ventas, no pagas absolutamente nada.</p>
+            </div>
+          </div>
+
+          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+            <button class="faq-trigger" aria-expanded="false">
+              <span>¿Es seguro redirigir el tráfico a su interfaz optimizada?</span>
+              <div class="faq-icon" aria-hidden="true"></div>
+            </button>
+            <div class="faq-content">
+              <p>Completamente seguro. Utilizamos redirección gradual y controlada. Empezamos enviando solo un 10% del tráfico a la variante optimizada. Evaluamos el comportamiento en tiempo real y, solo cuando validamos científicamente que la nueva versión convierte mejor que el control (A), aumentamos gradualmente el porcentaje de tráfico para mitigar cualquier riesgo operativo.</p>
+            </div>
+          </div>
+
+          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+            <button class="faq-trigger" aria-expanded="false">
+              <span>¿Cuánto tiempo toma ver los primeros resultados de MRR incremental?</span>
+              <div class="faq-icon" aria-hidden="true"></div>
+            </button>
+            <div class="faq-content">
+              <p>El ciclo inicial de auditoría neuro-conductual, diseño de hipótesis y desarrollo iterativo toma de 2 a 4 semanas. Una vez activa la prueba A/B, la velocidad de los resultados depende del volumen de tráfico de tu plataforma. Generalmente, en un periodo de 30 días acumulamos suficiente significancia estadística para validar científicamente la mejora.</p>
+            </div>
+          </div>
+
+          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+            <button class="faq-trigger" aria-expanded="false">
+              <span>¿Qué requisitos debe cumplir mi empresa para colaborar con Faust?</span>
+              <div class="faq-icon" aria-hidden="true"></div>
+            </button>
+            <div class="faq-content">
+              <p>Debido a nuestro modelo basado en resultados y la necesidad de significancia estadística, nos enfocamos en empresas medianas y grandes (high-ticket) de México y LATAM que cuenten con un flujo de tráfico establecido y un volumen mínimo de ventas mensuales. Evaluamos cada caso mediante nuestro formulario de partnering.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta section section-grid-bg" id="CTA">
       <div class="wrap" style="display: flex; justify-content: center;">
         <div data-layer="Bloque" class="Bloque" style="width: 100%; flex-direction: column; justify-content: flex-start; align-items: center; gap: 50px; display: flex">
           <div data-layer="Frame 219" data-propiedad-1="Variante 3" class="Frame219 reveal-item" style="width: 322px; height: 20px; position: relative">
@@ -971,6 +1030,20 @@
       window.initReveal = initReveal;
       initReveal();
     })();
+  </script>
+
+  <script>
+    function toggleFaq(element) {
+      const isOpen = element.classList.contains('is-open');
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('is-open');
+        item.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        element.classList.add('is-open');
+        element.querySelector('.faq-trigger').setAttribute('aria-expanded', 'true');
+      }
+    }
   </script>
 
 </body></html>

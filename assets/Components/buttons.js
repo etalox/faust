@@ -42,6 +42,7 @@ customElements.define('faust-btn-strategy', FaustBtnStrategy);
 
 class FaustLegalNav extends HTMLElement {
   connectedCallback() {
+    this.style.display = 'contents';
     const rootPrefix = getRootPrefix();
     const nextHref = this.getAttribute('next-href') || (rootPrefix + 'start/index.html');
     const nextLabel = this.getAttribute('next-label') || '';
