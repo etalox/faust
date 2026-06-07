@@ -36,24 +36,44 @@
     document.head.appendChild(s);
   });
 
-  // IntersectionObserver to fade out background lines when the final CTA enters the viewport
+  // IntersectionObserver to fade out background lines when the final CTA or FAQ enters the viewport
   document.addEventListener('DOMContentLoaded', function() {
-    const finalCta = document.querySelector('.cta') || document.getElementById('contacto') || document.getElementById('vacantes');
-    if (finalCta) {
-      const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            document.body.classList.add('hide-page-grid');
-          } else {
-            document.body.classList.remove('hide-page-grid');
-          }
-        });
-      }, {
-        root: null,
-        threshold: 0.05,
-        rootMargin: '0px'
-      });
-      observer.observe(finalCta);
+    const visibleSet = new Set();
+
+    function updateGridVisibility() {
+      if (visibleSet.size > 0) {
+        document.body.classList.add('hide-page-grid');
+      } else {
+        document.body.classList.remove('hide-page-grid');
+      }
     }
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          visibleSet.add(entry.target);
+        } else {
+          visibleSet.delete(entry.target);
+        }
+      });
+      updateGridVisibility();
+    }, {
+      root: null,
+      threshold: 0.05,
+      rootMargin: '0px'
+    });
+
+    // Observe the final CTA section
+    const finalCta = document.querySelector('.cta') || document.getElementById('contacto') || document.getElementById('vacantes');
+    if (finalCta) observer.observe(finalCta);
+
+    // Observe the FAQ section
+    const faqSection = document.getElementById('faq');
+    if (faqSection) observer.observe(faqSection);
+
+    // Also observe any element explicitly marked with data-hide-grid
+    document.querySelectorAll('[data-hide-grid]').forEach(function(el) {
+      observer.observe(el);
+    });
   });
 })();
