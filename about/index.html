@@ -148,118 +148,7 @@
       pointer-events: none;
     }
     
-    /* Grid system for pillars */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-      margin-top: 60px;
-    }
-    
-    .pillar-card {
-      background: rgba(253, 253, 255, 0.04);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 40px;
-      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-    }
-    
-    .pillar-card:hover {
-      background: rgba(253, 253, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.15);
-      transform: translateY(-4px);
-    }
-    
-    .pillar-number {
-      font-size: 14px;
-      color: var(--blue);
-      font-weight: 600;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .pillar-card h3 {
-      font-size: 24px;
-      font-weight: 500;
-      margin: 0 0 16px 0;
-      color: #fff;
-    }
-    
-    .pillar-card p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.6);
-      margin: 0;
-    }
-    
-    /* Selectivity section layout */
-    .focus-block {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 80px;
-    }
-    
-    .focus-content {
-      flex: 1;
-    }
-    
-    .focus-stat {
-      flex-shrink: 0;
-      width: 320px;
-      background: rgba(253, 253, 255, 0.03);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 48px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .focus-stat::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    }
-    
-    .focus-stat h3 {
-      font-size: 96px;
-      font-weight: 400;
-      line-height: 1;
-      margin: 0 0 16px 0;
-      background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.4) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .focus-stat p {
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.5);
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
 
-    @media (max-width: 1024px) {
-      .pillars-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      .focus-block {
-        flex-direction: column;
-        gap: 40px;
-      }
-      .focus-stat {
-        width: 100%;
-        padding: 32px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -280,7 +169,21 @@
       </div>
     </section>
 
-    <!-- Section 2: Presentation Video -->
+    <!-- Section 2: Philosophy (Sequential Text Lighting Effect) -->
+    <section class="section centered" id="filosofia">
+      <div class="wrap wrap-narrow">
+        <div class="pill reveal-item">/ Filosofía</div>
+        <h2 class="lead reveal-item">
+          <div class="muted" style="display: inline;">No nos importan las tendencias ni los frameworks de moda. Nos importa la ciencia detrás de la toma de decisiones y la ingeniería que hace que las cosas funcionen.</div>
+        </h2>
+        <div class="btn-row reveal-item" style="margin-top: 40px; justify-content: center;">
+          <faust-btn-apply></faust-btn-apply>
+          <faust-btn-strategy></faust-btn-strategy>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Presentation Video -->
     <section class="section centered" id="presentacion">
       <div class="wrap">
         <div class="pill reveal-item">/ Presentación</div>
@@ -297,62 +200,6 @@
             <source src="../assets/Hero.mp4" type="video/mp4">
             Tu navegador no soporta el tag de video.
           </video>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 3: Philosophy (Sequential Text Lighting Effect) -->
-    <section class="section centered" id="filosofia">
-      <div class="wrap wrap-narrow">
-        <div class="pill reveal-item">/ Filosofía</div>
-        <h2 class="lead reveal-item">
-          <div class="muted" style="display: inline;">No nos importan las tendencias ni los frameworks de moda. Nos importa la ciencia detrás de la toma de decisiones y la ingeniería que hace que las cosas funcionen.</div>
-        </h2>
-        <div class="btn-row reveal-item" style="margin-top: 40px; justify-content: center;">
-          <faust-btn-apply></faust-btn-apply>
-          <faust-btn-strategy></faust-btn-strategy>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 4: Core Pillars -->
-    <section class="section" id="pilares">
-      <div class="wrap">
-        <div class="pill reveal-item">/ Pilares</div>
-        <h2 class="headline reveal-item">Metodología de tres capas.</h2>
-        <div class="pillars-grid">
-          <div class="pillar-card reveal-item">
-            <div class="pillar-number">01 / Psicología</div>
-            <h3>Neurociencia Conductual</h3>
-            <p>Modelamos y alineamos flujos digitales basándonos en cómo decide el cerebro humano. Aplicamos sesgos cognitivos e incentivos del comportamiento para reducir la fricción en el momento exacto.</p>
-          </div>
-          <div class="pillar-card reveal-item">
-            <div class="pillar-number">02 / Datos</div>
-            <h3>Testing A/B Científico</h3>
-            <p>No adivinamos ni nos basamos en tendencias pasajeras. Cada optimización se valida de forma controlada mediante experimentos A/B que demuestran significancia estadística inequívoca.</p>
-          </div>
-          <div class="pillar-card reveal-item">
-            <div class="pillar-number">03 / Código</div>
-            <h3>Ingeniería Growth</h3>
-            <p>Escribimos código eficiente y ágil para asegurar una performance premium. La velocidad de carga y la estabilidad técnica de las interfaces de variantes impactan de forma directa en las conversiones.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 5: Focus & Selectivity -->
-    <section class="section" id="enfoque">
-      <div class="wrap">
-        <div class="pill reveal-item">/ Selectividad</div>
-        <div class="focus-block">
-          <div class="focus-content">
-            <h2 class="headline reveal-item" style="margin-bottom: 24px;">Enfoque absoluto.<br>Menos partners, más impacto.</h2>
-            <p class="sub reveal-item" style="max-width: 680px; margin: 0; font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.6);">A diferencia de las agencias tradicionales, no trabajamos con docenas de clientes a la vez. Limitamos nuestra capacidad a un selecto número de partners en México para involucrarnos al 100% en el diseño, análisis e ingeniería de sus plataformas.</p>
-          </div>
-          <div class="focus-stat reveal-item">
-            <h3>5</h3>
-            <p>Empresas simultáneas</p>
-          </div>
         </div>
       </div>
     </section>
