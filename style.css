@@ -1893,7 +1893,7 @@ body.hide-page-grid .section-grid-bg::after {
 /* Each layer floats gently upward at staggered intervals */
 .perk-preview-svg.is-active .revenue-layer,
 .perk-interactive-item.is-active .perk-mobile-visual .revenue-layer {
-  animation: floatLayer 4s ease-in-out infinite;
+  animation: floatLayer 3s ease-in-out infinite;
   animation-delay: 0.5s;
 }
 
@@ -1906,16 +1906,16 @@ body.hide-page-grid .section-grid-bg::after {
 /* Each cube floats independently with unique rhythm */
 .perk-preview-svg.is-active .auto-module,
 .perk-interactive-item.is-active .perk-mobile-visual .auto-module {
-  animation: floatCube 3.6s ease-in-out infinite;
+  animation: floatCube 2.8s ease-in-out infinite;
 }
 .perk-preview-svg.is-active g:nth-child(2) > .auto-module,
 .perk-interactive-item.is-active .perk-mobile-visual g:nth-child(2) > .auto-module {
-  animation: floatCubeAlt 3.2s ease-in-out infinite;
+  animation: floatCubeAlt 2.4s ease-in-out infinite;
   animation-delay: 0.4s;
 }
 .perk-preview-svg.is-active g:nth-child(3) > .auto-module,
 .perk-interactive-item.is-active .perk-mobile-visual g:nth-child(3) > .auto-module {
-  animation: floatCube 3.8s ease-in-out infinite;
+  animation: floatCube 3s ease-in-out infinite;
   animation-delay: 1.2s;
 }
 
@@ -1923,7 +1923,7 @@ body.hide-page-grid .section-grid-bg::after {
 .perk-preview-svg.is-active .auto-connector,
 .perk-interactive-item.is-active .perk-mobile-visual .auto-connector {
   stroke-dasharray: 3 5;
-  animation: flowDash 2.2s linear infinite;
+  animation: flowDash 1.6s linear infinite;
 }
 
 @keyframes floatCube {
@@ -1943,7 +1943,7 @@ body.hide-page-grid .section-grid-bg::after {
 /* Scanning line sweeps horizontally across the chart */
 .perk-preview-svg.is-active .evidence-scan,
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-scan {
-  animation: scanSweep 4.5s ease-in-out infinite;
+  animation: scanSweep 3.5s ease-in-out infinite;
 }
 
 @keyframes scanSweep {
@@ -1955,7 +1955,7 @@ body.hide-page-grid .section-grid-bg::after {
 .perk-preview-svg.is-active .evidence-bar-iso path,
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso path {
   animation-delay: var(--bar-delay, 0s) !important;
-  animation-duration: 4s !important;
+  animation-duration: 3s !important;
   animation-iteration-count: infinite !important;
   animation-timing-function: ease-in-out !important;
 }
@@ -2045,7 +2045,7 @@ body.hide-page-grid .section-grid-bg::after {
 /* Top layer lifts and glows */
 .perk-preview-svg.is-active .infra-top,
 .perk-interactive-item.is-active .perk-mobile-visual .infra-top {
-  animation: liftInfraTop 3.5s ease-in-out infinite;
+  animation: liftInfraTop 2.6s ease-in-out infinite;
 }
 
 @keyframes liftInfraTop {
