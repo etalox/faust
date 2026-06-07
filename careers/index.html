@@ -268,6 +268,16 @@
         margin-bottom: 24px;
         justify-content: flex-start;
         gap: 8px;
+        flex-wrap: nowrap; /* Prevent stacking */
+        overflow-x: auto; /* Enable horizontal scroll */
+        -webkit-overflow-scrolling: touch; /* Inertial scroll on iOS */
+        scrollbar-width: none; /* Hide scrollbar Firefox */
+        -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+        padding-bottom: 4px; /* Prevent scaling clipping */
+      }
+
+      .filter-row::-webkit-scrollbar {
+        display: none; /* Hide scrollbar Chrome/Safari */
       }
 
       .filter-indicator {
@@ -276,8 +286,9 @@
 
       .filter-btn {
         flex-grow: 1;
+        flex-shrink: 0; /* Prevent buttons from shrinking */
         text-align: center;
-        padding: 10px 16px;
+        padding: 10px 20px;
         font-size: 13px;
         border-radius: 12px;
       }
