@@ -375,21 +375,7 @@ try {
   let footerObserver = null;
 
   function updateLegalNavBottom() {
-    const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
-    if (!overlay) {
-      document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
-      return;
-    }
-    const container = overlay.querySelector('.cookie-banner-container');
-    if (container && overlay.classList.contains('show')) {
-      const rect = container.getBoundingClientRect();
-      const bannerStyle = window.getComputedStyle(overlay);
-      const bannerBottom = parseInt(bannerStyle.bottom, 10) || 0;
-      const totalHeight = rect.height + bannerBottom;
-      document.documentElement.style.setProperty('--legal-nav-bottom', `${totalHeight + 40}px`);
-    } else {
-      document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
-    }
+    document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
   }
 
   function closeBannerAndResetButtons() {
