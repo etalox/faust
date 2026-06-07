@@ -2491,35 +2491,112 @@ html.legal-page body {
   .legal-split-container {
     flex-direction: column;
     gap: 40px;
-    margin-top: 100px;
+    margin-top: 128px;
     margin-bottom: 80px;
+  }
+
+  .legal-body-content h1 {
+    font-size: 40px !important;
+    line-height: 1.12 !important;
+    margin-bottom: 14px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .legal-body-content h2 {
+    font-size: 21px !important;
+    line-height: 1.25 !important;
+    margin: 42px 0 12px 0 !important;
+    padding-top: 26px;
+    letter-spacing: 0 !important;
   }
 
   .legal-sidebar {
     width: 100%;
-    position: static;
+    position: sticky;
+    top: 80px;
+    z-index: 10;
     border-bottom: 1px solid var(--line);
-    padding-bottom: 24px;
+    padding: 14px 0;
     margin-top: 0; /* Restablece el margen en móviles */
+    gap: 18px;
+    overflow: hidden;
+    background: var(--bg);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .legal-sidebar h3 {
+    flex: 0 0 auto;
   }
 
   .legal-toc {
     flex-direction: row;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: nowrap;
+    gap: 18px;
     border-left: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0;
+  }
+
+  .legal-toc::-webkit-scrollbar {
+    display: none;
+  }
+
+  .legal-toc-item {
+    flex: 0 0 auto;
   }
 
   .legal-toc-item a {
     border-left: none;
     border-bottom: 2px solid transparent;
     padding-left: 0;
-    padding-bottom: 4px;
+    padding-bottom: 7px;
     margin-left: 0;
+    white-space: nowrap;
+    font-size: 13px;
   }
 
   .legal-toc-item.is-active a {
     border-bottom-color: var(--blue);
+    padding-left: 0;
+  }
+
+  .legal-toc-item a:hover {
+    padding-left: 0;
+  }
+
+  .legal-tldr-box,
+  .legal-disclaimer {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .legal-sidebar {
+    display: none;
+  }
+
+  .legal-split-container {
+    gap: 28px;
+    margin-top: 124px;
+  }
+
+  .legal-body-content h1 {
+    font-size: 38px !important;
+    line-height: 1.12 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .legal-body-content h2 {
+    font-size: 20px !important;
+    line-height: 1.25 !important;
+    margin: 34px 0 10px 0 !important;
+    padding-top: 22px;
+    scroll-margin-top: 110px;
   }
 }
 
