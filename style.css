@@ -520,6 +520,9 @@ h2.lead.reveal-item.reveal-visible {
   flex-direction: column;
   gap: 50px;
   border-left: 1px solid var(--line);
+  background-color: var(--bg, #0A0A0C);
+  position: relative;
+  z-index: 1;
 }
 
 .stat:first-child {
@@ -1926,6 +1929,33 @@ body.hide-page-grid .section-grid-bg::after {
   animation: flowDash 1.6s linear infinite;
 }
 
+/* Timeline dials rotate asynchronously (different speeds/directions for independent cycles) */
+.perk-preview-svg.is-active .dial-left,
+.perk-interactive-item.is-active .perk-mobile-visual .dial-left {
+  animation: rotateDialLeft 6s linear infinite;
+}
+.perk-preview-svg.is-active .dial-center,
+.perk-interactive-item.is-active .perk-mobile-visual .dial-center {
+  animation: rotateDialCenter 4s linear infinite;
+}
+.perk-preview-svg.is-active .dial-right,
+.perk-interactive-item.is-active .perk-mobile-visual .dial-right {
+  animation: rotateDialRight 8s linear infinite;
+}
+
+@keyframes rotateDialLeft {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 24; }
+}
+@keyframes rotateDialCenter {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -24; }
+}
+@keyframes rotateDialRight {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 32; }
+}
+
 @keyframes floatCube {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-4px); }
@@ -1940,38 +1970,40 @@ body.hide-page-grid .section-grid-bg::after {
 }
 
 /* ── Perk 3: Evidencia — Isometric analytical bars ── */
-/* Scanning line sweeps horizontally across the chart */
-.perk-preview-svg.is-active .evidence-scan,
-.perk-interactive-item.is-active .perk-mobile-visual .evidence-scan {
-  animation: scanSweep 3.5s ease-in-out infinite;
-}
 
-@keyframes scanSweep {
-  0%, 100% { transform: translateX(0); opacity: 0.08; }
-  50%      { transform: translateX(170px); opacity: 0.25; }
-}
-
-/* Dynamic growing and shrinking animation of isometric bars */
+/* Dynamic growing and shrinking animation of isometric bars (synchronized with scan sweep) */
 .perk-preview-svg.is-active .evidence-bar-iso path,
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso path {
-  animation-delay: var(--bar-delay, 0s) !important;
   animation-duration: 3s !important;
   animation-iteration-count: infinite !important;
   animation-timing-function: ease-in-out !important;
 }
 
-/* Bar 1 (Short) path animations */
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path {
+  animation-delay: -0.54s !important;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path {
+  animation-delay: -0.75s !important;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path {
+  animation-delay: -0.96s !important;
+}
+
+/* Bar 3 (Tall) path animations */
 .perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(1),
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(1) {
-  animation-name: growBar1Left;
+  animation-name: growBar3Left;
 }
 .perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(2),
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(2) {
-  animation-name: growBar1Right;
+  animation-name: growBar3Right;
 }
 .perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(3),
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(3) {
-  animation-name: growBar1Top;
+  animation-name: growBar3Top;
 }
 
 /* Bar 2 (Medium) path animations */
@@ -1988,57 +2020,57 @@ body.hide-page-grid .section-grid-bg::after {
   animation-name: growBar2Top;
 }
 
-/* Bar 3 (Tall) path animations */
+/* Bar 1 (Short) path animations */
 .perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(1),
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(1) {
-  animation-name: growBar3Left;
+  animation-name: growBar1Left;
 }
 .perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(2),
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(2) {
-  animation-name: growBar3Right;
+  animation-name: growBar1Right;
 }
 .perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(3),
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(3) {
-  animation-name: growBar3Top;
+  animation-name: growBar1Top;
 }
 
 @keyframes growBar1Left {
-  0%, 100% { d: path('M 54,101 L 72,110 L 72,128 L 54,119 Z'); }
-  50%      { d: path('M 54,89 L 72,98 L 72,128 L 54,119 Z'); }
+  0%, 100% { d: path('M 50,101 L 72,112 L 72,130 L 50,119 Z'); }
+  50%      { d: path('M 50,89 L 72,100 L 72,130 L 50,119 Z'); }
 }
 @keyframes growBar1Right {
-  0%, 100% { d: path('M 72,110 L 90,101 L 90,119 L 72,128 Z'); }
-  50%      { d: path('M 72,98 L 90,89 L 90,119 L 72,128 Z'); }
+  0%, 100% { d: path('M 72,112 L 94,101 L 94,119 L 72,130 Z'); }
+  50%      { d: path('M 72,100 L 94,89 L 94,119 L 72,130 Z'); }
 }
 @keyframes growBar1Top {
-  0%, 100% { d: path('M 72,92 L 90,101 L 72,110 L 54,101 Z'); }
-  50%      { d: path('M 72,80 L 90,89 L 72,98 L 54,89 Z'); }
+  0%, 100% { d: path('M 72,90 L 94,101 L 72,112 L 50,101 Z'); }
+  50%      { d: path('M 72,78 L 94,89 L 72,100 L 50,89 Z'); }
 }
 
 @keyframes growBar2Left {
-  0%, 100% { d: path('M 102,87 L 120,96 L 120,128 L 102,119 Z'); }
-  50%      { d: path('M 102,71 L 120,80 L 120,128 L 102,119 Z'); }
+  0%, 100% { d: path('M 98,87 L 120,98 L 120,130 L 98,119 Z'); }
+  50%      { d: path('M 98,71 L 120,82 L 120,130 L 98,119 Z'); }
 }
 @keyframes growBar2Right {
-  0%, 100% { d: path('M 120,96 L 138,87 L 138,119 L 120,128 Z'); }
-  50%      { d: path('M 120,80 L 138,71 L 138,119 L 120,128 Z'); }
+  0%, 100% { d: path('M 120,98 L 142,87 L 142,119 L 120,130 Z'); }
+  50%      { d: path('M 120,82 L 142,71 L 142,119 L 120,130 Z'); }
 }
 @keyframes growBar2Top {
-  0%, 100% { d: path('M 120,78 L 138,87 L 120,96 L 102,87 Z'); }
-  50%      { d: path('M 120,62 L 138,71 L 120,80 L 102,71 Z'); }
+  0%, 100% { d: path('M 120,76 L 142,87 L 120,98 L 98,87 Z'); }
+  50%      { d: path('M 120,60 L 142,71 L 120,82 L 98,71 Z'); }
 }
 
 @keyframes growBar3Left {
-  0%, 100% { d: path('M 150,69 L 168,78 L 168,128 L 150,119 Z'); }
-  50%      { d: path('M 150,49 L 168,58 L 168,128 L 150,119 Z'); }
+  0%, 100% { d: path('M 146,69 L 168,80 L 168,130 L 146,119 Z'); }
+  50%      { d: path('M 146,49 L 168,60 L 168,130 L 146,119 Z'); }
 }
 @keyframes growBar3Right {
-  0%, 100% { d: path('M 168,78 L 186,69 L 186,119 L 168,128 Z'); }
-  50%      { d: path('M 168,58 L 186,49 L 186,119 L 168,128 Z'); }
+  0%, 100% { d: path('M 168,80 L 190,69 L 190,119 L 168,130 Z'); }
+  50%      { d: path('M 168,60 L 190,49 L 190,119 L 168,130 Z'); }
 }
 @keyframes growBar3Top {
-  0%, 100% { d: path('M 168,60 L 186,69 L 168,78 L 150,69 Z'); }
-  50%      { d: path('M 168,40 L 186,49 L 168,58 L 150,49 Z'); }
+  0%, 100% { d: path('M 168,58 L 190,69 L 168,80 L 146,69 Z'); }
+  50%      { d: path('M 168,38 L 190,49 L 168,60 L 146,49 Z'); }
 }
 
 /* ── Perk 4: High-Ticket — Stacked server layers ── */
@@ -2064,6 +2096,7 @@ body.hide-page-grid .section-grid-bg::after {
 }
 
 .perk-interactive-item.is-active .perk-mobile-visual .auto-accent circle,
+.perk-interactive-item.is-active .perk-mobile-visual .auto-accent ellipse,
 .perk-interactive-item.is-active .perk-mobile-visual .infra-top ellipse {
   stroke: #ffffff !important;
   opacity: 0.8 !important;
