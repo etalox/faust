@@ -13,7 +13,7 @@ if (!window.showPrototypeToast) {
           <div class="message-modal">
             <div class="message-modal-header">
               <div class="message-modal-title-row" style="justify-content: space-between;">
-                <span style="font-size: 20px; font-weight: 500; color: #fff;">Página web en desarrollo</span>
+                <span style="font-size: 20px; font-weight: 500; color: #fff;">Sitio Web en construcción</span>
                 <button class="faust-modal-close-btn" style="background: none; border: none; color: rgba(255, 255, 255, 0.4); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s;" aria-label="Cerrar">&times;</button>
               </div>
             </div>
@@ -781,7 +781,7 @@ class FaustNavbar extends HTMLElement {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           if (window.showPrototypeToast) {
-            window.showPrototypeToast('El contenido al que intenta navegar aún se encuentra en desarrollo, aún no es indexado o ha sido retirado. Por favor, contáctenos para solicitar más información. Agradecemos su interés.');
+            window.showPrototypeToast('Este contenido está en desarrollo. Por favor, contáctenos para solicitar la información que necesita. Agradecemos su interés.');
           }
         });
       }
