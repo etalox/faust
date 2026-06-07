@@ -1,3 +1,101 @@
+if (!window.showPrototypeToast) {
+  window.showPrototypeToast = (message) => {
+    // Prevent duplicate modals
+    if (document.getElementById('faust-prototype-modal')) return;
+
+    const backdrop = document.createElement('div');
+    backdrop.id = 'faust-prototype-modal';
+    backdrop.className = 'message-overlay';
+
+    backdrop.innerHTML = `
+      <div class="message-overlay-wrap">
+        <div class="message-modal-container" style="max-width: 440px;">
+          <div class="message-modal">
+            <div class="message-modal-header">
+              <div class="message-modal-title-row" style="justify-content: space-between;">
+                <span style="font-size: 20px; font-weight: 500; color: #fff;">Página web en desarrollo</span>
+                <button class="faust-modal-close-btn" style="background: none; border: none; color: rgba(255, 255, 255, 0.4); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s;" aria-label="Cerrar">&times;</button>
+              </div>
+            </div>
+            <div class="message-modal-body" style="text-align: left;">
+              <div style="font-size: 15px; line-height: 1.6; color: rgba(255, 255, 255, 0.7); font-family: inherit;">
+                ${message}
+              </div>
+            </div>
+            <div class="message-modal-footer">
+              <button class="btn btn-secondary faust-modal-contact-btn" style="min-width: 120px; justify-content: center;">Contacto</button>
+              <button class="btn btn-primary faust-modal-action-btn" style="min-width: 120px; justify-content: center;">Entendido</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(backdrop);
+    document.body.style.overflow = 'hidden';
+
+    // Fade in / Slide up animation by adding 'is-open' class
+    requestAnimationFrame(() => {
+      backdrop.classList.add('is-open');
+    });
+
+    // Close logic
+    const closeModal = () => {
+      backdrop.classList.remove('is-open');
+      document.body.style.overflow = '';
+      
+      // Wait for transitions to finish before removing from DOM
+      backdrop.addEventListener('transitionend', () => {
+        backdrop.remove();
+      });
+      document.removeEventListener('keydown', handleEsc);
+    };
+
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') closeModal();
+    };
+
+    // Close on escape key
+    document.addEventListener('keydown', handleEsc);
+
+    // Close on backdrop click (outside the modal box)
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop || e.target.classList.contains('message-overlay-wrap')) {
+        closeModal();
+      }
+    });
+
+    // Close button events
+    const closeBtn = backdrop.querySelector('.faust-modal-close-btn');
+    closeBtn.addEventListener('click', closeModal);
+    closeBtn.addEventListener('mouseenter', () => {
+      closeBtn.style.color = '#fff';
+    });
+    closeBtn.addEventListener('mouseleave', () => {
+      closeBtn.style.color = 'rgba(255, 255, 255, 0.4)';
+    });
+
+    // Contact button event
+    const contactBtn = backdrop.querySelector('.faust-modal-contact-btn');
+    contactBtn.addEventListener('click', () => {
+      closeModal();
+      if (window.openMessageModal) {
+        setTimeout(() => {
+          window.openMessageModal();
+        }, 300);
+      } else {
+        window.location.hash = '#contacto';
+      }
+    });
+
+    // Action button event
+    const actionBtn = backdrop.querySelector('.faust-modal-action-btn');
+    actionBtn.addEventListener('click', closeModal);
+  };
+}
+
+
+
 class FaustNavbar extends HTMLElement {
   connectedCallback() {
     this.style.display = 'contents';
@@ -675,6 +773,19 @@ class FaustNavbar extends HTMLElement {
     window.addEventListener('resize', checkNavGap);
     
     this._resizeHandler = checkNavGap;
+
+    // Intercept placeholder links
+    this.querySelectorAll('a').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href.endsWith('#') || href.endsWith('#resultados') || href.endsWith('#expertos')) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (window.showPrototypeToast) {
+            window.showPrototypeToast('El contenido al que intenta navegar aún se encuentra en desarrollo, aún no es indexado o ha sido retirado. Por favor, contáctenos para solicitar más información. Agradecemos su interés.');
+          }
+        });
+      }
+    });
   }
 
   cleanup() {
