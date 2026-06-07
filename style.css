@@ -1550,6 +1550,13 @@ html.legal-page body {
   right: clamp(4vw, 16.26vw - 120.13px, 140px);
   pointer-events: none;
   z-index: -1;
+  transition: opacity 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 1;
+}
+
+body.hide-page-grid .section-grid-bg::before,
+body.hide-page-grid .section-grid-bg::after {
+  opacity: 0;
 }
 
 .section-grid-bg::before {
@@ -1887,37 +1894,12 @@ html.legal-page body {
 .perk-preview-svg.is-active .revenue-layer,
 .perk-interactive-item.is-active .perk-mobile-visual .revenue-layer {
   animation: floatLayer 4s ease-in-out infinite;
-}
-.perk-preview-svg.is-active .revenue-layer:nth-child(1),
-.perk-interactive-item.is-active .perk-mobile-visual .revenue-layer:nth-child(1) {
-  animation-delay: 0s;
-}
-.perk-preview-svg.is-active .revenue-layer:nth-child(1):nth-last-child(1),
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(2) > .revenue-layer {
   animation-delay: 0.5s;
-}
-.perk-preview-svg.is-active g:nth-child(3) > .revenue-layer,
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(3) > .revenue-layer {
-  animation-delay: 1s;
-}
-.perk-preview-svg.is-active g:nth-child(4) > .revenue-layer,
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(4) > .revenue-layer {
-  animation-delay: 1.5s;
-}
-
-/* Glow under the stack breathes */
-.perk-preview-svg.is-active .revenue-glow,
-.perk-interactive-item.is-active .perk-mobile-visual .revenue-glow {
-  animation: breatheGlow 3.5s ease-in-out infinite;
 }
 
 @keyframes floatLayer {
-  0%, 100% { transform: translateY(0); opacity: 0.85; }
-  50%      { transform: translateY(-3px); opacity: 1; }
-}
-@keyframes breatheGlow {
-  0%, 100% { opacity: 0.03; }
-  50%      { opacity: 0.12; }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
 }
 
 /* ── Perk 2: Autonomía — Independent floating cubes ── */
@@ -1945,12 +1927,12 @@ html.legal-page body {
 }
 
 @keyframes floatCube {
-  0%, 100% { transform: translateY(0); opacity: 0.7; }
-  50%      { transform: translateY(-4px); opacity: 1; }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
 }
 @keyframes floatCubeAlt {
-  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.75; }
-  50%      { transform: translateY(-5px) translateX(1px); opacity: 1; }
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-5px) translateX(1px); }
 }
 @keyframes flowDash {
   from { stroke-dashoffset: 0; }
@@ -1958,26 +1940,15 @@ html.legal-page body {
 }
 
 /* ── Perk 3: Evidencia — Isometric analytical bars ── */
-/* Each bar group pulses opacity with staggered delay */
-.perk-preview-svg.is-active .evidence-bar-iso,
-.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso {
-  animation: pulseBar 3s ease-in-out infinite;
-  animation-delay: var(--bar-delay, 0s);
-}
-
 /* Scanning line sweeps horizontally across the chart */
 .perk-preview-svg.is-active .evidence-scan,
 .perk-interactive-item.is-active .perk-mobile-visual .evidence-scan {
   animation: scanSweep 4.5s ease-in-out infinite;
 }
 
-@keyframes pulseBar {
-  0%, 100% { opacity: 0.5; }
-  50%      { opacity: 1; }
-}
 @keyframes scanSweep {
   0%, 100% { transform: translateX(0); opacity: 0.08; }
-  50%      { transform: translateX(130px); opacity: 0.25; }
+  50%      { transform: translateX(170px); opacity: 0.25; }
 }
 
 /* ── Perk 4: High-Ticket — Stacked server layers ── */
@@ -1987,36 +1958,9 @@ html.legal-page body {
   animation: liftInfraTop 3.5s ease-in-out infinite;
 }
 
-/* Shimmer ripple through the stack, bottom to top */
-.perk-preview-svg.is-active g:nth-child(1) > .infra-layer,
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(1) > .infra-layer {
-  animation: shimmerLayer 5s ease-in-out infinite;
-}
-.perk-preview-svg.is-active g:nth-child(2) > .infra-layer,
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(2) > .infra-layer {
-  animation: shimmerLayer 5s ease-in-out infinite 0.4s;
-}
-.perk-preview-svg.is-active g:nth-child(3) > .infra-layer,
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(3) > .infra-layer {
-  animation: shimmerLayer 5s ease-in-out infinite 0.8s;
-}
-.perk-preview-svg.is-active g:nth-child(4) > .infra-layer,
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(4) > .infra-layer {
-  animation: shimmerLayer 5s ease-in-out infinite 1.2s;
-}
-.perk-preview-svg.is-active g:nth-child(5) > .infra-layer,
-.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(5) > .infra-layer {
-  animation: shimmerLayer 5s ease-in-out infinite 1.6s;
-}
-
 @keyframes liftInfraTop {
-  0%, 100% { transform: translateY(0); opacity: 0.8; }
-  50%      { transform: translateY(-3px); opacity: 1; }
-}
-@keyframes shimmerLayer {
-  0%, 100% { opacity: 0.65; }
-  30%      { opacity: 1; }
-  60%      { opacity: 0.65; }
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
 }
 
 

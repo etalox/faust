@@ -25,7 +25,8 @@
     'Components/apply-modal.js',
     'Components/logo-lockup.js',
     'Components/vacancy-card.js',
-    'Components/responsive-br.js'
+    'Components/responsive-br.js',
+    'Components/perk-illustrations.js'
   ];
 
   scripts.forEach(src => {
@@ -33,5 +34,26 @@
     s.src = basePath + src;
     s.async = false;
     document.head.appendChild(s);
+  });
+
+  // IntersectionObserver to fade out background lines when the final CTA enters the viewport
+  document.addEventListener('DOMContentLoaded', function() {
+    const finalCta = document.querySelector('.cta') || document.getElementById('contacto') || document.getElementById('vacantes');
+    if (finalCta) {
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            document.body.classList.add('hide-page-grid');
+          } else {
+            document.body.classList.remove('hide-page-grid');
+          }
+        });
+      }, {
+        root: null,
+        threshold: 0.05,
+        rootMargin: '0px'
+      });
+      observer.observe(finalCta);
+    }
   });
 })();
