@@ -13,7 +13,7 @@ if (!window.showPrototypeToast) {
           <div class="message-modal">
             <div class="message-modal-header">
               <div class="message-modal-title-row" style="justify-content: space-between;">
-                <span style="font-size: 20px; font-weight: 500; color: #fff;">Página web en desarrollo</span>
+                <span style="font-size: 20px; font-weight: 500; color: #fff;">Sitio Web en Desarrollo</span>
                 <button class="faust-modal-close-btn" style="background: none; border: none; color: rgba(255, 255, 255, 0.4); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s;" aria-label="Cerrar">&times;</button>
               </div>
             </div>
