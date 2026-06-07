@@ -1609,7 +1609,9 @@ html.legal-page body {
   border-bottom: 1px solid var(--line);
   padding: 28px 0;
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: opacity var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1),
+    transform var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
   background-color: var(--bg);
   position: relative;
   z-index: 1;
