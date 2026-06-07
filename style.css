@@ -1610,6 +1610,9 @@ html.legal-page body {
   padding: 28px 0;
   cursor: pointer;
   transition: border-color 0.3s ease;
+  background-color: var(--bg);
+  position: relative;
+  z-index: 1;
 }
 
 .faq-item:hover {
@@ -1717,6 +1720,8 @@ html.legal-page body {
   transition: opacity 0.3s ease;
   position: relative;
   flex-direction: row;
+  background-color: var(--bg);
+  z-index: 1;
 }
 
 .perk-interactive-item:hover {
@@ -1785,7 +1790,7 @@ html.legal-page body {
 }
 
 .mockup-window {
-  background: rgba(255, 255, 255, 0.01);
+  background: var(--bg);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   overflow: hidden;
@@ -1795,6 +1800,7 @@ html.legal-page body {
   height: 360px;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 }
 
 .mockup-header {
@@ -1859,14 +1865,159 @@ html.legal-page body {
 .perk-technical-svg {
   width: 100%;
   height: 100%;
-  max-width: 280px;
-  max-height: 180px;
+  max-width: 340px;
+  max-height: 220px;
   overflow: visible;
 }
 
 .perk-mobile-visual {
   display: none;
 }
+
+/* ═══════════════════════════════════════════════
+   SVG LOOP ANIMATIONS — Isometric Illustrations
+   Smooth transforms on inner <g> wrappers only.
+   Outer <g> holds position, inner <g> holds class.
+   ═══════════════════════════════════════════════ */
+
+/* ── Perk 1: Revenue Share — Stacked ascending layers ── */
+/* Each layer floats gently upward at staggered intervals */
+.perk-preview-svg.is-active .revenue-layer,
+.perk-interactive-item.is-active .perk-mobile-visual .revenue-layer {
+  animation: floatLayer 4s ease-in-out infinite;
+}
+.perk-preview-svg.is-active .revenue-layer:nth-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual .revenue-layer:nth-child(1) {
+  animation-delay: 0s;
+}
+.perk-preview-svg.is-active .revenue-layer:nth-child(1):nth-last-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(2) > .revenue-layer {
+  animation-delay: 0.5s;
+}
+.perk-preview-svg.is-active g:nth-child(3) > .revenue-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(3) > .revenue-layer {
+  animation-delay: 1s;
+}
+.perk-preview-svg.is-active g:nth-child(4) > .revenue-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(4) > .revenue-layer {
+  animation-delay: 1.5s;
+}
+
+/* Glow under the stack breathes */
+.perk-preview-svg.is-active .revenue-glow,
+.perk-interactive-item.is-active .perk-mobile-visual .revenue-glow {
+  animation: breatheGlow 3.5s ease-in-out infinite;
+}
+
+@keyframes floatLayer {
+  0%, 100% { transform: translateY(0); opacity: 0.85; }
+  50%      { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes breatheGlow {
+  0%, 100% { opacity: 0.03; }
+  50%      { opacity: 0.12; }
+}
+
+/* ── Perk 2: Autonomía — Independent floating cubes ── */
+/* Each cube floats independently with unique rhythm */
+.perk-preview-svg.is-active .auto-module,
+.perk-interactive-item.is-active .perk-mobile-visual .auto-module {
+  animation: floatCube 3.6s ease-in-out infinite;
+}
+.perk-preview-svg.is-active g:nth-child(2) > .auto-module,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(2) > .auto-module {
+  animation: floatCubeAlt 3.2s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+.perk-preview-svg.is-active g:nth-child(3) > .auto-module,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(3) > .auto-module {
+  animation: floatCube 3.8s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* Connectors flow with dashes */
+.perk-preview-svg.is-active .auto-connector,
+.perk-interactive-item.is-active .perk-mobile-visual .auto-connector {
+  stroke-dasharray: 3 5;
+  animation: flowDash 2.2s linear infinite;
+}
+
+@keyframes floatCube {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50%      { transform: translateY(-4px); opacity: 1; }
+}
+@keyframes floatCubeAlt {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.75; }
+  50%      { transform: translateY(-5px) translateX(1px); opacity: 1; }
+}
+@keyframes flowDash {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -16; }
+}
+
+/* ── Perk 3: Evidencia — Isometric analytical bars ── */
+/* Each bar group pulses opacity with staggered delay */
+.perk-preview-svg.is-active .evidence-bar-iso,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso {
+  animation: pulseBar 3s ease-in-out infinite;
+  animation-delay: var(--bar-delay, 0s);
+}
+
+/* Scanning line sweeps horizontally across the chart */
+.perk-preview-svg.is-active .evidence-scan,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-scan {
+  animation: scanSweep 4.5s ease-in-out infinite;
+}
+
+@keyframes pulseBar {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+@keyframes scanSweep {
+  0%, 100% { transform: translateX(0); opacity: 0.08; }
+  50%      { transform: translateX(130px); opacity: 0.25; }
+}
+
+/* ── Perk 4: High-Ticket — Stacked server layers ── */
+/* Top layer lifts and glows */
+.perk-preview-svg.is-active .infra-top,
+.perk-interactive-item.is-active .perk-mobile-visual .infra-top {
+  animation: liftInfraTop 3.5s ease-in-out infinite;
+}
+
+/* Shimmer ripple through the stack, bottom to top */
+.perk-preview-svg.is-active g:nth-child(1) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(1) > .infra-layer {
+  animation: shimmerLayer 5s ease-in-out infinite;
+}
+.perk-preview-svg.is-active g:nth-child(2) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(2) > .infra-layer {
+  animation: shimmerLayer 5s ease-in-out infinite 0.4s;
+}
+.perk-preview-svg.is-active g:nth-child(3) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(3) > .infra-layer {
+  animation: shimmerLayer 5s ease-in-out infinite 0.8s;
+}
+.perk-preview-svg.is-active g:nth-child(4) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(4) > .infra-layer {
+  animation: shimmerLayer 5s ease-in-out infinite 1.2s;
+}
+.perk-preview-svg.is-active g:nth-child(5) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(5) > .infra-layer {
+  animation: shimmerLayer 5s ease-in-out infinite 1.6s;
+}
+
+@keyframes liftInfraTop {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50%      { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes shimmerLayer {
+  0%, 100% { opacity: 0.65; }
+  30%      { opacity: 1; }
+  60%      { opacity: 0.65; }
+}
+
+
 
 /* 4. Metodología Timeline (About Nosotros) */
 .timeline-grid {
@@ -2252,6 +2403,10 @@ html.legal-page body {
 
 /* Responsive adjustments for new classes */
 @media (max-width: 980px) {
+  .section-grid-bg::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='25%25' y1='0' x2='25%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='50%25' y1='0' x2='50%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='75%25' y1='0' x2='75%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E");
+  }
+
   .faq-section {
     padding: 80px 0;
   }
@@ -2303,7 +2458,7 @@ html.legal-page body {
     height: 180px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.01);
+    background: var(--bg);
     align-items: center;
     justify-content: center;
     margin-top: 16px;

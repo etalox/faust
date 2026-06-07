@@ -370,13 +370,31 @@
               </div>
               <!-- Mobile visual (inline SVG) -->
               <div class="perk-mobile-visual">
-                <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                  <line x1="20" y1="100" x2="180" y2="100" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
-                  <line x1="20" y1="20" x2="20" y2="100" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
-                  <line x1="20" y1="60" x2="180" y2="60" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.1"/>
-                  <line x1="100" y1="20" x2="100" y2="100" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.1"/>
-                  <path d="M 20 90 C 60 85, 100 50, 180 30" fill="none" stroke="currentColor" stroke-width="2"/>
-                  <circle cx="180" cy="30" r="4" fill="currentColor"/>
+                <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                  <!-- Revenue Share: Isometric ascending stacked layers -->
+                  <g transform="translate(40, 120)"><g class="revenue-layer">
+                    <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.1"/>
+                  </g></g>
+                  <g transform="translate(40, 100)"><g class="revenue-layer">
+                    <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.16"/>
+                    <line x1="0" y1="0" x2="0" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                    <line x1="160" y1="0" x2="160" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                    <line x1="80" y1="-20" x2="80" y2="0" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                  </g></g>
+                  <g transform="translate(40, 80)"><g class="revenue-layer">
+                    <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                    <line x1="0" y1="0" x2="0" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                    <line x1="160" y1="0" x2="160" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                    <line x1="80" y1="-20" x2="80" y2="0" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                  </g></g>
+                  <g transform="translate(40, 55)"><g class="revenue-layer">
+                    <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                    <line x1="0" y1="0" x2="0" y2="25" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+                    <line x1="160" y1="0" x2="160" y2="25" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+                    <line x1="80" y1="-20" x2="80" y2="5" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+                    <ellipse cx="80" cy="0" rx="30" ry="8" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>
+                  </g></g>
+                  <ellipse class="revenue-glow" cx="120" cy="142" rx="60" ry="8" fill="currentColor" opacity="0.05"/>
                 </svg>
               </div>
               <div class="perk-row-progress">
@@ -393,13 +411,27 @@
               </div>
               <!-- Mobile visual (inline SVG) -->
               <div class="perk-mobile-visual">
-                <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                  <rect x="20" y="30" width="70" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                  <rect x="100" y="30" width="80" height="24" rx="4" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-width="1.5"/>
-                  <rect x="20" y="66" width="90" height="24" rx="4" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-width="1.5"/>
-                  <rect x="120" y="66" width="60" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                  <line x1="90" y1="42" x2="100" y2="42" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.3"/>
-                  <line x1="110" y1="78" x2="120" y2="78" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.3"/>
+                <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                  <!-- Autonomy: Independent isometric cubes -->
+                  <g transform="translate(30, 80)"><g class="auto-module">
+                    <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.3"/>
+                    <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.18"/>
+                    <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                  </g></g>
+                  <g transform="translate(95, 55)"><g class="auto-module">
+                    <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.4"/>
+                    <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                    <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.28"/>
+                    <circle cx="25" cy="4" r="2" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.25"/>
+                  </g></g>
+                  <g transform="translate(160, 75)"><g class="auto-module">
+                    <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.3"/>
+                    <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.18"/>
+                    <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                  </g></g>
+                  <line class="auto-connector" x1="80" y1="86" x2="95" y2="73" stroke="currentColor" stroke-width="0.5" opacity="0.12"/>
+                  <line class="auto-connector" x1="145" y1="73" x2="160" y2="81" stroke="currentColor" stroke-width="0.5" opacity="0.12"/>
+                  <ellipse cx="120" cy="142" rx="70" ry="6" fill="currentColor" opacity="0.03"/>
                 </svg>
               </div>
               <div class="perk-row-progress">
@@ -416,13 +448,28 @@
               </div>
               <!-- Mobile visual (inline SVG) -->
               <div class="perk-mobile-visual">
-                <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                  <text x="20" y="38" fill="currentColor" opacity="0.5" font-size="10" font-family="monospace">A (Control)</text>
-                  <rect x="20" y="44" width="90" height="10" rx="2" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-width="1"/>
-                  <text x="120" y="52" fill="currentColor" opacity="0.6" font-size="10" font-family="monospace">2.14%</text>
-                  <text x="20" y="76" fill="currentColor" opacity="0.5" font-size="10" font-family="monospace">B (Variación)</text>
-                  <rect x="20" y="82" width="140" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                  <text x="170" y="90" fill="currentColor" font-size="10" font-family="monospace" font-weight="bold">3.82%</text>
+                <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                  <!-- Evidence: Isometric analytical bars rising from base plane -->
+                  <path d="M 20,120 L 120,70 L 220,120 L 120,150 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                  <line x1="45" y1="107" x2="145" y2="82" stroke="currentColor" stroke-width="0.3" opacity="0.05"/>
+                  <line x1="70" y1="120" x2="170" y2="95" stroke="currentColor" stroke-width="0.3" opacity="0.05"/>
+                  <line x1="95" y1="133" x2="195" y2="108" stroke="currentColor" stroke-width="0.3" opacity="0.05"/>
+                  <g class="evidence-bar-iso" style="--bar-delay: 0s">
+                    <path d="M 70,115 L 70,95 L 82,89 L 82,109 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+                    <path d="M 82,89 L 94,95 L 94,115 L 82,109 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.14"/>
+                    <path d="M 70,95 L 82,89 L 94,95 L 82,101 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.25"/>
+                  </g>
+                  <g class="evidence-bar-iso" style="--bar-delay: 0.4s">
+                    <path d="M 100,108 L 100,78 L 112,72 L 112,102 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.28"/>
+                    <path d="M 112,72 L 124,78 L 124,108 L 112,102 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.18"/>
+                    <path d="M 100,78 L 112,72 L 124,78 L 112,84 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.32"/>
+                  </g>
+                  <g class="evidence-bar-iso" style="--bar-delay: 0.8s">
+                    <path d="M 130,102 L 130,58 L 142,52 L 142,96 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.38"/>
+                    <path d="M 142,52 L 154,58 L 154,102 L 142,96 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                    <path d="M 130,58 L 142,52 L 154,58 L 142,64 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.42"/>
+                  </g>
+                  <line class="evidence-scan" x1="60" y1="40" x2="60" y2="130" stroke="currentColor" stroke-width="0.4" opacity="0.12"/>
                 </svg>
               </div>
               <div class="perk-row-progress">
@@ -439,15 +486,46 @@
               </div>
               <!-- Mobile visual (inline SVG) -->
               <div class="perk-mobile-visual">
-                <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                  <circle cx="50" cy="40" r="4" fill="currentColor"/>
-                  <circle cx="150" cy="40" r="4" fill="currentColor"/>
-                  <circle cx="100" cy="80" r="4" fill="currentColor"/>
-                  <line x1="50" y1="40" x2="150" y2="40" stroke="currentColor" stroke-width="1" opacity="0.3"/>
-                  <line x1="50" y1="40" x2="100" y2="80" stroke="currentColor" stroke-width="1" opacity="0.3"/>
-                  <line x1="150" y1="40" x2="100" y2="80" stroke="currentColor" stroke-width="1" opacity="0.3"/>
-                  <circle cx="100" cy="80" r="12" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
-                  <circle cx="100" cy="80" r="24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.1"/>
+                <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                  <!-- High-Ticket: Isometric stacked server layers receding -->
+                  <g transform="translate(40, 128)"><g class="infra-layer">
+                    <path d="M 0,0 L 80,-24 L 160,0 L 80,24 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.07"/>
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.05"/>
+                    <line x1="160" y1="0" x2="160" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.05"/>
+                    <path d="M 0,8 L 80,32 L 160,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.05"/>
+                  </g></g>
+                  <g transform="translate(45, 114)"><g class="infra-layer">
+                    <path d="M 0,0 L 75,-22 L 150,0 L 75,22 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.07"/>
+                    <line x1="150" y1="0" x2="150" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.07"/>
+                    <path d="M 0,8 L 75,30 L 150,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.07"/>
+                  </g></g>
+                  <g transform="translate(50, 100)"><g class="infra-layer">
+                    <path d="M 0,0 L 70,-20 L 140,0 L 70,20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.14"/>
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.09"/>
+                    <line x1="140" y1="0" x2="140" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.09"/>
+                    <path d="M 0,8 L 70,28 L 140,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.09"/>
+                  </g></g>
+                  <g transform="translate(55, 86)"><g class="infra-layer">
+                    <path d="M 0,0 L 65,-18 L 130,0 L 65,18 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.11"/>
+                    <line x1="130" y1="0" x2="130" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.11"/>
+                    <path d="M 0,8 L 65,26 L 130,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.11"/>
+                  </g></g>
+                  <g transform="translate(60, 72)"><g class="infra-layer">
+                    <path d="M 0,0 L 60,-16 L 120,0 L 60,16 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.23"/>
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.14"/>
+                    <line x1="120" y1="0" x2="120" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.14"/>
+                    <path d="M 0,8 L 60,24 L 120,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.14"/>
+                  </g></g>
+                  <g transform="translate(65, 58)"><g class="infra-top">
+                    <path d="M 0,0 L 55,-14 L 110,0 L 55,14 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.38"/>
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                    <line x1="110" y1="0" x2="110" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                    <path d="M 0,8 L 55,22 L 110,8" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                    <ellipse cx="55" cy="0" rx="20" ry="5" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.18"/>
+                  </g></g>
+                  <ellipse cx="120" cy="150" rx="55" ry="5" fill="currentColor" opacity="0.03"/>
                 </svg>
               </div>
               <div class="perk-row-progress">
@@ -468,50 +546,124 @@
                 <span class="mockup-filename" id="perk-filename">revenue_share.svg</span>
               </div>
               <div class="mockup-body">
-                <!-- SVG 1 -->
+                <!-- SVG 1: Revenue Share -->
                 <div class="perk-preview-svg is-active" id="perk-svg-0">
-                  <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                    <line x1="20" y1="100" x2="180" y2="100" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
-                    <line x1="20" y1="20" x2="20" y2="100" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
-                    <line x1="20" y1="60" x2="180" y2="60" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.1"/>
-                    <line x1="100" y1="20" x2="100" y2="100" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.1"/>
-                    <path d="M 20 90 C 60 85, 100 50, 180 30" fill="none" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="180" cy="30" r="4" fill="currentColor"/>
+                  <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                    <g transform="translate(40, 120)"><g class="revenue-layer">
+                      <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.1"/>
+                    </g></g>
+                    <g transform="translate(40, 100)"><g class="revenue-layer">
+                      <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.16"/>
+                      <line x1="0" y1="0" x2="0" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                      <line x1="160" y1="0" x2="160" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                      <line x1="80" y1="-20" x2="80" y2="0" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                    </g></g>
+                    <g transform="translate(40, 80)"><g class="revenue-layer">
+                      <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                      <line x1="0" y1="0" x2="0" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                      <line x1="160" y1="0" x2="160" y2="20" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                      <line x1="80" y1="-20" x2="80" y2="0" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                    </g></g>
+                    <g transform="translate(40, 55)"><g class="revenue-layer">
+                      <path d="M 0,0 L 80,-20 L 160,0 L 80,20 Z" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
+                      <line x1="0" y1="0" x2="0" y2="25" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+                      <line x1="160" y1="0" x2="160" y2="25" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+                      <line x1="80" y1="-20" x2="80" y2="5" stroke="currentColor" stroke-width="0.5" opacity="0.15"/>
+                      <ellipse cx="80" cy="0" rx="30" ry="8" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.2"/>
+                    </g></g>
+                    <ellipse class="revenue-glow" cx="120" cy="142" rx="60" ry="8" fill="currentColor" opacity="0.05"/>
                   </svg>
                 </div>
-                <!-- SVG 2 -->
+                <!-- SVG 2: Autonomía -->
                 <div class="perk-preview-svg" id="perk-svg-1">
-                  <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                    <rect x="20" y="30" width="70" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                    <rect x="100" y="30" width="80" height="24" rx="4" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-width="1.5"/>
-                    <rect x="20" y="66" width="90" height="24" rx="4" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-width="1.5"/>
-                    <rect x="120" y="66" width="60" height="24" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                    <line x1="90" y1="42" x2="100" y2="42" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.3"/>
-                    <line x1="110" y1="78" x2="120" y2="78" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.3"/>
+                  <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                    <g transform="translate(30, 80)"><g class="auto-module">
+                      <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.3"/>
+                      <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.18"/>
+                      <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                    </g></g>
+                    <g transform="translate(95, 55)"><g class="auto-module">
+                      <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.4"/>
+                      <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                      <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.28"/>
+                      <circle cx="25" cy="4" r="2" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.25"/>
+                    </g></g>
+                    <g transform="translate(160, 75)"><g class="auto-module">
+                      <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.3"/>
+                      <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.18"/>
+                      <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                    </g></g>
+                    <line class="auto-connector" x1="80" y1="86" x2="95" y2="73" stroke="currentColor" stroke-width="0.5" opacity="0.12"/>
+                    <line class="auto-connector" x1="145" y1="73" x2="160" y2="81" stroke="currentColor" stroke-width="0.5" opacity="0.12"/>
+                    <ellipse cx="120" cy="142" rx="70" ry="6" fill="currentColor" opacity="0.03"/>
                   </svg>
                 </div>
-                <!-- SVG 3 -->
+                <!-- SVG 3: Evidencia -->
                 <div class="perk-preview-svg" id="perk-svg-2">
-                  <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                    <text x="20" y="38" fill="currentColor" opacity="0.5" font-size="10" font-family="monospace">A (Control)</text>
-                    <rect x="20" y="44" width="90" height="10" rx="2" fill="currentColor" opacity="0.1" stroke="currentColor" stroke-width="1"/>
-                    <text x="120" y="52" fill="currentColor" opacity="0.6" font-size="10" font-family="monospace">2.14%</text>
-                    <text x="20" y="76" fill="currentColor" opacity="0.5" font-size="10" font-family="monospace">B (Variación)</text>
-                    <rect x="20" y="82" width="140" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                    <text x="170" y="90" fill="currentColor" font-size="10" font-family="monospace" font-weight="bold">3.82%</text>
+                  <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                    <path d="M 20,120 L 120,70 L 220,120 L 120,150 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.08"/>
+                    <line x1="45" y1="107" x2="145" y2="82" stroke="currentColor" stroke-width="0.3" opacity="0.05"/>
+                    <line x1="70" y1="120" x2="170" y2="95" stroke="currentColor" stroke-width="0.3" opacity="0.05"/>
+                    <line x1="95" y1="133" x2="195" y2="108" stroke="currentColor" stroke-width="0.3" opacity="0.05"/>
+                    <g class="evidence-bar-iso" style="--bar-delay: 0s">
+                      <path d="M 70,115 L 70,95 L 82,89 L 82,109 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+                      <path d="M 82,89 L 94,95 L 94,115 L 82,109 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.14"/>
+                      <path d="M 70,95 L 82,89 L 94,95 L 82,101 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.25"/>
+                    </g>
+                    <g class="evidence-bar-iso" style="--bar-delay: 0.4s">
+                      <path d="M 100,108 L 100,78 L 112,72 L 112,102 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.28"/>
+                      <path d="M 112,72 L 124,78 L 124,108 L 112,102 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.18"/>
+                      <path d="M 100,78 L 112,72 L 124,78 L 112,84 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.32"/>
+                    </g>
+                    <g class="evidence-bar-iso" style="--bar-delay: 0.8s">
+                      <path d="M 130,102 L 130,58 L 142,52 L 142,96 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.38"/>
+                      <path d="M 142,52 L 154,58 L 154,102 L 142,96 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                      <path d="M 130,58 L 142,52 L 154,58 L 142,64 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.42"/>
+                    </g>
+                    <line class="evidence-scan" x1="60" y1="40" x2="60" y2="130" stroke="currentColor" stroke-width="0.4" opacity="0.12"/>
                   </svg>
                 </div>
-                <!-- SVG 4 -->
+                <!-- SVG 4: High-Ticket -->
                 <div class="perk-preview-svg" id="perk-svg-3">
-                  <svg viewBox="0 0 200 120" class="perk-technical-svg">
-                    <circle cx="50" cy="40" r="4" fill="currentColor"/>
-                    <circle cx="150" cy="40" r="4" fill="currentColor"/>
-                    <circle cx="100" cy="80" r="4" fill="currentColor"/>
-                    <line x1="50" y1="40" x2="150" y2="40" stroke="currentColor" stroke-width="1" opacity="0.3"/>
-                    <line x1="50" y1="40" x2="100" y2="80" stroke="currentColor" stroke-width="1" opacity="0.3"/>
-                    <line x1="150" y1="40" x2="100" y2="80" stroke="currentColor" stroke-width="1" opacity="0.3"/>
-                    <circle cx="100" cy="80" r="12" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
-                    <circle cx="100" cy="80" r="24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.1"/>
+                  <svg viewBox="0 0 240 160" class="perk-technical-svg">
+                    <g transform="translate(40, 128)"><g class="infra-layer">
+                      <path d="M 0,0 L 80,-24 L 160,0 L 80,24 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.07"/>
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.05"/>
+                      <line x1="160" y1="0" x2="160" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.05"/>
+                      <path d="M 0,8 L 80,32 L 160,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.05"/>
+                    </g></g>
+                    <g transform="translate(45, 114)"><g class="infra-layer">
+                      <path d="M 0,0 L 75,-22 L 150,0 L 75,22 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.1"/>
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.07"/>
+                      <line x1="150" y1="0" x2="150" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.07"/>
+                      <path d="M 0,8 L 75,30 L 150,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.07"/>
+                    </g></g>
+                    <g transform="translate(50, 100)"><g class="infra-layer">
+                      <path d="M 0,0 L 70,-20 L 140,0 L 70,20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.14"/>
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.09"/>
+                      <line x1="140" y1="0" x2="140" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.09"/>
+                      <path d="M 0,8 L 70,28 L 140,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.09"/>
+                    </g></g>
+                    <g transform="translate(55, 86)"><g class="infra-layer">
+                      <path d="M 0,0 L 65,-18 L 130,0 L 65,18 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.11"/>
+                      <line x1="130" y1="0" x2="130" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.11"/>
+                      <path d="M 0,8 L 65,26 L 130,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.11"/>
+                    </g></g>
+                    <g transform="translate(60, 72)"><g class="infra-layer">
+                      <path d="M 0,0 L 60,-16 L 120,0 L 60,16 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.23"/>
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.14"/>
+                      <line x1="120" y1="0" x2="120" y2="8" stroke="currentColor" stroke-width="0.4" opacity="0.14"/>
+                      <path d="M 0,8 L 60,24 L 120,8" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.14"/>
+                    </g></g>
+                    <g transform="translate(65, 58)"><g class="infra-top">
+                      <path d="M 0,0 L 55,-14 L 110,0 L 55,14 Z" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.38"/>
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                      <line x1="110" y1="0" x2="110" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                      <path d="M 0,8 L 55,22 L 110,8" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+                      <ellipse cx="55" cy="0" rx="20" ry="5" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.18"/>
+                    </g></g>
+                    <ellipse cx="120" cy="150" rx="55" ry="5" fill="currentColor" opacity="0.03"/>
                   </svg>
                 </div>
               </div>
