@@ -15,66 +15,6 @@
   <style>
     /* Careers specific stylesheet overrides */
 
-    /* Hero ASCII background */
-    .hero-ascii-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      opacity: 0.20;
-      pointer-events: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      mix-blend-mode: screen;
-    }
-
-    .hero-ascii-bg > div {
-      width: 100% !important;
-      height: 100% !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      position: absolute !important;
-      inset: 0 !important;
-      background: none !important;
-    }
-
-    .hero-ascii-bg table,
-    .hero-ascii-bg pre {
-      border-collapse: collapse !important;
-      border-spacing: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      user-select: none;
-      background-color: transparent !important;
-      width: auto !important;
-      height: auto !important;
-      max-width: none !important;
-      max-height: none !important;
-      white-space: pre !important;
-      word-wrap: normal !important;
-      overflow: visible !important;
-      text-align: center;
-    }
-
-    .hero-ascii-bg td {
-      padding: 0 !important;
-      margin: 0 !important;
-      font-family: monospace !important;
-      color: var(--fg) !important;
-      background-color: transparent !important;
-      text-align: center;
-      vertical-align: middle !important;
-    }
-
-    .hero > *:not(.hero-ascii-bg) {
-      position: relative;
-      z-index: 1;
-    }
 
 
     /* 1.5. Hero Content styling for optimal layout readability (Careers page only) */
@@ -395,7 +335,6 @@
 
   <main>
     <section class="hero wrap">
-      <faust-ascii-bg class="hero-ascii-bg"></faust-ascii-bg>
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
       <h1 class="reveal-item">Reunimos al top 1%<br>del talento en México</h1>
       <p class="reveal-item">Buscamos talento de clase mundial en CRO, UX/UI y desarrollo de software. Únete a nuestro
