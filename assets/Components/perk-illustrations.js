@@ -53,7 +53,6 @@ class FaustIllustrationAutonomy extends HTMLElement {
           <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.4"/>
           <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.22"/>
           <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.28"/>
-          <circle cx="25" cy="4" r="2" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.25"/>
         </g></g>
         <g transform="translate(160, 75)"><g class="auto-module">
           <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.3"/>
