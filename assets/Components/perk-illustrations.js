@@ -43,18 +43,21 @@ class FaustIllustrationAutonomy extends HTMLElement {
     this.style.display = 'contents';
     this.innerHTML = `
       <svg viewBox="0 0 240 160" class="perk-technical-svg">
-        <!-- Autonomy: Independent isometric cubes -->
+        <!-- Autonomy: Independent isometric cubes with asynchronous rotating timeline dials -->
         <g transform="translate(30, 80)"><g class="auto-module">
+          <ellipse class="auto-dial dial-left" cx="25" cy="25" rx="32" ry="16" fill="none" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2" stroke-dasharray="3 5"/>
           <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.3"/>
           <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.18"/>
           <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.22"/>
         </g></g>
         <g transform="translate(95, 55)"><g class="auto-module auto-accent">
+          <ellipse class="auto-dial dial-center" cx="25" cy="25" rx="32" ry="16" fill="none" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.3" stroke-dasharray="3 5"/>
           <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.4"/>
           <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.22"/>
           <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.28"/>
         </g></g>
         <g transform="translate(160, 75)"><g class="auto-module">
+          <ellipse class="auto-dial dial-right" cx="25" cy="25" rx="32" ry="16" fill="none" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2" stroke-dasharray="3 5"/>
           <path d="M 0,0 L 25,-12 L 50,0 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.3"/>
           <path d="M 50,0 L 50,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.18"/>
           <path d="M 0,0 L 0,25 L 25,37 L 25,12 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.22"/>
@@ -72,32 +75,29 @@ class FaustIllustrationEvidence extends HTMLElement {
     this.style.display = 'contents';
     this.innerHTML = `
       <svg viewBox="0 0 240 160" class="perk-technical-svg">
-        <!-- Evidence: Isometric bar chart — strict 2:1 iso vectors -->
-        <!-- Bar width: (+18,-9), depth: (-18,+9), height: (0,-N) -->
+        <!-- Evidence: Isometric bar chart — parallel 3D aligned bars -->
+        <!-- Bar width: (+22,-11), depth: (-22,+11), height: (0,-N) -->
 
-        <!-- Bar 1: Short — height 18 (cube), base at y=128 -->
-        <g class="evidence-bar-iso" style="--bar-delay: 0s">
-          <path d="M 54,101 L 72,110 L 72,128 L 54,119 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2"/>
-          <path d="M 72,110 L 90,101 L 90,119 L 72,128 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.15"/>
-          <path d="M 72,92 L 90,101 L 72,110 L 54,101 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.25"/>
+        <!-- Bar 3: Tall — height 50, base translated to Y=101 (back-most, drawn first) -->
+        <g class="evidence-bar-iso evidence-accent" transform="translate(-12, -18)">
+          <path d="M 146,69 L 168,80 L 168,130 L 146,119 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.35"/>
+          <path d="M 168,80 L 190,69 L 190,119 L 168,130 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.25"/>
+          <path d="M 168,58 L 190,69 L 168,80 L 146,69 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.42"/>
         </g>
 
-        <!-- Bar 2: Medium — height 32, base at y=128 -->
-        <g class="evidence-bar-iso" style="--bar-delay: 0.4s">
-          <path d="M 102,87 L 120,96 L 120,128 L 102,119 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.28"/>
-          <path d="M 120,96 L 138,87 L 138,119 L 120,128 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2"/>
-          <path d="M 120,78 L 138,87 L 120,96 L 102,87 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.35"/>
+        <!-- Bar 2: Medium — height 32, base at Y=119 (middle, drawn second) -->
+        <g class="evidence-bar-iso">
+          <path d="M 98,87 L 120,98 L 120,130 L 98,119 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.28"/>
+          <path d="M 120,98 L 142,87 L 142,119 L 120,130 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2"/>
+          <path d="M 120,76 L 142,87 L 120,98 L 98,87 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.35"/>
         </g>
 
-        <!-- Bar 3: Tall — height 50, base at y=128 -->
-        <g class="evidence-bar-iso evidence-accent" style="--bar-delay: 0.8s">
-          <path d="M 150,69 L 168,78 L 168,128 L 150,119 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.35"/>
-          <path d="M 168,78 L 186,69 L 186,119 L 168,128 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.25"/>
-          <path d="M 168,60 L 186,69 L 168,78 L 150,69 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.7" stroke-opacity="0.42"/>
+        <!-- Bar 1: Short — height 18 (cube), base translated to Y=137 (front-most, drawn last) -->
+        <g class="evidence-bar-iso" transform="translate(12, 18)">
+          <path d="M 50,101 L 72,112 L 72,130 L 50,119 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2"/>
+          <path d="M 72,112 L 94,101 L 94,119 L 72,130 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.15"/>
+          <path d="M 72,90 L 94,101 L 72,112 L 50,101 Z" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.25"/>
         </g>
-
-        <!-- Scan line (placed on top of the bars) -->
-        <line class="evidence-scan" x1="35" y1="15" x2="35" y2="145" stroke="currentColor" stroke-width="0.6" opacity="0.25"/>
       </svg>
     `;
   }
