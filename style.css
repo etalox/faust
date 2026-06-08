@@ -2783,6 +2783,12 @@ body.hide-page-grid .section-grid-bg::after {
     display: none !important;
   }
 
+  /* Sobreescribir el grid de fondo para que sus 2 líneas coincidan exactamente
+     con los 2 bordes divisorios entre las 3 tarjetas visibles (33.33% | 66.66%) */
+  #perks.section-grid-bg::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='33.333%25' y1='0' x2='33.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='66.666%25' y1='0' x2='66.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E") !important;
+  }
+
   /* El contenedor pasa a ser una sola columna */
   .perks-showcase-container {
     grid-template-columns: 1fr !important;
@@ -2792,15 +2798,12 @@ body.hide-page-grid .section-grid-bg::after {
 
   /* Fila horizontal con scroll si es necesario (Estilo Grid) */
   .perks-interactive-list {
-    display: flex !important;
-    flex-direction: row !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
     border-top: none !important;
     gap: 0 !important;
-    overflow-x: auto !important;
+    overflow-x: visible !important;
     padding: 24px 0 !important;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
 
   /* Estilos para el scrollbar en Webkit */
@@ -2820,8 +2823,9 @@ body.hide-page-grid .section-grid-bg::after {
 
   /* Tarjetas Individuales (Estilo Linear - Sin fondo, sin bordes propios, solo líneas verticales de división) */
   .perk-interactive-item {
-    flex: 1 1 0% !important;
-    min-width: 200px !important;
+    flex: none !important;
+    width: auto !important;
+    min-width: 0 !important;
     max-width: none !important;
     display: flex !important;
     flex-direction: column !important;
@@ -2836,24 +2840,22 @@ body.hide-page-grid .section-grid-bg::after {
     z-index: 1 !important;
     transform: none !important;
     box-shadow: none !important;
-    transition: flex 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-                opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
     --speed-scale: 2.5; /* Default slow speed scale */
   }
 
-  /* Animación de hover: opaca y ensancha la tarjeta seleccionada, desvanece y reduce las demás */
+  /* Animación de hover: opaca la tarjeta seleccionada, desvanece las demás */
   .perks-interactive-list:hover .perk-interactive-item {
     opacity: 0.45 !important;
-    flex: 0.8 1 0% !important;
     --speed-scale: 2.5 !important;
   }
   .perks-interactive-list .perk-interactive-item:hover {
     opacity: 1 !important;
-    flex: 1.4 1 0% !important;
     --speed-scale: 1 !important;
   }
   .perks-interactive-list .perk-interactive-item.is-active {
-    --speed-scale: 1;
+    opacity: 1 !important;
+    --speed-scale: 1 !important;
   }
 
   /* Asegurar que las tarjetas con inline display: none se oculten en desktop (evita conflicto con display: flex !important) */
