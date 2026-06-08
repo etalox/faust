@@ -26,7 +26,9 @@
     'Components/logo-lockup.js',
     'Components/vacancy-card.js',
     'Components/responsive-br.js',
-    'Components/perk-illustrations.js'
+    'Components/perk-illustrations.js',
+    'Components/mouse-follower.js',
+    'Components/ecosystem.js'
   ];
 
   scripts.forEach(src => {
