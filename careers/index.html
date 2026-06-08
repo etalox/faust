@@ -388,7 +388,7 @@
             </div>
 
             <!-- Item 2: Autonomía Asíncrona -->
-            <div class="perk-interactive-item" data-index="1">
+            <div class="perk-interactive-item" data-index="1" style="display: none;">
               <span class="perk-num">02</span>
               <div class="perk-item-content">
                 <h3>Autonomía Asíncrona</h3>
@@ -575,6 +575,7 @@
               var closestDistance = Infinity;
               
               items.forEach(function(item, idx) {
+                if (item.offsetWidth === 0 && item.offsetHeight === 0) return;
                 var rect = item.getBoundingClientRect();
                 var itemCenter = rect.top + rect.height / 2;
                 var distance = Math.abs(itemCenter - viewportCenter);
@@ -590,6 +591,36 @@
             }
 
             window.addEventListener('scroll', handleScroll, { passive: true });
+
+            function resizeVisualContainers() {
+              if (window.innerWidth > 980) {
+                var middleItem = items[2];
+                if (middleItem) {
+                  var middleVisual = middleItem.querySelector('.perk-mobile-visual');
+                  if (middleVisual) {
+                    middleVisual.style.height = 'auto';
+                    var targetHeight = middleVisual.clientHeight;
+                    if (targetHeight > 0) {
+                      items.forEach(function(item) {
+                        if (item.style.display !== 'none') {
+                          var visual = item.querySelector('.perk-mobile-visual');
+                          if (visual) {
+                            visual.style.setProperty('height', targetHeight + 'px', 'important');
+                          }
+                        }
+                      });
+                    }
+                  }
+                }
+              } else {
+                items.forEach(function(item) {
+                  var visual = item.querySelector('.perk-mobile-visual');
+                  if (visual) {
+                    visual.style.removeProperty('height');
+                  }
+                });
+              }
+            }
 
             // Handle window resizing to restart or stop animation appropriately
             window.addEventListener('resize', function() {
@@ -607,6 +638,7 @@
                 // Restart animation if resizing back to desktop
                 startProgressAnimation();
               }
+              resizeVisualContainers();
             });
 
             // Start
@@ -619,6 +651,10 @@
             } else {
               setActiveStep(0);
             }
+            
+            window.addEventListener('load', resizeVisualContainers);
+            setTimeout(resizeVisualContainers, 150);
+            resizeVisualContainers();
           })();
         </script>
       </div>
@@ -627,8 +663,9 @@
     <section class="section section-grid-bg" id="vacantes">
       <div class="wrap">
         <div class="pill reveal-item">/ Vacantes disponibles</div>
-        <h2 class="section-title reveal-item" style="margin: 0;">Únete al equipo</h2>
-
+        <h2 class="section-title reveal-item" style="margin: 0 0 60px 0;">Únete al equipo</h2>
+      </div>
+      <div class="wrap wrap-narrow">
         <div class="filter-row reveal-item">
           <div class="filter-indicator"></div>
           <button class="filter-btn is-active" id="filter-all" data-filter="all">Todos</button>
@@ -725,7 +762,8 @@
           })();
         </script>
       </div>
-    </section>
+    </div>
+  </section>
   </main>
 
   <!-- Careers Application Modal Overlay -->
