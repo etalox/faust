@@ -1782,12 +1782,6 @@ body.hide-page-grid .section-grid-bg::after {
   color: #8B8D91;
   margin: 0;
   max-width: 580px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-bottom: 4px;
 }
 
 /* Botón flotante oculto por defecto */
@@ -2783,6 +2777,12 @@ body.hide-page-grid .section-grid-bg::after {
     display: none !important;
   }
 
+  /* Sobreescribir el grid de fondo para que sus 2 líneas coincidan exactamente
+     con los 2 bordes divisorios entre las 3 tarjetas visibles (33.33% | 66.66%) */
+  #perks.section-grid-bg::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='33.333%25' y1='0' x2='33.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='66.666%25' y1='0' x2='66.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E") !important;
+  }
+
   /* El contenedor pasa a ser una sola columna */
   .perks-showcase-container {
     grid-template-columns: 1fr !important;
@@ -2796,11 +2796,8 @@ body.hide-page-grid .section-grid-bg::after {
     flex-direction: row !important;
     border-top: none !important;
     gap: 0 !important;
-    overflow-x: auto !important;
+    overflow-x: visible !important;
     padding: 24px 0 !important;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
 
   /* Estilos para el scrollbar en Webkit */
@@ -2820,8 +2817,8 @@ body.hide-page-grid .section-grid-bg::after {
 
   /* Tarjetas Individuales (Estilo Linear - Sin fondo, sin bordes propios, solo líneas verticales de división) */
   .perk-interactive-item {
-    flex: 1 1 0% !important;
-    min-width: 200px !important;
+    flex: 1 1 33.333% !important;
+    min-width: 0 !important;
     max-width: none !important;
     display: flex !important;
     flex-direction: column !important;
@@ -2853,7 +2850,8 @@ body.hide-page-grid .section-grid-bg::after {
     --speed-scale: 1 !important;
   }
   .perks-interactive-list .perk-interactive-item.is-active {
-    --speed-scale: 1;
+    opacity: 1 !important;
+    --speed-scale: 1 !important;
   }
 
   /* Asegurar que las tarjetas con inline display: none se oculten en desktop (evita conflicto con display: flex !important) */
