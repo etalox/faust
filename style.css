@@ -1568,7 +1568,7 @@ body.hide-page-grid .section-grid-bg::after {
 }
 
 .section-grid-bg::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='16.666%25' y1='0' x2='16.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='33.333%25' y1='0' x2='33.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='50%25' y1='0' x2='50%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='66.666%25' y1='0' x2='66.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='83.333%25' y1='0' x2='83.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='33.333%25' y1='0' x2='33.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='66.666%25' y1='0' x2='66.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E");
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -2543,9 +2543,6 @@ body.hide-page-grid .section-grid-bg::after {
 
 /* Responsive adjustments for new classes */
 @media (max-width: 980px) {
-  .section-grid-bg::after {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='25%25' y1='0' x2='25%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='50%25' y1='0' x2='50%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='75%25' y1='0' x2='75%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E");
-  }
 
   .faq-section {
     padding: 80px 0;
@@ -2777,11 +2774,7 @@ body.hide-page-grid .section-grid-bg::after {
     display: none !important;
   }
 
-  /* Sobreescribir el grid de fondo para que sus 2 líneas coincidan exactamente
-     con los 2 bordes divisorios entre las 3 tarjetas visibles (33.33% | 66.66%) */
-  #perks.section-grid-bg::after {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cline x1='33.333%25' y1='0' x2='33.333%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3Cline x1='66.666%25' y1='0' x2='66.666%25' y2='100%25' stroke='%23ffffff' stroke-opacity='0.035' stroke-width='1' stroke-dasharray='4 4'/%3E%3C/svg%3E") !important;
-  }
+
 
   /* El contenedor pasa a ser una sola columna */
   .perks-showcase-container {
