@@ -1579,6 +1579,10 @@ body.hide-page-grid .section-grid-bg::after {
     left: 4vw;
     right: 4vw;
   }
+  .wrap-narrow {
+    padding-left: 4vw !important;
+    padding-right: 4vw !important;
+  }
 }
 
 .radial-glow {
@@ -1720,6 +1724,7 @@ body.hide-page-grid .section-grid-bg::after {
   display: flex;
   flex-direction: column;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  counter-reset: perk-counter;
 }
 
 .perk-interactive-item {
@@ -1734,6 +1739,7 @@ body.hide-page-grid .section-grid-bg::after {
   flex-direction: row;
   background-color: var(--bg);
   z-index: 1;
+  counter-increment: perk-counter;
 }
 
 .perk-interactive-item:hover {
@@ -1746,11 +1752,16 @@ body.hide-page-grid .section-grid-bg::after {
 
 .perk-num {
   font-family: monospace;
-  font-size: 14px;
+  font-size: 0 !important;
   color: rgba(255, 255, 255, 0.4);
   margin-top: 6px;
   width: 32px;
   flex-shrink: 0;
+}
+
+.perk-num::after {
+  content: "0" counter(perk-counter);
+  font-size: 14px !important;
 }
 
 .perk-item-content {
@@ -1880,6 +1891,12 @@ body.hide-page-grid .section-grid-bg::after {
   max-width: 340px;
   max-height: 220px;
   overflow: visible;
+}
+
+.perk-technical-svg path,
+.perk-technical-svg line {
+  stroke-linejoin: round !important;
+  stroke-linecap: round !important;
 }
 
 .perk-mobile-visual {
@@ -2035,71 +2052,103 @@ body.hide-page-grid .section-grid-bg::after {
 }
 
 @keyframes growBar1Left {
-  0%, 100% { d: path('M 50,101 L 72,112 L 72,130 L 50,119 Z'); }
-  50%      { d: path('M 50,89 L 72,100 L 72,130 L 50,119 Z'); }
+  0%, 100% { d: path("M 50.00,102.00 Q 50.00,101.00 50.89,101.45 L 71.11,111.55 Q 72.00,112.00 72.00,113.00 L 72.00,129.00 Q 72.00,130.00 71.11,129.55 L 50.89,119.45 Q 50.00,119.00 50.00,118.00 Z"); }
+  50%      { d: path("M 50.00,90.00 Q 50.00,89.00 50.89,89.45 L 71.11,99.55 Q 72.00,100.00 72.00,101.00 L 72.00,129.00 Q 72.00,130.00 71.11,129.55 L 50.89,119.45 Q 50.00,119.00 50.00,118.00 Z"); }
 }
 @keyframes growBar1Right {
-  0%, 100% { d: path('M 72,112 L 94,101 L 94,119 L 72,130 Z'); }
-  50%      { d: path('M 72,100 L 94,89 L 94,119 L 72,130 Z'); }
+  0%, 100% { d: path("M 72.00,113.00 Q 72.00,112.00 72.89,111.55 L 93.11,101.45 Q 94.00,101.00 94.00,102.00 L 94.00,118.00 Q 94.00,119.00 93.11,119.45 L 72.89,129.55 Q 72.00,130.00 72.00,129.00 Z"); }
+  50%      { d: path("M 72.00,101.00 Q 72.00,100.00 72.89,99.55 L 93.11,89.45 Q 94.00,89.00 94.00,90.00 L 94.00,118.00 Q 94.00,119.00 93.11,119.45 L 72.89,129.55 Q 72.00,130.00 72.00,129.00 Z"); }
 }
 @keyframes growBar1Top {
-  0%, 100% { d: path('M 72,90 L 94,101 L 72,112 L 50,101 Z'); }
-  50%      { d: path('M 72,78 L 94,89 L 72,100 L 50,89 Z'); }
+  0%, 100% { d: path("M 71.11,90.45 Q 72.00,90.00 72.89,90.45 L 93.11,100.55 Q 94.00,101.00 93.11,101.45 L 72.89,111.55 Q 72.00,112.00 71.11,111.55 L 50.89,101.45 Q 50.00,101.00 50.89,100.55 Z"); }
+  50%      { d: path("M 71.11,78.45 Q 72.00,78.00 72.89,78.45 L 93.11,88.55 Q 94.00,89.00 93.11,89.45 L 72.89,99.55 Q 72.00,100.00 71.11,99.55 L 50.89,89.45 Q 50.00,89.00 50.89,88.55 Z"); }
 }
 
 @keyframes growBar2Left {
-  0%, 100% { d: path('M 98,87 L 120,98 L 120,130 L 98,119 Z'); }
-  50%      { d: path('M 98,71 L 120,82 L 120,130 L 98,119 Z'); }
+  0%, 100% { d: path("M 98.00,88.00 Q 98.00,87.00 98.89,87.45 L 119.11,97.55 Q 120.00,98.00 120.00,99.00 L 120.00,129.00 Q 120.00,130.00 119.11,129.55 L 98.89,119.45 Q 98.00,119.00 98.00,118.00 Z"); }
+  50%      { d: path("M 98.00,72.00 Q 98.00,71.00 98.89,71.45 L 119.11,81.55 Q 120.00,82.00 120.00,83.00 L 120.00,129.00 Q 120.00,130.00 119.11,129.55 L 98.89,119.45 Q 98.00,119.00 98.00,118.00 Z"); }
 }
 @keyframes growBar2Right {
-  0%, 100% { d: path('M 120,98 L 142,87 L 142,119 L 120,130 Z'); }
-  50%      { d: path('M 120,82 L 142,71 L 142,119 L 120,130 Z'); }
+  0%, 100% { d: path("M 120.00,99.00 Q 120.00,98.00 120.89,97.55 L 141.11,87.45 Q 142.00,87.00 142.00,88.00 L 142.00,118.00 Q 142.00,119.00 141.11,119.45 L 120.89,129.55 Q 120.00,130.00 120.00,129.00 Z"); }
+  50%      { d: path("M 120.00,83.00 Q 120.00,82.00 120.89,81.55 L 141.11,71.45 Q 142.00,71.00 142.00,72.00 L 142.00,118.00 Q 142.00,119.00 141.11,119.45 L 120.89,129.55 Q 120.00,130.00 120.00,129.00 Z"); }
 }
 @keyframes growBar2Top {
-  0%, 100% { d: path('M 120,76 L 142,87 L 120,98 L 98,87 Z'); }
-  50%      { d: path('M 120,60 L 142,71 L 120,82 L 98,71 Z'); }
+  0%, 100% { d: path("M 119.11,76.45 Q 120.00,76.00 120.89,76.45 L 141.11,86.55 Q 142.00,87.00 141.11,87.45 L 120.89,97.55 Q 120.00,98.00 119.11,97.55 L 98.89,87.45 Q 98.00,87.00 98.89,86.55 Z"); }
+  50%      { d: path("M 119.11,60.45 Q 120.00,60.00 120.89,60.45 L 141.11,70.55 Q 142.00,71.00 141.11,71.45 L 120.89,81.55 Q 120.00,82.00 119.11,81.55 L 98.89,71.45 Q 98.00,71.00 98.89,70.55 Z"); }
 }
 
 @keyframes growBar3Left {
-  0%, 100% { d: path('M 146,69 L 168,80 L 168,130 L 146,119 Z'); }
-  50%      { d: path('M 146,49 L 168,60 L 168,130 L 146,119 Z'); }
+  0%, 100% { d: path("M 146.00,70.00 Q 146.00,69.00 146.89,69.45 L 167.11,79.55 Q 168.00,80.00 168.00,81.00 L 168.00,129.00 Q 168.00,130.00 167.11,129.55 L 146.89,119.45 Q 146.00,119.00 146.00,118.00 Z"); }
+  50%      { d: path("M 146.00,50.00 Q 146.00,49.00 146.89,49.45 L 167.11,59.55 Q 168.00,60.00 168.00,61.00 L 168.00,129.00 Q 168.00,130.00 167.11,129.55 L 146.89,119.45 Q 146.00,119.00 146.00,118.00 Z"); }
 }
 @keyframes growBar3Right {
-  0%, 100% { d: path('M 168,80 L 190,69 L 190,119 L 168,130 Z'); }
-  50%      { d: path('M 168,60 L 190,49 L 190,119 L 168,130 Z'); }
+  0%, 100% { d: path("M 168.00,81.00 Q 168.00,80.00 168.89,79.55 L 189.11,69.45 Q 190.00,69.00 190.00,70.00 L 190.00,118.00 Q 190.00,119.00 189.11,119.45 L 168.89,129.55 Q 168.00,130.00 168.00,129.00 Z"); }
+  50%      { d: path("M 168.00,61.00 Q 168.00,60.00 168.89,59.55 L 189.11,49.45 Q 190.00,49.00 190.00,50.00 L 190.00,118.00 Q 190.00,119.00 189.11,119.45 L 168.89,129.55 Q 168.00,130.00 168.00,129.00 Z"); }
 }
 @keyframes growBar3Top {
-  0%, 100% { d: path('M 168,58 L 190,69 L 168,80 L 146,69 Z'); }
-  50%      { d: path('M 168,38 L 190,49 L 168,60 L 146,49 Z'); }
+  0%, 100% { d: path("M 167.11,58.45 Q 168.00,58.00 168.89,58.45 L 189.11,68.55 Q 190.00,69.00 189.11,69.45 L 168.89,79.55 Q 168.00,80.00 167.11,79.55 L 146.89,69.45 Q 146.00,69.00 146.89,68.55 Z"); }
+  50%      { d: path("M 167.11,38.45 Q 168.00,38.00 168.89,38.45 L 189.11,48.55 Q 190.00,49.00 189.11,49.45 L 168.89,59.55 Q 168.00,60.00 167.11,59.55 L 146.89,49.45 Q 146.00,49.00 146.89,48.55 Z"); }
 }
 
-/* ── Perk 4: High-Ticket — Stacked server layers ── */
-/* Top layer lifts and glows */
+/* ── Perk 4: High-Ticket — Stacked server layers stretching ── */
+/* Each layer stretches proportionally, driven by the top blue piece */
+.perk-preview-svg.is-active g:nth-of-type(1) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(1) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -0.1px;
+}
+.perk-preview-svg.is-active g:nth-of-type(2) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(2) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -0.5px;
+}
+.perk-preview-svg.is-active g:nth-of-type(3) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(3) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -1.2px;
+}
+.perk-preview-svg.is-active g:nth-of-type(4) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(4) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -2.2px;
+}
+.perk-preview-svg.is-active g:nth-of-type(5) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(5) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -3.5px;
+}
 .perk-preview-svg.is-active .infra-top,
 .perk-interactive-item.is-active .perk-mobile-visual .infra-top {
-  animation: liftInfraTop 2.6s ease-in-out infinite;
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -12px;
 }
 
-@keyframes liftInfraTop {
+@keyframes pullStructure {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-3px); }
+  50%      { transform: translateY(var(--pull-amount)); }
 }
 
 /* ── Blue Accent Highlight for Illustrations (Vibrant Tech Blue with White Borders - ONLY when background is light in mobile active state) ── */
-.perk-interactive-item.is-active .perk-mobile-visual .revenue-layer path,
-.perk-interactive-item.is-active .perk-mobile-visual .auto-accent path,
-.perk-interactive-item.is-active .perk-mobile-visual .evidence-accent path,
-.perk-interactive-item.is-active .perk-mobile-visual .infra-top path {
-  fill: #0066FF !important; /* Premium tech blue fill */
-  stroke: #ffffff !important; /* Clean white border */
-  stroke-opacity: 0.95 !important;
-}
+@media (max-width: 980px) {
+  .perk-interactive-item.is-active .perk-mobile-visual .revenue-layer path,
+  .perk-interactive-item.is-active .perk-mobile-visual .auto-accent path,
+  .perk-interactive-item.is-active .perk-mobile-visual .evidence-accent path,
+  .perk-interactive-item.is-active .perk-mobile-visual .infra-top path {
+    fill: #0066FF !important; /* Premium tech blue fill */
+    stroke: #ffffff !important; /* Clean white border */
+    stroke-opacity: 0.95 !important;
+  }
 
-.perk-interactive-item.is-active .perk-mobile-visual .auto-accent circle,
-.perk-interactive-item.is-active .perk-mobile-visual .auto-accent ellipse,
-.perk-interactive-item.is-active .perk-mobile-visual .infra-top ellipse {
-  stroke: #ffffff !important;
-  opacity: 0.8 !important;
+  .perk-interactive-item.is-active .perk-mobile-visual .auto-accent circle,
+  .perk-interactive-item.is-active .perk-mobile-visual .auto-accent ellipse {
+    stroke: #08090a !important;
+    opacity: 0.35 !important;
+  }
+
+  .perk-interactive-item.is-active .perk-mobile-visual .infra-top ellipse {
+    stroke: #ffffff !important;
+    opacity: 0.8 !important;
+  }
 }
 
 
@@ -2710,4 +2759,299 @@ body.hide-page-grid .section-grid-bg::after {
   line-height: 1.6 !important;
   color: var(--muted) !important;
   margin-bottom: 0 !important;
+}
+
+/* ── Vista Desktop: Ecosistema en Tarjetas de Alto Contraste (Estilo Linear) ── */
+@media (min-width: 981px) {
+  /* Ocultar panel de previsualización derecho */
+  .perks-preview-pane {
+    display: none !important;
+  }
+
+  /* El contenedor pasa a ser una sola columna */
+  .perks-showcase-container {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    margin-top: 40px;
+  }
+
+  /* Fila horizontal con scroll si es necesario (Estilo Grid) */
+  .perks-interactive-list {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(280px, 1fr)) !important;
+    border-top: none !important;
+    gap: 0 !important;
+    overflow-x: auto !important;
+    padding: 24px 0 !important;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  /* Estilos para el scrollbar en Webkit */
+  .perks-interactive-list::-webkit-scrollbar {
+    height: 6px;
+  }
+  .perks-interactive-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .perks-interactive-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+  }
+  .perks-interactive-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Tarjetas Individuales (Estilo Linear - Sin fondo, sin bordes propios, solo líneas verticales de división) */
+  .perk-interactive-item {
+    width: 100% !important;
+    min-width: 280px !important;
+    max-width: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 0 48px !important; /* Espacio horizontal de las columnas */
+    background-color: var(--bg, #0A0A0C) !important;
+    border: none !important; /* Sin borde de tarjeta */
+    border-radius: 0 !important;
+    opacity: 1 !important;
+    cursor: default !important;
+    position: relative !important;
+    z-index: 1 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    transition: none !important;
+  }
+
+  /* Asegurar que las tarjetas con inline display: none se oculten en desktop (evita conflicto con display: flex !important) */
+  .perk-interactive-item[style*="display: none"] {
+    display: none !important;
+  }
+
+  /* Primera columna alineada a la izquierda */
+  .perk-interactive-item:first-child {
+    padding-left: 0 !important;
+  }
+
+  /* Última columna alineada a la derecha */
+  .perk-interactive-item:last-child {
+    padding-right: 0 !important;
+  }
+
+  /* Líneas divisorias verticales entre columnas */
+  .perk-interactive-item:not(:first-child) {
+    border-left: 1px solid rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Ilustración en la parte superior sin fondo ni borde */
+  .perk-interactive-item .perk-mobile-visual {
+    display: flex !important;
+    order: 2 !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    background: transparent !important; /* Sin fondo */
+    border: none !important; /* Sin borde */
+    border-radius: 12px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 16px !important;
+    margin-bottom: 32px !important;
+  }
+
+
+  /* Número discreto arriba de la ilustración (Estilo Linear: FIG 0.X) */
+  .perk-interactive-item .perk-num {
+    display: block !important;
+    order: 1 !important;
+    position: static !important;
+    margin: 0 0 16px 0 !important;
+    width: auto !important;
+    font-family: monospace !important;
+    letter-spacing: 0.05em !important;
+    color: rgba(255, 255, 255, 0.25) !important;
+    height: 14px;
+    font-size: 0 !important;
+  }
+
+  .perk-interactive-item .perk-num::after {
+    content: "FIG 0." counter(perk-counter) !important;
+    font-size: 11px !important;
+  }
+
+  /* Bloque de Contenido (Título + Descripción) */
+  .perk-interactive-item .perk-item-content {
+    order: 3 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+
+  .perk-interactive-item .perk-item-content h3 {
+    font-size: 24px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .perk-interactive-item .perk-item-content p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    color: #8B8D91 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Ocultar barra de progreso */
+  .perk-row-progress {
+    display: none !important;
+  }
+
+  /* Forzar ejecución continua de las animaciones SVG en todas las tarjetas */
+  .perk-interactive-item .perk-mobile-visual .revenue-layer {
+    animation: floatLayer 3s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+  .perk-interactive-item .perk-mobile-visual .auto-module {
+    animation: floatCube 2.8s ease-in-out infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(2) > .auto-module {
+    animation: floatCubeAlt 2.4s ease-in-out infinite;
+    animation-delay: 0.4s;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(3) > .auto-module {
+    animation: floatCube 3s ease-in-out infinite;
+    animation-delay: 1.2s;
+  }
+  .perk-interactive-item .perk-mobile-visual .auto-connector {
+    stroke-dasharray: 3 5;
+    animation: flowDash 1.6s linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .dial-left {
+    animation: rotateDialLeft 6s linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .dial-center {
+    animation: rotateDialCenter 4s linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .dial-right {
+    animation: rotateDialRight 8s linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso path {
+    animation-duration: 3s !important;
+    animation-iteration-count: infinite !important;
+    animation-timing-function: ease-in-out !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path {
+    animation-delay: -0.54s !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path {
+    animation-delay: -0.75s !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path {
+    animation-delay: -0.96s !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(1) {
+    animation-name: growBar3Left;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(2) {
+    animation-name: growBar3Right;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(3) {
+    animation-name: growBar3Top;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(1) {
+    animation-name: growBar2Left;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(2) {
+    animation-name: growBar2Right;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(3) {
+    animation-name: growBar2Top;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(1) {
+    animation-name: growBar1Left;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(2) {
+    animation-name: growBar1Right;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(3) {
+    animation-name: growBar1Top;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(1) > .infra-layer {
+    animation: pullStructure 2.6s ease-in-out infinite;
+    --pull-amount: -0.1px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(2) > .infra-layer {
+    animation: pullStructure 2.6s ease-in-out infinite;
+    --pull-amount: -0.5px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(3) > .infra-layer {
+    animation: pullStructure 2.6s ease-in-out infinite;
+    --pull-amount: -1.2px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(4) > .infra-layer {
+    animation: pullStructure 2.6s ease-in-out infinite;
+    --pull-amount: -2.2px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(5) > .infra-layer {
+    animation: pullStructure 2.6s ease-in-out infinite;
+    --pull-amount: -3.5px;
+  }
+  .perk-interactive-item .perk-mobile-visual .infra-top {
+    animation: pullStructure 2.6s ease-in-out infinite;
+    --pull-amount: -12px;
+  }
+
+  /* Transiciones suaves para los cambios de color/relleno al hacer hover */
+  .perk-interactive-item .perk-mobile-visual {
+    transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  .perk-interactive-item .perk-mobile-visual path,
+  .perk-interactive-item .perk-mobile-visual circle,
+  .perk-interactive-item .perk-mobile-visual line,
+  .perk-interactive-item .perk-mobile-visual ellipse {
+    transition: fill 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke-opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  /* Efecto de Hover (Equivalente al active state de mobile) */
+  .perk-interactive-item:hover .perk-mobile-visual {
+    background-color: #f4f4f6 !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #08090a !important;
+    --illustration-fill: #e5e5ea !important;
+  }
+
+  .perk-interactive-item:hover .perk-mobile-visual .revenue-layer path,
+  .perk-interactive-item:hover .perk-mobile-visual .auto-accent path,
+  .perk-interactive-item:hover .perk-mobile-visual .evidence-accent path,
+  .perk-interactive-item:hover .perk-mobile-visual .infra-top path {
+    fill: #0066FF !important;
+    stroke: #ffffff !important;
+    stroke-opacity: 0.95 !important;
+  }
+
+  .perk-interactive-item:hover .perk-mobile-visual .auto-accent circle,
+  .perk-interactive-item:hover .perk-mobile-visual .auto-accent ellipse {
+    stroke: #08090a !important;
+    opacity: 0.35 !important;
+  }
+
+  .perk-interactive-item:hover .perk-mobile-visual .infra-top ellipse {
+    stroke: #ffffff !important;
+    opacity: 0.8 !important;
+  }
+
+  /* Aumentar ligeramente el tamaño de las ilustraciones (SVGs) dentro del contenedor cuadrado */
+  .perk-interactive-item .perk-mobile-visual .perk-technical-svg {
+    max-width: 380px !important;
+    max-height: 250px !important;
+  }
 }
