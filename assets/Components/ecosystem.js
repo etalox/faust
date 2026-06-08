@@ -11,7 +11,7 @@
 
       this.innerHTML = `
         <section class="section section-grid-bg" id="perks">
-          <div class="wrap">
+          <div class="wrap-narrow">
             <div class="pill reveal-item">${pill}</div>
             <h2 class="section-title reveal-item" style="margin: 0 0 60px 0;">${title}</h2>
             
