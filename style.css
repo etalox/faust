@@ -3116,8 +3116,8 @@ body.hide-page-grid .section-grid-bg::after {
     opacity: 0 !important;
     transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
                 opacity 0.25s ease,
-                color 0.2s ease,
-                background-color 0.2s ease !important;
+                color 0.4s ease-in-out,
+                background-color 0.4s ease-in-out !important;
     white-space: nowrap !important;
   }
   .perk-mouse-follower::before {
@@ -3131,14 +3131,14 @@ body.hide-page-grid .section-grid-bg::after {
     -webkit-mask-composite: xor !important;
     mask-composite: exclude !important;
     pointer-events: none !important;
-    transition: background 0.2s ease !important;
+    transition: background 0.4s ease-in-out !important;
   }
   .perk-mouse-follower.is-over-light {
-    background-color: rgba(229, 229, 234, 0.25) !important;
+    background-color: rgba(229, 229, 234, 0.8) !important;
     color: #1d1e22 !important;
   }
   .perk-mouse-follower.is-over-light::before {
-    background: linear-gradient(to bottom, rgba(8, 9, 10, 0.15), rgba(8, 9, 10, 0.05)) !important;
+    background: linear-gradient(to top, rgba(8, 9, 10, 0.06), rgba(8, 9, 10, 0.03)) !important;
   }
   .perk-mouse-follower.is-over-light.is-over-blue {
     background-color: rgba(255, 255, 255, 0.08) !important;
