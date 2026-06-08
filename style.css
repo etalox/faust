@@ -1782,12 +1782,6 @@ body.hide-page-grid .section-grid-bg::after {
   color: #8B8D91;
   margin: 0;
   max-width: 580px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-bottom: 4px;
 }
 
 /* Botón flotante oculto por defecto */
