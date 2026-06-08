@@ -175,8 +175,6 @@
       </div>
     </section>
 
-    <faust-ecosystem pill="/ Metodología" title="El ecosistema que impulsa tu crecimiento."></faust-ecosystem>
-
     <section class="section centered section-grid-bg" id="estrategia">
       <div class="wrap wrap-narrow">
         <div class="pill reveal-item">/ Optimización</div>
@@ -218,6 +216,22 @@
         </div>
       </div>
     </section>
+
+    <!-- Section 2: Philosophy (Sequential Text Lighting Effect) -->
+    <section class="section centered section-grid-bg" id="filosofia">
+      <div class="wrap wrap-narrow">
+        <div class="pill reveal-item">/ Nuestra visión</div>
+        <h2 class="lead reveal-item">
+          <div class="muted" style="display: inline;">No nos importan las tendencias ni los frameworks de moda. Nos importa la ciencia detrás de la toma de decisiones and la ingeniería que hace que las cosas funcionen.</div>
+        </h2>
+        <div class="btn-row reveal-item" style="margin-top: 40px; justify-content: center;">
+          <faust-btn-apply></faust-btn-apply>
+          <faust-btn-strategy></faust-btn-strategy>
+        </div>
+      </div>
+    </section>
+
+    <faust-ecosystem pill="/ Metodología" title="El ecosistema que impulsa tu crecimiento."></faust-ecosystem>
 
     <section class="section centered section-grid-bg">
       <div id="Testing" style="position: relative; top: -100px; height: 0; pointer-events: none; visibility: hidden;"></div>
@@ -360,148 +374,152 @@
   <!-- Apply Form Overlay Wizard -->
   <faust-apply-modal></faust-apply-modal>
   <script>
-
     /* Scroll-driven text lighting up effect */
     (() => {
-      let leadSpan = document.querySelector('.lead .muted');
-      const targetElement = document.querySelector('.lead');
-      if (!leadSpan || !targetElement) return;
+      const leads = document.querySelectorAll('.lead');
+      if (leads.length === 0) return;
 
-      const originalSpanishText = leadSpan.textContent.trim().replace(/\s+/g, ' ').toLowerCase();
-      let observer;
-      let wordSpans = [];
-      let lastText = '';
-      let rebuildTimeout = null;
       const cjkRegex = /[\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff]/;
 
-      function tokenizeText(text) {
-        const tokens = [];
-        let currentWord = "";
-        const normalized = text.trim().replace(/\s+/g, " ");
+      leads.forEach((targetElement) => {
+        let leadSpan = targetElement.querySelector('.muted');
+        if (!leadSpan) return;
 
-        for (let i = 0; i < normalized.length; i++) {
-          const char = normalized[i];
-          if (cjkRegex.test(char)) {
-            if (currentWord) {
-              tokens.push(currentWord);
-              currentWord = "";
+        const originalSpanishText = leadSpan.textContent.trim().replace(/\s+/g, ' ').toLowerCase();
+        let observer;
+        let wordSpans = [];
+        let lastText = '';
+        let rebuildTimeout = null;
+
+        function tokenizeText(text) {
+          const tokens = [];
+          let currentWord = "";
+          const normalized = text.trim().replace(/\s+/g, " ");
+
+          for (let i = 0; i < normalized.length; i++) {
+            const char = normalized[i];
+            if (cjkRegex.test(char)) {
+              if (currentWord) {
+                tokens.push(currentWord);
+                currentWord = "";
+              }
+              tokens.push(char);
+            } else if (char === " ") {
+              if (currentWord) {
+                tokens.push(currentWord);
+                currentWord = "";
+              }
+            } else {
+              currentWord += char;
             }
-            tokens.push(char);
-          } else if (char === " ") {
-            if (currentWord) {
-              tokens.push(currentWord);
-              currentWord = "";
-            }
+          }
+          if (currentWord) {
+            tokens.push(currentWord);
+          }
+          return tokens;
+        }
+
+        function rebuildSpans() {
+          const text = leadSpan.textContent;
+          const cleanText = text.trim().replace(/\s+/g, ' ');
+          if (cleanText === lastText) return;
+          
+          lastText = cleanText;
+          const chunks = tokenizeText(cleanText);
+          
+          if (observer) observer.disconnect();
+
+          // Create a new clone to avoid Google Translate's observer restoration loop
+          const newLeadSpan = document.createElement(leadSpan.tagName.toLowerCase());
+          newLeadSpan.className = leadSpan.className;
+          if (leadSpan.hasAttribute('style')) {
+            newLeadSpan.setAttribute('style', leadSpan.getAttribute('style'));
+          }
+          
+          const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
+          const isSpanish = (savedNative === 'Español');
+          const isTextOriginal = (cleanText.toLowerCase() === originalSpanishText);
+
+          // Only block translations (adding notranslate) once Google Translate has successfully translated the text
+          if (!isSpanish && !isTextOriginal) {
+            newLeadSpan.classList.add('notranslate');
+            newLeadSpan.setAttribute('translate', 'no');
           } else {
-            currentWord += char;
+            newLeadSpan.classList.remove('notranslate');
+            newLeadSpan.removeAttribute('translate');
           }
-        }
-        if (currentWord) {
-          tokens.push(currentWord);
-        }
-        return tokens;
-      }
 
-      function rebuildSpans() {
-        const text = leadSpan.textContent;
-        const cleanText = text.trim().replace(/\s+/g, ' ');
-        if (cleanText === lastText) return;
-        
-        lastText = cleanText;
-        const chunks = tokenizeText(cleanText);
-        
-        if (observer) observer.disconnect();
+          wordSpans = [];
+          chunks.forEach(chunk => {
+            if (chunk) {
+              const span = document.createElement('span');
+              span.className = 'scroll-word';
+              const isCjk = cjkRegex.test(chunk);
+              span.textContent = chunk + (isCjk ? '' : ' '); 
+              span.style.color = '#4A4B4F';
+              span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+              newLeadSpan.appendChild(span);
+              wordSpans.push(span);
+            }
+          });
 
-        // Create a new clone to avoid Google Translate's observer restoration loop
-        const newLeadSpan = document.createElement(leadSpan.tagName.toLowerCase());
-        newLeadSpan.className = leadSpan.className;
-        if (leadSpan.hasAttribute('style')) {
-          newLeadSpan.setAttribute('style', leadSpan.getAttribute('style'));
-        }
-        
-        const savedNative = localStorage.getItem('faust-lang-native') || 'Español';
-        const isSpanish = (savedNative === 'Español');
-        const isTextOriginal = (cleanText.toLowerCase() === originalSpanishText);
+          leadSpan.parentNode.replaceChild(newLeadSpan, leadSpan);
+          leadSpan = newLeadSpan;
 
-        // Only block translations (adding notranslate) once Google Translate has successfully translated the text
-        if (!isSpanish && !isTextOriginal) {
-          newLeadSpan.classList.add('notranslate');
-          newLeadSpan.setAttribute('translate', 'no');
-        } else {
-          newLeadSpan.classList.remove('notranslate');
-          newLeadSpan.removeAttribute('translate');
+          if (observer) observer.observe(leadSpan, { childList: true, subtree: true, characterData: true });
+          
+          updateScrollText();
         }
 
-        wordSpans = [];
-        chunks.forEach(chunk => {
-          if (chunk) {
-            const span = document.createElement('span');
-            span.className = 'scroll-word';
-            const isCjk = cjkRegex.test(chunk);
-            span.textContent = chunk + (isCjk ? '' : ' '); 
-            span.style.color = '#4A4B4F';
-            span.style.transition = 'color 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
-            newLeadSpan.appendChild(span);
-            wordSpans.push(span);
-          }
+        function updateScrollText() {
+          if (!wordSpans.length) return;
+          const rect = targetElement.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          
+          const start = viewportHeight * 0.60;
+          const end = viewportHeight * 0.35;
+
+          let globalProgress = (start - rect.top) / (start - end);
+          globalProgress = Math.max(0, Math.min(1, globalProgress));
+
+          const W = wordSpans.length;
+          
+          const targetWordsLit = globalProgress * W;
+
+          wordSpans.forEach((span, i) => {
+            let wordProgress = targetWordsLit - i;
+            wordProgress = Math.max(0, Math.min(1, wordProgress));
+
+            if (wordProgress === 1) {
+              span.style.color = 'rgb(255, 255, 255)';
+            } else if (wordProgress === 0) {
+              span.style.color = 'rgb(74, 75, 79)';
+            } else {
+              const r = Math.round(74 + (255 - 74) * wordProgress);
+              const g = Math.round(75 + (255 - 75) * wordProgress);
+              const b = Math.round(79 + (255 - 79) * wordProgress);
+              span.style.color = `rgb(${r}, ${g}, ${b})`;
+            }
+          });
+        }
+
+        // Observe mutations (e.g. from Google Translate)
+        observer = new MutationObserver(() => {
+          if (rebuildTimeout) clearTimeout(rebuildTimeout);
+          rebuildTimeout = setTimeout(() => {
+            rebuildSpans();
+          }, 100);
         });
 
-        leadSpan.parentNode.replaceChild(newLeadSpan, leadSpan);
-        leadSpan = newLeadSpan;
+        // Initial build
+        rebuildSpans();
 
-        if (observer) observer.observe(leadSpan, { childList: true, subtree: true, characterData: true });
-        
+        document.body.addEventListener('scroll', updateScrollText, { passive: true });
+        window.addEventListener('scroll', updateScrollText, { passive: true });
+        window.addEventListener('resize', updateScrollText);
+
         updateScrollText();
-      }
-
-      function updateScrollText() {
-        if (!wordSpans.length) return;
-        const rect = targetElement.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        
-        const start = viewportHeight * 0.60;
-        const end = viewportHeight * 0.35;
-
-        let globalProgress = (start - rect.top) / (start - end);
-        globalProgress = Math.max(0, Math.min(1, globalProgress));
-
-        const W = wordSpans.length;
-        
-        const targetWordsLit = globalProgress * W;
-
-        wordSpans.forEach((span, i) => {
-          let wordProgress = targetWordsLit - i;
-          wordProgress = Math.max(0, Math.min(1, wordProgress));
-
-          if (wordProgress === 1) {
-            span.style.color = 'rgb(255, 255, 255)';
-          } else if (wordProgress === 0) {
-            span.style.color = 'rgb(74, 75, 79)';
-          } else {
-            const r = Math.round(74 + (255 - 74) * wordProgress);
-            const g = Math.round(75 + (255 - 75) * wordProgress);
-            const b = Math.round(79 + (255 - 79) * wordProgress);
-            span.style.color = `rgb(${r}, ${g}, ${b})`;
-          }
-        });
-      }
-
-      // Observe mutations (e.g. from Google Translate)
-      observer = new MutationObserver(() => {
-        if (rebuildTimeout) clearTimeout(rebuildTimeout);
-        rebuildTimeout = setTimeout(() => {
-          rebuildSpans();
-        }, 100);
       });
-
-      // Initial build
-      rebuildSpans();
-
-      document.body.addEventListener('scroll', updateScrollText, { passive: true });
-      window.addEventListener('scroll', updateScrollText, { passive: true });
-      window.addEventListener('resize', updateScrollText);
-
-      updateScrollText();
 
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
