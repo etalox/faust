@@ -1,0 +1,10 @@
+Principios de Diseño Visual
+"El diseño visual de la plataforma de Faust Partners está orientado a proyectar profesionalismo, rigor técnico y minimalismo estético."
+Estética Oscura Premium
+"Empleamos un fondo gris oscuro profundo con una retícula lineal de dos ejes. Esto resalta el contenido y proporciona un orden matemático rígido."
+- Color de fondo principal: #08090a.
+- Líneas de retícula: rgba(255, 255, 255, 0.07).
+Tipografía BDOGrotesk
+"La familia tipográfica BDO Grotesk es nuestro estándar de comunicación en pesos regular, medio y seminegrita."
+- Títulos de secciones: 36px con interlineado 1.25.
+- Títulos principales (Hero): tamaños clamp variables para responsividad óptima.

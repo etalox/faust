@@ -118,7 +118,7 @@ class FaustNavbar extends HTMLElement {
 
     const path = window.location.pathname.toLowerCase();
     const getRootPrefix = () => {
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about')) {
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs')) {
         return '../';
       }
       return './';
@@ -608,7 +608,7 @@ class FaustNavbar extends HTMLElement {
       internalNav.offsetHeight; 
 
       const isReload = localStorage.getItem('faust-show-modal-after-reload') === 'true';
-      if (isReload) {
+      if (isReload || document.body.classList.contains('no-reveal-animations')) {
         internalNav.classList.add('is-active');
       } else {
         setTimeout(() => {

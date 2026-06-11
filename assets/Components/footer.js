@@ -111,7 +111,7 @@ class FaustFooter extends HTMLElement {
   render() {
     const getRootPrefix = () => {
       const path = window.location.pathname.toLowerCase();
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about')) {
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs')) {
         return '../';
       }
       return './';
@@ -575,7 +575,7 @@ class FaustFooter extends HTMLElement {
             <div class="footer-col">
               <h4>Comenzar</h4>
               <div class="footer-col-links">
-              <a href="${rootPrefix}start/index.html#">Inicio</a>
+              <a href="${rootPrefix}start/index.html">Inicio</a>
                 <a href="${rootPrefix}start/index.html#">Partnering</a>
                 ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Revenue Share</a>`}
                 <a href="${rootPrefix}start/index.html#">Licenciamiento</a>
@@ -586,6 +586,7 @@ class FaustFooter extends HTMLElement {
             <div class="footer-col">
               <h4>Estrategia</h4>
               <div class="footer-col-links">
+                <a href="${rootPrefix}docs/introduccion.html">Documentación</a>
                 ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>`}
                 <a href="${rootPrefix}start/index.html#">Neurociencia Conductual</a>
                 <a href="${rootPrefix}start/index.html#">UX/UI Design</a>
@@ -608,6 +609,7 @@ class FaustFooter extends HTMLElement {
           <div class="footer-bottom">
             <div class="footer-logo" style="color: #fff !important;">© ${new Date().getFullYear()} Faust Partners™</div>
             <div style="display:flex;gap:24px;">
+              <a href="${rootPrefix}docs/introduccion.html">Documentación</a>
               <a href="${rootPrefix}privacy.html">Privacidad</a>
               <a href="${rootPrefix}terms.html">Términos y condiciones</a>
             </div>
