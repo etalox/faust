@@ -32,7 +32,6 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
-                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
 
                 <!-- Item 2: Autonomía Asíncrona -->
@@ -49,7 +48,6 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
-                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
 
                 <!-- Item 3: Enfoque Basado en Evidencia -->
@@ -66,7 +64,6 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
-                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
 
                 <!-- Item 4: Proyectos High-Ticket -->
@@ -83,8 +80,8 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
-                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
+                <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
               </div>
 
               <!-- Right side: sticky terminal/code editor mockup window -->

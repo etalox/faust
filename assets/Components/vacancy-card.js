@@ -1,7 +1,7 @@
 (function() {
   const getRootPrefix = () => {
     const path = window.location.pathname.toLowerCase();
-    if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about')) {
+    if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs')) {
       return '../';
     }
     return './';

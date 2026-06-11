@@ -1,0 +1,16 @@
+Guía de Metodología CRO
+"Bienvenidos a la documentación técnica de Faust Partners. Aquí detallamos los principios y procesos con los que maximizamos el MRR de nuestros socios comerciales."
+1. Neurociencia Conductual
+"Diseñamos flujos de conversión que respetan la psicología cognitiva del usuario. Minimizamos la fricción y potenciamos la claridad en la toma de decisiones."
+- Heurística de escasez y urgencia legítima.
+- Reducción del esfuerzo mental en formularios complejos.
+- Jerarquía visual optimizada por patrones de lectura natural (F y Z).
+2. Prototipado Asíncrono
+"Nuestra infraestructura técnica permite diseñar y desplegar variaciones A/B a alta velocidad."
+- Aislamiento de variables de control.
+- Recopilación de eventos de click, scroll e intención de salida de forma pasiva.
+3. Análisis Basado en Datos
+"Cada cambio que proponemos está respaldado por evidencia cuantitativa de Clarity y Google Analytics."
+- Análisis forense de embudos caídos.
+- Pruebas cuantitativas semanales con significancia estadística mayor al 95%.
+[Hero.mp4]

@@ -39,6 +39,8 @@
       let targetY = 0;
       let currentX = 0;
       let currentY = 0;
+      let lastMouseX = 0;
+      let lastMouseY = 0;
       let isFollowing = false;
       let lerpFrameId = null;
 
@@ -50,6 +52,24 @@
           isFollowing = false;
           return;
         }
+
+        // Dynamically compute constrained targetX and targetY based on current parent bounding box
+        const zoom = getZoom();
+        const parentRect = parent.getBoundingClientRect();
+        const parentLeft = parentRect.left / zoom;
+        const parentRight = parentRect.right / zoom;
+        const parentTop = parentRect.top / zoom;
+        const parentBottom = parentRect.bottom / zoom;
+
+        const halfW = follower.offsetWidth / 2;
+        const halfH = follower.offsetHeight / 2;
+
+        let tx = lastMouseX / zoom - halfW;
+        let ty = lastMouseY / zoom - halfH;
+
+        // Clamp center of button inside parent bounds
+        targetX = Math.max(parentLeft - halfW, Math.min(tx, parentRight - halfW));
+        targetY = Math.max(parentTop - halfH, Math.min(ty, parentBottom - halfH));
 
         const isVisible = follower.classList.contains('is-visible');
         const dx = targetX - currentX;
@@ -86,12 +106,25 @@
           htmlContent += `<span style="vertical-align: middle; display: inline-block;">${text}</span>`;
           follower.innerHTML = htmlContent;
 
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+
           const zoom = getZoom();
+          const parentRect = parent.getBoundingClientRect();
+          const parentLeft = parentRect.left / zoom;
+          const parentRight = parentRect.right / zoom;
+          const parentTop = parentRect.top / zoom;
+          const parentBottom = parentRect.bottom / zoom;
+
           const halfW = follower.offsetWidth / 2;
           const halfH = follower.offsetHeight / 2;
 
-          targetX = e.clientX / zoom - halfW;
-          targetY = e.clientY / zoom - halfH;
+          let tx = lastMouseX / zoom - halfW;
+          let ty = lastMouseY / zoom - halfH;
+
+          // Clamp center of button inside parent bounds
+          targetX = Math.max(parentLeft - halfW, Math.min(tx, parentRight - halfW));
+          targetY = Math.max(parentTop - halfH, Math.min(ty, parentBottom - halfH));
 
           const timeSinceActive = Date.now() - (follower.lastActiveTime || 0);
           const wasRecentlyActive = timeSinceActive < 350; // 350ms matching the transition duration
@@ -140,12 +173,25 @@
           // Reclaim ownership in case of fast movements crossing boundaries
           follower.activeParent = parent;
 
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+
           const zoom = getZoom();
+          const parentRect = parent.getBoundingClientRect();
+          const parentLeft = parentRect.left / zoom;
+          const parentRight = parentRect.right / zoom;
+          const parentTop = parentRect.top / zoom;
+          const parentBottom = parentRect.bottom / zoom;
+
           const halfW = follower.offsetWidth / 2;
           const halfH = follower.offsetHeight / 2;
 
-          targetX = e.clientX / zoom - halfW;
-          targetY = e.clientY / zoom - halfH;
+          let tx = lastMouseX / zoom - halfW;
+          let ty = lastMouseY / zoom - halfH;
+
+          // Clamp center of button inside parent bounds
+          targetX = Math.max(parentLeft - halfW, Math.min(tx, parentRight - halfW));
+          targetY = Math.max(parentTop - halfH, Math.min(ty, parentBottom - halfH));
 
           if (!isFollowing) {
             // Seed current position from actual style coordinates of the shared follower

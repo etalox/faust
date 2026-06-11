@@ -2,6 +2,15 @@ class FaustApplyModal extends HTMLElement {
   connectedCallback() {
     this.style.display = 'contents';
     this.innerHTML = `
+  <style>
+    .apply-overlay:not(.is-open),
+    .message-overlay:not(.is-open) {
+      visibility: hidden !important;
+      position: fixed !important;
+      inset: 0 !important;
+      pointer-events: none !important;
+    }
+  </style>
   <div class="apply-overlay" id="apply-overlay">
     <div class="wrap apply-overlay-wrap">
       <div class="apply-modal-container">
