@@ -2871,23 +2871,20 @@ body.hide-page-grid .section-grid-bg::after {
     box-shadow: none !important;
     transition: flex 0.4s cubic-bezier(0.25, 1, 0.5, 1),
                 opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
-    --speed-scale: 2.5; /* Default slow speed scale */
+    --speed-scale: 1.2; /* Fixed scale for premium, fluid, non-disruptive animation speed */
   }
 
   /* Animación de hover: opaca y ensancha la tarjeta seleccionada, desvanece y reduce las demás */
   .perks-interactive-list:hover .perk-interactive-item {
     opacity: 0.45 !important;
     flex: 0.8 1 0% !important;
-    --speed-scale: 2.5 !important;
   }
   .perks-interactive-list .perk-interactive-item:hover {
     opacity: 1 !important;
     flex: 1.4 1 0% !important;
-    --speed-scale: 1 !important;
   }
   .perks-interactive-list .perk-interactive-item.is-active {
     opacity: 1 !important;
-    --speed-scale: 1 !important;
   }
 
   /* Asegurar que las tarjetas con inline display: none se oculten en desktop (evita conflicto con display: flex !important) */
