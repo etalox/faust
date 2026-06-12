@@ -587,6 +587,8 @@ if (typeof window !== 'undefined') {
  */
 class FaustFlowCubeSvg extends HTMLElement {
   connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
     const size = this.getAttribute('size') || 'small';
     let width = 20;
     let height = 22;
@@ -619,6 +621,8 @@ class FaustFlowCubeSvg extends HTMLElement {
  */
 class FaustFlowArrow extends HTMLElement {
   connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
     const left = this.getAttribute('left') || '0';
     const top = this.getAttribute('top') || '0';
     const fromColor = this.getAttribute('from-color') || '#D3D7D6';
@@ -662,6 +666,8 @@ class FaustFlowArrow extends HTMLElement {
  */
 class FaustFlowArrowSplitDown extends HTMLElement {
   connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
     const left = this.getAttribute('left') || '0';
     const top = this.getAttribute('top') || '0';
     const gradId = 'split-down-grad';
@@ -692,6 +698,8 @@ class FaustFlowArrowSplitDown extends HTMLElement {
  */
 class FaustFlowArrowMergeRight extends HTMLElement {
   connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
     const left = this.getAttribute('left') || '0';
     const top = this.getAttribute('top') || '0';
     const gradId = 'merge-right-grad';
@@ -733,7 +741,12 @@ class FaustFlowLabel extends HTMLElement {
     this.style.display = 'block';
 
     if (!this._originalHTML) {
-      this._originalHTML = this.innerHTML;
+      const existingLabel = this.querySelector('.Label');
+      if (existingLabel) {
+        this._originalHTML = existingLabel.innerHTML;
+      } else {
+        this._originalHTML = this.innerHTML;
+      }
     }
 
     this.innerHTML = `
@@ -741,6 +754,11 @@ class FaustFlowLabel extends HTMLElement {
         ${this._originalHTML}
       </div>
     `;
+
+    if (this._handleCompanyChange) {
+      window.removeEventListener('faust-company-confirmed', this._handleCompanyChange);
+      this._handleCompanyChange = null;
+    }
 
     if (left === '80') {
       this._handleCompanyChange = (e) => {
@@ -787,6 +805,8 @@ class FaustFlowLabel extends HTMLElement {
  */
 class FaustFlowCube extends HTMLElement {
   connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
     const letter = this.getAttribute('letter') || '';
     const size = this.getAttribute('size') || 'small';
 
@@ -811,6 +831,8 @@ class FaustFlowCube extends HTMLElement {
  */
 class FaustFlowIcon extends HTMLElement {
   connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
     const left = this.getAttribute('left') || '0';
     const top = this.getAttribute('top') || '0';
     const type = this.getAttribute('type') || 'user';
@@ -906,6 +928,8 @@ class FaustFlowIcon extends HTMLElement {
  */
 class FaustFlowCard extends HTMLElement {
   connectedCallback() {
+    if (this._initialized) return;
+    this._initialized = true;
     const left = this.getAttribute('left') || '0';
     const top = this.getAttribute('top') || '0';
     const width = parseInt(this.getAttribute('width') || '240', 10);
@@ -1212,65 +1236,69 @@ class FaustFlowCanvas extends HTMLElement {
     this._isIntersecting = false;
     this._enteredFromBelow = false;
 
-    const width = parseInt(this.getAttribute('width') || '1640', 10);
-    const height = parseInt(this.getAttribute('height') || '450', 10);
-    const mobileWidth = parseInt(this.getAttribute('mobile-width') || '1040', 10);
-    const mobileShift = parseInt(this.getAttribute('mobile-shift') || '-140', 10);
-    const frameLeft = parseInt(this.getAttribute('frame-left') || '140', 10);
-    const frameTop = parseInt(this.getAttribute('frame-top') || '80', 10);
-    const frameWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
-    const frameHeight = parseInt(this.getAttribute('frame-height') || '320', 10);
-    const gridLines = parseInt(this.getAttribute('grid-lines') || '14', 10);
-    const gridId = this.getAttribute('grid-id') || 'grid-grad';
+    if (!this._initialized) {
+      this._initialized = true;
 
-    let pathD = `M0.5 ${frameHeight}L0.5 0`;
-    for (let i = 1; i < gridLines; i++) {
-      const x = i * 80 + 0.5;
-      pathD += `M${x} ${frameHeight}V0`;
-    }
+      const width = parseInt(this.getAttribute('width') || '1640', 10);
+      const height = parseInt(this.getAttribute('height') || '450', 10);
+      const mobileWidth = parseInt(this.getAttribute('mobile-width') || '1040', 10);
+      const mobileShift = parseInt(this.getAttribute('mobile-shift') || '-140', 10);
+      const frameLeft = parseInt(this.getAttribute('frame-left') || '140', 10);
+      const frameTop = parseInt(this.getAttribute('frame-top') || '80', 10);
+      const frameWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
+      const frameHeight = parseInt(this.getAttribute('frame-height') || '320', 10);
+      const gridLines = parseInt(this.getAttribute('grid-lines') || '14', 10);
+      const gridId = this.getAttribute('grid-id') || 'grid-grad';
 
-    // Extract legend element from children if present to preserve translation
-    const legendNode = this.querySelector('.canvas-legend, [slot="legend"]');
-    let legendHtml = '';
-    if (legendNode) {
-      legendHtml = legendNode.outerHTML;
-      legendNode.remove();
-    } else {
-      const legendAttr = this.getAttribute('legend') || '';
-      if (legendAttr) {
-        legendHtml = `<div class="canvas-legend">${legendAttr}</div>`;
+      let pathD = `M0.5 ${frameHeight}L0.5 0`;
+      for (let i = 1; i < gridLines; i++) {
+        const x = i * 80 + 0.5;
+        pathD += `M${x} ${frameHeight}V0`;
       }
-    }
 
-    const children = Array.from(this.childNodes);
+      // Extract legend element from children if present to preserve translation
+      const legendNode = this.querySelector('.canvas-legend, [slot="legend"]');
+      let legendHtml = '';
+      if (legendNode) {
+        legendHtml = legendNode.outerHTML;
+        legendNode.remove();
+      } else {
+        const legendAttr = this.getAttribute('legend') || '';
+        if (legendAttr) {
+          legendHtml = `<div class="canvas-legend">${legendAttr}</div>`;
+        }
+      }
 
-    this.innerHTML = `
-      <div class="flow-wrapper">
-        <div class="flow-scaler" style="--base-width: ${frameWidth}px; --mobile-width: ${frameWidth}px; --mobile-shift: 0px; --base-height: ${height}px;">
-          <div data-layer="Flow" class="Flow" style="width: ${frameWidth}px; height: ${height}px; position: relative;">
-            <div data-layer="Frame 1" class="Frame1" style="width: ${frameWidth}px; height: ${frameHeight}px; left: 0px; top: ${frameTop}px; position: absolute">
-              <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
-                <svg width="${frameWidth + 1}" height="${frameHeight}" viewBox="0 0 ${frameWidth + 1} ${frameHeight}" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path opacity="0.4" d="${pathD}" stroke="url(#${gridId})"/>
-                  <defs>
-                    <linearGradient id="${gridId}" x1="${frameWidth + 1}.44" y1="0" x2="${frameWidth + 1}.44" y2="${frameHeight}" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="white" stop-opacity="0.1"/>
-                      <stop offset="0.4" stop-color="white" stop-opacity="0.15"/>
-                      <stop offset="1" stop-color="white" stop-opacity="0.05"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
+      const children = Array.from(this.childNodes);
+
+      this.innerHTML = `
+        <div class="flow-wrapper">
+          <div class="flow-scaler" style="--base-width: ${frameWidth}px; --mobile-width: ${frameWidth}px; --mobile-shift: 0px; --base-height: ${height}px;">
+            <div data-layer="Flow" class="Flow" style="width: ${frameWidth}px; height: ${height}px; position: relative;">
+              <div data-layer="Frame 1" class="Frame1" style="width: ${frameWidth}px; height: ${frameHeight}px; left: 0px; top: ${frameTop}px; position: absolute">
+                <div data-svg-wrapper data-layer="Vector" class="Vector" style="left: 0px; top: 0px; position: absolute">
+                  <svg width="${frameWidth + 1}" height="${frameHeight}" viewBox="0 0 ${frameWidth + 1} ${frameHeight}" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.4" d="${pathD}" stroke="url(#${gridId})"/>
+                    <defs>
+                      <linearGradient id="${gridId}" x1="${frameWidth + 1}.44" y1="0" x2="${frameWidth + 1}.44" y2="${frameHeight}" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="white" stop-opacity="0.1"/>
+                        <stop offset="0.4" stop-color="white" stop-opacity="0.15"/>
+                        <stop offset="1" stop-color="white" stop-opacity="0.05"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div class="flow-content-mount" style="display: contents;"></div>
               </div>
-              <div class="flow-content-mount" style="display: contents;"></div>
             </div>
           </div>
         </div>
-      </div>
-      ${legendHtml}
-    `;
+        ${legendHtml}
+      `;
 
-    const mount = this.querySelector('.flow-content-mount');
-    children.forEach(child => mount.appendChild(child));
+      const mount = this.querySelector('.flow-content-mount');
+      children.forEach(child => mount.appendChild(child));
+    }
 
     // Pre-calculate sweep durations immediately for hover states
     const setupSweepDurations = () => {
@@ -1298,6 +1326,9 @@ class FaustFlowCanvas extends HTMLElement {
     const setupHoverListeners = () => {
       const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
       components.forEach(comp => {
+        if (comp._hoverListenersAttached) return;
+        comp._hoverListenersAttached = true;
+
         comp._isMouseOver = false;
         
         comp.addEventListener('mouseenter', () => {
@@ -1380,8 +1411,6 @@ class FaustFlowCanvas extends HTMLElement {
       } else {
         const t = (w - 980) / (1440 - 980);
         // Curva de aceleración pronunciada (Power of 12 Ease-Out) para favorecer tamaños más grandes en tablet.
-        // Hacemos que la interpolación comience desde 0.90 (0.72 físico en body con 80% zoom) en vez de 0.75 (0.60 físico)
-        // para que en tablet (ej. 1024px) se vea mucho más grande (cercano al tamaño de desktop).
         const tEased = 1 - Math.pow(1 - t, 12);
         scale = 0.90 + 0.10 * tEased;
       }
