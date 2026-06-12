@@ -59,7 +59,6 @@
           <div class="doc-split-container">
             <!-- Columna Izquierda: Menú de Documentos y Capítulos (TOC) -->
             <div class="doc-sidebar">
-              <h3>Documentación</h3>
               <ul class="doc-menu" id="doc-menu">
                 <li class="doc-menu-item"><span style="color: rgba(255,255,255,0.4); font-size: 14px; padding-left: 16px;">Cargando documentos...</span></li>
               </ul>
