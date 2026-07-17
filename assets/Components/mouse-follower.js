@@ -1,7 +1,7 @@
 (function() {
   class FaustMouseFollower extends HTMLElement {
     connectedCallback() {
-      this.style.display = 'contents';
+      this.style.display = 'none';
       const parent = this.parentElement;
       if (!parent) return;
 

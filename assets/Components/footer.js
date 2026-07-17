@@ -1,30 +1,299 @@
 if (!window.showPrototypeToast) {
-  window.showPrototypeToast = (message) => {
+  /* ── Available-pages helper ── */
+  window._getAvailablePages = function() {
+    const footer = document.querySelector('faust-footer');
+    if (!footer) return [];
+    
+    const columns = [];
+    const footerCols = footer.querySelectorAll('.footer-col');
+    
+    footerCols.forEach(col => {
+      const titleEl = col.querySelector('h4');
+      const title = titleEl ? titleEl.textContent.trim() : '';
+      const links = col.querySelectorAll('a[href]');
+      const pages = [];
+      
+      links.forEach(link => {
+        const href = link.getAttribute('href') || '';
+        const label = link.textContent.trim();
+        if (!label) return;
+        
+        if (link.id === 'footer-cookie-trigger') return;
+
+        let isAvailable = true;
+        if (!href || href.endsWith('#') || href.includes('#resultados') || href.includes('#expertos')) {
+          isAvailable = false;
+        }
+
+        pages.push({
+          label: label,
+          href: link.href,
+          isExternal: link.target === '_blank',
+          isAvailable: isAvailable
+        });
+      });
+      
+      if (pages.length > 0 || title) {
+        columns.push({
+          title: title,
+          pages: pages
+        });
+      }
+    });
+
+    return columns;
+  };
+
+  window.showPrototypeToast = () => {
     // Prevent duplicate modals
     if (document.getElementById('faust-prototype-modal')) return;
 
+    const columns = window._getAvailablePages();
+
+    /* ── Build pages list HTML ── */
+    const pagesHtml = columns.length > 0
+      ? '<div class="proto-grid">' + columns.map(col => `
+          <div class="proto-col">
+            ${col.title ? `<div class="proto-col-title">${col.title}</div>` : ''}
+            <div class="proto-col-links">
+              ${col.pages.map(p => {
+                if (p.isAvailable) {
+                  return `<a href="${p.href}" class="proto-link" ${p.isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} data-proto-link>${p.label}</a>`;
+                } else {
+                  return `<span class="proto-link is-disabled">${p.label}</span>`;
+                }
+              }).join('')}
+            </div>
+          </div>
+        `).join('') + '</div>'
+      : '<p style="padding:16px 32px;color:#8b8d91;font-size:14px;margin:0;">No se encontraron páginas.</p>';
+
+    /* ── Build modal DOM ── */
     const backdrop = document.createElement('div');
     backdrop.id = 'faust-prototype-modal';
-    backdrop.className = 'message-overlay';
+    backdrop.className = 'lang-overlay';
 
     backdrop.innerHTML = `
-      <div class="message-overlay-wrap">
-        <div class="message-modal-container" style="max-width: 440px;">
-          <div class="message-modal">
-            <div class="message-modal-header">
-              <div class="message-modal-title-row" style="justify-content: space-between;">
-                <span style="font-size: 20px; font-weight: 500; color: #fff;">Sitio Web en Desarrollo</span>
-                <button class="faust-modal-close-btn" style="background: none; border: none; color: rgba(255, 255, 255, 0.4); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s;" aria-label="Cerrar">&times;</button>
+      <style>
+        #faust-prototype-modal.lang-overlay {
+          z-index: 19;
+        }
+        .proto-modal-wrap {
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 24px;
+          box-sizing: border-box;
+        }
+        .proto-modal-container {
+          width: 800px;
+          max-width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          transform: translateY(20px) scale(0.97);
+          transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        #faust-prototype-modal.is-open .proto-modal-container {
+          transform: translateY(0) scale(1);
+        }
+        .proto-modal {
+          background: rgba(253, 253, 255, 0);
+          backdrop-filter: blur(0px);
+          -webkit-backdrop-filter: blur(0px);
+          border-radius: 20px;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          max-height: calc(100dvh - 80px);
+          transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      -webkit-backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                      box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        #faust-prototype-modal.is-open .proto-modal {
+          background: rgba(22, 22, 24, 0.92);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8),
+                      0 0 0 1px rgba(255,255,255,0.07);
+        }
+        .proto-modal-header,
+        .proto-modal-body,
+        .proto-modal-footer {
+          opacity: 0;
+          transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1) 0.05s;
+        }
+        #faust-prototype-modal.is-open .proto-modal-header,
+        #faust-prototype-modal.is-open .proto-modal-body,
+        #faust-prototype-modal.is-open .proto-modal-footer {
+          opacity: 1;
+        }
+        .proto-modal-header {
+          padding: 24px 32px 16px;
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 12px;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .proto-modal-header-inner {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .proto-modal-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #fff;
+          letter-spacing: 0.28px;
+          line-height: 1.3;
+        }
+        .proto-modal-subtitle {
+          font-size: 14px;
+          color: #8b8d91;
+          line-height: 1.5;
+          max-width: 400px;
+        }
+        .proto-modal-close-btn {
+          background: none;
+          border: none;
+          color: rgba(255,255,255,0.35);
+          font-size: 24px;
+          line-height: 1;
+          cursor: pointer;
+          padding: 0;
+          flex-shrink: 0;
+          margin-top: 2px;
+          transition: color 0.2s ease;
+        }
+        .proto-modal-close-btn:hover { color: #fff; }
+        .proto-modal-body {
+          overflow-y: auto;
+          flex: 1;
+          min-height: 0;
+          padding: 8px 8px;
+          max-height: 400px;
+        }
+        .proto-modal-body::-webkit-scrollbar { width: 4px; }
+        .proto-modal-body::-webkit-scrollbar-track { background: transparent; margin: 8px 0; }
+        .proto-modal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+        .proto-modal-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+        
+        .proto-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 80px;
+          padding: 32px 48px;
+          background: #0A0A0A;
+          border-radius: 16px;
+        }
+        .proto-col-title {
+          font-family: "BDO Grotesk", sans-serif;
+          font-weight: 500;
+          font-size: 18px;
+          color: #fff;
+          margin: 0 0 32px;
+        }
+        .proto-col-links {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .proto-link {
+          display: block;
+          font-size: 16px;
+          color: #f2f2f2;
+          text-decoration: none;
+          line-height: normal;
+          transition: color 0.2s ease;
+          cursor: pointer;
+        }
+        a.proto-link:hover {
+          color: #fff;
+        }
+        .proto-link.is-disabled {
+          opacity: 0.35;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+        
+        .proto-modal-footer {
+          display: flex;
+          gap: 12px;
+          padding: 20px 32px;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          justify-content: flex-end;
+        }
+        .proto-btn {
+          border-radius: 999px;
+          padding: 10px 20px;
+          font-size: 14px;
+          font-weight: 500;
+          border: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-family: inherit;
+          transition: background 0.18s ease, color 0.18s ease;
+          text-decoration: none;
+          box-sizing: border-box;
+          letter-spacing: 0.1px;
+        }
+        .proto-btn-secondary {
+          position: relative;
+          background: rgba(253,253,255,0.06);
+          color: #f2f2f2;
+        }
+        .proto-btn-secondary::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 999px;
+          padding: 1px;
+          background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+        }
+        .proto-btn-secondary:hover { background: rgba(238,238,241,0.10); }
+        .proto-btn-primary {
+          background: #f2f2f2;
+          color: #161616;
+        }
+        .proto-btn-primary:hover { background: #0022ff; color: #fff; }
+
+        @media (max-width: 768px) {
+          .proto-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+            padding: 20px 24px;
+          }
+          .proto-modal-header { padding: 20px 24px 16px; }
+          .proto-modal-footer { padding: 16px 24px; flex-direction: column; }
+          .proto-btn { width: 100%; }
+        }
+      </style>
+
+      <div class="proto-modal-wrap">
+        <div class="proto-modal-container">
+          <div class="proto-modal">
+            <div class="proto-modal-header">
+              <div class="proto-modal-header-inner">
+                <span class="proto-modal-title">Sitio en construcción</span>
+                <span class="proto-modal-subtitle">Este contenido aún no está disponible. Aquí tienes lo que ya puedes explorar:</span>
               </div>
+              <button class="proto-modal-close-btn" aria-label="Cerrar">&times;</button>
             </div>
-            <div class="message-modal-body" style="text-align: left;">
-              <div style="font-size: 15px; line-height: 1.6; color: rgba(255, 255, 255, 0.7); font-family: inherit;">
-                ${message}
-              </div>
+            <div class="proto-modal-body">
+              ${pagesHtml}
             </div>
-            <div class="message-modal-footer">
-              <button class="btn btn-secondary faust-modal-contact-btn" style="min-width: 120px; justify-content: center;">Contacto</button>
-              <button class="btn btn-primary faust-modal-action-btn" style="min-width: 120px; justify-content: center;">Entendido</button>
+            <div class="proto-modal-footer">
+              <button class="proto-btn proto-btn-secondary" id="proto-contact-btn">Contacto</button>
+              <button class="proto-btn proto-btn-primary" id="proto-close-btn">Cerrar</button>
             </div>
           </div>
         </div>
@@ -34,65 +303,75 @@ if (!window.showPrototypeToast) {
     document.body.appendChild(backdrop);
     document.body.style.overflow = 'hidden';
 
-    // Fade in / Slide up animation by adding 'is-open' class
+    // Animate in
     requestAnimationFrame(() => {
       backdrop.classList.add('is-open');
     });
 
-    // Close logic
+    /* ── Close logic ── */
     const closeModal = () => {
       backdrop.classList.remove('is-open');
       document.body.style.overflow = '';
-      
-      // Wait for transitions to finish before removing from DOM
-      backdrop.addEventListener('transitionend', () => {
-        backdrop.remove();
-      });
       document.removeEventListener('keydown', handleEsc);
+      // Wait for transition then remove
+      const onEnd = () => { backdrop.remove(); };
+      backdrop.addEventListener('transitionend', onEnd, { once: true });
+      // Safety fallback
+      setTimeout(() => { if (backdrop.isConnected) backdrop.remove(); }, 500);
     };
 
-    const handleEsc = (e) => {
-      if (e.key === 'Escape') closeModal();
-    };
-
-    // Close on escape key
+    const handleEsc = (e) => { if (e.key === 'Escape') closeModal(); };
     document.addEventListener('keydown', handleEsc);
 
-    // Close on backdrop click (outside the modal box)
+    // Close on backdrop click
     backdrop.addEventListener('click', (e) => {
-      if (e.target === backdrop || e.target.classList.contains('message-overlay-wrap')) {
+      if (e.target === backdrop || e.target.classList.contains('proto-modal-wrap')) {
         closeModal();
       }
     });
 
-    // Close button events
-    const closeBtn = backdrop.querySelector('.faust-modal-close-btn');
-    closeBtn.addEventListener('click', closeModal);
-    closeBtn.addEventListener('mouseenter', () => {
-      closeBtn.style.color = '#fff';
-    });
-    closeBtn.addEventListener('mouseleave', () => {
-      closeBtn.style.color = 'rgba(255, 255, 255, 0.4)';
-    });
+    // Close button
+    backdrop.querySelector('.proto-modal-close-btn').addEventListener('click', closeModal);
+    backdrop.querySelector('#proto-close-btn').addEventListener('click', closeModal);
 
-    // Contact button event
-    const contactBtn = backdrop.querySelector('.faust-modal-contact-btn');
-    contactBtn.addEventListener('click', () => {
+    // Contact button
+    backdrop.querySelector('#proto-contact-btn').addEventListener('click', () => {
       closeModal();
-      if (window.openMessageModal) {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (window.openMessageModal) {
           window.openMessageModal();
-        }, 300);
-      } else {
-        window.location.hash = '#contacto';
-      }
+        } else {
+          window.location.hash = '#contacto';
+        }
+      }, 320);
     });
 
-    // Action button event
-    const actionBtn = backdrop.querySelector('.faust-modal-action-btn');
-    actionBtn.addEventListener('click', closeModal);
+    // Page links — close modal then navigate (respects client-side router)
+    backdrop.querySelectorAll('[data-proto-link]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (link.target === '_blank') return; // let external links open normally
+        e.preventDefault();
+        const href = link.href;
+        closeModal();
+        setTimeout(() => {
+          // Use the client-side router if available, otherwise hard navigate
+          const anchor = document.createElement('a');
+          anchor.href = href;
+          const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
+          anchor.dispatchEvent(clickEvent);
+          if (!clickEvent.defaultPrevented) {
+            window.location.href = href;
+          }
+        }, 320);
+      });
+    });
   };
 }
+
+
+
+
+
 
 
 
@@ -295,7 +574,7 @@ class FaustFooter extends HTMLElement {
           position: fixed;
           inset: 0;
           background: rgba(0, 0, 0, 0);
-          z-index: 2000;
+          z-index: 19;
           visibility: hidden;
           pointer-events: none;
           transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
@@ -1096,7 +1375,7 @@ class FaustFooter extends HTMLElement {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           if (window.showPrototypeToast) {
-            window.showPrototypeToast('El contenido al que intenta navegar aún se encuentra en desarrollo, aún no es indexado o ha sido retirado. Por favor, contáctenos para solicitar más información. Agradecemos su interés.');
+            window.showPrototypeToast();
           }
         });
       }

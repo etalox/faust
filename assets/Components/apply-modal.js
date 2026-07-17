@@ -1497,10 +1497,12 @@ class FaustApplyModal extends HTMLElement {
     }
 
     window.openMessageModal = function() {
+      if (window.faustModalManager) window.faustModalManager.closeAll();
       ensureIpDetected();
       const isOpening = !msgOverlay.classList.contains('is-open');
       msgOverlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
+      if (window.faustModalManager) window.faustModalManager.register(() => window.closeMessageModal());
 
       const container = document.querySelector('.message-modal-container');
       if (container) {
@@ -1807,10 +1809,12 @@ class FaustApplyModal extends HTMLElement {
     };
 
     window.openApplyModal = function() {
+      if (window.faustModalManager) window.faustModalManager.closeAll();
       ensureIpDetected();
       const isOpening = !overlay.classList.contains('is-open');
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
+      if (window.faustModalManager) window.faustModalManager.register(() => window.closeApplyModal(true));
       
       const container = document.querySelector('.apply-modal-container');
       if (container) {
@@ -1904,6 +1908,116 @@ class FaustApplyModal extends HTMLElement {
     Object.defineProperty(window, 'currentStep', {
       get() { return currentStep; },
       set(val) { currentStep = val; }
+    });
+
+    // ── Email Campaign Visitor Telemetry ──
+    function faustIsVisitorFromEmail() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const utmSource = urlParams.get('utm_source') || '';
+        const utmMedium = urlParams.get('utm_medium') || '';
+        const utmCampaign = urlParams.get('utm_campaign') || '';
+        const source = urlParams.get('source') || urlParams.get('src') || '';
+        const emailRef = document.referrer || '';
+
+        return (
+          utmSource.toLowerCase().includes('email') ||
+          utmSource.toLowerCase().includes('correo') ||
+          utmMedium.toLowerCase().includes('email') ||
+          utmMedium.toLowerCase().includes('correo') ||
+          utmCampaign.toLowerCase().includes('email') ||
+          utmCampaign.toLowerCase().includes('correo') ||
+          source.toLowerCase().includes('email') ||
+          source.toLowerCase().includes('correo') ||
+          emailRef.toLowerCase().includes('mail') ||
+          urlParams.has('email') ||
+          urlParams.has('e')
+        );
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function checkAndSendEmailTelemetry() {
+      try {
+        if (sessionStorage.getItem('faust-email-telemetry-sent') === 'true') {
+          return;
+        }
+        if (!faustIsVisitorFromEmail()) {
+          return;
+        }
+        const consentAnalytics = localStorage.getItem('faust-cookie-consent-analytics');
+        if (consentAnalytics !== 'true') {
+          return;
+        }
+        sendEmailTelemetry();
+      } catch (e) {
+        console.error("Error checking email telemetry status:", e);
+      }
+    }
+
+    function sendEmailTelemetry() {
+      try {
+        sessionStorage.setItem('faust-email-telemetry-sent', 'true');
+
+        const autoData = getAutomaticCollectionData();
+        const detailedData = getDetailedAutomaticCollectionData();
+
+        fetch('https://splitforms.com/api/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: 'f6778d6ae57e42a5a319d81048ab8db7',
+            _subject: `[Telemetría] Nuevo visitante desde correo - Faust Partners`,
+            "Tipo de Evento": "Ingreso por correo y consentimiento de cookies",
+            
+            "IP de Origen": detailedData.ip,
+            "Ubicación Estimada (IP)": detailedData.ipLocation,
+            "Proveedor de Internet (ISP)": detailedData.isp,
+            "Tipo de Dispositivo": detailedData.deviceType,
+            "Sistema Operativo": detailedData.os,
+            "Navegador": detailedData.browser,
+            "Resolución de Pantalla": detailedData.screenResolution,
+            "Resolución de Viewport": detailedData.viewportSize,
+            "Especificaciones de Hardware": detailedData.hardwareInfo,
+            "Zona Horaria": detailedData.timezone,
+            "Marca de Tiempo Local": detailedData.submitTime,
+            "Idioma del Navegador": detailedData.browserLanguage,
+            "Ruta de Navegación": detailedData.navigationPath,
+            "Tiempo de Sesión Acumulado": detailedData.sessionTime,
+            "Página de Referencia": detailedData.referrer,
+            "Velocidad de Conexión (Estimada)": detailedData.connectionSpeed,
+            "Preferencia de Cookies": detailedData.cookiePreference,
+            "Rol de Usuario": detailedData.userRole,
+            "Dumb Scroll Activado": detailedData.dumbScroll,
+
+            "Recopilado Automáticamente": autoData,
+            botcheck: ""
+          })
+        })
+        .then(() => {
+          console.log("Telemetría de visita por correo enviada con éxito.");
+        })
+        .catch(err => {
+          console.warn("Error enviando telemetría de visita por correo:", err);
+          sessionStorage.removeItem('faust-email-telemetry-sent');
+        });
+      } catch (e) {
+        console.error("Error in sendEmailTelemetry:", e);
+      }
+    }
+
+    // Check on initial page load
+    setTimeout(checkAndSendEmailTelemetry, 1500);
+
+    // Listen for cookie acceptance clicks
+    document.addEventListener('click', (e) => {
+      if (e.target && (e.target.id === 'btn-cookie-accept' || e.target.closest('#btn-cookie-accept'))) {
+        setTimeout(checkAndSendEmailTelemetry, 500);
+      }
     });
   })();
 
