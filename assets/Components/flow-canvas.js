@@ -1413,6 +1413,7 @@ class FaustFlowCanvas extends HTMLElement {
     if (this._hasPlayed === undefined) {
       this._hasPlayed = false;
     }
+    this.lockMobileNavigationPortrait();
     this._isIntersecting = false;
     this._enteredFromBelow = false;
 
@@ -1822,7 +1823,8 @@ class FaustFlowCanvas extends HTMLElement {
 
   openMobilePresentation(canvasOuter) {
     const lockLandscape = () => {
-      screen.orientation?.lock?.('landscape').then(() => {
+      const lockRequest = screen.orientation?.lock?.('landscape');
+      lockRequest?.then(() => {
         this._presentationOrientationLocked = true;
       }).catch(() => {});
     };
@@ -1849,9 +1851,14 @@ class FaustFlowCanvas extends HTMLElement {
   }
 
   unlockPresentationOrientation() {
-    if (!this._presentationOrientationLocked) return;
-    screen.orientation?.unlock?.();
+    if (this._presentationOrientationLocked) screen.orientation?.unlock?.();
     this._presentationOrientationLocked = false;
+    this.lockMobileNavigationPortrait();
+  }
+
+  lockMobileNavigationPortrait() {
+    if (window.innerWidth > 767 || this.isMobilePresentation()) return;
+    screen.orientation?.lock?.('portrait')?.catch(() => {});
   }
 
   disconnectedCallback() {
