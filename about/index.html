@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="description" content="Faust Partners™ es el Growth Partner de Optimización CRO #1 en México. Conoce más sobre nuestra filosofía, nuestra metodología basada en neurociencia conductual y nuestro enfoque científico de conversión A/B.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=430, viewport-fit=cover">
   <title>Sobre nosotros | Faust Partners™</title>
   <link rel="icon" type="image/png" href="../assets/Icons/tab_icon.png">
   <script src="../assets/translation.js" defer></script>
@@ -124,7 +124,7 @@
             </div>
             <faust-mouse-follower text="Reproducir" play-icon></faust-mouse-follower>
           </div>
-          <video autoplay loop muted playsinline preload="auto" style="width: 100%; height: 100%;">
+          <video autoplay loop muted playsinline preload="metadata" style="width: 100%; height: 100%;">
             <source src="../assets/video.mp4" type="video/mp4">
             Tu navegador no soporta el tag de video.
           </video>
@@ -193,6 +193,7 @@
         video.controls = true;
         video.style.pointerEvents = 'auto';
         video.currentTime = 0;
+        wrapper.dataset.userInitiated = 'true';
         video.play().catch(function(err) {
           console.warn("Video play blocked or error:", err);
         });
@@ -200,6 +201,29 @@
         wrapper.style.cursor = 'default';
       }
     }
+
+    (function() {
+      const wrapper = document.querySelector('.video-wrapper');
+      const video = wrapper && wrapper.querySelector('video');
+      if (!wrapper || !video || !('IntersectionObserver' in window)) return;
+
+      let isVisible = false;
+      const syncPlayback = function() {
+        if (document.visibilityState !== 'visible' || !isVisible) {
+          video.pause();
+        } else if (wrapper.dataset.userInitiated !== 'true') {
+          video.play().catch(function() {});
+        }
+      };
+
+      const observer = new IntersectionObserver(function(entries) {
+        isVisible = entries[0].isIntersecting;
+        syncPlayback();
+      }, { threshold: 0.05 });
+
+      observer.observe(wrapper);
+      document.addEventListener('visibilitychange', syncPlayback);
+    })();
   </script>
 
   <!-- Text highlight scroll animation -->
@@ -374,6 +398,7 @@
       var lastTime = Date.now();
       var scrollSpeed = 0;
       var scrollTimeout = null;
+      var scrollFrame = null;
 
       function updateScrollSpeed() {
         var currentScroll = window.scrollY;
@@ -400,7 +425,13 @@
       }
 
       document.documentElement.style.setProperty('--reveal-duration', '1.6s');
-      window.addEventListener('scroll', updateScrollSpeed, { passive: true });
+      window.addEventListener('scroll', function() {
+        if (scrollFrame) return;
+        scrollFrame = requestAnimationFrame(function() {
+          scrollFrame = null;
+          updateScrollSpeed();
+        });
+      }, { passive: true });
 
       // 3. Bidirectional reveal observer
       var revealObserverOptions = {

@@ -32,6 +32,7 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
+                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
 
                 <!-- Item 2: Autonomía Asíncrona -->
@@ -48,6 +49,7 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
+                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
 
                 <!-- Item 3: Enfoque Basado en Evidencia -->
@@ -64,6 +66,7 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
+                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
 
                 <!-- Item 4: Proyectos High-Ticket -->
@@ -80,8 +83,8 @@
                   <div class="perk-row-progress">
                     <div class="perk-row-progress-fill"></div>
                   </div>
+                  <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
                 </div>
-                <faust-mouse-follower text="Conocer más"></faust-mouse-follower>
               </div>
 
               <!-- Right side: sticky terminal/code editor mockup window -->
@@ -145,6 +148,24 @@
       const duration = 6000; // 6 seconds per step
       let startTime = null;
       let animationFrameId = null;
+
+      const section = this.querySelector('.section');
+      const syncAnimationVisibility = () => {
+        this.classList.toggle('is-page-visible', document.visibilityState === 'visible');
+      };
+      const animationObserver = 'IntersectionObserver' in window
+        ? new IntersectionObserver((entries) => {
+            this.classList.toggle('is-in-view', entries[0].isIntersecting);
+          }, { threshold: 0.05 })
+        : null;
+
+      if (animationObserver && section) {
+        animationObserver.observe(section);
+      } else {
+        this.classList.add('is-in-view');
+      }
+      document.addEventListener('visibilitychange', syncAnimationVisibility);
+      syncAnimationVisibility();
 
       const setActiveStep = (index) => {
         currentIndex = index;
@@ -334,6 +355,8 @@
         window.removeEventListener('scroll', handleScroll);
         window.removeEventListener('resize', handleResize);
         window.removeEventListener('load', handleLoad);
+        document.removeEventListener('visibilitychange', syncAnimationVisibility);
+        if (animationObserver) animationObserver.disconnect();
         clickListeners.forEach(({ item, listener }) => {
           item.removeEventListener('click', listener);
         });

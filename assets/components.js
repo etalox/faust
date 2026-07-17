@@ -104,6 +104,92 @@
     pageRafs.length = 0;
   }
 
+  // Let the press-state microinteraction complete before replacing UI or navigating.
+  // Keyboard activation remains immediate so the delay does not affect accessibility.
+  const pressDelayMs = 70;
+  const pressableSelector = [
+    'button',
+    'a.btn:not([target]):not([download])',
+    'a.modal-action:not([target]):not([download])',
+    '[role="button"]',
+    '.apply-option-item',
+    '.calendar-day',
+    '.lang-item'
+  ].join(', ');
+
+  // Shared modal/surface coordinator. Components register their own close
+  // routine so closing preserves each surface's local cleanup and animation.
+  const surfaceClosers = new Map();
+  window.faustRegisterSurface = function(id, close) {
+    surfaceClosers.set(id, close);
+    return function() {
+      if (surfaceClosers.get(id) === close) surfaceClosers.delete(id);
+    };
+  };
+  window.faustOpenSurface = function(id) {
+    surfaceClosers.forEach(function(close, registeredId) {
+      if (registeredId === id) return;
+      try { close(); } catch (error) { console.warn('Unable to close surface:', registeredId, error); }
+    });
+  };
+
+  // Experimental visual treatment. Set this to false before components.js
+  // loads, or add `is-bottom-blur-disabled` to <body>, to turn it off.
+  const enableBottomPageBlur = window.FAUST_ENABLE_BOTTOM_PAGE_BLUR !== false;
+  window.faustEnsureBottomPageBlur = function() {
+    if (!enableBottomPageBlur || !document.body || document.querySelector('.page-bottom-blur')) return;
+    const blurLayer = document.createElement('div');
+    blurLayer.className = 'page-bottom-blur';
+    blurLayer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(blurLayer);
+  };
+
+  if (document.body) {
+    window.faustEnsureBottomPageBlur();
+  } else {
+    document.addEventListener('DOMContentLoaded', window.faustEnsureBottomPageBlur, { once: true });
+  }
+
+  let bottomBlurFooterObserver = null;
+  window.faustSyncBottomPageBlurVisibility = function() {
+    if (!enableBottomPageBlur || !document.body || !('IntersectionObserver' in window)) return;
+    const footer = document.querySelector('faust-footer');
+    if (!footer) return;
+
+    if (bottomBlurFooterObserver) bottomBlurFooterObserver.disconnect();
+    bottomBlurFooterObserver = new IntersectionObserver(function(entries) {
+      document.body.classList.toggle('is-footer-near', entries[0].isIntersecting);
+    }, { rootMargin: '0px 0px 20% 0px' });
+    bottomBlurFooterObserver.observe(footer);
+  };
+
+  const setupBottomBlur = function() {
+    window.faustEnsureBottomPageBlur();
+    window.faustSyncBottomPageBlurVisibility();
+  };
+  if (document.body) {
+    requestAnimationFrame(setupBottomBlur);
+  } else {
+    document.addEventListener('DOMContentLoaded', setupBottomBlur, { once: true });
+  }
+
+  document.addEventListener('click', function(event) {
+    if (!event.isTrusted || event.detail === 0 || event.defaultPrevented) return;
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    if (!(event.target instanceof Element)) return;
+    const control = event.target.closest(pressableSelector);
+    if (!control || control.closest('[data-press-delay="off"]')) return;
+    if (control.matches(':disabled, .is-past, .is-weekend, [aria-disabled="true"]')) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    window.setTimeout(function() {
+      if (control.isConnected) control.click();
+    }, pressDelayMs);
+  }, true);
+
   // Load Component Files
   let currentScript = document.currentScript;
   if (!currentScript) {
@@ -190,9 +276,6 @@
 
       // Synchronize <body> classes (preserving active transitioning and grid/animation states)
       const preservedBodyClasses = [];
-      if (document.body.classList.contains('no-reveal-animations')) {
-        preservedBodyClasses.push('no-reveal-animations');
-      }
       if (document.body.classList.contains('is-transitioning')) {
         preservedBodyClasses.push('is-transitioning');
       }
@@ -254,6 +337,7 @@
       const footer = document.querySelector('faust-footer');
       const applyModal = document.querySelector('faust-apply-modal');
       const fadeOverlay = document.querySelector('.page-fade-overlay');
+      const bottomPageBlur = document.querySelector('.page-bottom-blur');
 
       // Remove current non-preserved elements
       const childrenToRemove = Array.from(document.body.childNodes).filter(node => {
@@ -261,6 +345,7 @@
                node !== footer && 
                node !== applyModal && 
                node !== fadeOverlay && 
+               node !== bottomPageBlur &&
                node.nodeName !== 'NOSCRIPT' &&
                !(node.nodeType === Node.ELEMENT_NODE && node.id === 'google_translate_element') &&
                !(node.nodeType === Node.ELEMENT_NODE && node.classList.contains('skiptranslate'));
@@ -305,6 +390,7 @@
       if (footer && typeof footer.render === 'function') {
         footer.render();
       }
+      window.faustSyncBottomPageBlur?.();
 
       // Execute scripts with active sandbox
       window.isRunningPageScripts = true;
@@ -317,6 +403,12 @@
         oldScript.parentNode.replaceChild(newScript, oldScript);
       });
       window.isRunningPageScripts = false;
+
+      // This class only suppresses the initial reveal while the new page is mounted.
+      // Do not let it leak into interactive transitions such as Careers filters.
+      setTimeout(() => {
+        document.body.classList.remove('no-reveal-animations');
+      }, 0);
 
       // Re-bind grid intersection observers
       if (typeof window.bindGridObserver === 'function') {
@@ -359,6 +451,10 @@
   document.addEventListener('click', function(e) {
     const link = e.target.closest('a');
     if (!link) return;
+
+    // Component-owned links (such as placeholder navigation that opens a
+    // modal) have already handled the action and must not be routed as URLs.
+    if (e.defaultPrevented) return;
 
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (link.hasAttribute('download') || link.getAttribute('target') === '_blank') return;

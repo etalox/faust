@@ -7,29 +7,10 @@ const strictCountriesList = [
 
 const faustIsStrictRegion = () => {
   if (typeof window === 'undefined') return false;
-  
-  // Check active language selection code (e.g. if manually switched to en-GB, es-ES, fr)
-  const activeCode = (typeof getSelectedCode === 'function') ? getSelectedCode() : 'es-LA';
-  if (activeCode === 'es-ES' || activeCode === 'en-GB' || activeCode.startsWith('fr')) {
-    return true;
-  }
-  
+
+  // Consent rules are based on the visitor's detected location, never their UI language.
   const detectedCountry = (localStorage.getItem('faust-detected-country-code') || '').toUpperCase();
-  if (detectedCountry) {
-    return strictCountriesList.includes(detectedCountry);
-  }
-  
-  // Check browser language region (fallback if geolocation hasn't loaded or failed)
-  const browserLang = (navigator.language || navigator.userLanguage || '');
-  const parts = browserLang.split('-');
-  if (parts.length > 1) {
-    const browserCountry = parts[1].toUpperCase();
-    if (strictCountriesList.includes(browserCountry)) {
-      return true;
-    }
-  }
-  
-  return false;
+  return strictCountriesList.includes(detectedCountry);
 };
 
 const faustIsClarityEnabled = () => {
@@ -51,24 +32,29 @@ const faustIsAnalyticsEnabled = () => {
 /* ── Cumulative Session Timer ── */
 (function() {
   let lastSavedTime = Date.now();
+
+  const saveElapsedTime = (allowHidden = false) => {
+    if (!allowHidden && document.visibilityState !== 'visible') return;
+
+    const now = Date.now();
+    const delta = Math.round((now - lastSavedTime) / 1000);
+    if (delta > 0) {
+      const accumulated = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
+      localStorage.setItem('faust-cumulative-session-time', accumulated + delta);
+    }
+    lastSavedTime = now;
+  };
   
   document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      saveElapsedTime(true);
+    }
     lastSavedTime = Date.now();
   });
   
   setInterval(() => {
-    const now = Date.now();
-    if (document.visibilityState === 'visible') {
-      const delta = Math.round((now - lastSavedTime) / 1000);
-      if (delta > 0) {
-        const accumulated = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
-        localStorage.setItem('faust-cumulative-session-time', accumulated + delta);
-        lastSavedTime = now;
-      }
-    } else {
-      lastSavedTime = now;
-    }
-  }, 1000);
+    saveElapsedTime();
+  }, 15000);
 })();
 
 /* ── Track Visited Pages ── */
@@ -252,82 +238,6 @@ try {
       flex-shrink: 0;
     }
 
-    .btn-cookie-accept {
-      height: 48px;
-      padding: 0 32px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      background: #f2f2f2;
-      color: #161616 !important;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 240ms ease-out, color 240ms ease-out, transform 150ms ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-
-    .btn-cookie-accept:hover {
-      background: #0022ff;
-      color: #fff !important;
-    }
-
-    .btn-cookie-accept:active {
-      transform: scale(0.97);
-    }
-
-    .btn-cookie-decline {
-      height: 48px;
-      padding: 0 32px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      position: relative;
-      background: rgba(253, 253, 255, 0.06);
-      color: #f2f2f2 !important;
-      border: none;
-      backdrop-filter: blur(20px);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 240ms ease-out, color 240ms ease-out, transform 150ms ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-
-    .btn-cookie-decline::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 999px;
-      padding: 1px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      transition: opacity 180ms ease-out;
-    }
-
-    .btn-cookie-decline:hover {
-      background: rgba(238, 238, 241, 0.10);
-      color: #fff !important;
-    }
-
-    .btn-cookie-decline:hover::before {
-      opacity: 0.5;
-    }
-
-    .btn-cookie-decline:active {
-      transform: scale(0.97);
-    }
-
     @media (max-width: 768px) {
       .cookie-banner-overlay {
         bottom: 16px;
@@ -359,10 +269,8 @@ try {
         gap: 10px;
       }
       
-      .btn-cookie-decline,
-      .btn-cookie-accept {
+      .cookie-banner-buttons .modal-action {
         width: 100%;
-        height: 44px;
       }
     }
   `;
@@ -373,6 +281,13 @@ try {
   let bannerOverlay = null;
   let footerIntersecting = false;
   let footerObserver = null;
+  let countryDetectionPending = localStorage.getItem('faust-ip-detection-status') === 'pending' &&
+    !localStorage.getItem('faust-detected-country-code');
+
+  window.addEventListener('faust-country-detected', () => {
+    countryDetectionPending = false;
+    checkScrollAndInit();
+  });
 
   function updateLegalNavBottom() {
     document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
@@ -498,8 +413,8 @@ try {
           <p class="cookie-banner-text">${textToShow}</p>
         </div>
         <div class="cookie-banner-buttons">
-          ${strictMode ? `<button class="btn-cookie-decline" id="btn-cookie-decline">${t.decline}</button>` : ''}
-          <button class="btn-cookie-accept" id="btn-cookie-accept">${t.accept}</button>
+          ${strictMode ? `<button class="modal-action modal-action--secondary" id="btn-cookie-decline">${t.decline}</button>` : ''}
+          <button class="modal-action modal-action--primary" id="btn-cookie-accept">${t.accept}</button>
         </div>
       </div>
     `;
@@ -598,6 +513,7 @@ try {
 
   function checkScrollAndInit() {
     if (bannerDismissed) return;
+    if (countryDetectionPending) return;
 
     const path = window.location.pathname.toLowerCase();
     const isCareers = path.includes('/careers/') || path.endsWith('/careers');
