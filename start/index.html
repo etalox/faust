@@ -646,42 +646,54 @@
 
       var isLoaded = false;
       var objectUrl = null;
+      var heroIsVisible = true;
+      var glowIsVisible = true;
+
+      function syncVideoPlayback() {
+        if (!isLoaded) return;
+
+        var canPlay = document.visibilityState === 'visible';
+        [[video, heroIsVisible], [glowVideo, glowIsVisible]].forEach(function(entry) {
+          var media = entry[0];
+          if (!media) return;
+          if (canPlay && entry[1]) {
+            media.play().catch(function() {});
+          } else {
+            media.pause();
+          }
+        });
+      }
+
+      function markVideoLoaded() {
+        if (isLoaded) return;
+        isLoaded = true;
+        container.classList.add('is-loaded');
+        if (glowContainer) glowContainer.classList.add('is-loaded');
+        syncVideoPlayback();
+      }
+
+      if ('IntersectionObserver' in window) {
+        var videoObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.target === hero) heroIsVisible = entry.isIntersecting;
+            if (entry.target === gestion) glowIsVisible = entry.isIntersecting;
+          });
+          syncVideoPlayback();
+        }, { threshold: 0.05 });
+        videoObserver.observe(hero);
+        if (gestion) videoObserver.observe(gestion);
+      }
+
+      document.addEventListener('visibilitychange', syncVideoPlayback);
 
       function checkVideoLoaded() {
         if (isLoaded) return;
-        if (video.duration > 0 && video.buffered.length > 0) {
-          var bufferedEnd = video.buffered.end(video.buffered.length - 1);
-          if (bufferedEnd >= video.duration - 0.1) {
-            isLoaded = true;
-            
-            var playPromise1 = video.play();
-            var promises = [];
-            if (playPromise1 !== undefined) promises.push(playPromise1);
-            
-            if (glowVideo) {
-              var playPromise2 = glowVideo.play();
-              if (playPromise2 !== undefined) promises.push(playPromise2);
-            }
-            
-            if (promises.length > 0) {
-              Promise.all(promises).then(function() {
-                container.classList.add('is-loaded');
-                if (glowContainer) glowContainer.classList.add('is-loaded');
-              }).catch(function(error) {
-                console.warn("Autoplay video control:", error);
-                container.classList.add('is-loaded');
-                if (glowContainer) glowContainer.classList.add('is-loaded');
-              });
-            } else {
-              container.classList.add('is-loaded');
-              if (glowContainer) glowContainer.classList.add('is-loaded');
-            }
-
-            video.removeEventListener('progress', checkVideoLoaded);
-            video.removeEventListener('canplaythrough', checkVideoLoaded);
-            video.removeEventListener('suspend', checkVideoLoaded);
-            video.removeEventListener('loadeddata', checkVideoLoaded);
-          }
+        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+          markVideoLoaded();
+          video.removeEventListener('progress', checkVideoLoaded);
+          video.removeEventListener('canplaythrough', checkVideoLoaded);
+          video.removeEventListener('suspend', checkVideoLoaded);
+          video.removeEventListener('loadeddata', checkVideoLoaded);
         }
       }
 
@@ -693,28 +705,7 @@
       // Fallback: If it's taking too long or browser stops buffering, force show.
       var fallbackTimeout = setTimeout(function() {
         if (!isLoaded && video.src) {
-          isLoaded = true;
-          var playPromise1 = video.play();
-          var promises = [];
-          if (playPromise1 !== undefined) promises.push(playPromise1);
-          
-          if (glowVideo) {
-            var playPromise2 = glowVideo.play();
-            if (playPromise2 !== undefined) promises.push(playPromise2);
-          }
-          
-          if (promises.length > 0) {
-            Promise.all(promises).then(function() {
-              container.classList.add('is-loaded');
-              if (glowContainer) glowContainer.classList.add('is-loaded');
-            }).catch(function(error) {
-              container.classList.add('is-loaded');
-              if (glowContainer) glowContainer.classList.add('is-loaded');
-            });
-          } else {
-            container.classList.add('is-loaded');
-            if (glowContainer) glowContainer.classList.add('is-loaded');
-          }
+          markVideoLoaded();
         }
       }, 10000);
 
@@ -828,6 +819,7 @@
       var lastTime = Date.now();
       var scrollSpeed = 0;
       var scrollTimeout = null;
+      var scrollFrame = null;
 
       function updateScrollSpeed() {
         var currentScroll = window.scrollY;
@@ -859,7 +851,13 @@
 
       // Initialize default duration
       document.documentElement.style.setProperty('--reveal-duration', '1.6s');
-      window.addEventListener('scroll', updateScrollSpeed, { passive: true });
+      window.addEventListener('scroll', function() {
+        if (scrollFrame) return;
+        scrollFrame = requestAnimationFrame(function() {
+          scrollFrame = null;
+          updateScrollSpeed();
+        });
+      }, { passive: true });
 
       // 2. Group adjacent text-like elements to force sequential reveal blocks
       var revealItems = document.querySelectorAll('.reveal-item');

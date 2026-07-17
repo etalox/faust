@@ -7,29 +7,10 @@ const strictCountriesList = [
 
 const faustIsStrictRegion = () => {
   if (typeof window === 'undefined') return false;
-  
-  // Check active language selection code (e.g. if manually switched to en-GB, es-ES, fr)
-  const activeCode = (typeof getSelectedCode === 'function') ? getSelectedCode() : 'es-LA';
-  if (activeCode === 'es-ES' || activeCode === 'en-GB' || activeCode.startsWith('fr')) {
-    return true;
-  }
-  
+
+  // Consent rules are based on the visitor's detected location, never their UI language.
   const detectedCountry = (localStorage.getItem('faust-detected-country-code') || '').toUpperCase();
-  if (detectedCountry) {
-    return strictCountriesList.includes(detectedCountry);
-  }
-  
-  // Check browser language region (fallback if geolocation hasn't loaded or failed)
-  const browserLang = (navigator.language || navigator.userLanguage || '');
-  const parts = browserLang.split('-');
-  if (parts.length > 1) {
-    const browserCountry = parts[1].toUpperCase();
-    if (strictCountriesList.includes(browserCountry)) {
-      return true;
-    }
-  }
-  
-  return false;
+  return strictCountriesList.includes(detectedCountry);
 };
 
 const faustIsClarityEnabled = () => {
@@ -51,24 +32,29 @@ const faustIsAnalyticsEnabled = () => {
 /* ── Cumulative Session Timer ── */
 (function() {
   let lastSavedTime = Date.now();
+
+  const saveElapsedTime = (allowHidden = false) => {
+    if (!allowHidden && document.visibilityState !== 'visible') return;
+
+    const now = Date.now();
+    const delta = Math.round((now - lastSavedTime) / 1000);
+    if (delta > 0) {
+      const accumulated = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
+      localStorage.setItem('faust-cumulative-session-time', accumulated + delta);
+    }
+    lastSavedTime = now;
+  };
   
   document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      saveElapsedTime(true);
+    }
     lastSavedTime = Date.now();
   });
   
   setInterval(() => {
-    const now = Date.now();
-    if (document.visibilityState === 'visible') {
-      const delta = Math.round((now - lastSavedTime) / 1000);
-      if (delta > 0) {
-        const accumulated = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
-        localStorage.setItem('faust-cumulative-session-time', accumulated + delta);
-        lastSavedTime = now;
-      }
-    } else {
-      lastSavedTime = now;
-    }
-  }, 1000);
+    saveElapsedTime();
+  }, 15000);
 })();
 
 /* ── Track Visited Pages ── */
@@ -295,6 +281,13 @@ try {
   let bannerOverlay = null;
   let footerIntersecting = false;
   let footerObserver = null;
+  let countryDetectionPending = localStorage.getItem('faust-ip-detection-status') === 'pending' &&
+    !localStorage.getItem('faust-detected-country-code');
+
+  window.addEventListener('faust-country-detected', () => {
+    countryDetectionPending = false;
+    checkScrollAndInit();
+  });
 
   function updateLegalNavBottom() {
     document.documentElement.style.setProperty('--legal-nav-bottom', '40px');
@@ -520,6 +513,7 @@ try {
 
   function checkScrollAndInit() {
     if (bannerDismissed) return;
+    if (countryDetectionPending) return;
 
     const path = window.location.pathname.toLowerCase();
     const isCareers = path.includes('/careers/') || path.endsWith('/careers');

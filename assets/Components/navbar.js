@@ -48,8 +48,7 @@ if (!window.showPrototypeToast) {
     // Prevent duplicate modals
     if (document.getElementById('faust-prototype-modal')) return;
 
-    // Close any other open modal first
-    if (window.faustModalManager) window.faustModalManager.closeAll();
+    window.faustOpenSurface?.('prototype');
 
     const columns = window._getAvailablePages();
 
@@ -177,7 +176,6 @@ if (!window.showPrototypeToast) {
           flex: 1;
           min-height: 0;
           padding: 8px 8px;
-          max-height: 400px;
         }
         .proto-modal-body::-webkit-scrollbar { width: 4px; }
         .proto-modal-body::-webkit-scrollbar-track { background: transparent; margin: 8px 0; }
@@ -229,6 +227,46 @@ if (!window.showPrototypeToast) {
           border-top: 1px solid rgba(255,255,255,0.06);
           justify-content: flex-end;
         }
+        .proto-btn {
+          border-radius: 999px;
+          padding: 10px 20px;
+          font-size: 14px;
+          font-weight: 500;
+          border: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-family: inherit;
+          transition: background 0.18s ease, color 0.18s ease;
+          text-decoration: none;
+          box-sizing: border-box;
+          letter-spacing: 0.1px;
+        }
+        .proto-btn-secondary {
+          position: relative;
+          background: rgba(253,253,255,0.06);
+          color: #f2f2f2;
+        }
+        .proto-btn-secondary::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 999px;
+          padding: 1px;
+          background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+        }
+        .proto-btn-secondary:hover { background: rgba(238,238,241,0.10); }
+        .proto-btn-primary {
+          background: #f2f2f2;
+          color: #161616;
+        }
+        .proto-btn-primary:hover { background: #0022ff; color: #fff; }
+
         @media (max-width: 768px) {
           .proto-grid {
             grid-template-columns: 1fr;
@@ -237,7 +275,7 @@ if (!window.showPrototypeToast) {
           }
           .proto-modal-header { padding: 20px 24px 16px; }
           .proto-modal-footer { padding: 16px 24px; flex-direction: column; }
-          .modal-action { width: 100%; }
+          .proto-btn { width: 100%; }
         }
       </style>
 
@@ -255,8 +293,8 @@ if (!window.showPrototypeToast) {
               ${pagesHtml}
             </div>
             <div class="proto-modal-footer">
-              <button class="modal-action modal-action--secondary" id="proto-contact-btn">Contacto</button>
-              <button class="modal-action modal-action--primary" id="proto-close-btn">Cerrar</button>
+              <button class="proto-btn proto-btn-secondary" id="proto-contact-btn">Contacto</button>
+              <button class="proto-btn proto-btn-primary" id="proto-close-btn">Cerrar</button>
             </div>
           </div>
         </div>
@@ -275,6 +313,7 @@ if (!window.showPrototypeToast) {
     const closeModal = () => {
       backdrop.classList.remove('is-open');
       document.body.style.overflow = '';
+      unregisterPrototypeSurface?.();
       document.removeEventListener('keydown', handleEsc);
       // Wait for transition then remove
       const onEnd = () => { backdrop.remove(); };
@@ -282,6 +321,7 @@ if (!window.showPrototypeToast) {
       // Safety fallback
       setTimeout(() => { if (backdrop.isConnected) backdrop.remove(); }, 500);
     };
+    const unregisterPrototypeSurface = window.faustRegisterSurface?.('prototype', closeModal);
 
     const handleEsc = (e) => { if (e.key === 'Escape') closeModal(); };
     document.addEventListener('keydown', handleEsc);

@@ -386,16 +386,21 @@ async function detectCountryByIP() {
 
   // If we already detected the country code, we don't need to run again
   if (localStorage.getItem('faust-detected-country-code')) {
+    localStorage.setItem('faust-ip-detection-status', 'complete');
     return;
   }
 
   // If the IP detection has already run, stop to avoid repeat requests
   if (localStorage.getItem('faust-ip-detected') === 'true') {
+    localStorage.setItem('faust-ip-detection-status', 'complete');
     return;
   }
 
   // Mark as detected (or attempted) so we don't repeat this even if it fails or gets blocked
   localStorage.setItem('faust-ip-detected', 'true');
+  localStorage.setItem('faust-ip-detection-status', 'pending');
+
+  let resolvedCountry = null;
 
   try {
     let country = null;
@@ -424,6 +429,8 @@ async function detectCountryByIP() {
     }
 
     if (!country) return;
+
+    resolvedCountry = country;
 
     if (ip) {
       localStorage.setItem('faust-detected-ip', ip);
@@ -481,6 +488,11 @@ async function detectCountryByIP() {
     }
   } catch (error) {
     console.warn('Geolocation detection failed:', error);
+  } finally {
+    localStorage.setItem('faust-ip-detection-status', 'complete');
+    window.dispatchEvent(new CustomEvent('faust-country-detected', {
+      detail: { country: resolvedCountry }
+    }));
   }
 }
 

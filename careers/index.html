@@ -1071,43 +1071,85 @@
 
           const filter = btn.getAttribute('data-filter');
           const vacancyItems = Array.from(document.querySelectorAll('.vacancy-item'));
-          
+
           let visibleCount = 0;
+
+          function cancelCardTransition(item) {
+            if (item._transitionTimeout) {
+              clearTimeout(item._transitionTimeout);
+              item._transitionTimeout = null;
+            }
+            if (item._showAnimationFrame) {
+              cancelAnimationFrame(item._showAnimationFrame);
+              item._showAnimationFrame = null;
+            }
+            if (item._hideTransitionHandler) {
+              item.removeEventListener('transitionend', item._hideTransitionHandler);
+              item._hideTransitionHandler = null;
+            }
+          }
+
+          function finishHidingCard(item) {
+            if (!item.classList.contains('is-hidden')) return;
+            item.style.display = 'none';
+            item.style.transitionDelay = '';
+            item._transitionTimeout = null;
+            if (item._hideTransitionHandler) {
+              item.removeEventListener('transitionend', item._hideTransitionHandler);
+              item._hideTransitionHandler = null;
+            }
+          }
 
           vacancyItems.forEach(item => {
             const types = item.getAttribute('data-type').split(' ');
             const shouldShow = (filter === 'all' || types.includes(filter));
 
-            if (item._transitionTimeout) {
-              clearTimeout(item._transitionTimeout);
-              item._transitionTimeout = null;
-            }
+            cancelCardTransition(item);
 
             if (shouldShow) {
               item.style.transitionDelay = '0ms';
-              
+
               if (item.style.display === 'none' || item.classList.contains('is-hidden')) {
                 item.style.display = 'flex';
                 // Force layout reflow
                 item.offsetHeight;
-                
+
                 // Add staggered animation delay
-                item.style.transitionDelay = `${visibleCount * 60}ms`;
+                const delay = visibleCount * 60;
+                item.style.transitionDelay = `${delay}ms`;
                 visibleCount++;
-                
-                item.classList.remove('is-hidden');
+
+                item._showAnimationFrame = requestAnimationFrame(() => {
+                  item._showAnimationFrame = null;
+                  item.classList.remove('is-hidden');
+                  item._transitionTimeout = setTimeout(() => {
+                    if (!item.classList.contains('is-hidden')) {
+                      item.style.transitionDelay = '';
+                    }
+                    item._transitionTimeout = null;
+                  }, delay + 450);
+                });
               } else {
                 item.classList.remove('is-hidden');
+                item.style.transitionDelay = '';
               }
             } else {
               if (item.style.display !== 'none' && !item.classList.contains('is-hidden')) {
-                item.classList.add('is-hidden');
-                
-                item._transitionTimeout = setTimeout(() => {
-                  if (item.classList.contains('is-hidden')) {
-                    item.style.display = 'none';
+                item.style.transitionDelay = '0ms';
+                item._hideTransitionHandler = (event) => {
+                  if (event.target === item && event.propertyName === 'max-height') {
+                    finishHidingCard(item);
                   }
-                }, 400);
+                };
+                item.addEventListener('transitionend', item._hideTransitionHandler);
+                item.classList.add('is-hidden');
+
+                item._transitionTimeout = setTimeout(() => {
+                  finishHidingCard(item);
+                }, 500);
+              } else if (item.style.display !== 'none' && item.classList.contains('is-hidden')) {
+                // A quick filter change can cancel an entering card before its frame runs.
+                finishHidingCard(item);
               }
             }
           });

@@ -166,9 +166,10 @@ if (!window.showPrototypeToast) {
           padding: 0;
           flex-shrink: 0;
           margin-top: 2px;
-          transition: color 0.2s ease;
+          transition: color 0.2s ease, transform 120ms ease-out;
         }
         .proto-modal-close-btn:hover { color: #fff; }
+        .proto-modal-close-btn:active { transform: scale(0.88); }
         .proto-modal-body {
           overflow-y: auto;
           flex: 1;
@@ -448,7 +449,7 @@ class FaustFooter extends HTMLElement {
           color: var(--fg); 
           backdrop-filter: blur(40px); 
           -webkit-backdrop-filter: blur(40px);
-          transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out; 
+          transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out, transform 120ms ease-out;
         }
         faust-footer .btn-secondary::before { 
           content: ''; 
@@ -467,6 +468,7 @@ class FaustFooter extends HTMLElement {
           background: rgba(238, 238, 241, 0.10); 
           color: #fff; 
         }
+        faust-footer .btn:not(.lang-done):not(:disabled):active { transform: scale(0.98); }
 
         /* ── Google Translate Premium Clean Overrides ── */
         iframe.goog-te-banner-frame {
@@ -591,13 +593,13 @@ class FaustFooter extends HTMLElement {
 
         .lang-modal-header,
         .lang-modal-body,
-        .btn-listo {
+        .lang-done {
           opacity: 0;
           transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .lang-overlay.is-open .lang-modal-header,
         .lang-overlay.is-open .lang-modal-body,
-        .lang-overlay.is-open .btn-listo {
+        .lang-overlay.is-open .lang-done {
           opacity: 1;
         }
         .lang-modal-header {
@@ -686,10 +688,30 @@ class FaustFooter extends HTMLElement {
           opacity: 1;
           transform: scale(1);
         }
-        .btn-listo {
+        .lang-done {
           width: 100%;
+          justify-content: center;
+          height: 48px;
+          font-weight: 600;
+          font-size: 14px;
+          letter-spacing: 0.2px;
+          display: flex;
+          align-items: center;
           box-sizing: border-box;
         }
+        .btn-save-cookies-overlay {
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          opacity: 0;
+          transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+                      background 0.18s ease,
+                      color 0.18s ease,
+                      transform 120ms ease-out;
+        }
+        .lang-overlay.is-open .btn-save-cookies-overlay {
+          opacity: 1;
+        }
+        .lang-overlay .lang-done:active { transform: none; }
 
         @media (min-width: 981px) {
           .lang-overlay {
@@ -723,7 +745,7 @@ class FaustFooter extends HTMLElement {
             -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
           }
-          .btn-listo {
+          .lang-done {
             align-self: flex-end;
           }
         }
@@ -855,7 +877,7 @@ class FaustFooter extends HTMLElement {
       </footer>
 
       <!-- Language selection modal overlay -->
-      <div class="lang-overlay" id="lang-menu-overlay">
+      <div class="lang-overlay" id="lang-menu-overlay" data-press-delay="off">
         <div class="wrap lang-overlay-wrap">
           <div class="lang-modal-container">
             <div class="lang-modal notranslate" translate="no">
@@ -869,7 +891,7 @@ class FaustFooter extends HTMLElement {
               </div>
             </div>
             <!-- Botón Listo -->
-            <button class="modal-action modal-action--secondary btn-listo">Listo</button>
+            <button class="btn btn-secondary lang-done">Listo</button>
           </div>
         </div>
       </div>
@@ -929,7 +951,7 @@ class FaustFooter extends HTMLElement {
               </div>
             </div>
             <!-- Botón Guardar en modal -->
-            <button class="modal-action modal-action--secondary btn-listo btn-save-cookies-overlay" id="btn-save-cookies-overlay">Guardar preferencias</button>
+            <button class="modal-action modal-action--secondary modal-action--full btn-save-cookies-overlay" id="btn-save-cookies-overlay">Guardar preferencias</button>
           </div>
         </div>
       </div>
@@ -952,6 +974,8 @@ class FaustFooter extends HTMLElement {
     const openCookieModal = (e) => {
       e.preventDefault();
 
+      window.faustOpenSurface?.('cookies');
+
       const clarityInput = this.querySelector('#overlay-cookie-clarity-toggle');
       if (clarityInput) clarityInput.checked = faustIsClarityEnabled();
 
@@ -964,6 +988,7 @@ class FaustFooter extends HTMLElement {
     const closeCookieModal = () => {
       overlay.classList.remove('is-open');
     };
+    this._unregisterCookieSurface = window.faustRegisterSurface?.('cookies', closeCookieModal);
 
     triggerLink.addEventListener('click', openCookieModal);
 
@@ -1097,7 +1122,7 @@ class FaustFooter extends HTMLElement {
   initLanguageModal(wasOpen = false, savedScrollTop = null) {
     const langBtn = this.querySelector('.lang');
     const overlay = this.querySelector('#lang-menu-overlay');
-    const listoBtn = this.querySelector('.btn-listo');
+    const listoBtn = this.querySelector('.lang-done');
 
     if (!langBtn || !overlay || !listoBtn) return;
 
@@ -1212,6 +1237,8 @@ class FaustFooter extends HTMLElement {
     langBtn.addEventListener('click', (e) => {
       e.preventDefault();
 
+      window.faustOpenSurface?.('language');
+
       syncActiveItem();
 
       const isDesktop = window.innerWidth >= 981;
@@ -1245,16 +1272,21 @@ class FaustFooter extends HTMLElement {
         const langWidth = langBtn.offsetWidth;
         listoBtn.style.transition = 'width 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
         listoBtn.style.width = langWidth + 'px';
+
+        // Restore the trigger while the modal contracts. Waiting until the
+        // overlay is gone leaves a visible gap and makes the button pop in.
+        langBtn.style.transition = 'opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
+        langBtn.style.opacity = '1';
+        langBtn.style.pointerEvents = 'auto';
       }
       overlay.classList.remove('is-open');
       if (isDesktop) {
         setTimeout(() => {
-          langBtn.style.opacity = '1';
-          langBtn.style.pointerEvents = 'auto';
           listoBtn.style.width = '';
         }, 300);
       }
     };
+    this._unregisterLanguageSurface = window.faustRegisterSurface?.('language', closeModal);
 
     listoBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1593,6 +1625,14 @@ class FaustFooter extends HTMLElement {
   }
 
   cleanup() {
+    if (this._unregisterCookieSurface) {
+      this._unregisterCookieSurface();
+      this._unregisterCookieSurface = null;
+    }
+    if (this._unregisterLanguageSurface) {
+      this._unregisterLanguageSurface();
+      this._unregisterLanguageSurface = null;
+    }
     if (this._scrollExpandCleanup) {
       this._scrollExpandCleanup();
       this._scrollExpandCleanup = null;
