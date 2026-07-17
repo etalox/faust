@@ -528,6 +528,45 @@
       animation: projector-sweep-local var(--sweep-duration, 1s) linear infinite !important;
     }
 
+    /* Slow replay: remove the one-second introduction while preserving every
+       subsequent interval of the original sequence. These are CSS rules (not
+       post-start JS mutations), so the browser schedules them from frame zero. */
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame13,
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame13 faust-flow-arrow,
+    faust-flow-canvas.is-restarting.has-animations.animating .FlowMetricsContainer,
+    faust-flow-canvas.is-restarting.has-animations.animating .FlowMetricsContainer faust-flow-arrow-split-down { transition-delay: 0s; }
+
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame199,
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame199 faust-flow-card,
+    faust-flow-canvas.is-restarting.has-animations.animating faust-flow-label[left="80"],
+    faust-flow-canvas.is-restarting.has-animations.animating .AB,
+    faust-flow-canvas.is-restarting.has-animations.animating .AB faust-flow-icon { transition-delay: .35s; }
+
+    faust-flow-canvas.is-restarting.has-animations.animating .FlowMetricsContainer .FlowArrowContainer2,
+    faust-flow-canvas.is-restarting.has-animations.animating .FlowMetricsContainer .FlowPercentage1 { transition-delay: .4s; }
+
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame199 faust-flow-arrow,
+    faust-flow-canvas.is-restarting.has-animations.animating .AB faust-flow-icon[bg="blue"],
+    faust-flow-canvas.is-restarting.has-animations.animating .AB faust-flow-icon[bg="blue"] .Frame,
+    faust-flow-canvas.is-restarting.has-animations.animating .FrameMergeDb,
+    faust-flow-canvas.is-restarting.has-animations.animating .FrameMergeDb faust-flow-arrow-merge-right { transition-delay: 1.15s; }
+
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame198,
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame198 faust-flow-icon,
+    faust-flow-canvas.is-restarting.has-animations.animating .FrameMergeDb faust-flow-icon { transition-delay: 1.5s; }
+
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame198 faust-flow-arrow,
+    faust-flow-canvas.is-restarting.has-animations.animating .FrameCardMetrics,
+    faust-flow-canvas.is-restarting.has-animations.animating .FrameCardMetrics faust-flow-arrow { transition-delay: 2.3s; }
+
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame201,
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame201 faust-flow-card,
+    faust-flow-canvas.is-restarting.has-animations.animating faust-flow-label[left="560"],
+    faust-flow-canvas.is-restarting.has-animations.animating .FrameCardMetrics faust-flow-card { transition-delay: 2.65s; }
+
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame201 faust-flow-card[bg="blue"],
+    faust-flow-canvas.is-restarting.has-animations.animating .Frame201 faust-flow-card[bg="blue"] .Frame { transition-delay: 3.45s; }
+
     @keyframes projector-sweep-local {
       0% {
         transform: translate3d(-70%, 0, 0) skewX(-20deg);
@@ -1073,6 +1112,8 @@ class FaustFlowCanvas extends HTMLElement {
 
   startSweepLoop() {
     this.stopSweepLoop();
+    this.classList.remove('is-restarting');
+    this.classList.add('animation-complete');
     
     const runSweep = () => {
       const geometry = this._sweepGeometry || this.refreshSweepGeometry();
@@ -1158,15 +1199,15 @@ class FaustFlowCanvas extends HTMLElement {
     }
   }
 
-  triggerActualAnimation(enteredFromBelow) {
+  triggerActualAnimation(enteredFromBelow, forceSlow = false) {
     const width = parseInt(this.getAttribute('width') || '1640', 10);
     const isCanvas2 = width > 1300;
     const normalDuration = isCanvas2 ? 4500 : 5500;
     const replayDuration = isCanvas2 ? 1800 : 2400;
 
-    if (!this._hasPlayed) {
+    if (!this._hasPlayed || forceSlow) {
       // If user scrolls fast (dumb scroll) before canvas enters, or if dumb scroll was triggered globally, trigger fast animation immediately
-      const isFastScroll = globalScrollSpeed > 1.5 || globalDumbScrollTriggered;
+      const isFastScroll = !forceSlow && (globalScrollSpeed > 1.5 || globalDumbScrollTriggered);
       if (isFastScroll) {
         globalDumbScrollTriggered = true;
         this.classList.remove('animating', 'fast-replay');
@@ -1194,9 +1235,12 @@ class FaustFlowCanvas extends HTMLElement {
       this.classList.remove('animating');
       void this.offsetWidth; // Force reflow
       this.classList.add('animating');
+      const animationDuration = forceSlow && this.classList.contains('is-restarting')
+        ? normalDuration - 1000
+        : normalDuration;
       
       this._animationStartTime = Date.now();
-      this._animationDuration = normalDuration;
+      this._animationDuration = animationDuration;
 
       this.startLabelTracking();
       this.clearTimers();
@@ -1205,7 +1249,7 @@ class FaustFlowCanvas extends HTMLElement {
       this._seenTimeout = setTimeout(() => {
         this._hasPlayed = true;
         this._seenTimeout = null;
-      }, 3000);
+      }, Math.min(3000, animationDuration));
 
       // Set completion timer
       this._playTimeout = setTimeout(() => {
@@ -1214,7 +1258,7 @@ class FaustFlowCanvas extends HTMLElement {
         this.stopLabelTracking();
         this.alignLabelsOnce();
         this.startSweepLoop();
-      }, normalDuration);
+      }, animationDuration);
     } else if (enteredFromBelow) {
       // Subsequent play from below: fast-replay animation
       this.classList.remove('animating', 'fast-replay');
@@ -1237,6 +1281,134 @@ class FaustFlowCanvas extends HTMLElement {
     }
   }
 
+  restartSlowAnimation() {
+    // Keep a brief visual acknowledgement while the next frame starts immediately.
+    // The class is also used to remove the artificial one-second lead-in of the
+    // first visible connection in each canvas.
+    this.classList.add('is-restarting', 'is-replay-feedback');
+    if (this._replayFeedbackTimeout) clearTimeout(this._replayFeedbackTimeout);
+    this._replayFeedbackTimeout = setTimeout(() => {
+      this.classList.remove('is-replay-feedback');
+      this._replayFeedbackTimeout = null;
+    }, 340);
+    this.classList.remove('animation-complete', 'animating', 'fast-replay');
+    this.hideCanvasFollower();
+    this._hasPlayed = false;
+    this.clearTimers();
+    this.stopLabelTracking();
+    void this.offsetWidth;
+    this.triggerActualAnimation(false, true);
+  }
+
+  hideCanvasFollower() {
+    const follower = document.body.querySelector('.canvas-mouse-follower');
+    if (follower && follower.activeParent === this) {
+      follower.classList.remove('is-visible');
+      follower.activeParent = null;
+    }
+  }
+
+  restartFastAnimation() {
+    this.classList.remove('animation-complete', 'animating', 'fast-replay');
+    this.hideCanvasFollower();
+    this._hasPlayed = true;
+    this.clearTimers();
+    this.stopLabelTracking();
+    void this.offsetWidth;
+    this.triggerActualAnimation(true);
+  }
+
+  openExpandedView() {
+    const isPhone = window.innerWidth <= 767;
+    const canvasOuter = this.closest('.canvas-outer');
+    if (!canvasOuter) return;
+    const sourceRect = canvasOuter.getBoundingClientRect();
+
+    const activeOuter = document.querySelector('.canvas-outer.is-expanded');
+    if (activeOuter && activeOuter !== canvasOuter) {
+      activeOuter.classList.remove('is-expanded');
+    }
+    canvasOuter.classList.add('is-expanded');
+    if (isPhone) {
+      canvasOuter.classList.add('is-mobile-presentation');
+      this.updateMobilePresentationOrientation();
+      this.resetMobilePresentationLabels();
+    }
+    this.classList.add('is-expanded-view');
+    document.body.classList.add('has-expanded-canvas');
+    this.restartFastAnimation();
+    if (isPhone) {
+      this.openMobilePresentation(canvasOuter);
+      requestAnimationFrame(() => this._scheduleScaleAndCenter?.());
+    } else {
+      this.animateWindowGeometry(canvasOuter, sourceRect);
+      requestAnimationFrame(() => this._scheduleScaleAndCenter?.());
+    }
+  }
+
+  closeExpandedView() {
+    const canvasOuter = this.closest('.canvas-outer');
+    const isPhonePresentation = canvasOuter?.classList.contains('is-mobile-presentation');
+    if (canvasOuter && document.fullscreenElement === canvasOuter) {
+      document.exitFullscreen?.();
+    }
+    if (!canvasOuter || isPhonePresentation) {
+      if (canvasOuter) canvasOuter.classList.remove('is-expanded', 'is-mobile-presentation');
+      this.classList.remove('is-expanded-view');
+      document.body.classList.remove('has-expanded-canvas');
+      this.unlockPresentationOrientation();
+      return;
+    }
+
+    const sourceRect = canvasOuter.getBoundingClientRect();
+    canvasOuter.classList.remove('is-expanded');
+    this.classList.remove('is-expanded-view');
+    this.animateWindowGeometry(canvasOuter, sourceRect, () => {
+      document.body.classList.remove('has-expanded-canvas');
+      this._scheduleScaleAndCenter?.();
+    });
+  }
+
+  animateWindowGeometry(canvasOuter, sourceRect, onComplete = null) {
+    const targetRect = canvasOuter.getBoundingClientRect();
+    if (!sourceRect.width || !sourceRect.height || !targetRect.width || !targetRect.height) {
+      onComplete?.();
+      return;
+    }
+
+    const translateX = sourceRect.left - targetRect.left;
+    const translateY = sourceRect.top - targetRect.top;
+    const scaleX = sourceRect.width / targetRect.width;
+    const scaleY = sourceRect.height / targetRect.height;
+    const finish = () => {
+      canvasOuter.style.removeProperty('transition');
+      canvasOuter.style.removeProperty('transform');
+      canvasOuter.style.removeProperty('transform-origin');
+      canvasOuter.classList.remove('is-window-transitioning');
+      document.body.classList.remove('canvas-window-transitioning');
+      onComplete?.();
+    };
+
+    canvasOuter.classList.add('is-window-transitioning');
+    document.body.classList.add('canvas-window-transitioning');
+    canvasOuter.style.transformOrigin = 'top left';
+    canvasOuter.style.transition = 'none';
+    canvasOuter.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`;
+    void canvasOuter.offsetWidth;
+
+    requestAnimationFrame(() => {
+      canvasOuter.style.transition = 'transform 440ms cubic-bezier(0.25, 1, 0.5, 1)';
+      canvasOuter.style.transform = 'translate(0, 0) scale(1, 1)';
+    });
+
+    const fallback = setTimeout(finish, 500);
+    canvasOuter.addEventListener('transitionend', (event) => {
+      if (event.target !== canvasOuter || event.propertyName !== 'transform') return;
+      clearTimeout(fallback);
+      finish();
+    }, { once: true });
+  }
+
   connectedCallback() {
     if (this._hasPlayed === undefined) {
       this._hasPlayed = false;
@@ -1257,6 +1429,10 @@ class FaustFlowCanvas extends HTMLElement {
       const frameHeight = parseInt(this.getAttribute('frame-height') || '320', 10);
       const gridLines = parseInt(this.getAttribute('grid-lines') || '14', 10);
       const gridId = this.getAttribute('grid-id') || 'grid-grad';
+
+      // The expanded grid is centered. With an even number of lines, the
+      // canvas center falls between two grid lines, so shift it half a cell.
+      this.style.setProperty('--expanded-grid-phase', gridLines % 2 === 0 ? '40px' : '0px');
 
       let pathD = `M0.5 ${frameHeight}L0.5 0`;
       for (let i = 1; i < gridLines; i++) {
@@ -1301,8 +1477,105 @@ class FaustFlowCanvas extends HTMLElement {
             </div>
           </div>
         </div>
+        <faust-mouse-follower text="Abrir" open-icon class-name="canvas-mouse-follower" active-class="animation-complete" inactive-class="is-expanded-view"></faust-mouse-follower>
+        <div class="canvas-expanded-controls">
+          <button class="canvas-replay-button" type="button" aria-label="Reproducir animación nuevamente" title="Reproducir nuevamente">
+            <svg class="canvas-play-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4.5 2.9L10.5 7L4.5 11.1V2.9Z" fill="currentColor"/></svg>
+            <svg class="canvas-pause-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4.5 3.25H6.25V10.75H4.5V3.25ZM7.75 3.25H9.5V10.75H7.75V3.25Z" fill="currentColor"/></svg>
+          </button>
+          <div class="canvas-replay-protection" aria-hidden="true"></div>
+          <button class="canvas-expanded-fullscreen" type="button" aria-label="Abrir modo presentación" title="Abrir modo presentación">
+            <svg class="canvas-fullscreen-enter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></svg>
+            <svg class="canvas-fullscreen-exit-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v5H3M16 3v5h5M21 16h-5v5M3 16h5v5"/></svg>
+          </button>
+          <button class="canvas-expanded-close" type="button" aria-label="Cerrar vista expandida" title="Cerrar vista expandida">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
         ${legendHtml}
       `;
+
+      this._onCanvasReplayClick = (event) => {
+        if (event.target.closest('.canvas-expanded-close')) {
+          event.stopPropagation();
+          this.closeExpandedView();
+          return;
+        }
+        if (event.target.closest('.canvas-expanded-fullscreen')) {
+          event.stopPropagation();
+          this.togglePresentationMode();
+          return;
+        }
+        if (!this.classList.contains('animation-complete')) return;
+        if (event.target.closest('.canvas-replay-button')) {
+          event.stopPropagation();
+          this.restartSlowAnimation();
+        } else if (!this.classList.contains('is-expanded-view')) {
+          this.openExpandedView();
+        }
+      };
+      this.addEventListener('click', this._onCanvasReplayClick);
+      this._replayButton = this.querySelector('.canvas-replay-button');
+      this._onReplayButtonEnter = () => this.hideCanvasFollower();
+      this._onReplayButtonMove = (event) => {
+        this.hideCanvasFollower();
+        event.stopPropagation();
+      };
+      this._replayButton.addEventListener('mouseenter', this._onReplayButtonEnter);
+      this._replayButton.addEventListener('mousemove', this._onReplayButtonMove);
+      this._replayProtection = this.querySelector('.canvas-replay-protection');
+      this._onReplayProtectionEnter = () => this.hideCanvasFollower();
+      this._onReplayProtectionMove = (event) => {
+        this.hideCanvasFollower();
+        event.stopPropagation();
+      };
+      this._onReplayProtectionLeave = (event) => {
+        requestAnimationFrame(() => {
+          if (window.innerWidth > 980 && this.classList.contains('animation-complete') && this.matches(':hover') && !this._replayButton.matches(':hover')) {
+            this.dispatchEvent(new MouseEvent('mouseenter', {
+              clientX: event.clientX,
+              clientY: event.clientY
+            }));
+          }
+        });
+      };
+      this._onReplayProtectionClick = (event) => event.stopPropagation();
+      this._replayProtection.addEventListener('mouseenter', this._onReplayProtectionEnter);
+      this._replayProtection.addEventListener('mousemove', this._onReplayProtectionMove);
+      this._replayProtection.addEventListener('mouseleave', this._onReplayProtectionLeave);
+      this._replayProtection.addEventListener('click', this._onReplayProtectionClick);
+      this._onReplayButtonLeave = (event) => {
+        requestAnimationFrame(() => {
+          if (window.innerWidth > 980 && this.classList.contains('animation-complete') && this.matches(':hover')) {
+            this.dispatchEvent(new MouseEvent('mouseenter', {
+              clientX: event.clientX,
+              clientY: event.clientY
+            }));
+          }
+        });
+      };
+      this._replayButton.addEventListener('mouseleave', this._onReplayButtonLeave);
+      this._closeButton = this.querySelector('.canvas-expanded-close');
+      this._closeButton.addEventListener('mouseenter', this._onReplayButtonEnter);
+      this._fullscreenButton = this.querySelector('.canvas-expanded-fullscreen');
+      this._fullscreenButton.addEventListener('mouseenter', this._onReplayButtonEnter);
+      this._onCanvasFullscreenChange = () => {
+        const canvasOuter = this.closest('.canvas-outer');
+        const isPresentation = document.fullscreenElement === canvasOuter;
+        canvasOuter?.classList.toggle('is-presentation', isPresentation);
+        this._fullscreenButton?.setAttribute('aria-label', isPresentation ? 'Salir del modo presentación' : 'Abrir modo presentación');
+        this._fullscreenButton?.setAttribute('title', isPresentation ? 'Salir del modo presentación' : 'Abrir modo presentación');
+        if (!isPresentation) this.unlockPresentationOrientation();
+        this.updateMobilePresentationOrientation();
+        this._scheduleScaleAndCenter?.();
+      };
+      document.addEventListener('fullscreenchange', this._onCanvasFullscreenChange);
+      this._onExpandedKeydown = (event) => {
+        if (event.key === 'Escape' && this.closest('.canvas-outer')?.classList.contains('is-expanded')) {
+          this.closeExpandedView();
+        }
+      };
+      document.addEventListener('keydown', this._onExpandedKeydown);
 
       const mount = this.querySelector('.flow-content-mount');
       children.forEach(child => mount.appendChild(child));
@@ -1387,7 +1660,7 @@ class FaustFlowCanvas extends HTMLElement {
           const leftToBelow = entry.boundingClientRect.top > 0;
           if (leftToBelow) {
             // Re-hide element when scrolled out of view to the bottom
-            this.classList.remove('animating', 'fast-replay');
+            this.classList.remove('animating', 'fast-replay', 'is-restarting', 'is-replay-feedback');
           } else {
             // Scrolled out of view to the top (hidden behind upper edge of viewport)
             if (!this._hasPlayed) {
@@ -1409,7 +1682,16 @@ class FaustFlowCanvas extends HTMLElement {
     const updateScaleAndCenter = () => {
       const w = window.innerWidth;
       let scale = 1.0;
-      if (w <= 980) {
+      const isMobilePresentation = w <= 980 && this.classList.contains('is-expanded-view');
+      if (isMobilePresentation) {
+        // CSS emulators do not rotate their viewport when orientation.lock()
+        // succeeds or is mocked. Fit the native horizontal Canvas into either
+        // viewport shape so its complete horizontal composition is preserved.
+        const isPortraitViewport = window.innerHeight > window.innerWidth;
+        const availableWidth = Math.max(1, (isPortraitViewport ? window.innerHeight : w) - 32);
+        const availableHeight = Math.max(1, (isPortraitViewport ? w : window.innerHeight) - 96);
+        scale = Math.min(1, availableWidth / frameWidth, availableHeight / height);
+      } else if (w <= 980) {
         scale = 0.6;
       } else if (w >= 1440) {
         scale = 1.0;
@@ -1421,7 +1703,7 @@ class FaustFlowCanvas extends HTMLElement {
       }
       this.style.setProperty('--canvas-scale', scale.toFixed(4));
       
-      if (wrapper && w > 980) {
+      if (wrapper && (w > 980 || isMobilePresentation)) {
         wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
       }
     };
@@ -1440,10 +1722,14 @@ class FaustFlowCanvas extends HTMLElement {
       if (scaleFrame !== null) cancelAnimationFrame(scaleFrame);
       scaleFrame = null;
     };
+    this._scheduleScaleAndCenter = scheduleScaleAndCenter;
     updateScaleAndCenter();
     scheduleScaleAndCenter();
 
-    this._onResize = scheduleScaleAndCenter;
+    this._onResize = () => {
+      this.updateMobilePresentationOrientation();
+      scheduleScaleAndCenter();
+    };
     window.addEventListener('resize', this._onResize);
 
     // Revertir scroll manual al centro suavemente después de 400ms de inactividad (solo tablet/no-mobile)
@@ -1524,8 +1810,56 @@ class FaustFlowCanvas extends HTMLElement {
     }
   }
 
+  togglePresentationMode() {
+    const canvasOuter = this.closest('.canvas-outer');
+    if (!canvasOuter) return;
+    if (document.fullscreenElement === canvasOuter) {
+      document.exitFullscreen?.();
+    } else {
+      canvasOuter.requestFullscreen?.().catch(() => {});
+    }
+  }
+
+  openMobilePresentation(canvasOuter) {
+    const lockLandscape = () => {
+      screen.orientation?.lock?.('landscape').then(() => {
+        this._presentationOrientationLocked = true;
+      }).catch(() => {});
+    };
+
+    const fullscreenRequest = canvasOuter.requestFullscreen?.();
+    if (fullscreenRequest?.then) fullscreenRequest.then(lockLandscape).catch(lockLandscape);
+    else lockLandscape();
+  }
+
+  updateMobilePresentationOrientation() {
+    const canvasOuter = this.closest('.canvas-outer');
+    if (!canvasOuter?.classList.contains('is-mobile-presentation')) return;
+    canvasOuter.classList.toggle('is-portrait-presentation', window.innerHeight > window.innerWidth);
+  }
+
+  isMobilePresentation() {
+    return this.closest('.canvas-outer')?.classList.contains('is-mobile-presentation');
+  }
+
+  resetMobilePresentationLabels() {
+    this.querySelectorAll('faust-flow-label[left]').forEach((label) => {
+      label.style.left = `${label.getAttribute('left')}px`;
+    });
+  }
+
+  unlockPresentationOrientation() {
+    if (!this._presentationOrientationLocked) return;
+    screen.orientation?.unlock?.();
+    this._presentationOrientationLocked = false;
+  }
+
   disconnectedCallback() {
     this.clearTimers();
+    if (this._replayFeedbackTimeout) {
+      clearTimeout(this._replayFeedbackTimeout);
+      this._replayFeedbackTimeout = null;
+    }
     this.stopLabelTracking();
     if (this._cancelSweepGeometry) this._cancelSweepGeometry();
     if (this._cancelScaleAndCenter) this._cancelScaleAndCenter();
@@ -1545,6 +1879,33 @@ class FaustFlowCanvas extends HTMLElement {
       this._onResize = null;
     }
 
+    if (this._onCanvasReplayClick) {
+      this.removeEventListener('click', this._onCanvasReplayClick);
+      this._onCanvasReplayClick = null;
+    }
+    if (this._replayButton && this._onReplayButtonEnter) {
+      this._replayButton.removeEventListener('mouseenter', this._onReplayButtonEnter);
+      this._replayButton.removeEventListener('mousemove', this._onReplayButtonMove);
+      this._replayButton.removeEventListener('mouseleave', this._onReplayButtonLeave);
+      if (this._closeButton) this._closeButton.removeEventListener('mouseenter', this._onReplayButtonEnter);
+      if (this._fullscreenButton) this._fullscreenButton.removeEventListener('mouseenter', this._onReplayButtonEnter);
+      this._onReplayButtonEnter = null;
+    }
+    if (this._replayProtection) {
+      this._replayProtection.removeEventListener('mouseenter', this._onReplayProtectionEnter);
+      this._replayProtection.removeEventListener('mousemove', this._onReplayProtectionMove);
+      this._replayProtection.removeEventListener('mouseleave', this._onReplayProtectionLeave);
+      this._replayProtection.removeEventListener('click', this._onReplayProtectionClick);
+    }
+    if (this._onExpandedKeydown) {
+      document.removeEventListener('keydown', this._onExpandedKeydown);
+      this._onExpandedKeydown = null;
+    }
+    if (this._onCanvasFullscreenChange) {
+      document.removeEventListener('fullscreenchange', this._onCanvasFullscreenChange);
+      this._onCanvasFullscreenChange = null;
+    }
+
     // Quitar listeners de revert scroll
     const wrapper = this.querySelector('.flow-wrapper');
     if (wrapper) {
@@ -1561,6 +1922,7 @@ class FaustFlowCanvas extends HTMLElement {
 
   startLabelTracking() {
     this.stopLabelTracking(); // Avoid duplicate loops
+    if (this.isMobilePresentation()) return;
     this._trackingActive = true;
 
     const labelLeft = this.querySelector('faust-flow-label[left="80"]');
@@ -1621,6 +1983,7 @@ class FaustFlowCanvas extends HTMLElement {
   }
 
   alignLabelsOnce() {
+    if (this.isMobilePresentation()) return;
     const labelLeft = this.querySelector('faust-flow-label[left="80"]');
     const compLeft1 = this.querySelector('.Frame13 faust-flow-icon');
     const compLeft2 = this.querySelector('.Frame199 faust-flow-card');

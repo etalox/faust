@@ -1,5 +1,11 @@
 (() => {
   function init() {
+    // A client-side route swap replaces the text nodes while this script stays
+    // loaded. Dispose the previous page's measurements before collecting new ones.
+    if (window.__faustResponsiveBreakCleanup) {
+      window.__faustResponsiveBreakCleanup();
+    }
+
     // Inject responsive-br styles to ensure they are available on all pages
     try {
       if (!document.getElementById('responsive-br-styles')) {
@@ -106,23 +112,38 @@
       }
     }
 
-    // Perform checks
-    checkWraps();
+    let measureFrame = null;
+    const scheduleCheck = () => {
+      if (measureFrame !== null) cancelAnimationFrame(measureFrame);
+      measureFrame = requestAnimationFrame(() => {
+        measureFrame = requestAnimationFrame(() => {
+          measureFrame = null;
+          checkWraps();
+        });
+      });
+    };
+
+    // Measure after layout and once again after deferred style/zoom work.
+    scheduleCheck();
 
     // Listen to resize to re-check
-    window.addEventListener('resize', checkWraps);
+    window.addEventListener('resize', scheduleCheck);
 
-    // Double check on load events
-    window.addEventListener('load', checkWraps);
     if (document.fonts) {
-      document.fonts.ready.then(checkWraps).catch(() => {});
+      document.fonts.ready.then(scheduleCheck).catch(() => {});
     }
     
-    // Multiple deferred checks to handle rendering delays and zoom calculations
-    setTimeout(checkWraps, 50);
-    setTimeout(checkWraps, 250);
-    setTimeout(checkWraps, 1000);
+    // Deferred checks cover route-transition styles and CSS zoom settling.
+    const timers = [50, 250, 1000].map(delay => setTimeout(scheduleCheck, delay));
+    window.__faustResponsiveBreakCleanup = () => {
+      window.removeEventListener('resize', scheduleCheck);
+      if (measureFrame !== null) cancelAnimationFrame(measureFrame);
+      timers.forEach(clearTimeout);
+      window.__faustResponsiveBreakCleanup = null;
+    };
   }
+
+  window.faustInitResponsiveBreaks = init;
 
   // Self-correct state execution
   if (document.readyState === 'complete' || document.readyState === 'interactive') {

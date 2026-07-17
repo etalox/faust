@@ -133,6 +133,42 @@
     });
   };
 
+  // Main-page scrolling dismisses transient surfaces through their own closers,
+  // preserving each component's exit animation and cleanup. The legal consent
+  // banner is separate from these surfaces; Apply and the expanded canvas lock
+  // background scrolling instead of being dismissed.
+  const blocksMainScroll = function() {
+    return Boolean(
+      document.body.classList.contains('has-expanded-canvas') ||
+      document.querySelector('.apply-overlay.is-open')
+    );
+  };
+
+  const closeScrollSurfaces = function() {
+    surfaceClosers.forEach(function(close, registeredId) {
+      if (registeredId === 'apply') return;
+      try { close(); } catch (error) { console.warn('Unable to close surface:', registeredId, error); }
+    });
+    document.querySelectorAll('.nav-lang-dropdown.is-open').forEach(function(dropdown) {
+      dropdown.classList.remove('is-open');
+    });
+  };
+
+  window.faustCloseScrollSurfaces = closeScrollSurfaces;
+
+  window.addEventListener('wheel', function(event) {
+    if (blocksMainScroll()) return;
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) closeScrollSurfaces();
+  }, { passive: true, capture: true });
+
+  window.addEventListener('touchmove', function(event) {
+    if (!blocksMainScroll()) closeScrollSurfaces();
+  }, { passive: true, capture: true });
+
+  window.addEventListener('scroll', function() {
+    if (!blocksMainScroll()) closeScrollSurfaces();
+  }, { passive: true });
+
   // Experimental visual treatment. Set this to false before components.js
   // loads, or add `is-bottom-blur-disabled` to <body>, to turn it off.
   const enableBottomPageBlur = window.FAUST_ENABLE_BOTTOM_PAGE_BLUR !== false;
@@ -215,7 +251,7 @@
     { src: 'Components/buttons.js', always: true },
     { src: 'Components/apply-modal.js', always: true },
     { src: 'Components/logo-lockup.js', selector: 'faust-logo-lockup' },
-    { src: 'Components/vacancy-card.js', selector: 'faust-vacancy-card' },
+    { src: 'Components/vacancy-card.js', selector: 'faust-vacancy-card, #vacancies-container' },
     { src: 'Components/responsive-br.js', selector: 'h1 br, h2 br, h3 br, h4 br, h5 br, h6 br, p br' },
     { src: 'Components/flow-canvas.js', selector: 'faust-flow-canvas' },
     { src: 'Components/perk-illustrations.js', selector: 'faust-ecosystem' },
@@ -470,6 +506,10 @@
 
       // Register page-specific custom elements only after their markup exists.
       await loadRequiredComponentScripts(document.body);
+
+      // The responsive line-break component is cached across route changes, so
+      // explicitly remeasure the newly mounted page after its layout is in DOM.
+      window.faustInitResponsiveBreaks?.();
 
       // Update/Re-render navbar and footer for new path
       if (navbar && typeof navbar.render === 'function') {
