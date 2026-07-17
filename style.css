@@ -834,6 +834,327 @@ h2.lead.reveal-item.reveal-visible {
   overflow: hidden;
 }
 
+faust-flow-canvas {
+  display: block;
+  position: relative;
+}
+
+.canvas-expanded-controls {
+  display: contents;
+}
+
+.canvas-replay-button {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.84);
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(0.25, 1, 0.5, 1), background-color 180ms ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.canvas-replay-protection {
+  position: absolute;
+  right: -85px;
+  bottom: -85px;
+  z-index: 2;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+}
+
+.canvas-replay-button::before,
+.canvas-expanded-close::before,
+.canvas-expanded-fullscreen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .15), rgba(255, 255, 255, .05));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.canvas-replay-button svg {
+  margin-left: 1px;
+}
+
+.canvas-replay-button .canvas-pause-icon {
+  display: none;
+}
+
+faust-flow-canvas.is-restarting .canvas-replay-button .canvas-play-icon {
+  display: none;
+}
+
+faust-flow-canvas.is-restarting .canvas-replay-button .canvas-pause-icon,
+faust-flow-canvas.is-expanded-view:not(.animation-complete) .canvas-replay-button .canvas-pause-icon {
+  display: block;
+  margin-left: 0;
+}
+
+faust-flow-canvas.is-expanded-view:not(.animation-complete) .canvas-replay-button {
+  opacity: 0.32;
+  pointer-events: none;
+  transform: scale(1);
+}
+
+faust-flow-canvas.is-expanded-view:not(.animation-complete) .canvas-replay-button .canvas-play-icon {
+  display: none;
+}
+
+faust-flow-canvas.animation-complete .canvas-replay-button {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.canvas-replay-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Durante un reinicio el control conserva su lugar, pero comunica claramente
+   que está temporalmente inhabilitado. Antes de la primera reproducción sigue
+   usando el estado oculto por defecto. */
+faust-flow-canvas.is-restarting .canvas-replay-button {
+  opacity: 0.32;
+  pointer-events: none;
+  transform: scale(1);
+}
+
+/* El clic confirma la acción sin ocultar el control. */
+faust-flow-canvas.is-replay-feedback .canvas-replay-button {
+  opacity: 0.32;
+  pointer-events: none;
+  animation: canvas-replay-confirm 340ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes canvas-replay-confirm {
+  0% { opacity: 1; transform: scale(1); }
+  28% { opacity: 1; transform: scale(0.78); }
+  58% { opacity: 0.92; transform: scale(1.12); }
+  100% { opacity: 0.32; transform: scale(1); }
+}
+
+.canvas-expanded-close {
+  display: none;
+}
+
+.canvas-expanded-fullscreen {
+  display: none;
+}
+
+.canvas-fullscreen-exit-icon {
+  display: none;
+}
+
+.canvas-outer.is-presentation .canvas-fullscreen-enter-icon {
+  display: none;
+}
+
+.canvas-outer.is-presentation .canvas-fullscreen-exit-icon {
+  display: block;
+}
+
+body.has-expanded-canvas {
+  overflow: hidden;
+}
+
+/* Matches the overlay used by the existing apply/message windows. */
+body.has-expanded-canvas::before {
+  content: '';
+  position: fixed;
+  top: 80px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 18;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+body.canvas-window-transitioning .canvas-expanded-controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .canvas-outer.is-expanded {
+    position: fixed;
+    top: calc(80px + clamp(16px, 3vh, 32px));
+    right: clamp(32px, 5vw, 88px);
+    bottom: clamp(24px, 5vh, 56px);
+    left: clamp(32px, 5vw, 88px);
+    z-index: 19;
+    display: grid;
+    align-items: center;
+    margin: 0 !important;
+    border-radius: 24px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.03) 100%), #08090a;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .canvas-outer.is-expanded:fullscreen,
+  .canvas-outer.is-expanded:-webkit-full-screen {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .canvas-outer.is-expanded faust-flow-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .canvas-outer.is-expanded faust-flow-canvas::before {
+    content: '';
+    position: absolute;
+    top: 64px;
+    right: 0;
+    bottom: 64px;
+    left: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.06) 40%,
+      rgba(255, 255, 255, 0.02)
+    );
+    -webkit-mask-image: linear-gradient(90deg, transparent 39px, #000 39px 40px, transparent 40px);
+    -webkit-mask-size: 80px 100%;
+    -webkit-mask-position: calc(50% + var(--expanded-grid-phase, 0px));
+    -webkit-mask-repeat: repeat-x;
+    mask-image: linear-gradient(90deg, transparent 39px, #000 39px 40px, transparent 40px);
+    mask-size: 80px 100%;
+    mask-position: calc(50% + var(--expanded-grid-phase, 0px));
+    mask-repeat: repeat-x;
+    transition: opacity 160ms ease;
+  }
+
+  .canvas-outer.is-expanded .flow-wrapper {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    align-items: center;
+  }
+
+  .canvas-outer.is-expanded .Frame1 > .Vector {
+    display: none;
+  }
+
+  .canvas-outer.is-expanded.is-window-transitioning faust-flow-canvas::before {
+    opacity: 0;
+  }
+
+  .canvas-outer.is-expanded.is-window-transitioning .Frame1 > .Vector {
+    display: block;
+  }
+
+  .canvas-outer.is-expanded .canvas-legend {
+    position: absolute;
+    right: 0;
+    bottom: 24px;
+    left: 0;
+    z-index: 2;
+    padding: 0 72px;
+  }
+
+  .canvas-outer.is-expanded .canvas-expanded-close,
+  .canvas-outer.is-expanded .canvas-expanded-fullscreen {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 5;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .canvas-outer.is-expanded .canvas-expanded-fullscreen {
+    top: auto;
+    right: auto;
+  }
+
+  .canvas-outer.is-expanded .canvas-replay-button {
+    top: auto;
+    right: auto;
+    bottom: auto;
+  }
+
+  .canvas-outer.is-expanded .canvas-replay-protection {
+    top: -101px;
+    right: auto;
+    bottom: auto;
+    left: -101px;
+  }
+
+  .canvas-outer.is-expanded .canvas-expanded-controls {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 180ms ease, transform 180ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .canvas-outer.is-expanded .canvas-expanded-controls > .canvas-replay-button,
+  .canvas-outer.is-expanded .canvas-expanded-controls > .canvas-expanded-fullscreen,
+  .canvas-outer.is-expanded .canvas-expanded-controls > .canvas-expanded-close {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+  }
+
+  .canvas-outer.is-presentation .canvas-expanded-controls {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  .canvas-outer.is-presentation .canvas-expanded-controls::before {
+    content: '';
+    position: absolute;
+    inset: -72px;
+    z-index: -1;
+  }
+
+  .canvas-outer.is-presentation .canvas-expanded-controls:hover,
+  .canvas-outer.is-presentation .canvas-expanded-controls:focus-within {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .canvas-legend {
   margin: 0 auto;
   padding: 30px 20px 40px;
@@ -868,6 +1189,126 @@ h2.lead.reveal-item.reveal-visible {
   .canvas-outer {
     border-radius: 16px;
   }
+
+  .canvas-replay-button:active {
+    transform: scale(0.94);
+  }
+
+}
+
+/* En teléfonos el reinicio queda reservado para la presentación completa;
+   tablet conserva el control fijo dentro del Canvas normal. */
+@media (max-width: 767px) {
+  faust-flow-canvas:not(.is-expanded-view) .canvas-replay-button {
+    display: none;
+  }
+}
+
+/* On phones in landscape, opening a completed canvas enters a compact
+   presentation view. The native fullscreen layer provides the actual viewport
+   takeover; these rules keep the Canvas and its exit control usable there. */
+@media (max-width: 980px) {
+  .canvas-outer.is-expanded:fullscreen,
+  .canvas-outer.is-expanded:-webkit-full-screen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    align-items: center;
+    margin: 0 !important;
+    overflow: hidden;
+    border-radius: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.03) 100%), #08090a;
+  }
+
+  .canvas-outer.is-expanded:fullscreen faust-flow-canvas,
+  .canvas-outer.is-expanded:-webkit-full-screen faust-flow-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .canvas-outer.is-expanded:fullscreen .flow-wrapper,
+  .canvas-outer.is-expanded:-webkit-full-screen .flow-wrapper {
+    height: 100%;
+    overflow: hidden;
+    align-items: center;
+    border-radius: 0;
+  }
+
+  .canvas-outer.is-expanded:fullscreen .canvas-legend,
+  .canvas-outer.is-expanded:-webkit-full-screen .canvas-legend {
+    position: absolute;
+    right: 0;
+    bottom: 14px;
+    left: 0;
+    z-index: 2;
+    padding: 0 64px;
+  }
+
+  .canvas-outer.is-expanded:fullscreen .canvas-expanded-controls,
+  .canvas-outer.is-expanded:-webkit-full-screen .canvas-expanded-controls {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .canvas-outer.is-expanded:fullscreen .canvas-replay-button,
+  .canvas-outer.is-expanded:-webkit-full-screen .canvas-replay-button,
+  .canvas-outer.is-expanded:fullscreen .canvas-expanded-close,
+  .canvas-outer.is-expanded:-webkit-full-screen .canvas-expanded-close {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+  }
+
+  .canvas-outer.is-expanded:fullscreen .canvas-expanded-close,
+  .canvas-outer.is-expanded:-webkit-full-screen .canvas-expanded-close {
+    z-index: 5;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .canvas-outer.is-expanded:fullscreen .canvas-replay-protection,
+  .canvas-outer.is-expanded:-webkit-full-screen .canvas-replay-protection {
+    top: -101px;
+    right: auto;
+    bottom: auto;
+    left: -101px;
+  }
+}
+
+/* Fallback para simuladores y navegadores que no permiten orientation.lock():
+   se intercambian las dimensiones lógicas y se rota la escena completa. */
+.canvas-outer.is-expanded.is-mobile-presentation.is-portrait-presentation:fullscreen,
+.canvas-outer.is-expanded.is-mobile-presentation.is-portrait-presentation:-webkit-full-screen {
+  overflow: hidden;
+}
+
+.canvas-outer.is-expanded.is-mobile-presentation.is-portrait-presentation:fullscreen faust-flow-canvas,
+.canvas-outer.is-expanded.is-mobile-presentation.is-portrait-presentation:-webkit-full-screen faust-flow-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vh;
+  height: 100vw;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center;
 }
 
 @media (min-width: 981px) and (max-width: 1440px) {
@@ -1965,7 +2406,8 @@ body.hide-page-grid .section-grid-bg::after {
 }
 
 /* Botón flotante oculto por defecto */
-.perk-mouse-follower {
+.perk-mouse-follower,
+.canvas-mouse-follower {
   display: none;
 }
 
@@ -3396,7 +3838,8 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
   }
 
   /* Botón "Conocer más" flotante que sigue al puntero en desktop */
-  .perk-mouse-follower {
+  .perk-mouse-follower,
+  .canvas-mouse-follower {
     display: block !important;
     position: fixed !important;
     left: 0;
@@ -3426,7 +3869,8 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
     contain: layout paint style;
     will-change: auto;
   }
-  .perk-mouse-follower::before {
+  .perk-mouse-follower::before,
+  .canvas-mouse-follower::before {
     content: '' !important;
     position: absolute !important;
     inset: 0 !important;
@@ -3439,21 +3883,26 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
     pointer-events: none !important;
     transition: background 0.4s ease-in-out !important;
   }
-  .perk-mouse-follower.is-over-light {
+  .perk-mouse-follower.is-over-light,
+  .canvas-mouse-follower.is-over-light {
     background-color: rgba(229, 229, 234, 0.8) !important;
     color: #1d1e22 !important;
   }
-  .perk-mouse-follower.is-over-light::before {
+  .perk-mouse-follower.is-over-light::before,
+  .canvas-mouse-follower.is-over-light::before {
     background: linear-gradient(to top, rgba(8, 9, 10, 0.06), rgba(8, 9, 10, 0.03)) !important;
   }
-  .perk-mouse-follower.is-over-light.is-over-blue {
+  .perk-mouse-follower.is-over-light.is-over-blue,
+  .canvas-mouse-follower.is-over-light.is-over-blue {
     background-color: rgba(255, 255, 255, 0.08) !important;
     color: #ffffff !important;
   }
-  .perk-mouse-follower.is-over-light.is-over-blue::before {
+  .perk-mouse-follower.is-over-light.is-over-blue::before,
+  .canvas-mouse-follower.is-over-light.is-over-blue::before {
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)) !important;
   }
-  .perk-mouse-follower.is-visible {
+  .perk-mouse-follower.is-visible,
+  .canvas-mouse-follower.is-visible {
     transform: translate3d(var(--follower-x), var(--follower-y), 0) scale(1) !important;
     opacity: 1 !important;
     will-change: transform, opacity;

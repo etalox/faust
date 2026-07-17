@@ -7,7 +7,13 @@
 
       const text = this.getAttribute('text') || 'Conocer más';
       const playIcon = this.hasAttribute('play-icon');
+      const openIcon = this.hasAttribute('open-icon');
       const className = this.getAttribute('class-name') || 'perk-mouse-follower';
+      const activeClass = this.getAttribute('active-class') || '';
+      const inactiveClass = this.getAttribute('inactive-class') || '';
+      const isEnabled = () =>
+        (!activeClass || parent.classList.contains(activeClass)) &&
+        (!inactiveClass || !parent.classList.contains(inactiveClass));
 
       // Create mouse follower directly in body to avoid transform clipping context from ancestors
       let follower = document.body.querySelector(`.${className}`);
@@ -131,7 +137,9 @@
       };
 
       const onMouseEnter = (e) => {
-        if (window.innerWidth > 980) {
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        if (window.innerWidth > 980 && isEnabled()) {
           // Claim ownership of the shared follower
           follower.activeParent = parent;
 
@@ -143,12 +151,16 @@
                 <path d="M1 2.69141V21.3086C1 22.1133 1.89844 22.5938 2.56641 22.1406L19.25 10.832C19.8281 10.4414 19.8281 9.55859 19.25 9.16797L2.56641 0.859375C1.89844 0.40625 1 0.886719 1 2.69141Z" fill="currentColor"/>
               </svg>
             `;
+          } else if (openIcon) {
+            htmlContent += `
+              <svg width="12" height="12" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle; display: inline-block; margin-top: -2px;">
+                <path d="M0.658125 0.834188C0.658125 0.612947 0.746012 0.400769 0.902453 0.244328C1.05889 0.0878875 1.27107 0 1.49231 0H9.16581C9.38705 0 9.59923 0.0878875 9.75567 0.244328C9.91211 0.400769 10 0.612947 10 0.834188V8.50769C10 8.72893 9.91211 8.94111 9.75567 9.09755C9.59923 9.25399 9.38705 9.34188 9.16581 9.34188C8.94457 9.34188 8.73239 9.25399 8.57595 9.09755C8.41951 8.94111 8.33162 8.72893 8.33162 8.50769V2.84792L1.41371 9.76583C1.25638 9.91779 1.04566 10.0019 0.826939 9.99997C0.608218 9.99807 0.398993 9.91034 0.244328 9.75567C0.089663 9.60101 0.00193216 9.39178 3.15343e-05 9.17306C-0.00186909 8.95434 0.0822127 8.74362 0.234167 8.58629L7.15208 1.66838H1.49231C1.27107 1.66838 1.05889 1.58049 0.902453 1.42405C0.746012 1.26761 0.658125 1.05543 0.658125 0.834188Z" fill="currentColor"/>
+              </svg>
+            `;
           }
           htmlContent += `<span style="vertical-align: middle; display: inline-block;">${text}</span>`;
           follower.innerHTML = htmlContent;
 
-          lastMouseX = e.clientX;
-          lastMouseY = e.clientY;
           metricsDirty = true;
           updateTarget();
           lastColorSampleX = NaN;
@@ -159,9 +171,14 @@
 
           // Only snap if not recently active and not already visible (to avoid jarring jumps between cards)
           if (!follower.classList.contains('is-visible') && !wasRecentlyActive) {
+            // Commit the initial position before enabling the visible-state transition.
+            // Without this frame, browsers interpolate from the default (0, 0) transform.
+            follower.style.setProperty('transition', 'none', 'important');
             currentX = targetX;
             currentY = targetY;
             writePosition();
+            void follower.offsetWidth;
+            follower.style.removeProperty('transition');
           } else {
             // Reuse the shared follower's compositor position when moving between cards.
             if (Number.isFinite(follower._positionX) && Number.isFinite(follower._positionY)) {
@@ -194,12 +211,13 @@
       };
 
       const onMouseMove = (e) => {
-        if (window.innerWidth > 980) {
+        // Keep the latest pointer coordinates even while this follower is gated.
+        // This lets it appear immediately if its activation class is added mid-hover.
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        if (window.innerWidth > 980 && isEnabled()) {
           // Reclaim ownership in case of fast movements crossing boundaries
           follower.activeParent = parent;
-
-          lastMouseX = e.clientX;
-          lastMouseY = e.clientY;
 
           if (!isFollowing) {
             if (Number.isFinite(follower._positionX) && Number.isFinite(follower._positionY)) {
@@ -216,6 +234,13 @@
         }
       };
 
+      // Keep a real pointer position even while the follower is gated or hidden.
+      // A gated follower can then become visible mid-hover without starting at (0, 0).
+      const onWindowPointerMove = (e) => {
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+      };
+
       const markMetricsDirty = () => {
         metricsDirty = true;
       };
@@ -224,9 +249,21 @@
         : null;
       if (resizeObserver) resizeObserver.observe(parent);
 
+      const activeClassObserver = activeClass && typeof MutationObserver !== 'undefined'
+        ? new MutationObserver(() => {
+          if (window.innerWidth > 980 && isEnabled() && parent.matches(':hover')) {
+            onMouseEnter({ clientX: lastMouseX, clientY: lastMouseY });
+          }
+        })
+        : null;
+      if (activeClassObserver) {
+        activeClassObserver.observe(parent, { attributes: true, attributeFilter: ['class'] });
+      }
+
       parent.addEventListener('mouseenter', onMouseEnter);
       parent.addEventListener('mouseleave', onMouseLeave);
       parent.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('pointermove', onWindowPointerMove, { passive: true });
       window.addEventListener('resize', markMetricsDirty);
       window.addEventListener('scroll', markMetricsDirty, { passive: true });
 
@@ -237,9 +274,11 @@
         parent.removeEventListener('mouseenter', onMouseEnter);
         parent.removeEventListener('mouseleave', onMouseLeave);
         parent.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('pointermove', onWindowPointerMove);
         window.removeEventListener('resize', markMetricsDirty);
         window.removeEventListener('scroll', markMetricsDirty);
         if (resizeObserver) resizeObserver.disconnect();
+        if (activeClassObserver) activeClassObserver.disconnect();
         
         window.__activeFollowers[className]--;
         if (window.__activeFollowers[className] === 0 && follower) {
