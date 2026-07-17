@@ -5,12 +5,15 @@
       
       const pill = this.getAttribute('pill') || '/ Ecosistema';
       const title = this.getAttribute('title') || 'El ecosistema para el talento extraordinario.';
+      const hoverStyleClass = this.getAttribute('hover-style') === 'canvas'
+        ? ' ecosystem-hover-canvas'
+        : '';
       this.removeAttribute('title');
 
 
 
       this.innerHTML = `
-        <section class="section section-grid-bg" id="perks">
+        <section class="section section-grid-bg${hoverStyleClass}" id="perks">
           <div class="wrap-narrow">
             <div class="pill reveal-item">${pill}</div>
             <h2 class="section-title reveal-item" style="margin: 0 0 60px 0;">${title}</h2>

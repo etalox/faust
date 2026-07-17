@@ -214,6 +214,7 @@ class FaustIllustrationRevenue extends HTMLElement {
     this.style.display = 'contents';
     this.innerHTML = `
       <svg viewBox="0 0 240 160" class="perk-technical-svg">
+        <defs><linearGradient id="perk-revenue-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D3D7D6" stop-opacity="0.86"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.20"/></linearGradient><linearGradient id="perk-revenue-blue-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF" stop-opacity="0.72"/><stop offset="0.42" stop-color="#FFFFFF" stop-opacity="0.36"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.12"/></linearGradient></defs>
         <!-- Revenue Share: 3D Donut Chart with 25% slice floating -->
         
         <!-- 1. Static 75% Donut Chart Base -->
@@ -255,6 +256,7 @@ class FaustIllustrationAutonomy extends HTMLElement {
     const r = 1.0; // Rounding radius in SVG pixels
     this.innerHTML = `
       <svg viewBox="0 0 240 160" class="perk-technical-svg">
+        <defs><linearGradient id="perk-autonomy-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D3D7D6" stop-opacity="0.86"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.20"/></linearGradient><linearGradient id="perk-autonomy-blue-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF" stop-opacity="0.72"/><stop offset="0.42" stop-color="#FFFFFF" stop-opacity="0.36"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.12"/></linearGradient></defs>
         <!-- Autonomy: Independent isometric cubes with asynchronous rotating timeline dials -->
         <g transform="translate(30, 80)"><g class="auto-module">
           <ellipse class="auto-dial dial-left" cx="25" cy="27" rx="32" ry="16" fill="none" stroke="currentColor" stroke-width="0.6" stroke-opacity="0.2" stroke-dasharray="3 5"/>
@@ -288,6 +290,7 @@ class FaustIllustrationEvidence extends HTMLElement {
     const r = 1.0; // Rounding radius in SVG pixels
     this.innerHTML = `
       <svg viewBox="0 0 240 160" class="perk-technical-svg">
+        <defs><linearGradient id="perk-evidence-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D3D7D6" stop-opacity="0.86"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.20"/></linearGradient><linearGradient id="perk-evidence-blue-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF" stop-opacity="0.72"/><stop offset="0.42" stop-color="#FFFFFF" stop-opacity="0.36"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.12"/></linearGradient></defs>
         <!-- Evidence: Isometric bar chart — parallel 3D aligned bars -->
         <!-- Bar width: (+22,-11), depth: (-22,+11), height: (0,-N) -->
 
@@ -323,6 +326,7 @@ class FaustIllustrationHighTicket extends HTMLElement {
     const r = 1.0; // Rounding radius in SVG pixels
     this.innerHTML = `
       <svg viewBox="0 0 240 160" class="perk-technical-svg">
+        <defs><linearGradient id="perk-infra-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D3D7D6" stop-opacity="0.86"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.20"/></linearGradient><linearGradient id="perk-infra-blue-outline" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF" stop-opacity="0.72"/><stop offset="0.42" stop-color="#FFFFFF" stop-opacity="0.36"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.12"/></linearGradient></defs>
         <!-- High-Ticket: Isometric server layers receding -->
         <g transform="translate(40, 128)"><g class="infra-layer">
           <path d="${roundPath("M 0,0 L 80,-24 L 160,0 L 80,24 Z", r)}" fill="var(--illustration-fill, #08090a)" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.07"/>
