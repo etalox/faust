@@ -154,7 +154,7 @@ if (!window.showPrototypeToast) {
           font-size: 14px;
           color: #8b8d91;
           line-height: 1.5;
-          max-width: 400px;
+          max-width: 100%;
         }
         .proto-modal-close-btn {
           background: none;
@@ -245,7 +245,7 @@ if (!window.showPrototypeToast) {
             <div class="proto-modal-header">
               <div class="proto-modal-header-inner">
                 <span class="proto-modal-title">Sitio en construcción</span>
-                <span class="proto-modal-subtitle">Este contenido aún no está disponible. Aquí tienes lo que ya puedes explorar:</span>
+                <span class="proto-modal-subtitle">Este contenido aún no está disponible. Páginas disponibles actualmente:</span>
               </div>
               <button class="proto-modal-close-btn" aria-label="Cerrar">&times;</button>
             </div>
