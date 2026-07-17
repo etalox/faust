@@ -339,6 +339,37 @@ if (!window.showPrototypeToast) {
 class FaustFooter extends HTMLElement {
   /* ── Feature flag: scroll-expand footer link spacing (tablet/desktop) ── */
   static ENABLE_SCROLL_EXPAND = false;
+
+  scrollToPageEnd() {
+    const scroller = document.scrollingElement;
+    if (!scroller) return Promise.resolve();
+
+    const getBottom = () => Math.max(0, scroller.scrollHeight - window.innerHeight);
+    if (Math.abs(window.scrollY - getBottom()) < 2) return Promise.resolve();
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: getBottom(), behavior: reducedMotion ? 'auto' : 'smooth' });
+
+    return new Promise(resolve => {
+      let frameId = null;
+      let timeoutId = null;
+      const finish = () => {
+        if (frameId) cancelAnimationFrame(frameId);
+        if (timeoutId) clearTimeout(timeoutId);
+        resolve();
+      };
+      const checkScrollEnd = () => {
+        if (Math.abs(window.scrollY - getBottom()) < 2) {
+          finish();
+          return;
+        }
+        frameId = requestAnimationFrame(checkScrollEnd);
+      };
+      frameId = requestAnimationFrame(checkScrollEnd);
+      timeoutId = setTimeout(finish, 1200);
+    });
+  }
+
   connectedCallback() {
     this._onLanguageChanged = () => {
       this.render();
@@ -971,10 +1002,11 @@ class FaustFooter extends HTMLElement {
 
     if (!triggerLink || !overlay || !saveBtn) return;
 
-    const openCookieModal = (e) => {
+    const openCookieModal = async (e) => {
       e.preventDefault();
 
       window.faustOpenSurface?.('cookies');
+      await this.scrollToPageEnd();
 
       const clarityInput = this.querySelector('#overlay-cookie-clarity-toggle');
       if (clarityInput) clarityInput.checked = faustIsClarityEnabled();
@@ -1234,10 +1266,11 @@ class FaustFooter extends HTMLElement {
       }
     }
 
-    langBtn.addEventListener('click', (e) => {
+    langBtn.addEventListener('click', async (e) => {
       e.preventDefault();
 
       window.faustOpenSurface?.('language');
+      await this.scrollToPageEnd();
 
       syncActiveItem();
 
