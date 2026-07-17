@@ -43,6 +43,50 @@
       let lastMouseY = 0;
       let isFollowing = false;
       let lerpFrameId = null;
+      let zoom = getZoom();
+      let parentRect = null;
+      let halfW = 0;
+      let halfH = 0;
+      let metricsDirty = true;
+      let lastHitTarget = null;
+
+      const refreshMetrics = () => {
+        zoom = getZoom();
+        parentRect = parent.getBoundingClientRect();
+        halfW = follower.offsetWidth / 2;
+        halfH = follower.offsetHeight / 2;
+        metricsDirty = false;
+      };
+
+      const updateTarget = () => {
+        if (metricsDirty || !parentRect) refreshMetrics();
+
+        const parentLeft = parentRect.left / zoom;
+        const parentRight = parentRect.right / zoom;
+        const parentTop = parentRect.top / zoom;
+        const parentBottom = parentRect.bottom / zoom;
+        const pointerX = lastMouseX / zoom - halfW;
+        const pointerY = lastMouseY / zoom - halfH;
+
+        targetX = Math.max(parentLeft - halfW, Math.min(pointerX, parentRight - halfW));
+        targetY = Math.max(parentTop - halfH, Math.min(pointerY, parentBottom - halfH));
+      };
+
+      const writePosition = () => {
+        follower.style.setProperty('--follower-x', currentX + 'px');
+        follower.style.setProperty('--follower-y', currentY + 'px');
+        follower._positionX = currentX;
+        follower._positionY = currentY;
+      };
+
+      const updateHoverAppearance = () => {
+        if (!lastHitTarget || !lastHitTarget.closest) return;
+        follower.classList.toggle(
+          'is-over-blue',
+          Boolean(lastHitTarget.closest('.revenue-layer, .auto-accent, .evidence-accent, .infra-top'))
+        );
+        follower.classList.toggle('is-over-light', Boolean(lastHitTarget.closest('.perk-mobile-visual')));
+      };
 
       const updateFollowerPosition = () => {
         if (!follower) return;
@@ -53,23 +97,8 @@
           return;
         }
 
-        // Dynamically compute constrained targetX and targetY based on current parent bounding box
-        const zoom = getZoom();
-        const parentRect = parent.getBoundingClientRect();
-        const parentLeft = parentRect.left / zoom;
-        const parentRight = parentRect.right / zoom;
-        const parentTop = parentRect.top / zoom;
-        const parentBottom = parentRect.bottom / zoom;
-
-        const halfW = follower.offsetWidth / 2;
-        const halfH = follower.offsetHeight / 2;
-
-        let tx = lastMouseX / zoom - halfW;
-        let ty = lastMouseY / zoom - halfH;
-
-        // Clamp center of button inside parent bounds
-        targetX = Math.max(parentLeft - halfW, Math.min(tx, parentRight - halfW));
-        targetY = Math.max(parentTop - halfH, Math.min(ty, parentBottom - halfH));
+        updateTarget();
+        updateHoverAppearance();
 
         const isVisible = follower.classList.contains('is-visible');
         const dx = targetX - currentX;
@@ -83,8 +112,7 @@
         currentX += dx * ease;
         currentY += dy * ease;
 
-        follower.style.left = currentX + 'px';
-        follower.style.top = currentY + 'px';
+        writePosition();
 
         lerpFrameId = requestAnimationFrame(updateFollowerPosition);
       };
@@ -108,23 +136,10 @@
 
           lastMouseX = e.clientX;
           lastMouseY = e.clientY;
-
-          const zoom = getZoom();
-          const parentRect = parent.getBoundingClientRect();
-          const parentLeft = parentRect.left / zoom;
-          const parentRight = parentRect.right / zoom;
-          const parentTop = parentRect.top / zoom;
-          const parentBottom = parentRect.bottom / zoom;
-
-          const halfW = follower.offsetWidth / 2;
-          const halfH = follower.offsetHeight / 2;
-
-          let tx = lastMouseX / zoom - halfW;
-          let ty = lastMouseY / zoom - halfH;
-
-          // Clamp center of button inside parent bounds
-          targetX = Math.max(parentLeft - halfW, Math.min(tx, parentRight - halfW));
-          targetY = Math.max(parentTop - halfH, Math.min(ty, parentBottom - halfH));
+          lastHitTarget = e.target;
+          metricsDirty = true;
+          updateTarget();
+          updateHoverAppearance();
 
           const timeSinceActive = Date.now() - (follower.lastActiveTime || 0);
           const wasRecentlyActive = timeSinceActive < 350; // 350ms matching the transition duration
@@ -133,15 +148,12 @@
           if (!follower.classList.contains('is-visible') && !wasRecentlyActive) {
             currentX = targetX;
             currentY = targetY;
-            follower.style.left = currentX + 'px';
-            follower.style.top = currentY + 'px';
+            writePosition();
           } else {
-            // Seed current position from actual style coordinates of the shared follower
-            const styleLeft = parseFloat(follower.style.left);
-            const styleTop = parseFloat(follower.style.top);
-            if (!isNaN(styleLeft) && !isNaN(styleTop)) {
-              currentX = styleLeft;
-              currentY = styleTop;
+            // Reuse the shared follower's compositor position when moving between cards.
+            if (Number.isFinite(follower._positionX) && Number.isFinite(follower._positionY)) {
+              currentX = follower._positionX;
+              currentY = follower._positionY;
             } else {
               currentX = targetX;
               currentY = targetY;
@@ -175,31 +187,12 @@
 
           lastMouseX = e.clientX;
           lastMouseY = e.clientY;
-
-          const zoom = getZoom();
-          const parentRect = parent.getBoundingClientRect();
-          const parentLeft = parentRect.left / zoom;
-          const parentRight = parentRect.right / zoom;
-          const parentTop = parentRect.top / zoom;
-          const parentBottom = parentRect.bottom / zoom;
-
-          const halfW = follower.offsetWidth / 2;
-          const halfH = follower.offsetHeight / 2;
-
-          let tx = lastMouseX / zoom - halfW;
-          let ty = lastMouseY / zoom - halfH;
-
-          // Clamp center of button inside parent bounds
-          targetX = Math.max(parentLeft - halfW, Math.min(tx, parentRight - halfW));
-          targetY = Math.max(parentTop - halfH, Math.min(ty, parentBottom - halfH));
+          lastHitTarget = e.target;
 
           if (!isFollowing) {
-            // Seed current position from actual style coordinates of the shared follower
-            const styleLeft = parseFloat(follower.style.left);
-            const styleTop = parseFloat(follower.style.top);
-            if (!isNaN(styleLeft) && !isNaN(styleTop)) {
-              currentX = styleLeft;
-              currentY = styleTop;
+            if (Number.isFinite(follower._positionX) && Number.isFinite(follower._positionY)) {
+              currentX = follower._positionX;
+              currentY = follower._positionY;
             } else {
               currentX = targetX;
               currentY = targetY;
@@ -208,27 +201,22 @@
             updateFollowerPosition();
           }
 
-          // Hit test to detect underlying colors
-          const hit = document.elementFromPoint(e.clientX, e.clientY);
-          if (hit) {
-            if (hit.closest('.revenue-layer, .auto-accent, .evidence-accent, .infra-top')) {
-              follower.classList.add('is-over-blue');
-            } else {
-              follower.classList.remove('is-over-blue');
-            }
-
-            if (hit.closest('.perk-mobile-visual')) {
-              follower.classList.add('is-over-light');
-            } else {
-              follower.classList.remove('is-over-light');
-            }
-          }
         }
       };
+
+      const markMetricsDirty = () => {
+        metricsDirty = true;
+      };
+      const resizeObserver = typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(markMetricsDirty)
+        : null;
+      if (resizeObserver) resizeObserver.observe(parent);
 
       parent.addEventListener('mouseenter', onMouseEnter);
       parent.addEventListener('mouseleave', onMouseLeave);
       parent.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('resize', markMetricsDirty);
+      window.addEventListener('scroll', markMetricsDirty, { passive: true });
 
       this._cleanup = () => {
         if (lerpFrameId) {
@@ -237,6 +225,9 @@
         parent.removeEventListener('mouseenter', onMouseEnter);
         parent.removeEventListener('mouseleave', onMouseLeave);
         parent.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('resize', markMetricsDirty);
+        window.removeEventListener('scroll', markMetricsDirty);
+        if (resizeObserver) resizeObserver.disconnect();
         
         window.__activeFollowers[className]--;
         if (window.__activeFollowers[className] === 0 && follower) {

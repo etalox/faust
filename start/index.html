@@ -565,7 +565,7 @@
       });
     })();
 
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('pagehide', () => {
       const currentScroll = document.body.scrollTop || (document.documentElement ? document.documentElement.scrollTop : 0);
       sessionStorage.setItem('mainScrollPosition', currentScroll);
     });
