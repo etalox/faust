@@ -148,14 +148,47 @@
       const duration = 6000; // 6 seconds per step
       let startTime = null;
       let animationFrameId = null;
+      let elapsedBeforePause = 0;
+      let isInView = !('IntersectionObserver' in window);
+      let isPageVisible = document.visibilityState === 'visible';
+      let scrollFrameId = null;
+
+      const canAnimateProgress = () => (
+        window.innerWidth > 980 && isInView && isPageVisible
+      );
+
+      const setFillProgress = (fill, progress) => {
+        fill.style.transform = `scaleX(${progress})`;
+      };
+
+      const pauseProgressAnimation = () => {
+        if (animationFrameId && startTime !== null) {
+          elapsedBeforePause += performance.now() - startTime;
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+          startTime = null;
+        }
+      };
 
       const section = this.querySelector('.section');
       const syncAnimationVisibility = () => {
-        this.classList.toggle('is-page-visible', document.visibilityState === 'visible');
+        isPageVisible = document.visibilityState === 'visible';
+        this.classList.toggle('is-page-visible', isPageVisible);
+        if (isPageVisible) {
+          startProgressAnimation();
+        } else {
+          pauseProgressAnimation();
+        }
       };
       const animationObserver = 'IntersectionObserver' in window
         ? new IntersectionObserver((entries) => {
-            this.classList.toggle('is-in-view', entries[0].isIntersecting);
+            isInView = entries[0].isIntersecting;
+            this.classList.toggle('is-in-view', isInView);
+            if (isInView) {
+              startProgressAnimation();
+            } else {
+              pauseProgressAnimation();
+            }
           }, { threshold: 0.05 })
         : null;
 
@@ -165,7 +198,7 @@
         this.classList.add('is-in-view');
       }
       document.addEventListener('visibilitychange', syncAnimationVisibility);
-      syncAnimationVisibility();
+      this.classList.toggle('is-page-visible', isPageVisible);
 
       const setActiveStep = (index) => {
         currentIndex = index;
@@ -178,7 +211,7 @@
             item.classList.remove('is-active');
             // Reset progress bar width
             const fill = item.querySelector('.perk-row-progress-fill');
-            if (fill) fill.style.width = '0%';
+            if (fill) setFillProgress(fill, 0);
           }
         });
 
@@ -196,16 +229,12 @@
           filenameEl.textContent = filenames[index];
         }
         
-        // Start progress bar animation for active item (only on desktop widths)
-        if (window.innerWidth > 980) {
-          startProgressAnimation();
-        }
+        elapsedBeforePause = 0;
+        startProgressAnimation();
       };
 
       const startProgressAnimation = () => {
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
+        if (!canAnimateProgress() || animationFrameId) return;
         
         const activeItem = items[currentIndex];
         if (!activeItem) return;
@@ -215,15 +244,22 @@
         startTime = performance.now();
 
         const updateProgress = (now) => {
-          const elapsed = now - startTime;
+          if (!canAnimateProgress()) {
+            animationFrameId = null;
+            return;
+          }
+
+          const elapsed = elapsedBeforePause + now - startTime;
           const progress = Math.min(elapsed / duration, 1);
           
-          fill.style.width = (progress * 100) + '%';
+          setFillProgress(fill, progress);
 
           if (progress < 1) {
             animationFrameId = requestAnimationFrame(updateProgress);
           } else {
             // Auto-advance
+            animationFrameId = null;
+            startTime = null;
             const nextIndex = (currentIndex + 1) % items.length;
             setActiveStep(nextIndex);
           }
@@ -234,6 +270,8 @@
 
       // Click handlers (ignored on mobile for scroll-only interaction)
       const clickListeners = [];
+      const hoverListeners = [];
+      const interactiveList = this.querySelector('.perks-interactive-list');
       items.forEach((item, idx) => {
         const listener = () => {
           if (window.innerWidth <= 980) {
@@ -246,6 +284,22 @@
         };
         item.addEventListener('click', listener);
         clickListeners.push({ item, listener });
+
+        const onMouseEnter = () => {
+          if (window.innerWidth <= 980 || !interactiveList) return;
+          interactiveList.classList.add('is-hovering');
+          item.classList.add('is-hovered');
+        };
+        const onMouseLeave = (event) => {
+          if (window.innerWidth <= 980 || !interactiveList) return;
+          item.classList.remove('is-hovered');
+          if (!interactiveList.contains(event.relatedTarget)) {
+            interactiveList.classList.remove('is-hovering');
+          }
+        };
+        item.addEventListener('mouseenter', onMouseEnter);
+        item.addEventListener('mouseleave', onMouseLeave);
+        hoverListeners.push({ item, onMouseEnter, onMouseLeave });
       });
 
       // Scroll handler for mobile accordion scroll-driven activation
@@ -274,7 +328,15 @@
         }
       };
 
-      window.addEventListener('scroll', handleScroll, { passive: true });
+      const scheduleScrollUpdate = () => {
+        if (scrollFrameId !== null) return;
+        scrollFrameId = requestAnimationFrame(() => {
+          scrollFrameId = null;
+          handleScroll();
+        });
+      };
+
+      window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
 
       const resizeVisualContainers = () => {
         if (window.innerWidth > 980) {
@@ -310,13 +372,15 @@
       const handleResize = () => {
         if (window.innerWidth <= 980) {
           if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
+            pauseProgressAnimation();
           }
           // Clear any width on progress bar fills on mobile
           items.forEach((item) => {
             const fill = item.querySelector('.perk-row-progress-fill');
-            if (fill) fill.style.width = '0%';
+            if (fill) setFillProgress(fill, 0);
           });
+          elapsedBeforePause = 0;
+          startTime = null;
           handleScroll(); // Align active state with scroll position immediately on resize
         } else {
           // Restart animation if resizing back to desktop
@@ -352,13 +416,18 @@
         if (animationFrameId) {
           cancelAnimationFrame(animationFrameId);
         }
-        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('scroll', scheduleScrollUpdate);
+        if (scrollFrameId !== null) cancelAnimationFrame(scrollFrameId);
         window.removeEventListener('resize', handleResize);
         window.removeEventListener('load', handleLoad);
         document.removeEventListener('visibilitychange', syncAnimationVisibility);
         if (animationObserver) animationObserver.disconnect();
         clickListeners.forEach(({ item, listener }) => {
           item.removeEventListener('click', listener);
+        });
+        hoverListeners.forEach(({ item, onMouseEnter, onMouseLeave }) => {
+          item.removeEventListener('mouseenter', onMouseEnter);
+          item.removeEventListener('mouseleave', onMouseLeave);
         });
       };
     }

@@ -208,28 +208,111 @@
     basePath = src.substring(0, src.lastIndexOf('/') + 1);
   }
 
-  const scripts = [
-    'Components/consent.js',
-    'Components/navbar.js',
-    'Components/footer.js',
-    'Components/buttons.js',
-    'Components/flow-canvas.js',
-    'Components/apply-modal.js',
-    'Components/logo-lockup.js',
-    'Components/vacancy-card.js',
-    'Components/responsive-br.js',
-    'Components/perk-illustrations.js',
-    'Components/mouse-follower.js',
-    'Components/ecosystem.js',
-    'Components/documentation.js'
+  const componentScripts = [
+    { src: 'Components/consent.js', always: true },
+    { src: 'Components/navbar.js', always: true },
+    { src: 'Components/footer.js', always: true },
+    { src: 'Components/buttons.js', always: true },
+    { src: 'Components/apply-modal.js', always: true },
+    { src: 'Components/logo-lockup.js', selector: 'faust-logo-lockup' },
+    { src: 'Components/vacancy-card.js', selector: 'faust-vacancy-card' },
+    { src: 'Components/responsive-br.js', selector: 'h1 br, h2 br, h3 br, h4 br, h5 br, h6 br, p br' },
+    { src: 'Components/flow-canvas.js', selector: 'faust-flow-canvas' },
+    { src: 'Components/perk-illustrations.js', selector: 'faust-ecosystem' },
+    { src: 'Components/mouse-follower.js', selector: 'faust-ecosystem' },
+    { src: 'Components/ecosystem.js', selector: 'faust-ecosystem' },
+    { src: 'Components/documentation.js', selector: 'faust-documentation' }
   ];
+  const componentLoads = new Map();
 
-  scripts.forEach(src => {
-    const s = document.createElement('script');
-    s.src = basePath + src;
-    s.async = false;
-    document.head.appendChild(s);
-  });
+  function loadComponentScript(src) {
+    if (componentLoads.has(src)) return componentLoads.get(src);
+
+    const load = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = basePath + src;
+      s.async = false;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error(`Unable to load component: ${src}`));
+      document.head.appendChild(s);
+    });
+    componentLoads.set(src, load);
+    return load;
+  }
+
+  function loadRequiredComponentScripts(root = document) {
+    const required = componentScripts.filter(({ always, selector }) => (
+      always || (selector && root.querySelector(selector))
+    ));
+    return Promise.all(required.map(({ src }) => loadComponentScript(src)));
+  }
+
+  // Defer page-specific component code until the corresponding element exists.
+  // Scripts retain deterministic execution order through async=false.
+  loadRequiredComponentScripts().catch(error => console.error(error));
+
+  // Keep a small, in-memory cache of route HTML. This complements HTTP caching
+  // and avoids another network request and response decode for recently visited
+  // pages during the same session.
+  const pageHtmlCache = new Map();
+  const maxCachedPages = 8;
+
+  function routeCacheKey(url) {
+    const normalized = new URL(url, window.location.href);
+    normalized.hash = '';
+    return normalized.href;
+  }
+
+  function cacheRouteHtml(url, html) {
+    const key = routeCacheKey(url);
+    pageHtmlCache.delete(key);
+    pageHtmlCache.set(key, html);
+    if (pageHtmlCache.size > maxCachedPages) {
+      pageHtmlCache.delete(pageHtmlCache.keys().next().value);
+    }
+  }
+
+  async function getRouteHtml(url) {
+    const key = routeCacheKey(url);
+    if (pageHtmlCache.has(key)) {
+      const cached = pageHtmlCache.get(key);
+      // Refresh LRU order.
+      pageHtmlCache.delete(key);
+      pageHtmlCache.set(key, cached);
+      return cached;
+    }
+
+    const response = await fetch(key, { credentials: 'same-origin' });
+    if (!response.ok) throw new Error('Fetch failed');
+    const html = await response.text();
+    cacheRouteHtml(key, html);
+    return html;
+  }
+
+  function getPrefetchableRoute(link) {
+    if (!link || link.hasAttribute('download') || link.getAttribute('target') === '_blank') return null;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return null;
+
+    let targetUrl;
+    try {
+      targetUrl = new URL(link.href);
+    } catch (error) {
+      return null;
+    }
+    if (targetUrl.origin !== window.location.origin) return null;
+
+    const pathname = targetUrl.pathname.toLowerCase();
+    const isAsset = pathname.includes('/assets/') ||
+      /\.(png|jpe?g|gif|svg|mp4|pdf|zip|glb|txt|css|js)$/.test(pathname);
+    return isAsset ? null : targetUrl.href;
+  }
+
+  function prefetchRoute(link) {
+    const url = getPrefetchableRoute(link);
+    if (!url || routeCacheKey(url) === routeCacheKey(window.location.href)) return;
+    getRouteHtml(url).catch(() => {});
+  }
 
   // Client-side Router transition function
   async function navigateTo(url, isPopState = false) {
@@ -238,16 +321,18 @@
       if (typeof window.closeApplyModal === 'function') window.closeApplyModal(true);
       if (typeof window.closeMessageModal === 'function') window.closeMessageModal();
 
+      // Fetch in parallel with the exit animation. Navigation still retains its
+      // visual transition, but network time no longer starts after the fade.
+      const htmlPromise = getRouteHtml(url);
+
       // Start fade out of the content area
       document.body.classList.add('is-transitioning');
       
       // Wait for content fade-out duration (300ms)
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      // Fetch target HTML
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Fetch failed');
-      const htmlText = await response.text();
+      const [, htmlText] = await Promise.all([
+        new Promise(resolve => setTimeout(resolve, 300)),
+        htmlPromise
+      ]);
 
       // Parse document
       const parser = new DOMParser();
@@ -383,6 +468,9 @@
         }
       });
 
+      // Register page-specific custom elements only after their markup exists.
+      await loadRequiredComponentScripts(document.body);
+
       // Update/Re-render navbar and footer for new path
       if (navbar && typeof navbar.render === 'function') {
         navbar.render();
@@ -501,6 +589,20 @@
 
     e.preventDefault();
     navigateTo(targetUrl.href);
+  });
+
+  // Warm likely next routes without changing navigation semantics. Pointerdown
+  // covers quick clicks and touch; pointerover/focus cover deliberate choices.
+  document.addEventListener('pointerdown', function(event) {
+    prefetchRoute(event.target.closest && event.target.closest('a'));
+  }, { passive: true, capture: true });
+  document.addEventListener('pointerover', function(event) {
+    const link = event.target.closest && event.target.closest('a');
+    if (!link || link.contains(event.relatedTarget)) return;
+    prefetchRoute(link);
+  }, { passive: true });
+  document.addEventListener('focusin', function(event) {
+    prefetchRoute(event.target.closest && event.target.closest('a'));
   });
 
   // Handle browser back/forward buttons

@@ -1025,12 +1025,39 @@ class FaustFlowCard extends HTMLElement {
  * Controls scaled rendering for desktop and mobile devices.
  */
 class FaustFlowCanvas extends HTMLElement {
+  refreshSweepGeometry() {
+    const flow = this.querySelector('.Flow');
+    if (!flow) return [];
+
+    const beamWidth = 300;
+    const beamVelocity = 250;
+    this._sweepGeometry = Array.from(
+      this.querySelectorAll('faust-flow-card, faust-flow-icon')
+    ).map((comp) => {
+      let left = 0;
+      let current = comp;
+      while (current && current !== flow) {
+        left += current.offsetLeft || 0;
+        current = current.offsetParent;
+      }
+
+      const width = comp.offsetWidth || 80;
+      const duration = (width + beamWidth) / beamVelocity;
+      comp.style.setProperty('--sweep-duration', `${duration.toFixed(4)}s`);
+      return { comp, start: left / beamVelocity, duration };
+    });
+
+    return this._sweepGeometry;
+  }
+
   stopSweepLoop() {
     if (this._sweepInterval) {
       clearInterval(this._sweepInterval);
       this._sweepInterval = null;
     }
-    const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
+    const components = this._sweepGeometry
+      ? this._sweepGeometry.map(({ comp }) => comp)
+      : this.querySelectorAll('faust-flow-card, faust-flow-icon');
     components.forEach(comp => {
       if (comp._sweepTimeout) {
         clearTimeout(comp._sweepTimeout);
@@ -1048,27 +1075,8 @@ class FaustFlowCanvas extends HTMLElement {
     this.stopSweepLoop();
     
     const runSweep = () => {
-      const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
-      const flow = this.querySelector('.Flow');
-      if (!flow) return;
-      
-      const W_beam = 300; // Width of the projector beam in pixels
-      const V = 250; // Speed of the beam in pixels/second
-      
-      components.forEach(comp => {
-        // Calculate absolute horizontal offset relative to the .Flow container
-        let leftPx = 0;
-        let curr = comp;
-        while (curr && curr !== flow) {
-          leftPx += curr.offsetLeft || 0;
-          curr = curr.offsetParent;
-        }
-        
-        const w = comp.offsetWidth || 80;
-        const t_start = leftPx / V;
-        const t_duration = (w + W_beam) / V;
-        
-        comp.style.setProperty('--sweep-duration', `${t_duration.toFixed(4)}s`);
+      const geometry = this._sweepGeometry || this.refreshSweepGeometry();
+      geometry.forEach(({ comp, start, duration }) => {
         
         // Trigger the sweep class after t_start delay
         comp._sweepTimeout = setTimeout(() => {
@@ -1076,8 +1084,8 @@ class FaustFlowCanvas extends HTMLElement {
           
           comp._sweepEndTimeout = setTimeout(() => {
             comp.classList.remove('sweep-active');
-          }, t_duration * 1000);
-        }, t_start * 1000);
+          }, duration * 1000);
+        }, start * 1000);
       });
     };
     
@@ -1300,27 +1308,24 @@ class FaustFlowCanvas extends HTMLElement {
       children.forEach(child => mount.appendChild(child));
     }
 
-    // Pre-calculate sweep durations immediately for hover states
-    const setupSweepDurations = () => {
-      const flow = this.querySelector('.Flow');
-      if (!flow) return;
-      const components = this.querySelectorAll('faust-flow-card, faust-flow-icon');
-      const W_beam = 300;
-      const V = 250;
-      components.forEach(comp => {
-        let leftPx = 0;
-        let curr = comp;
-        while (curr && curr !== flow) {
-          leftPx += curr.offsetLeft || 0;
-          curr = curr.offsetParent;
-        }
-        const w = comp.offsetWidth || 80;
-        const t_duration = (w + W_beam) / V;
-        comp.style.setProperty('--sweep-duration', `${t_duration.toFixed(4)}s`);
+    // Geometry is static between layout changes. Batch its measurements into one frame.
+    let geometryFrame = null;
+    const scheduleSweepGeometry = () => {
+      if (geometryFrame !== null) return;
+      geometryFrame = requestAnimationFrame(() => {
+        geometryFrame = null;
+        if (this.isConnected) this.refreshSweepGeometry();
       });
     };
-    setTimeout(setupSweepDurations, 100);
-    setTimeout(setupSweepDurations, 500);
+    this._scheduleSweepGeometry = scheduleSweepGeometry;
+    this._cancelSweepGeometry = () => {
+      if (geometryFrame !== null) cancelAnimationFrame(geometryFrame);
+      geometryFrame = null;
+    };
+    scheduleSweepGeometry();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(scheduleSweepGeometry);
+    }
 
     // Setup interactive hover listeners with loop completion tracking
     const setupHoverListeners = () => {
@@ -1421,12 +1426,24 @@ class FaustFlowCanvas extends HTMLElement {
       }
     };
 
+    let scaleFrame = null;
+    const scheduleScaleAndCenter = () => {
+      if (scaleFrame !== null) return;
+      scaleFrame = requestAnimationFrame(() => {
+        scaleFrame = null;
+        updateScaleAndCenter();
+        if (this._scheduleSweepGeometry) this._scheduleSweepGeometry();
+        if (!this._trackingActive) this.alignLabelsOnce();
+      });
+    };
+    this._cancelScaleAndCenter = () => {
+      if (scaleFrame !== null) cancelAnimationFrame(scaleFrame);
+      scaleFrame = null;
+    };
     updateScaleAndCenter();
-    setTimeout(updateScaleAndCenter, 0);
-    setTimeout(updateScaleAndCenter, 100);
-    setTimeout(updateScaleAndCenter, 300);
+    scheduleScaleAndCenter();
 
-    this._onResize = updateScaleAndCenter;
+    this._onResize = scheduleScaleAndCenter;
     window.addEventListener('resize', this._onResize);
 
     // Revertir scroll manual al centro suavemente después de 400ms de inactividad (solo tablet/no-mobile)
@@ -1510,6 +1527,8 @@ class FaustFlowCanvas extends HTMLElement {
   disconnectedCallback() {
     this.clearTimers();
     this.stopLabelTracking();
+    if (this._cancelSweepGeometry) this._cancelSweepGeometry();
+    if (this._cancelScaleAndCenter) this._cancelScaleAndCenter();
     if (this._clearRevert) {
       this._clearRevert();
     }
@@ -1552,7 +1571,7 @@ class FaustFlowCanvas extends HTMLElement {
     const compRight1 = this.querySelector('.Frame198 faust-flow-icon');
     const compRight2 = this.querySelector('.Frame201 faust-flow-card');
 
-    const alignLabel = (label, comp1, comp2, frame1Rect, scale) => {
+    const measureLabel = (label, comp1, comp2, frame1Rect, scale) => {
       if (!label || !comp1 || !comp2) return;
       const rect1 = comp1.getBoundingClientRect();
       const rect2 = comp2.getBoundingClientRect();
@@ -1562,7 +1581,7 @@ class FaustFlowCanvas extends HTMLElement {
       const targetRelCenter = (x1Rel + x2Rel) / 2;
       
       const labelWidth = parseFloat(label.getAttribute('width')) || 400;
-      label.style.left = (targetRelCenter - labelWidth / 2) + 'px';
+      return { label, left: targetRelCenter - labelWidth / 2 };
     };
 
     const updatePositions = () => {
@@ -1579,8 +1598,13 @@ class FaustFlowCanvas extends HTMLElement {
       const frameWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
       const scale = frame1Rect.width / frameWidth || 1;
 
-      alignLabel(labelLeft, compLeft1, compLeft2, frame1Rect, scale);
-      alignLabel(labelRight, compRight1, compRight2, frame1Rect, scale);
+      const updates = [
+        measureLabel(labelLeft, compLeft1, compLeft2, frame1Rect, scale),
+        measureLabel(labelRight, compRight1, compRight2, frame1Rect, scale)
+      ];
+      updates.forEach((update) => {
+        if (update) update.label.style.left = update.left + 'px';
+      });
 
       this._trackingFrame = requestAnimationFrame(updatePositions);
     };
@@ -1605,7 +1629,7 @@ class FaustFlowCanvas extends HTMLElement {
     const compRight1 = this.querySelector('.Frame198 faust-flow-icon');
     const compRight2 = this.querySelector('.Frame201 faust-flow-card');
 
-    const alignLabel = (label, comp1, comp2, frame1Rect, scale) => {
+    const measureLabel = (label, comp1, comp2, frame1Rect, scale) => {
       if (!label || !comp1 || !comp2) return;
       const rect1 = comp1.getBoundingClientRect();
       const rect2 = comp2.getBoundingClientRect();
@@ -1615,7 +1639,7 @@ class FaustFlowCanvas extends HTMLElement {
       const targetRelCenter = (x1Rel + x2Rel) / 2;
       
       const labelWidth = parseFloat(label.getAttribute('width')) || 400;
-      label.style.left = (targetRelCenter - labelWidth / 2) + 'px';
+      return { label, left: targetRelCenter - labelWidth / 2 };
     };
 
     const canvasRect = this.getBoundingClientRect();
@@ -1626,8 +1650,13 @@ class FaustFlowCanvas extends HTMLElement {
     const frameWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
     const scale = frame1Rect.width / frameWidth || 1;
 
-    alignLabel(labelLeft, compLeft1, compLeft2, frame1Rect, scale);
-    alignLabel(labelRight, compRight1, compRight2, frame1Rect, scale);
+    const updates = [
+      measureLabel(labelLeft, compLeft1, compLeft2, frame1Rect, scale),
+      measureLabel(labelRight, compRight1, compRight2, frame1Rect, scale)
+    ];
+    updates.forEach((update) => {
+      if (update) update.label.style.left = update.left + 'px';
+    });
   }
 }
 

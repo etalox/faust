@@ -1023,7 +1023,7 @@
         }, 100);
       });
 
-      window.addEventListener('beforeunload', function () {
+      window.addEventListener('pagehide', function () {
         var currentScroll = document.body.scrollTop || (document.documentElement ? document.documentElement.scrollTop : 0);
         sessionStorage.setItem('careersScrollPosition', currentScroll);
       });
