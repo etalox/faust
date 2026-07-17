@@ -48,7 +48,8 @@
       let halfW = 0;
       let halfH = 0;
       let metricsDirty = true;
-      let lastHitTarget = null;
+      let lastColorSampleX = NaN;
+      let lastColorSampleY = NaN;
 
       const refreshMetrics = () => {
         zoom = getZoom();
@@ -80,12 +81,24 @@
       };
 
       const updateHoverAppearance = () => {
-        if (!lastHitTarget || !lastHitTarget.closest) return;
+        // The follower lags behind the pointer, so sample the surface under the
+        // follower itself rather than using the pointer event's target.
+        const sampleX = (currentX + halfW) * zoom;
+        const sampleY = (currentY + halfH) * zoom;
+        if (
+          Math.abs(sampleX - lastColorSampleX) < 0.5 &&
+          Math.abs(sampleY - lastColorSampleY) < 0.5
+        ) return;
+
+        lastColorSampleX = sampleX;
+        lastColorSampleY = sampleY;
+        const hit = document.elementFromPoint(sampleX, sampleY);
+        if (!hit || !hit.closest) return;
         follower.classList.toggle(
           'is-over-blue',
-          Boolean(lastHitTarget.closest('.revenue-layer, .auto-accent, .evidence-accent, .infra-top'))
+          Boolean(hit.closest('.revenue-layer, .auto-accent, .evidence-accent, .infra-top'))
         );
-        follower.classList.toggle('is-over-light', Boolean(lastHitTarget.closest('.perk-mobile-visual')));
+        follower.classList.toggle('is-over-light', Boolean(hit.closest('.perk-mobile-visual')));
       };
 
       const updateFollowerPosition = () => {
@@ -98,7 +111,6 @@
         }
 
         updateTarget();
-        updateHoverAppearance();
 
         const isVisible = follower.classList.contains('is-visible');
         const dx = targetX - currentX;
@@ -113,6 +125,7 @@
         currentY += dy * ease;
 
         writePosition();
+        updateHoverAppearance();
 
         lerpFrameId = requestAnimationFrame(updateFollowerPosition);
       };
@@ -136,10 +149,10 @@
 
           lastMouseX = e.clientX;
           lastMouseY = e.clientY;
-          lastHitTarget = e.target;
           metricsDirty = true;
           updateTarget();
-          updateHoverAppearance();
+          lastColorSampleX = NaN;
+          lastColorSampleY = NaN;
 
           const timeSinceActive = Date.now() - (follower.lastActiveTime || 0);
           const wasRecentlyActive = timeSinceActive < 350; // 350ms matching the transition duration
@@ -187,7 +200,6 @@
 
           lastMouseX = e.clientX;
           lastMouseY = e.clientY;
-          lastHitTarget = e.target;
 
           if (!isFollowing) {
             if (Number.isFinite(follower._positionX) && Number.isFinite(follower._positionY)) {

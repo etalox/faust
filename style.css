@@ -3247,7 +3247,7 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
                 opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   }
 
-  /* Efecto de Hover (Equivalente al active state de mobile) - light gray with vertical lines */
+  /* Efecto de hover original: superficie clara con retícula oscura. */
   .perk-interactive-item:hover .perk-mobile-visual {
     background-color: #f4f4f6 !important;
     background-image: linear-gradient(
@@ -3283,6 +3283,110 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
   .perk-interactive-item:hover .perk-mobile-visual .infra-top ellipse {
     stroke: #ffffff !important;
     opacity: 0.8 !important;
+  }
+
+  /* Optional canvas-inspired hover. Enable with hover-style="canvas" on faust-ecosystem.
+     Removing the attribute restores the existing light hover treatment above. */
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual {
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.02) 50%,
+      rgba(255, 255, 255, 0.03) 100%
+    ) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    --illustration-fill: #171819 !important;
+    box-shadow: none !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Same 80px, centered grid rhythm as the default card, with canvas-like line falloff. */
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    right: 0;
+    bottom: 32px;
+    left: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.06) 40%,
+      rgba(255, 255, 255, 0.02)
+    );
+    -webkit-mask-image: linear-gradient(90deg, transparent 39px, #000 39px 40px, transparent 40px);
+    -webkit-mask-size: 80px 100%;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: repeat-x;
+    mask-image: linear-gradient(90deg, transparent 39px, #000 39px 40px, transparent 40px);
+    mask-size: 80px 100%;
+    mask-position: center;
+    mask-repeat: repeat-x;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .perk-technical-svg {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Gray illustration pieces use the same top-to-bottom border falloff as canvas controls. */
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-revenue .revenue-base path {
+    stroke: url(#perk-revenue-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-module:not(.auto-accent) path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-module:not(.auto-accent) ellipse,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-connector {
+    stroke: url(#perk-autonomy-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-evidence .evidence-bar-iso:not(.evidence-accent) path {
+    stroke: url(#perk-evidence-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-highticket .infra-layer path {
+    stroke: url(#perk-infra-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .revenue-layer,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .auto-accent,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .evidence-accent,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .infra-top {
+    filter: drop-shadow(0 0 14px rgba(0, 34, 255, 0.68));
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .revenue-layer path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .auto-accent path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .evidence-accent path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .infra-top path {
+    fill: #0022ff !important;
+    stroke-opacity: 1 !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-revenue .revenue-layer path {
+    stroke: url(#perk-revenue-blue-outline) !important;
+    stroke-width: 1.1px !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-accent path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-accent ellipse {
+    stroke: url(#perk-autonomy-blue-outline) !important;
+    stroke-width: 1.1px !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-evidence .evidence-accent path {
+    stroke: url(#perk-evidence-blue-outline) !important;
+    stroke-width: 1.1px !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-highticket .infra-top path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-highticket .infra-top ellipse {
+    stroke: url(#perk-infra-blue-outline) !important;
+    stroke-width: 1.1px !important;
   }
 
   /* Aumentar ligeramente el tamaño de las ilustraciones (SVGs) dentro del contenedor cuadrado */
