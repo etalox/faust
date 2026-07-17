@@ -274,6 +274,65 @@ p,
   opacity: 0;
 }
 
+/* Shared action component for dialogs and pop-up menus.
+   Mirrors the "Sitio en construcción" controls without affecting page, navbar, or footer buttons. */
+.modal-action {
+  border: none;
+  border-radius: 999px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  line-height: normal;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.modal-action--secondary {
+  position: relative;
+  background: rgba(253, 253, 255, 0.06);
+  color: #f2f2f2;
+}
+
+.modal-action--secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.modal-action--secondary:hover {
+  background: rgba(238, 238, 241, 0.10);
+}
+
+.modal-action--primary {
+  background: #f2f2f2;
+  color: #161616;
+}
+
+.modal-action--primary:hover {
+  background: #0022ff;
+  color: #fff;
+}
+
+.modal-action:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .gradient-border {
   position: relative;
 }
@@ -3504,4 +3563,3 @@ body:not(.is-ready) main {
     padding: 0;
   }
 }
-

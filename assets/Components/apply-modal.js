@@ -26,8 +26,8 @@ class FaustApplyModal extends HTMLElement {
             <!-- Dynamic step contents -->
           </div>
           <div class="apply-modal-footer">
-            <button class="btn btn-secondary btn-apply-back" id="apply-btn-back" style="display: none;">Anterior</button>
-            <button class="btn btn-primary btn-apply-next" id="apply-btn-next">Siguiente</button>
+            <button class="modal-action modal-action--secondary btn-apply-back" id="apply-btn-back" style="display: none;">Anterior</button>
+            <button class="modal-action modal-action--primary btn-apply-next" id="apply-btn-next">Siguiente</button>
           </div>
         </div>
       </div>
@@ -1432,8 +1432,8 @@ class FaustApplyModal extends HTMLElement {
             <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Gracias por aplicar!</h3>
             <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto con usted o su empresa muy pronto.</p>
             <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
-              <button class="btn btn-secondary" id="apply-success-message-btn" style="border: 1px solid rgba(255,255,255,0.15) !important; background: transparent; color: #fff; cursor: pointer;">Escribir un mensaje</button>
-              <button class="btn btn-primary" id="apply-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
+              <button class="modal-action modal-action--secondary" id="apply-success-message-btn">Escribir un mensaje</button>
+              <button class="modal-action modal-action--primary" id="apply-success-close-btn">Listo</button>
             </div>
           </div>
         `;
@@ -1604,8 +1604,8 @@ class FaustApplyModal extends HTMLElement {
           msgFooter.style.display = 'flex';
           msgFooter.style.justifyContent = 'flex-end';
           msgFooter.innerHTML = `
-            <button class="btn btn-secondary" id="message-cancel-btn">Cancelar</button>
-            <button class="btn btn-primary" id="message-submit-btn" disabled>Enviar</button>
+            <button class="modal-action modal-action--secondary" id="message-cancel-btn">Cancelar</button>
+            <button class="modal-action modal-action--primary" id="message-submit-btn" disabled>Enviar</button>
           `;
         }
 
@@ -1748,7 +1748,7 @@ class FaustApplyModal extends HTMLElement {
           msgFooter.style.display = 'flex';
           msgFooter.style.justifyContent = 'center';
           msgFooter.innerHTML = `
-            <button class="btn btn-primary" id="msg-success-close-btn-ind" style="width: 120px; justify-content: center;">Listo</button>
+            <button class="modal-action modal-action--primary" id="msg-success-close-btn-ind" style="width: 120px;">Listo</button>
           `;
         }
         

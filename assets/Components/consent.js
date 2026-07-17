@@ -252,82 +252,6 @@ try {
       flex-shrink: 0;
     }
 
-    .btn-cookie-accept {
-      height: 48px;
-      padding: 0 32px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      background: #f2f2f2;
-      color: #161616 !important;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 240ms ease-out, color 240ms ease-out, transform 150ms ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-
-    .btn-cookie-accept:hover {
-      background: #0022ff;
-      color: #fff !important;
-    }
-
-    .btn-cookie-accept:active {
-      transform: scale(0.97);
-    }
-
-    .btn-cookie-decline {
-      height: 48px;
-      padding: 0 32px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      position: relative;
-      background: rgba(253, 253, 255, 0.06);
-      color: #f2f2f2 !important;
-      border: none;
-      backdrop-filter: blur(20px);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 240ms ease-out, color 240ms ease-out, transform 150ms ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-      text-decoration: none;
-    }
-
-    .btn-cookie-decline::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 999px;
-      padding: 1px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      transition: opacity 180ms ease-out;
-    }
-
-    .btn-cookie-decline:hover {
-      background: rgba(238, 238, 241, 0.10);
-      color: #fff !important;
-    }
-
-    .btn-cookie-decline:hover::before {
-      opacity: 0.5;
-    }
-
-    .btn-cookie-decline:active {
-      transform: scale(0.97);
-    }
-
     @media (max-width: 768px) {
       .cookie-banner-overlay {
         bottom: 16px;
@@ -359,10 +283,8 @@ try {
         gap: 10px;
       }
       
-      .btn-cookie-decline,
-      .btn-cookie-accept {
+      .cookie-banner-buttons .modal-action {
         width: 100%;
-        height: 44px;
       }
     }
   `;
@@ -498,8 +420,8 @@ try {
           <p class="cookie-banner-text">${textToShow}</p>
         </div>
         <div class="cookie-banner-buttons">
-          ${strictMode ? `<button class="btn-cookie-decline" id="btn-cookie-decline">${t.decline}</button>` : ''}
-          <button class="btn-cookie-accept" id="btn-cookie-accept">${t.accept}</button>
+          ${strictMode ? `<button class="modal-action modal-action--secondary" id="btn-cookie-decline">${t.decline}</button>` : ''}
+          <button class="modal-action modal-action--primary" id="btn-cookie-accept">${t.accept}</button>
         </div>
       </div>
     `;
