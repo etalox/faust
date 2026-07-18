@@ -1,0 +1,13 @@
+/* Ajuste fino de las viñetas del Canvas.
+   Cada color se expresa como R, G, B para conservar sus opacidades por separado. */
+:root {
+  --canvas-vignette-edge-rgb: 15, 16, 17;
+  --canvas-vignette-edge-opacity: 0.96;
+
+  --canvas-vignette-blur-rgb: 13, 14, 15;
+  --canvas-vignette-blur-opacity: 0.05;
+
+  --canvas-vignette-plate-rgb: 14, 15, 16;
+  --canvas-vignette-plate-mid-opacity: 0.6;
+  --canvas-vignette-plate-bottom-opacity: 0.98;
+}
