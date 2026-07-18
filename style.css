@@ -2660,6 +2660,27 @@ font *:hover,
   background: transparent !important;
 }
 
+/* Google Translate is controlled through our own footer selector. Keep its
+   native controls and branding chrome out of the page, including the newer
+   injected widget variants. The hidden select remains available to JS. */
+#google_translate_element,
+#google_translate_element *,
+.goog-te-gadget,
+.goog-te-gadget *,
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+.goog-te-menu-frame,
+.goog-te-menu2,
+.goog-te-gadget-icon,
+.goog-te-gadget-simple,
+.VIpgJd-ZVi9od-ORHb,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-yAWNEb-L7lbkb {
+  display: none !important;
+  visibility: hidden !important;
+}
+
 /* ── Legal Page Styles ── */
 html.legal-page {
   --muted: #8B8D91;
