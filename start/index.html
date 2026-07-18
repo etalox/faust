@@ -13,8 +13,14 @@
   <!-- End Google Tag Manager -->
 
   <!-- Tab -->
-  <!-- Mobile layout uses the iPhone 14 Pro Max 430px CSS viewport as its reference. -->
-  <meta name="viewport" content="width=430, viewport-fit=cover">
+  <!-- Phones use the iPhone 14 Pro Max 430px CSS viewport as their reference.
+       Tablets retain their real viewport so their own responsive layout can render. -->
+  <meta id="faust-viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script>
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      document.getElementById('faust-viewport').content = 'width=430, viewport-fit=cover';
+    }
+  </script>
   <title>FaustPartners™ | Growth Partner Líder en México</title>
   <link rel="icon" type="image/png" href="../assets/Icons/tab_icon.png">
 
