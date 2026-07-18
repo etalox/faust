@@ -167,11 +167,19 @@
     closeScrollSurfaces({ closeFooterSurfaces: direction === 'up' });
   };
 
+  // Footer language and cookie menus contain their own scrollable body. Events
+  // that originate there are not page navigation and must not dismiss a menu.
+  const isInternalSurfaceScroll = function(target) {
+    return target instanceof Element && Boolean(
+      target.closest('.lang-overlay.is-open .lang-modal-body')
+    );
+  };
+
   let lastPageScrollTop = window.scrollY;
   let lastTouchY = null;
 
   window.addEventListener('wheel', function(event) {
-    if (blocksMainScroll()) return;
+    if (blocksMainScroll() || isInternalSurfaceScroll(event.target)) return;
     if (Math.abs(event.deltaY) > Math.abs(event.deltaX) && event.deltaY !== 0) {
       closeForScrollDirection(event.deltaY < 0 ? 'up' : 'down');
     }
@@ -182,7 +190,7 @@
   }, { passive: true, capture: true });
 
   window.addEventListener('touchmove', function(event) {
-    if (blocksMainScroll()) return;
+    if (blocksMainScroll() || isInternalSurfaceScroll(event.target)) return;
     const touchY = event.touches[0]?.clientY;
     if (touchY === undefined || lastTouchY === null || touchY === lastTouchY) return;
     closeForScrollDirection(touchY > lastTouchY ? 'up' : 'down');
