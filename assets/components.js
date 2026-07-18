@@ -144,9 +144,16 @@
     );
   };
 
-  const closeScrollSurfaces = function() {
+  // Footer surfaces remain available while continuing down the page. They only
+  // dismiss when the visitor scrolls back up, while every other transient
+  // surface keeps the usual any-direction dismissal behavior.
+  const footerScrollSurfaceIds = new Set(['cookies', 'language']);
+
+  const closeScrollSurfaces = function(options = {}) {
+    const closeFooterSurfaces = options.closeFooterSurfaces !== false;
     surfaceClosers.forEach(function(close, registeredId) {
       if (registeredId === 'apply') return;
+      if (!closeFooterSurfaces && footerScrollSurfaceIds.has(registeredId)) return;
       try { close(); } catch (error) { console.warn('Unable to close surface:', registeredId, error); }
     });
     document.querySelectorAll('.nav-lang-dropdown.is-open').forEach(function(dropdown) {
@@ -156,17 +163,37 @@
 
   window.faustCloseScrollSurfaces = closeScrollSurfaces;
 
+  const closeForScrollDirection = function(direction) {
+    closeScrollSurfaces({ closeFooterSurfaces: direction === 'up' });
+  };
+
+  let lastPageScrollTop = window.scrollY;
+  let lastTouchY = null;
+
   window.addEventListener('wheel', function(event) {
     if (blocksMainScroll()) return;
-    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) closeScrollSurfaces();
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX) && event.deltaY !== 0) {
+      closeForScrollDirection(event.deltaY < 0 ? 'up' : 'down');
+    }
+  }, { passive: true, capture: true });
+
+  window.addEventListener('touchstart', function(event) {
+    lastTouchY = event.touches[0]?.clientY ?? null;
   }, { passive: true, capture: true });
 
   window.addEventListener('touchmove', function(event) {
-    if (!blocksMainScroll()) closeScrollSurfaces();
+    if (blocksMainScroll()) return;
+    const touchY = event.touches[0]?.clientY;
+    if (touchY === undefined || lastTouchY === null || touchY === lastTouchY) return;
+    closeForScrollDirection(touchY > lastTouchY ? 'up' : 'down');
+    lastTouchY = touchY;
   }, { passive: true, capture: true });
 
   window.addEventListener('scroll', function() {
-    if (!blocksMainScroll()) closeScrollSurfaces();
+    const currentScrollTop = window.scrollY;
+    const direction = currentScrollTop < lastPageScrollTop ? 'up' : currentScrollTop > lastPageScrollTop ? 'down' : null;
+    lastPageScrollTop = currentScrollTop;
+    if (!blocksMainScroll() && direction) closeForScrollDirection(direction);
   }, { passive: true });
 
   // Experimental visual treatment. Set this to false before components.js
