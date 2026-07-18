@@ -280,6 +280,7 @@ try {
   let bannerDismissed = false;
   let bannerOverlay = null;
   let footerIntersecting = false;
+  let ctaReached = false;
   let footerObserver = null;
   let countryDetectionPending = localStorage.getItem('faust-ip-detection-status') === 'pending' &&
     !localStorage.getItem('faust-detected-country-code');
@@ -530,7 +531,7 @@ try {
     const showThreshold = 40;
     const hideThreshold = 2;
 
-    if (footerIntersecting) {
+    if (ctaReached || footerIntersecting) {
       const overlay = bannerOverlay || document.getElementById('faust-cookie-banner');
       if (overlay && overlay.classList.contains('show')) {
         overlay.classList.remove('show');
@@ -572,18 +573,33 @@ try {
 
   function setupFooterObserver() {
     if (typeof IntersectionObserver === 'undefined') return;
+    const cta = document.querySelector('main .cta');
     const footer = document.querySelector('faust-footer');
-    if (!footer) return;
+    const hideTrigger = cta || footer;
+    if (!hideTrigger) return;
+
+    const usesCtaTrigger = Boolean(cta);
 
     footerObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        footerIntersecting = entry.isIntersecting;
+        if (usesCtaTrigger) {
+          // Once the CTA has entered while scrolling down, keep the legal
+          // banner hidden for the remainder of the page. It becomes eligible
+          // again only after the visitor scrolls back above the CTA.
+          if (entry.isIntersecting) {
+            ctaReached = true;
+          } else if (entry.boundingClientRect.top > 0) {
+            ctaReached = false;
+          }
+        } else {
+          footerIntersecting = entry.isIntersecting;
+        }
         checkScrollAndInit();
       });
     }, {
       threshold: 0
     });
-    footerObserver.observe(footer);
+    footerObserver.observe(hideTrigger);
   }
 
   if (document.readyState === 'loading') {

@@ -1060,12 +1060,16 @@ class FaustFooter extends HTMLElement {
   }
 
   initGoogleTranslate() {
-    if (!document.getElementById('google_translate_element')) {
-      const gtDiv = document.createElement('div');
+    let gtDiv = document.getElementById('google_translate_element');
+    if (!gtDiv) {
+      gtDiv = document.createElement('div');
       gtDiv.id = 'google_translate_element';
-      gtDiv.style.display = 'none';
       document.body.appendChild(gtDiv);
     }
+    gtDiv.classList.add('notranslate');
+    gtDiv.setAttribute('translate', 'no');
+    gtDiv.setAttribute('aria-hidden', 'true');
+    gtDiv.style.setProperty('display', 'none', 'important');
 
     if (!window.googleTranslateElementInit) {
       window.googleTranslateElementInit = () => {
