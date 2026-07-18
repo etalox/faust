@@ -646,11 +646,30 @@ h2.lead.reveal-item.reveal-visible {
   flex-wrap: nowrap;
 }
 
+.supported .logos .partner-logo {
+  display: inline-flex;
+  flex: 0 1 calc((100% - 80px) / 3);
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+}
+
 .supported .logos img {
   height: 32px;
-  max-width: calc((100% - 80px) / 3);
+  max-width: 100%;
   object-fit: contain;
   opacity: .8;
+  transition: opacity 180ms ease;
+}
+
+.supported .logos .partner-logo:hover img,
+.supported .logos .partner-logo:focus-visible img {
+  opacity: .6;
+}
+
+/* Temporalmente ocultamos el control flotante que abre los canvas. */
+.canvas-mouse-follower {
+  display: none !important;
 }
 
 @media (max-width: 360px) {
@@ -659,7 +678,11 @@ h2.lead.reveal-item.reveal-visible {
   }
 
   .supported .logos img {
-    max-width: calc((100% - 40px) / 3);
+    max-width: 100%;
+  }
+
+  .supported .logos .partner-logo {
+    flex-basis: calc((100% - 40px) / 3);
   }
 }
 
@@ -4821,4 +4844,9 @@ body:not(.is-ready) main {
   .doc-body-content {
     padding: 0;
   }
+}
+
+/* Respaldo para instancias creadas antes de que el canvas se vuelva a renderizar. */
+.canvas-mouse-follower {
+  display: none !important;
 }

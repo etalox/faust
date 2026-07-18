@@ -1508,7 +1508,7 @@ class FaustFlowCanvas extends HTMLElement {
         <div class="canvas-window-breadcrumb" aria-label="Ruta del Canvas">
           <span>FaustPartners&nbsp; / &nbsp;Canvas&nbsp; / &nbsp;</span><strong>${canvasTitle}</strong>
         </div>
-        <faust-mouse-follower text="Abrir" open-icon class-name="canvas-mouse-follower" active-class="animation-complete" inactive-class="is-expanded-view"></faust-mouse-follower>
+        <!-- El control flotante «Abrir» está temporalmente desactivado. -->
         <div class="canvas-expanded-controls">
           <button class="canvas-replay-button" type="button" aria-label="Reproducir animación nuevamente" title="Reproducir nuevamente">
             <svg class="canvas-play-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4.5 2.9L10.5 7L4.5 11.1V2.9Z" fill="currentColor"/></svg>
@@ -1558,8 +1558,6 @@ class FaustFlowCanvas extends HTMLElement {
         if (event.target.closest('.canvas-replay-button')) {
           event.stopPropagation();
           this.restartSlowAnimation();
-        } else if (!this.classList.contains('is-expanded-view')) {
-          this.openExpandedView();
         }
       };
       this.addEventListener('click', this._onCanvasReplayClick);
