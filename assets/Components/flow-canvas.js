@@ -2369,6 +2369,7 @@ class FaustFlowCanvas extends HTMLElement {
         };
         const release = () => {
           piece.classList.remove('is-piece-dragging');
+          piece.classList.add('is-piece-returning');
           isReturningPiece = true;
           if (curveSettlingFrame !== null) {
             cancelAnimationFrame(curveSettlingFrame);
@@ -2394,6 +2395,7 @@ class FaustFlowCanvas extends HTMLElement {
               this._pieceReturnFrame = null;
               this.classList.remove('is-piece-field-active');
               resetArrowGeometry();
+              piece.classList.remove('is-piece-returning');
               isReturningPiece = false;
             };
             this._pieceReturnFrame = requestAnimationFrame(animateRestGeometry);
@@ -2477,7 +2479,7 @@ class FaustFlowCanvas extends HTMLElement {
     const MIN_WIDTH = 280;
     const getMaxWidth = () => {
       const outerWidth = this.closest('.canvas-outer')?.getBoundingClientRect().width || 0;
-      return Math.max(MIN_WIDTH, outerWidth - 56);
+      return Math.min(outerWidth * 0.3, outerWidth - 56);
     };
     const stopResize = () => {
       this.classList.remove('is-resizing-explainer');

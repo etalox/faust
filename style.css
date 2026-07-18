@@ -847,6 +847,19 @@ faust-flow-canvas {
   position: relative;
 }
 
+/* Los conectores pertenecen al plano de fondo del diagrama; las piezas los
+   cubren incluso cuando una flecha se deforma durante el arrastre. */
+faust-flow-canvas faust-flow-arrow,
+faust-flow-canvas faust-flow-arrow-split-down,
+faust-flow-canvas faust-flow-arrow-merge-right {
+  z-index: 1;
+}
+
+faust-flow-canvas faust-flow-card,
+faust-flow-canvas faust-flow-icon {
+  z-index: 2;
+}
+
 .canvas-expanded-controls {
   display: contents;
 }
@@ -1040,7 +1053,7 @@ body.canvas-window-transitioning .canvas-explainer-toggle {
   z-index: 4;
   display: flex;
   flex-direction: column;
-  width: min(var(--canvas-explainer-width, 340px), calc(100% - 56px));
+  width: min(var(--canvas-explainer-width, 340px), 30%, calc(100% - 56px));
   padding: 20px;
   box-sizing: border-box;
   color: rgba(255, 255, 255, 0.72);
@@ -1116,14 +1129,20 @@ body.canvas-window-transitioning .canvas-explainer-toggle {
   box-sizing: border-box;
   position: relative;
   color: #fff;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 500;
   letter-spacing: 0.01em;
+  text-align: left;
+}
+
+.canvas-explainer-header > span {
+  width: 100%;
+  text-align: left;
 }
 
 .canvas-explainer-panel p {
   margin: 32px 0 12px;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
   text-align: left;
 }
@@ -1182,11 +1201,11 @@ body.canvas-window-transitioning .canvas-explainer-toggle {
   cursor: pointer;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  transition: left 320ms cubic-bezier(0.25, 1, 0.5, 1), opacity 180ms ease, background-color 180ms ease, transform 180ms ease;
+  transition: opacity 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
 
 .canvas-outer.is-expanded .canvas-explainer-panel.is-open ~ .canvas-explainer-toggle {
-  left: calc(8px + min(var(--canvas-explainer-width, 340px), calc(100% - 56px)) - 60px);
+  left: calc(8px + min(var(--canvas-explainer-width, 340px), 30%, calc(100% - 56px)) - 60px);
 }
 
 @media (min-width: 768px) {
@@ -1194,7 +1213,7 @@ body.canvas-window-transitioning .canvas-explainer-toggle {
     position: absolute;
     top: 16px;
     bottom: 16px;
-    left: calc(8px + min(var(--canvas-explainer-width, 340px), calc(100% - 56px)) - 9px);
+    left: calc(8px + min(var(--canvas-explainer-width, 340px), 30%, calc(100% - 56px)) - 9px);
     z-index: 5;
     display: block;
     width: 18px;
@@ -1441,6 +1460,11 @@ faust-flow-canvas.has-explainer-open .canvas-explainer-close-icon {
   .canvas-outer.is-expanded faust-flow-canvas.is-window-interactive .canvas-piece-draggable.is-piece-dragging {
     cursor: grabbing;
     transition: none;
+  }
+
+  .canvas-outer.is-expanded faust-flow-canvas.is-window-interactive .canvas-piece-draggable.is-piece-dragging,
+  .canvas-outer.is-expanded faust-flow-canvas.is-window-interactive .canvas-piece-draggable.is-piece-returning {
+    z-index: 3;
   }
 
 .canvas-outer.is-expanded faust-flow-canvas.is-window-interactive.animation-complete .canvas-elastic-arrow {
