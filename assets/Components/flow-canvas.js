@@ -669,26 +669,31 @@ class FaustFlowArrow extends HTMLElement {
     const fromOpacity = this.getAttribute('from-opacity') || '1';
     const toOpacity = this.getAttribute('to-opacity') || '1';
     const reverse = this.getAttribute('reverse') === 'true';
+    const length = Math.max(73, Number.parseFloat(this.getAttribute('length')) || 73);
 
-    const x1 = reverse ? 72 : 0;
-    const x2 = reverse ? 0 : 72;
+    const x1 = reverse ? length - 1 : 0;
+    const x2 = reverse ? 0 : length - 1;
     const gradId = 'arrow-grad-' + Math.random().toString(36).substr(2, 9);
 
-    const pathD = reverse
-      ? "M72.7071 6.65691C73.0976 7.04743 73.0976 7.6806 72.7071 8.07112L66.3431 14.4351C65.9526 14.8256 65.3195 14.8256 64.9289 14.4351C64.5384 14.0446 64.5384 13.4114 64.9289 13.0209L70.5858 7.36401L64.9289 1.70716C64.5384 1.31664 64.5384 0.68347 64.9289 0.292946C65.3195 -0.0975785 65.9526 -0.0975785 66.3431 0.292946L72.7071 6.65691ZM72 7.36401V8.36401H0V7.36401V6.36401H72V7.36401Z"
-      : "M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112ZM0 7.36401V8.36401H72V7.36401V6.36401H0V7.36401Z";
+    const headD = reverse
+      ? "M72.7071 6.65691C73.0976 7.04743 73.0976 7.6806 72.7071 8.07112L66.3431 14.4351C65.9526 14.8256 65.3195 14.8256 64.9289 14.4351C64.5384 14.0446 64.5384 13.4114 64.9289 13.0209L70.5858 7.36401L64.9289 1.70716C64.5384 1.31664 64.5384 0.68347 64.9289 0.292946C65.3195 -0.0975785 65.9526 -0.0975785 66.3431 0.292946L72.7071 6.65691Z"
+      : "M72.7071 8.07112C73.0976 7.6806 73.0976 7.04743 72.7071 6.65691L66.3431 0.292946C65.9526 -0.0975785 65.3195 -0.0975785 64.9289 0.292946C64.5384 0.68347 64.5384 1.31664 64.9289 1.70716L70.5858 7.36401L64.9289 13.0209C64.5384 13.4114 64.5384 14.0446 64.9289 14.4351C65.3195 14.8256 65.9526 14.8256 66.3431 14.4351L72.7071 8.07112Z";
+    const leftHeadD = "M0.2929 8.07112C-0.0976 7.6806 -0.0976 7.04743 0.2929 6.65691L6.6569 0.292946C7.0474 -0.0975785 7.6805 -0.0975785 8.0711 0.292946C8.4616 0.68347 8.4616 1.31664 8.0711 1.70716L2.4142 7.36401L8.0711 13.0209C8.4616 13.4114 8.4616 14.0446 8.0711 14.4351C7.6805 14.8256 7.0474 14.8256 6.6569 14.4351L0.2929 8.07112Z";
 
     this.style.left = left + 'px';
     this.style.top = top + 'px';
     this.style.position = 'absolute';
     this.style.display = 'block';
 
-    const pulseLineD = reverse ? 'M 72 7.364 H 0' : 'M 0 7.364 H 72';
+    const stemD = `M 0 7.364 H ${length}`;
+    const pulseLineD = `M 0 7.364 H ${length}`;
+    const headTransform = length === 73 ? '' : `translate(${length - 73} 0)`;
 
     this.innerHTML = `
-      <svg width="73" height="15" viewBox="0 0 73 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="${pathD}" fill="url(#${gradId})"/>
-        <path d="${pulseLineD}" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.5" class="flow-line-pulse" stroke-linecap="round"/>
+      <svg width="${length}" height="15" viewBox="0 0 ${length} 15" data-base-width="${length}" data-base-viewbox="0 0 ${length} 15" data-base-stem="${stemD}" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="elastic-arrow-stem" d="${stemD}" stroke="url(#${gradId})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="elastic-arrow-head" d="${headD}" data-base-d="${headD}" data-base-transform="${headTransform}" data-right-d="${headD}" data-left-d="${leftHeadD}"${headTransform ? ` transform="${headTransform}"` : ''} fill="url(#${gradId})"/>
+        <path d="${pulseLineD}" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.5" class="flow-line-pulse" stroke-linecap="round" stroke-linejoin="round"/>
         <defs>
           <linearGradient id="${gradId}" x1="${x1}" y1="8.86401" x2="${x2}" y2="8.86401" gradientUnits="userSpaceOnUse">
             <stop stop-color="${fromColor}" stop-opacity="${fromOpacity}"/>
@@ -1336,12 +1341,14 @@ class FaustFlowCanvas extends HTMLElement {
     }
     this.classList.add('is-expanded-view');
     document.body.classList.add('has-expanded-canvas');
+    if (!isPhone) document.body.classList.add('has-canvas-window');
     this.restartFastAnimation();
     if (isPhone) {
       this.openMobilePresentation(canvasOuter);
       requestAnimationFrame(() => this._scheduleScaleAndCenter?.());
     } else {
-      this.animateWindowGeometry(canvasOuter, sourceRect);
+      this.resetWindowNavigation();
+      this.animateWindowGeometry(canvasOuter, sourceRect, () => this.enableWindowNavigation());
       requestAnimationFrame(() => this._scheduleScaleAndCenter?.());
     }
   }
@@ -1356,15 +1363,18 @@ class FaustFlowCanvas extends HTMLElement {
       if (canvasOuter) canvasOuter.classList.remove('is-expanded', 'is-mobile-presentation');
       this.classList.remove('is-expanded-view');
       document.body.classList.remove('has-expanded-canvas');
+      document.body.classList.remove('has-canvas-window');
       this.unlockPresentationOrientation();
       return;
     }
 
     const sourceRect = canvasOuter.getBoundingClientRect();
+    this.disableWindowNavigation();
     canvasOuter.classList.remove('is-expanded');
     this.classList.remove('is-expanded-view');
     this.animateWindowGeometry(canvasOuter, sourceRect, () => {
       document.body.classList.remove('has-expanded-canvas');
+      document.body.classList.remove('has-canvas-window');
       this._scheduleScaleAndCenter?.();
     });
   }
@@ -1430,6 +1440,19 @@ class FaustFlowCanvas extends HTMLElement {
       const frameHeight = parseInt(this.getAttribute('frame-height') || '320', 10);
       const gridLines = parseInt(this.getAttribute('grid-lines') || '14', 10);
       const gridId = this.getAttribute('grid-id') || 'grid-grad';
+      const canvasTitle = this.getAttribute('canvas-title') || (width > 1300 ? 'Testing' : 'Optimización');
+      const isTestingCanvas = canvasTitle === 'Testing';
+      const explainer = isTestingCanvas
+        ? {
+            title: 'Cómo funciona el testing',
+            body: 'El tráfico se distribuye entre la experiencia actual y una variante experimental. Medimos la respuesta de cada grupo para identificar cambios que mejoran la conversión de forma consistente.',
+            steps: ['Distribución gradual del tráfico', 'Medición de comportamiento y conversión', 'Escalamiento de la variante ganadora']
+          }
+        : {
+            title: 'Cómo funciona la optimización',
+            body: 'Partimos de la experiencia actual, identificamos los puntos de mayor impacto y construimos una versión optimizada enfocada en elevar la conversión.',
+            steps: ['Diagnóstico de la experiencia actual', 'Priorización de oportunidades', 'Implementación y medición continua']
+          };
 
       // The expanded grid is centered. With an even number of lines, the
       // canvas center falls between two grid lines, so shift it half a cell.
@@ -1478,6 +1501,13 @@ class FaustFlowCanvas extends HTMLElement {
             </div>
           </div>
         </div>
+        <div class="canvas-edge-fade" aria-hidden="true"></div>
+        <div class="canvas-grain" aria-hidden="true"></div>
+        <div class="canvas-foreground-blur" aria-hidden="true"></div>
+        <div class="canvas-plate-depth" aria-hidden="true"></div>
+        <div class="canvas-window-breadcrumb" aria-label="Ruta del Canvas">
+          <span>FaustPartners&nbsp; / &nbsp;Canvas&nbsp; / &nbsp;</span><strong>${canvasTitle}</strong>
+        </div>
         <faust-mouse-follower text="Abrir" open-icon class-name="canvas-mouse-follower" active-class="animation-complete" inactive-class="is-expanded-view"></faust-mouse-follower>
         <div class="canvas-expanded-controls">
           <button class="canvas-replay-button" type="button" aria-label="Reproducir animación nuevamente" title="Reproducir nuevamente">
@@ -1489,10 +1519,22 @@ class FaustFlowCanvas extends HTMLElement {
             <svg class="canvas-fullscreen-enter-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></svg>
             <svg class="canvas-fullscreen-exit-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v5H3M16 3v5h5M21 16h-5v5M3 16h5v5"/></svg>
           </button>
-          <button class="canvas-expanded-close" type="button" aria-label="Cerrar vista expandida" title="Cerrar vista expandida">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          <button class="canvas-expanded-close" type="button" aria-label="Minimizar vista de Canvas" title="Minimizar Canvas">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 12h12"/></svg>
           </button>
         </div>
+        <aside class="canvas-explainer-panel" aria-label="${explainer.title}">
+          <div class="canvas-explainer-header">
+            <span>${explainer.title}</span>
+          </div>
+          <p>${explainer.body}</p>
+          <ol>${explainer.steps.map((step) => `<li>${step}</li>`).join('')}</ol>
+        </aside>
+        <div class="canvas-explainer-resize-handle" role="separator" aria-orientation="vertical" aria-label="Ajustar ancho del panel de explicación" aria-hidden="true"></div>
+        <button class="canvas-explainer-toggle gradient-border" type="button" aria-label="Abrir explicación del Canvas" title="Ver explicación" aria-expanded="false">
+          <svg class="canvas-explainer-open-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          <svg class="canvas-explainer-close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
         ${legendHtml}
       `;
 
@@ -1505,6 +1547,11 @@ class FaustFlowCanvas extends HTMLElement {
         if (event.target.closest('.canvas-expanded-fullscreen')) {
           event.stopPropagation();
           this.togglePresentationMode();
+          return;
+        }
+        if (event.target.closest('.canvas-explainer-toggle')) {
+          event.stopPropagation();
+          this.toggleExplainerPanel();
           return;
         }
         if (!this.classList.contains('animation-complete')) return;
@@ -1560,13 +1607,25 @@ class FaustFlowCanvas extends HTMLElement {
       this._closeButton.addEventListener('mouseenter', this._onReplayButtonEnter);
       this._fullscreenButton = this.querySelector('.canvas-expanded-fullscreen');
       this._fullscreenButton.addEventListener('mouseenter', this._onReplayButtonEnter);
+      this._explainerPanel = this.querySelector('.canvas-explainer-panel');
+      this._explainerToggle = this.querySelector('.canvas-explainer-toggle');
+      this._explainerResizeHandle = this.querySelector('.canvas-explainer-resize-handle');
+      this._canvasPlateDepth = this.querySelector('.canvas-plate-depth');
+      this._canvasForegroundBlur = this.querySelector('.canvas-foreground-blur');
+      this.initializeExplainerResize();
+      this.initializePresentationExplainerProximity();
       this._onCanvasFullscreenChange = () => {
         const canvasOuter = this.closest('.canvas-outer');
         const isPresentation = document.fullscreenElement === canvasOuter;
         canvasOuter?.classList.toggle('is-presentation', isPresentation);
         this._fullscreenButton?.setAttribute('aria-label', isPresentation ? 'Salir del modo presentación' : 'Abrir modo presentación');
         this._fullscreenButton?.setAttribute('title', isPresentation ? 'Salir del modo presentación' : 'Abrir modo presentación');
-        if (!isPresentation) this.unlockPresentationOrientation();
+        if (!isPresentation) {
+          this.unlockPresentationOrientation();
+          this.toggleExplainerPanel(false);
+        }
+        if (isPresentation) this.disableWindowNavigation();
+        else if (this.classList.contains('is-expanded-view') && !this.isMobilePresentation()) this.enableWindowNavigation();
         this.updateMobilePresentationOrientation();
         this._scheduleScaleAndCenter?.();
       };
@@ -1580,6 +1639,7 @@ class FaustFlowCanvas extends HTMLElement {
 
       const mount = this.querySelector('.flow-content-mount');
       children.forEach(child => mount.appendChild(child));
+      this.initializePieceDragging();
     }
 
     // Geometry is static between layout changes. Batch its measurements into one frame.
@@ -1808,7 +1868,583 @@ class FaustFlowCanvas extends HTMLElement {
       this._scrollHandler = scrollHandler;
       this._interruptHandler = interruptHandler;
       this._clearRevert = clearRevert;
+      this.initializeWindowNavigation(wrapper);
     }
+  }
+
+  isWindowInteractionActive() {
+    return this.classList.contains('is-expanded-view')
+      && !this.isMobilePresentation()
+      && document.fullscreenElement !== this.closest('.canvas-outer');
+  }
+
+  initializeWindowNavigation(wrapper) {
+    if (this._windowNavigationReady || !wrapper) return;
+    this._windowNavigationReady = true;
+    this._windowNavigation = { zoom: 1, rawZoom: 1, panX: 0, panY: 0, rawPanX: 0, rawPanY: 0, pointers: new Map() };
+
+    const ZOOM_MIN = 0.88;
+    const ZOOM_MAX = 1.22;
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const distance = ([a, b]) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    const applyResistance = (value, threshold) => {
+      const magnitude = Math.abs(value);
+      if (magnitude <= threshold) return value;
+      const overflow = magnitude - threshold;
+      // A progressive rubber-band: never hard-stops the drag, but increasingly
+      // reduces the response as it moves farther from the centered state.
+      return Math.sign(value) * (threshold + overflow / (1 + overflow / 900));
+    };
+    const applyZoomResistance = (value) => {
+      if (value < ZOOM_MIN) return ZOOM_MIN - (ZOOM_MIN - value) / (1 + (ZOOM_MIN - value) * 5);
+      if (value > ZOOM_MAX) return ZOOM_MAX + (value - ZOOM_MAX) / (1 + (value - ZOOM_MAX) * 5);
+      return value;
+    };
+    const apply = () => {
+      const state = this._windowNavigation;
+      const baseScale = Number.parseFloat(getComputedStyle(this).getPropertyValue('--canvas-scale')) || 1;
+      this.style.setProperty('--canvas-view-zoom', state.zoom.toFixed(3));
+      this.style.setProperty('--canvas-pan-x', `${state.panX.toFixed(1)}px`);
+      this.style.setProperty('--canvas-pan-y', `${state.panY.toFixed(1)}px`);
+      this.style.setProperty('--canvas-grid-step', `${(80 * baseScale * state.zoom).toFixed(2)}px`);
+      this.style.setProperty('--canvas-grid-offset', `${state.panX.toFixed(1)}px`);
+    };
+    this._applyWindowNavigation = apply;
+    this._returnCanvasToCenter = () => {
+      const state = this._windowNavigation;
+      this.classList.add('is-window-navigating');
+      if (this._windowReturnFrame) {
+        cancelAnimationFrame(this._windowReturnFrame);
+        this._windowReturnFrame = null;
+      }
+      if (this._windowZoomSettleTimeout) {
+        clearTimeout(this._windowZoomSettleTimeout);
+        this._windowZoomSettleTimeout = null;
+      }
+      if (this._windowCenterSettleTimeout) {
+        clearTimeout(this._windowCenterSettleTimeout);
+        this._windowCenterSettleTimeout = null;
+      }
+      const startX = state.panX;
+      const startY = state.panY;
+      const startZoom = state.zoom;
+      const targetZoom = clamp(state.rawZoom, ZOOM_MIN, ZOOM_MAX);
+      const startTime = performance.now();
+      const duration = 2200;
+      const animate = (now) => {
+        const progress = Math.min(1, (now - startTime) / duration);
+        // Extiende levemente la entrada antes de una cola exponencial larga,
+        // para que el retorno tome impulso de forma más natural.
+        const easedProgress = progress * progress * (3 - 2 * progress);
+        const ease = progress === 1
+          ? 1
+          : (1 - Math.pow(2, -9 * easedProgress)) / (1 - Math.pow(2, -9));
+        state.panX = startX * (1 - ease);
+        state.panY = startY * (1 - ease);
+        state.zoom = startZoom + (targetZoom - startZoom) * ease;
+        state.rawPanX = state.panX;
+        state.rawPanY = state.panY;
+        apply();
+        if (progress < 1) this._windowReturnFrame = requestAnimationFrame(animate);
+        else {
+          state.rawZoom = targetZoom;
+          this._windowReturnFrame = null;
+          this.classList.remove('is-window-navigating');
+        }
+      };
+      this._windowReturnFrame = requestAnimationFrame(animate);
+    };
+
+    this._onCanvasPointerDown = (event) => {
+      if (!this.isWindowInteractionActive()) return;
+      this.classList.add('is-window-navigating');
+      if (this._windowReturnFrame) {
+        cancelAnimationFrame(this._windowReturnFrame);
+        this._windowReturnFrame = null;
+      }
+      if (this._windowZoomSettleTimeout) {
+        clearTimeout(this._windowZoomSettleTimeout);
+        this._windowZoomSettleTimeout = null;
+      }
+      if (this._windowCenterSettleTimeout) {
+        clearTimeout(this._windowCenterSettleTimeout);
+        this._windowCenterSettleTimeout = null;
+      }
+      wrapper.setPointerCapture?.(event.pointerId);
+      const state = this._windowNavigation;
+      state.pointers.set(event.pointerId, event);
+      if (state.pointers.size === 1) {
+        state.dragStart = { x: event.clientX, y: event.clientY, panX: state.rawPanX, panY: state.rawPanY };
+        wrapper.classList.add('is-panning');
+      } else if (state.pointers.size === 2) {
+        state.pinchStart = { distance: distance([...state.pointers.values()]), zoom: state.rawZoom };
+      }
+      event.preventDefault();
+    };
+
+    this._onCanvasPointerMove = (event) => {
+      const state = this._windowNavigation;
+      if (!this.isWindowInteractionActive() || !state.pointers.has(event.pointerId)) return;
+      state.pointers.set(event.pointerId, event);
+      if (state.pointers.size === 1 && state.dragStart) {
+        state.rawPanX = state.dragStart.panX + event.clientX - state.dragStart.x;
+        state.rawPanY = state.dragStart.panY + event.clientY - state.dragStart.y;
+        state.panX = applyResistance(state.rawPanX, 180);
+        state.panY = applyResistance(state.rawPanY, 140);
+      } else if (state.pointers.size === 2 && state.pinchStart) {
+        const nextDistance = distance([...state.pointers.values()]);
+        state.rawZoom = state.pinchStart.zoom * (nextDistance / state.pinchStart.distance);
+        state.zoom = applyZoomResistance(state.rawZoom);
+      }
+      apply();
+      event.preventDefault();
+    };
+
+    this._onCanvasPointerUp = (event) => {
+      const state = this._windowNavigation;
+      state.pointers.delete(event.pointerId);
+      if (state.pointers.size < 2) state.pinchStart = null;
+      if (state.pointers.size === 0) {
+        state.dragStart = null;
+        wrapper.classList.remove('is-panning');
+        if (this._windowCenterSettleTimeout) clearTimeout(this._windowCenterSettleTimeout);
+        this._windowCenterSettleTimeout = setTimeout(() => {
+          this._windowCenterSettleTimeout = null;
+          this._returnCanvasToCenter?.();
+        }, 70);
+      } else if (state.pointers.size === 1) {
+        const [remainingPointer] = state.pointers.values();
+        state.dragStart = {
+          x: remainingPointer.clientX,
+          y: remainingPointer.clientY,
+          panX: state.rawPanX,
+          panY: state.rawPanY
+        };
+      }
+    };
+
+    this._onCanvasWheel = (event) => {
+      if (!this.isWindowInteractionActive()) return;
+      this.classList.add('is-window-navigating');
+      const state = this._windowNavigation;
+      state.rawZoom *= Math.exp(-event.deltaY * 0.0012);
+      state.zoom = applyZoomResistance(state.rawZoom);
+      apply();
+      if (this._windowZoomSettleTimeout) clearTimeout(this._windowZoomSettleTimeout);
+      this._windowZoomSettleTimeout = setTimeout(() => this._returnCanvasToCenter?.(), 140);
+      event.preventDefault();
+    };
+
+    wrapper.addEventListener('pointerdown', this._onCanvasPointerDown);
+    wrapper.addEventListener('pointermove', this._onCanvasPointerMove);
+    wrapper.addEventListener('pointerup', this._onCanvasPointerUp);
+    wrapper.addEventListener('pointercancel', this._onCanvasPointerUp);
+    wrapper.addEventListener('wheel', this._onCanvasWheel, { passive: false });
+  }
+
+  initializePieceDragging() {
+    if (this._pieceDraggingReady) return;
+    this._pieceDraggingReady = true;
+    const pieces = Array.from(this.querySelectorAll('faust-flow-card, faust-flow-icon'));
+    const arrows = Array.from(this.querySelectorAll('faust-flow-arrow, faust-flow-arrow-split-down, faust-flow-arrow-merge-right'));
+    arrows.forEach((arrow) => arrow.classList.add('canvas-elastic-arrow'));
+    const centerOf = (element) => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, rect };
+    };
+    const portAnchor = (item, port) => {
+      if (port === 'left') return { x: item.rect.left, y: item.rect.top + item.rect.height / 2 };
+      if (port === 'right') return { x: item.rect.right, y: item.rect.top + item.rect.height / 2 };
+      if (port === 'top') return { x: item.rect.left + item.rect.width / 2, y: item.rect.top };
+      return { x: item.rect.left + item.rect.width / 2, y: item.rect.bottom };
+    };
+    // Intersect the ray towards the counterpart with the piece's rectangle.
+    // Unlike fixed left/right ports, this produces a continuous attachment
+    // point that glides around the perimeter as pieces cross each other.
+    const visibleCornerRadius = (item) => {
+      const frame = item.piece.querySelector('.Frame');
+      const renderedRadius = frame ? Number.parseFloat(getComputedStyle(frame).borderTopLeftRadius) : NaN;
+      if (Number.isFinite(renderedRadius)) {
+        const frameScale = frame.offsetWidth ? frame.getBoundingClientRect().width / frame.offsetWidth : 1;
+        return renderedRadius * frameScale;
+      }
+      const iconRadius = Number.parseFloat(item.piece.getAttribute('radius'));
+      const scale = item.piece.offsetWidth ? item.rect.width / item.piece.offsetWidth : 1;
+      return Number.isFinite(iconRadius) ? iconRadius * scale : 0;
+    };
+    const interpolatedPort = (item, offset, counterpart, counterpartOffset) => {
+      const center = { x: item.x + offset.x, y: item.y + offset.y };
+      const otherCenter = { x: counterpart.x + counterpartOffset.x, y: counterpart.y + counterpartOffset.y };
+      const deltaX = otherCenter.x - center.x;
+      const deltaY = otherCenter.y - center.y;
+      const halfWidth = item.rect.width / 2;
+      const halfHeight = item.rect.height / 2;
+      const horizontalRatio = Math.abs(deltaX) / halfWidth;
+      const verticalRatio = Math.abs(deltaY) / halfHeight;
+      const boundaryScale = Math.max(horizontalRatio, verticalRatio);
+      if (!Number.isFinite(boundaryScale) || boundaryScale < 0.0001) return center;
+      const radius = Math.min(visibleCornerRadius(item), halfWidth, halfHeight);
+      const isCircle = Math.abs(halfWidth - halfHeight) < 0.5 && radius >= halfWidth - 0.5;
+      let localX = deltaX / boundaryScale;
+      let localY = deltaY / boundaryScale;
+      if (isCircle) {
+        const ellipseScale = Math.hypot(deltaX / halfWidth, deltaY / halfHeight);
+        localX = deltaX / ellipseScale;
+        localY = deltaY / ellipseScale;
+      } else if (radius > 0 && Math.abs(localX) > halfWidth - radius && Math.abs(localY) > halfHeight - radius) {
+        const cornerX = Math.sign(deltaX) * (halfWidth - radius);
+        const cornerY = Math.sign(deltaY) * (halfHeight - radius);
+        const rayLengthSquared = deltaX * deltaX + deltaY * deltaY;
+        const projection = deltaX * cornerX + deltaY * cornerY;
+        const circleOffset = cornerX * cornerX + cornerY * cornerY - radius * radius;
+        const intersection = (projection + Math.sqrt(Math.max(0, projection * projection - rayLengthSquared * circleOffset))) / rayLengthSquared;
+        localX = deltaX * intersection;
+        localY = deltaY * intersection;
+      }
+      const side = horizontalRatio >= verticalRatio
+        ? (deltaX >= 0 ? 'right' : 'left')
+        : (deltaY >= 0 ? 'bottom' : 'top');
+      return {
+        x: center.x + localX,
+        y: center.y + localY,
+        side
+      };
+    };
+    const smoothConnectorPath = ([start, sourceControl, targetControl, end]) => (
+      `M ${start.x.toFixed(1)} ${start.y.toFixed(1)} C ${sourceControl.x.toFixed(1)} ${sourceControl.y.toFixed(1)} ${targetControl.x.toFixed(1)} ${targetControl.y.toFixed(1)} ${end.x.toFixed(1)} ${end.y.toFixed(1)}`
+    );
+
+    const getArrowLinks = (centers) => arrows.map((arrow) => {
+      const rect = arrow.getBoundingClientRect();
+      const parent = arrow.parentElement;
+      let sourcePiece = null;
+      let targetPiece = null;
+      if (parent?.classList.contains('Frame13')) {
+        sourcePiece = parent.querySelector('faust-flow-icon');
+        targetPiece = parent.nextElementSibling?.querySelector('faust-flow-card');
+      } else if (parent?.classList.contains('Frame199')) {
+        sourcePiece = parent.querySelector('faust-flow-card');
+        targetPiece = parent.nextElementSibling?.querySelector('faust-flow-icon');
+      } else if (parent?.classList.contains('Frame198')) {
+        sourcePiece = parent.querySelector('faust-flow-icon');
+        targetPiece = parent.nextElementSibling?.querySelector('faust-flow-card');
+      } else if (parent?.classList.contains('FrameCardMetrics')) {
+        sourcePiece = parent.closest('.FlowDetails')?.querySelector('.FrameMergeDb faust-flow-icon');
+        targetPiece = parent.querySelector('faust-flow-card');
+      }
+      // Las flechas ramificadas/fusionadas se excluyen hasta poder deformar
+      // sus múltiples trayectorias SVG de forma independiente.
+      if (!sourcePiece || !targetPiece) return null;
+      const source = centers.find(({ piece }) => piece === sourcePiece);
+      const target = centers.find(({ piece }) => piece === targetPiece);
+      if (!source || !target) return null;
+      const baseStart = source && target ? portAnchor(source, 'right') : null;
+      const baseEnd = source && target ? portAnchor(target, 'left') : null;
+      return {
+        arrow,
+        source: source?.piece,
+        target: target?.piece,
+        sourceCenter: source,
+        targetCenter: target,
+        baseStart,
+        baseEnd,
+        restStart: { x: rect.left, y: rect.top + rect.height / 2 },
+        restEnd: { x: rect.right, y: rect.top + rect.height / 2 },
+        visualLength: Math.max(rect.width, 1),
+        scale: arrow.offsetWidth ? rect.width / arrow.offsetWidth : 1
+      };
+    }).filter(Boolean);
+
+    pieces.forEach((piece) => {
+      piece.classList.add('canvas-piece-draggable');
+      piece.addEventListener('pointerdown', (event) => {
+        if (!this.isWindowInteractionActive() || !this.classList.contains('animation-complete')) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const centers = pieces.map((item) => ({ piece: item, ...centerOf(item) }));
+        const activeCenter = centers.find(({ piece: item }) => item === piece);
+        const scale = piece.offsetWidth ? activeCenter.rect.width / piece.offsetWidth : 1;
+        const arrowLinks = getArrowLinks(centers);
+        const start = { x: event.clientX, y: event.clientY };
+        piece.classList.add('is-piece-dragging');
+        this.classList.add('is-piece-field-active');
+        piece.setPointerCapture?.(event.pointerId);
+        let lastDx = 0;
+        let lastDy = 0;
+        let curveSettlingFrame = null;
+        let isReturningPiece = false;
+        const interactionStartedAt = performance.now();
+        let restTransitionStartedAt = null;
+        const applyPieceResistance = (value, threshold) => {
+          const magnitude = Math.abs(value);
+          if (magnitude <= threshold) return value;
+          const overflow = magnitude - threshold;
+          // A soft, progressive weight: it remains responsive but needs
+          // increasingly more pointer travel as the piece moves farther away.
+          return Math.sign(value) * (threshold + overflow / (1 + overflow / 210));
+        };
+        const applyDragState = (dx, dy) => {
+          const displacements = new Map();
+          let curveNeedsSettling = false;
+          centers.forEach((item) => {
+            const influence = item.piece === piece ? 1 : 0;
+            const itemScale = item.piece.offsetWidth ? item.rect.width / item.piece.offsetWidth : scale;
+            const displacement = { x: dx * influence, y: dy * influence, scale: itemScale };
+            displacements.set(item.piece, displacement);
+            item.piece.style.setProperty('--canvas-piece-drag-x', `${(displacement.x / itemScale).toFixed(1)}px`);
+            item.piece.style.setProperty('--canvas-piece-drag-y', `${(displacement.y / itemScale).toFixed(1)}px`);
+          });
+          arrowLinks.forEach(({ arrow, source, target, sourceCenter, targetCenter, baseStart, baseEnd, restStart, restEnd, visualLength, scale: arrowScale }) => {
+            const from = displacements.get(source) || { x: 0, y: 0 };
+            const to = displacements.get(target) || { x: 0, y: 0 };
+            if (!sourceCenter || !targetCenter || !baseStart || !baseEnd) return;
+            const dynamicStart = interpolatedPort(sourceCenter, from, targetCenter, to);
+            const targetPort = interpolatedPort(targetCenter, to, sourceCenter, from);
+            const targetPortNormal = {
+              left: { x: -1, y: 0 },
+              right: { x: 1, y: 0 },
+              top: { x: 0, y: -1 },
+              bottom: { x: 0, y: 1 }
+            }[targetPort.side] || { x: 0, y: 0 };
+            const dynamicEnd = {
+              ...targetPort,
+              x: targetPort.x + targetPortNormal.x * 8 * arrowScale,
+              y: targetPort.y + targetPortNormal.y * 8 * arrowScale
+            };
+            const phaseProgress = restTransitionStartedAt === null
+              ? Math.min(1, (performance.now() - interactionStartedAt) / 180)
+              : Math.max(0, 1 - (performance.now() - restTransitionStartedAt) / 180);
+            const modeBlend = phaseProgress * phaseProgress * (3 - 2 * phaseProgress);
+            const currentStart = {
+              x: restStart.x + (dynamicStart.x - restStart.x) * modeBlend,
+              y: restStart.y + (dynamicStart.y - restStart.y) * modeBlend,
+              side: dynamicStart.side
+            };
+            const currentEnd = {
+              x: restEnd.x + (dynamicEnd.x - restEnd.x) * modeBlend,
+              y: restEnd.y + (dynamicEnd.y - restEnd.y) * modeBlend,
+              side: dynamicEnd.side
+            };
+            const currentVectorX = currentEnd.x - currentStart.x;
+            const currentVectorY = currentEnd.y - currentStart.y;
+            const sourceNormalBySide = {
+              left: { x: -1, y: 0 },
+              right: { x: 1, y: 0 },
+              top: { x: 0, y: -1 },
+              bottom: { x: 0, y: 1 }
+            };
+            const targetHeadingBySide = {
+              left: { x: 1, y: 0, angle: 0 },
+              right: { x: -1, y: 0, angle: 180 },
+              top: { x: 0, y: 1, angle: 90 },
+              bottom: { x: 0, y: -1, angle: -90 }
+            };
+            const sourceNormal = sourceNormalBySide[currentStart.side]
+              || (currentVectorX >= 0 ? sourceNormalBySide.right : sourceNormalBySide.left);
+            const targetHeading = targetHeadingBySide[currentEnd.side]
+              || (currentVectorX >= 0 ? targetHeadingBySide.left : targetHeadingBySide.right);
+            const connectorDistance = Math.hypot(currentVectorX, currentVectorY);
+            const lead = Math.min(46 * arrowScale, Math.max(22 * arrowScale, connectorDistance * 0.18));
+            const sourceLead = {
+              x: currentStart.x + sourceNormal.x * lead,
+              y: currentStart.y + sourceNormal.y * lead
+            };
+            const targetLead = {
+              x: currentEnd.x - targetHeading.x * lead,
+              y: currentEnd.y - targetHeading.y * lead
+            };
+            const restingSourceControl = {
+              x: restStart.x + (restEnd.x - restStart.x) * 0.34,
+              y: restStart.y + (restEnd.y - restStart.y) * 0.34
+            };
+            const restingTargetControl = {
+              x: restStart.x + (restEnd.x - restStart.x) * 0.66,
+              y: restStart.y + (restEnd.y - restStart.y) * 0.66
+            };
+            const desiredSourceControl = {
+              x: restingSourceControl.x + (sourceLead.x - restingSourceControl.x) * modeBlend,
+              y: restingSourceControl.y + (sourceLead.y - restingSourceControl.y) * modeBlend
+            };
+            const desiredTargetControl = {
+              x: restingTargetControl.x + (targetLead.x - restingTargetControl.x) * modeBlend,
+              y: restingTargetControl.y + (targetLead.y - restingTargetControl.y) * modeBlend
+            };
+            // The endpoints stay locked to their ports. Only the Bézier control
+            // points ease towards a new route, avoiding visible snaps when a
+            // connector changes the side it uses on either piece.
+            const curveState = arrow._elasticCurveState || {
+              source: { ...desiredSourceControl },
+              target: { ...desiredTargetControl },
+              updatedAt: performance.now()
+            };
+            const elapsed = Math.min(48, performance.now() - curveState.updatedAt);
+            const controlBlend = 1 - Math.exp(-elapsed / 82);
+            curveState.source.x += (desiredSourceControl.x - curveState.source.x) * controlBlend;
+            curveState.source.y += (desiredSourceControl.y - curveState.source.y) * controlBlend;
+            curveState.target.x += (desiredTargetControl.x - curveState.target.x) * controlBlend;
+            curveState.target.y += (desiredTargetControl.y - curveState.target.y) * controlBlend;
+            curveState.updatedAt = performance.now();
+            arrow._elasticCurveState = curveState;
+            curveNeedsSettling ||= Math.hypot(desiredSourceControl.x - curveState.source.x, desiredSourceControl.y - curveState.source.y) > 0.15
+              || Math.hypot(desiredTargetControl.x - curveState.target.x, desiredTargetControl.y - curveState.target.y) > 0.15;
+            // Reach the tip, not merely the arrowhead base: this is the same
+            // continuous center stroke used by the original combined SVG path.
+            const routePoints = [currentStart, curveState.source, curveState.target, currentEnd];
+
+            const minX = Math.min(...routePoints.map((point) => point.x), currentEnd.x);
+            const minY = Math.min(...routePoints.map((point) => point.y), currentEnd.y);
+            const maxX = Math.max(...routePoints.map((point) => point.x), currentEnd.x);
+            const maxY = Math.max(...routePoints.map((point) => point.y), currentEnd.y);
+            const padding = 12;
+            const localWidth = Math.max(48, (maxX - minX) / arrowScale + padding * 2);
+            const localHeight = Math.max(15, (maxY - minY) / arrowScale + padding * 2);
+            const localPoints = routePoints.map((point) => ({
+              x: (point.x - minX) / arrowScale + padding,
+              y: (point.y - minY) / arrowScale + padding
+            }));
+            const endX = (currentEnd.x - minX) / arrowScale + padding;
+            const endY = (currentEnd.y - minY) / arrowScale + padding;
+            const translateX = ((minX - baseStart.x) / arrowScale - padding).toFixed(1);
+            const translateY = ((minY - baseStart.y) / arrowScale - padding + 7.364).toFixed(1);
+            arrow.style.setProperty('--canvas-arrow-x', `${translateX}px`);
+            arrow.style.setProperty('--canvas-arrow-y', `${translateY}px`);
+            arrow.style.setProperty('transform', `translate3d(${translateX}px, ${translateY}px, 0)`, 'important');
+
+            // Keep the arrowhead rigid: only redraw the long SVG stem to the
+            // actual distance between its two attachment ports.
+            const svg = arrow.querySelector('svg');
+            const stem = svg?.querySelector('.elastic-arrow-stem');
+            const pulse = svg?.querySelector('.flow-line-pulse');
+            const head = svg?.querySelector('.elastic-arrow-head');
+            if (!svg || !stem || !pulse || !head) return;
+
+            const connectorPath = smoothConnectorPath(localPoints);
+            svg.setAttribute('width', localWidth.toFixed(1));
+            svg.setAttribute('height', localHeight.toFixed(1));
+            svg.setAttribute('viewBox', `0 0 ${localWidth.toFixed(1)} ${localHeight.toFixed(1)}`);
+            stem.setAttribute('d', connectorPath);
+            pulse.setAttribute('d', connectorPath);
+            head.setAttribute(
+              'transform',
+              `translate(${endX.toFixed(1)} ${endY.toFixed(1)}) rotate(${targetHeading.angle}) translate(-73 -7.364)`
+            );
+            head.setAttribute('d', head.dataset.rightD);
+          });
+          if (curveNeedsSettling && !isReturningPiece && curveSettlingFrame === null) {
+            curveSettlingFrame = requestAnimationFrame(() => {
+              curveSettlingFrame = null;
+              applyDragState(lastDx, lastDy);
+            });
+          }
+        };
+        const move = (moveEvent) => {
+          lastDx = applyPieceResistance(moveEvent.clientX - start.x, 82);
+          lastDy = applyPieceResistance(moveEvent.clientY - start.y, 70);
+          applyDragState(lastDx, lastDy);
+        };
+        const resetArrowGeometry = () => {
+          arrows.forEach((arrow) => {
+            arrow.style.setProperty('--canvas-arrow-x', '0px');
+            arrow.style.setProperty('--canvas-arrow-y', '0px');
+            arrow.style.setProperty('--canvas-arrow-stretch', '1');
+            arrow.style.removeProperty('transform');
+            const svg = arrow.querySelector('svg');
+            const stem = svg?.querySelector('.elastic-arrow-stem');
+            const pulse = svg?.querySelector('.flow-line-pulse');
+            const head = svg?.querySelector('.elastic-arrow-head');
+            if (!svg || !stem || !pulse || !head) return;
+
+            const reverse = arrow.getAttribute('reverse') === 'true';
+            const originalStem = svg.dataset.baseStem || 'M 0 7.364 H 73';
+            svg.setAttribute('width', svg.dataset.baseWidth || '73');
+            svg.setAttribute('height', '15');
+            svg.setAttribute('viewBox', svg.dataset.baseViewbox || '0 0 73 15');
+            stem.setAttribute('d', originalStem);
+            pulse.setAttribute('d', originalStem);
+            if (head.dataset.baseTransform) head.setAttribute('transform', head.dataset.baseTransform);
+            else head.removeAttribute('transform');
+            head.setAttribute('d', head.dataset.baseD || head.getAttribute('d'));
+            delete arrow._elasticCurveState;
+          });
+        };
+        const release = () => {
+          piece.classList.remove('is-piece-dragging');
+          isReturningPiece = true;
+          if (curveSettlingFrame !== null) {
+            cancelAnimationFrame(curveSettlingFrame);
+            curveSettlingFrame = null;
+          }
+          const releaseStartedAt = performance.now();
+          const releaseDuration = 620;
+          const animateRelease = (now) => {
+            const progress = Math.min(1, (now - releaseStartedAt) / releaseDuration);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            applyDragState(lastDx * (1 - eased), lastDy * (1 - eased));
+            if (progress < 1) {
+              this._pieceReturnFrame = requestAnimationFrame(animateRelease);
+              return;
+            }
+            restTransitionStartedAt = performance.now();
+            const animateRestGeometry = (restNow) => {
+              applyDragState(0, 0);
+              if (restNow - restTransitionStartedAt < 180) {
+                this._pieceReturnFrame = requestAnimationFrame(animateRestGeometry);
+                return;
+              }
+              this._pieceReturnFrame = null;
+              this.classList.remove('is-piece-field-active');
+              resetArrowGeometry();
+              isReturningPiece = false;
+            };
+            this._pieceReturnFrame = requestAnimationFrame(animateRestGeometry);
+          };
+          if (this._pieceReturnFrame) cancelAnimationFrame(this._pieceReturnFrame);
+          this._pieceReturnFrame = requestAnimationFrame(animateRelease);
+          document.removeEventListener('pointermove', move);
+          document.removeEventListener('pointerup', release);
+          document.removeEventListener('pointercancel', release);
+        };
+        // Start from the exact resting SVG geometry, then morph into the
+        // dynamic connector while keeping the intentional resting gaps.
+        applyDragState(0, 0);
+        document.addEventListener('pointermove', move);
+        document.addEventListener('pointerup', release);
+        document.addEventListener('pointercancel', release);
+      });
+    });
+  }
+
+  resetWindowNavigation() {
+    if (!this._windowNavigation) return;
+    Object.assign(this._windowNavigation, { zoom: 1, rawZoom: 1, panX: 0, panY: 0, rawPanX: 0, rawPanY: 0 });
+    this.style.setProperty('--canvas-grid-offset', '0px');
+    this._applyWindowNavigation?.();
+  }
+
+  enableWindowNavigation() {
+    if (!this.isWindowInteractionActive()) return;
+    this.classList.add('is-window-interactive');
+    this._applyWindowNavigation?.();
+  }
+
+  disableWindowNavigation() {
+    this.classList.remove('is-window-interactive');
+    this.classList.remove('is-window-navigating');
+    if (this._windowReturnFrame) {
+      cancelAnimationFrame(this._windowReturnFrame);
+      this._windowReturnFrame = null;
+    }
+    if (this._windowZoomSettleTimeout) {
+      clearTimeout(this._windowZoomSettleTimeout);
+      this._windowZoomSettleTimeout = null;
+    }
+    if (this._windowCenterSettleTimeout) {
+      clearTimeout(this._windowCenterSettleTimeout);
+      this._windowCenterSettleTimeout = null;
+    }
+    const wrapper = this.querySelector('.flow-wrapper');
+    wrapper?.classList.remove('is-panning');
+    if (this._windowNavigation) this._windowNavigation.pointers.clear();
   }
 
   togglePresentationMode() {
@@ -1819,6 +2455,98 @@ class FaustFlowCanvas extends HTMLElement {
     } else {
       canvasOuter.requestFullscreen?.().catch(() => {});
     }
+  }
+
+  toggleExplainerPanel(forceOpen) {
+    if (!this.classList.contains('is-expanded-view')) return;
+    const isOpen = forceOpen === undefined
+      ? !this._explainerPanel.classList.contains('is-open')
+      : forceOpen;
+    this._explainerPanel.classList.toggle('is-open', isOpen);
+    this.classList.toggle('has-explainer-open', isOpen);
+    this.syncExplainerLayout();
+    this._explainerToggle?.setAttribute('aria-expanded', String(isOpen));
+    this._explainerToggle?.setAttribute('aria-label', isOpen ? 'Cerrar explicación del Canvas' : 'Abrir explicación del Canvas');
+    this._explainerToggle?.setAttribute('title', isOpen ? 'Cerrar explicación' : 'Ver explicación');
+  }
+
+  initializeExplainerResize() {
+    if (this._explainerResizeReady || !this._explainerResizeHandle) return;
+    this._explainerResizeReady = true;
+    const handle = this._explainerResizeHandle;
+    const MIN_WIDTH = 280;
+    const getMaxWidth = () => {
+      const outerWidth = this.closest('.canvas-outer')?.getBoundingClientRect().width || 0;
+      return Math.max(MIN_WIDTH, outerWidth - 56);
+    };
+    const stopResize = () => {
+      this.classList.remove('is-resizing-explainer');
+      document.removeEventListener('pointermove', this._onExplainerResizeMove);
+      document.removeEventListener('pointerup', this._onExplainerResizeEnd);
+      document.removeEventListener('pointercancel', this._onExplainerResizeEnd);
+    };
+    this._stopExplainerResize = stopResize;
+    this._onExplainerResizeMove = (event) => {
+      const nextWidth = Math.min(getMaxWidth(), Math.max(MIN_WIDTH, this._explainerResizeStartWidth + event.clientX - this._explainerResizeStartX));
+      this.style.setProperty('--canvas-explainer-width', `${nextWidth}px`);
+      this.syncExplainerLayout(nextWidth);
+    };
+    this._onExplainerResizeEnd = () => stopResize();
+    this._onExplainerResizeStart = (event) => {
+      if (window.innerWidth < 768 || !this._explainerPanel.classList.contains('is-open')) return;
+      event.preventDefault();
+      event.stopPropagation();
+      this._explainerResizeStartX = event.clientX;
+      this._explainerResizeStartWidth = this._explainerPanel.getBoundingClientRect().width;
+      this.classList.add('is-resizing-explainer');
+      document.addEventListener('pointermove', this._onExplainerResizeMove);
+      document.addEventListener('pointerup', this._onExplainerResizeEnd);
+      document.addEventListener('pointercancel', this._onExplainerResizeEnd);
+    };
+    handle.addEventListener('pointerdown', this._onExplainerResizeStart);
+  }
+
+  initializePresentationExplainerProximity() {
+    if (this._presentationExplainerReady) return;
+    const canvasOuter = this.closest('.canvas-outer');
+    if (!canvasOuter) return;
+    this._presentationExplainerReady = true;
+    this._presentationExplainerOuter = canvasOuter;
+    this._onPresentationExplainerPointerMove = (event) => {
+      if (!canvasOuter.classList.contains('is-presentation') || window.innerWidth <= 980) return;
+      const outerRect = canvasOuter.getBoundingClientRect();
+      const panelIsOpen = this._explainerPanel?.classList.contains('is-open');
+      const panelRect = panelIsOpen ? this._explainerPanel.getBoundingClientRect() : null;
+      const isNearLeftEdge = event.clientX - outerRect.left <= 24;
+      const isInsidePanel = panelRect
+        && event.clientX >= panelRect.left
+        && event.clientX <= panelRect.right
+        && event.clientY >= panelRect.top
+        && event.clientY <= panelRect.bottom;
+      if (isNearLeftEdge || isInsidePanel) {
+        if (!panelIsOpen) this.toggleExplainerPanel(true);
+      } else if (panelIsOpen) {
+        this.toggleExplainerPanel(false);
+      }
+    };
+    canvasOuter.addEventListener('pointermove', this._onPresentationExplainerPointerMove);
+  }
+
+  syncExplainerLayout(panelWidth) {
+    if (!this._explainerPanel?.classList.contains('is-open')) {
+      this.style.removeProperty('--canvas-panel-offset');
+      this.style.removeProperty('--canvas-workspace-left');
+      this._canvasPlateDepth?.style.setProperty('--canvas-vignette-center-shift', '0px');
+      this._canvasForegroundBlur?.style.setProperty('--canvas-vignette-center-shift', '0px');
+      return;
+    }
+    const width = panelWidth ?? this._explainerPanel.getBoundingClientRect().width;
+    const workspaceLeft = width + 8;
+    const centerOffset = workspaceLeft / 2;
+    this.style.setProperty('--canvas-panel-offset', `${centerOffset.toFixed(1)}px`);
+    this.style.setProperty('--canvas-workspace-left', `${workspaceLeft.toFixed(1)}px`);
+    this._canvasPlateDepth?.style.setProperty('--canvas-vignette-center-shift', `${centerOffset.toFixed(1)}px`);
+    this._canvasForegroundBlur?.style.setProperty('--canvas-vignette-center-shift', `${centerOffset.toFixed(1)}px`);
   }
 
   openMobilePresentation(canvasOuter) {
@@ -1912,6 +2640,13 @@ class FaustFlowCanvas extends HTMLElement {
       document.removeEventListener('fullscreenchange', this._onCanvasFullscreenChange);
       this._onCanvasFullscreenChange = null;
     }
+    if (this._explainerResizeHandle && this._onExplainerResizeStart) {
+      this._explainerResizeHandle.removeEventListener('pointerdown', this._onExplainerResizeStart);
+    }
+    this._stopExplainerResize?.();
+    if (this._presentationExplainerOuter && this._onPresentationExplainerPointerMove) {
+      this._presentationExplainerOuter.removeEventListener('pointermove', this._onPresentationExplainerPointerMove);
+    }
 
     // Quitar listeners de revert scroll
     const wrapper = this.querySelector('.flow-wrapper');
@@ -1923,6 +2658,13 @@ class FaustFlowCanvas extends HTMLElement {
         wrapper.removeEventListener('touchstart', this._interruptHandler);
         wrapper.removeEventListener('wheel', this._interruptHandler);
         wrapper.removeEventListener('mousedown', this._interruptHandler);
+      }
+      if (this._onCanvasPointerDown) {
+        wrapper.removeEventListener('pointerdown', this._onCanvasPointerDown);
+        wrapper.removeEventListener('pointermove', this._onCanvasPointerMove);
+        wrapper.removeEventListener('pointerup', this._onCanvasPointerUp);
+        wrapper.removeEventListener('pointercancel', this._onCanvasPointerUp);
+        wrapper.removeEventListener('wheel', this._onCanvasWheel);
       }
     }
   }
