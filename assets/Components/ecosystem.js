@@ -5,9 +5,9 @@
       
       const pill = this.getAttribute('pill') || '/ Ecosistema';
       const title = this.getAttribute('title') || 'El ecosistema para el talento extraordinario.';
-      const hoverStyleClass = this.getAttribute('hover-style') === 'canvas'
-        ? ' ecosystem-hover-canvas'
-        : '';
+      // El tratamiento anterior recoloreaba las ilustraciones al hover. Se
+      // conserva su CSS como referencia, pero el componente ya no lo activa.
+      const hoverStyleClass = '';
       this.removeAttribute('title');
 
 
@@ -155,9 +155,11 @@
       let isInView = !('IntersectionObserver' in window);
       let isPageVisible = document.visibilityState === 'visible';
       let scrollFrameId = null;
-
+      // Sólo afecta al ciclo de enfoque de escritorio; mobile conserva su
+      // activación automática basada en scroll.
+      const desktopAutoFocusEnabled = false;
       const canAnimateProgress = () => (
-        window.innerWidth > 980 && isInView && isPageVisible
+        desktopAutoFocusEnabled && window.innerWidth > 980 && isInView && isPageVisible
       );
 
       const setFillProgress = (fill, progress) => {
@@ -290,14 +292,23 @@
 
         const onMouseEnter = () => {
           if (window.innerWidth <= 980 || !interactiveList) return;
+          if (!interactiveList.classList.contains('is-hovering')) {
+            const visual = item.querySelector('.perk-mobile-visual');
+            if (visual) {
+              interactiveList.style.setProperty('--perk-hover-visual-height', `${visual.getBoundingClientRect().height}px`);
+            }
+          }
           interactiveList.classList.add('is-hovering');
           item.classList.add('is-hovered');
         };
         const onMouseLeave = (event) => {
           if (window.innerWidth <= 980 || !interactiveList) return;
           item.classList.remove('is-hovered');
-          if (!interactiveList.contains(event.relatedTarget)) {
+          // El contenedor tiene espacios entre tarjetas. Sólo mantenemos el
+          // foco si se entra directamente a otra tarjeta, no al hueco común.
+          if (!event.relatedTarget?.closest?.('.perk-interactive-item')) {
             interactiveList.classList.remove('is-hovering');
+            interactiveList.style.removeProperty('--perk-hover-visual-height');
           }
         };
         item.addEventListener('mouseenter', onMouseEnter);
