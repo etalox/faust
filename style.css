@@ -973,41 +973,6 @@ h2.lead.reveal-item.reveal-visible {
     animation-play-state: running;
   }
 
-  /* Si se reingresa durante la salida, se apaga primero la luz residual y
-     después se inicia un nuevo despliegue limpio desde los bordes. */
-  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::before,
-  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::after {
-    opacity: var(--canvas-glow-reentry-opacity);
-    transition: opacity 400ms ease;
-  }
-
-  /* Conserva la geometría abierta mientras se desvanece. De otro modo la
-     transición del hover replegaría la máscara antes de completar la salida. */
-  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::before {
-    --canvas-embedded-glow-reveal: 31% !important;
-  }
-
-  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::after {
-    --canvas-embedded-glow-reveal-secondary: 28% !important;
-  }
-
-  .canvas-outer:not(.is-expanded).is-glow-reenter-fading.is-glow-reenter-fading-out:hover::before,
-  .canvas-outer:not(.is-expanded).is-glow-reenter-fading.is-glow-reenter-fading-out:hover::after {
-    opacity: 0;
-  }
-
-  /* Reinicio instantáneo de la máscara antes de cada nueva entrada. Evita que
-     una salida todavía en curso haga que el siguiente despliegue se salte. */
-  .canvas-outer:not(.is-expanded).is-glow-resetting::before {
-    --canvas-embedded-glow-reveal: 84% !important;
-    transition: none !important;
-  }
-
-  .canvas-outer:not(.is-expanded).is-glow-resetting::after {
-    --canvas-embedded-glow-reveal-secondary: 82% !important;
-    transition: none !important;
-  }
-
   .canvas-outer:not(.is-expanded).is-glow-active:hover::before {
     --canvas-embedded-glow-reveal: 31%;
   }
