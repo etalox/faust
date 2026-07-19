@@ -1,0 +1,447 @@
+/* form.css */
+.form-body {
+  margin: 0; padding: 0;
+  min-height: 100vh;
+  background: #F3F3F3;
+  font-family: "BDO Grotesk", Arial, sans-serif;
+  color: #1E1E1E;
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Master Form Container (Fixed Dimensions / Relative Positioning) */
+.form-container {
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  max-height: 932px;
+  position: relative;
+  background: #F3F3F3;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 1;
+  
+  box-shadow: none;
+}
+
+/* Header */
+.form-header {
+  left: 148px;
+  top: 38px;
+  position: absolute;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  display: inline-flex;
+  z-index: 10;
+}
+.form-brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.form-brand-logo { width: 134px; height: 19px; display: block; }
+.form-brand > svg,
+.form-brand-name { display: none; }
+.form-brand-name {
+  color: #FC2600;
+  font-size: 16px;
+  font-family: "BDO Grotesk", sans-serif;
+  font-weight: 600;
+  line-height: 16px;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Progress bar (Fixed at top) */
+.form-progress {
+  width: calc(100% - 44px);
+  height: 4px;
+  left: 22px;
+  top: 84px;
+  position: absolute;
+  overflow: hidden;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  display: inline-flex;
+  z-index: 10;
+  transition: opacity .4s ease;
+}
+
+
+/* Dynamic Steps Area Wrapper */
+.form-steps-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Content Elements (Absolutely Positioned and Animated) */
+.step-content {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity .6s cubic-bezier(.25, 1, .5, 1),
+              transform .6s cubic-bezier(.25, 1, .5, 1);
+  pointer-events: none;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 140px 20px 100px 20px;
+}
+
+.step-content.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Entrada escalonada de cada paso: pregunta, opciones y CTA. */
+.step-content .form-step-heading,
+.step-content .form-options,
+.step-content .form-option {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .36s cubic-bezier(.25,1,.5,1), transform .36s cubic-bezier(.25,1,.5,1);
+}
+.step-content .form-step-heading { transform: translateY(250px); }
+.step-content.title-staged:not(.title-settled) .form-step-heading { opacity: 1; }
+.step-content.title-staged.title-settled .form-step-heading { opacity: 1; transform: translateY(0); transition: opacity .36s cubic-bezier(.25,1,.5,1), transform .68s cubic-bezier(.25,1,.5,1); }
+.step-content.options-revealed .form-options { opacity: 1; transform: translateY(0); transition-delay: .08s; }
+.step-content.options-revealed .form-option { opacity: 1; transform: translateY(0); }
+.step-content.options-revealed .form-option:nth-child(1) { transition-delay: .14s; }
+.step-content.options-revealed .form-option:nth-child(2) { transition-delay: .21s; }
+.step-content.options-revealed .form-option:nth-child(3) { transition-delay: .28s; }
+.step-content.options-revealed .form-option:nth-child(4) { transition-delay: .35s; }
+
+/* El loader no participa en la secuencia pregunta → opciones → CTA. */
+#content-loader .form-step-heading,
+#content-loader .form-options,
+#content-loader .form-option {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+
+
+/* Specific Content Adjustments */
+
+/* Intro — fade only, no slide */
+#content-intro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #F3F3F3;
+  padding: 0 20px;
+  transform: none !important;
+  transition: opacity .6s cubic-bezier(.25, 1, .5, 1);
+}
+.form-intro-heading {
+  position: absolute;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  text-align: center;
+  color: #1E1E1E;
+  font-size: 32px;
+  font-family: "BDO Grotesk", sans-serif;
+  font-weight: 600;
+  line-height: 36px;
+  margin: 20px;
+}
+
+#content-step1 {
+}
+
+.form-step-heading {
+  width: 100%;
+  color: #1E1E1E;
+  font-size: 32px;
+  font-family: "BDO Grotesk", sans-serif;
+  font-weight: 600;
+  line-height: 36px;
+  margin-top: 40px;
+  margin-bottom: 80px;
+  text-align: center;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+
+
+.form-option {
+  width: 100%;
+  height: 80px;
+  padding: 0 20px;
+  background: transparent;
+  outline: 1.4px solid rgba(0,0,0,.10);
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.form-option-label {
+  font-family: "BDO Grotesk", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1E1E1E;
+  width: 100%;
+  text-align: left;
+  line-height: 14px;
+}
+
+.form-option-check {
+  display: none;
+  flex-shrink: 0;
+}
+
+/* Selected option style */
+.form-option--selected {
+  background: linear-gradient(90deg, rgba(252,38,0,0) 30%, rgba(252,38,0,.20) 100%);
+  outline: 1.6px solid #FC2600;
+}
+.form-option--selected .form-option-label {
+  color: #FC2600;
+}
+.form-option--selected .form-option-sublabel {
+  color: #FC2600;
+}
+.form-option--selected .form-option-check {
+  display: block;
+}
+
+/* Double-line Option styles (for Step 2 & 5) */
+.form-option-double {
+  height: auto;
+  padding: 32px 20px;
+  gap: 16px;
+}
+.form-option-badge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form-option-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  text-align: left;
+  flex: 1;
+}
+.form-option-sublabel {
+  font-family: "BDO Grotesk", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(30, 30, 30, 0.60);
+  transition: color .2s;
+  line-height: 12px;
+}
+
+/* Common form-options layout wrapper for any step content */
+.step-content .form-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+  overflow: visible;
+}
+
+/* Progress indicator */
+.form-progress-seg {
+  flex: 1 1 0;
+  align-self: stretch;
+  background: rgba(252, 38, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+.form-progress-fill {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  width: 0%;
+  background: #FC2600;
+  transition: width 0.55s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.form-progress-seg.active .form-progress-fill {
+  width: 100%;
+}
+
+/* Next button absolute position */
+.form-next {
+  width: calc(100% - 20px);
+  height: 60px;
+  padding: 10px;
+  left: 10px;
+  bottom: 20px;
+  top: auto;
+  position: absolute;
+  z-index: 10;
+  background: #1E1E1E;
+  border-radius: 8px;
+  color: #fff;
+  border: none;
+  font-family: "BDO Grotesk", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: background .2s;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .32s cubic-bezier(.25,1,.5,1), transform .32s cubic-bezier(.25,1,.5,1), background .2s;
+}
+.form-next.is-visible { opacity: 1; transform: translateY(0); }
+.form-next:hover {
+  background: #1E1E1E;
+}
+
+/* Spinner and loaders */
+.spinner-svg {
+  animation: spin 1.2s linear infinite;
+  transform-origin: center;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.loader-item {
+  height: 78px;
+  overflow: hidden;
+  transition: opacity .4s ease, outline-color .4s ease, background .4s ease;
+  opacity: 0.3;
+  margin-bottom: 10px !important;
+}
+.loader-item .form-option-label { transition: color .4s ease, opacity .24s ease; }
+.loader-item .form-option-check {
+  display: block;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity .28s ease, transform .28s ease;
+}
+
+/* 1. Loader block - Completed state */
+.loader-item.completed {
+  opacity: 1;
+  outline-color: #3D3D3D !important;
+  background: transparent !important;
+}
+.loader-item.completed .form-option-label {
+  color: #3D3D3D !important;
+  margin-left: 10px;
+}
+.loader-item.completed .form-option-check {
+  margin-right: 10px;
+  opacity: 1;
+  transform: translateY(0);
+}
+.loader-item.completed .form-option-check path {
+  stroke: #3D3D3D !important;
+}
+
+/* 2. Loader block - Loading active state */
+.loader-item.loading {
+  height: 78px;
+  padding-top: 32px !important;
+  padding-bottom: 10px !important;
+  position: relative;
+  opacity: 1;
+  outline: 1.60px #FC2600 solid !important;
+  background: linear-gradient(90deg, rgba(251.57, 37.74, 0, 0) 30%, rgba(251.57, 37.74, 0, 0.20) 100%) !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 20px !important;
+}
+
+.loader-item.loading .form-option-label {
+  color: #FC2600 !important;
+  margin-left: 10px;
+}
+.loader-item.loading .form-option-check {
+  opacity: 0;
+}
+
+/* Sub-progress bar within the active loading block */
+.loader-subprogress {
+  align-self: stretch;
+  height: 4px;
+  overflow: hidden;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  flex-shrink: 0;
+  background: rgba(251.57, 37.74, 0, 0.20);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.loader-item.loading .loader-subprogress {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  width: auto;
+}
+.loader-subprogress.is-visible { opacity: 1; }
+.loader-subprogress-fill {
+  width: 0%;
+  height: 100%;
+  background: #FC2600;
+  transition: width 0.4s cubic-bezier(0.2, 1, 0.55, 1);
+}
+
+/* Tablet: el formulario usa el ancho útil sin perder su secuencia móvil. */
+@media (min-width:600px) and (max-width:1024px){
+  .form-container{max-width:900px;height:100vh;height:100svh;max-height:none}
+  .form-header{top:42px;left:50%;transform:translateX(-50%)}
+  .form-progress{width:calc(100% - 96px);left:48px;top:94px}
+  .step-content{padding:154px max(48px,calc((100% - 600px) / 2)) 100px}
+  .form-intro-heading{width:min(600px,calc(100% - 96px));font-size:40px;line-height:44px}
+  .form-step-heading{font-size:36px;line-height:40px;margin-top:28px;margin-bottom:64px}
+  .form-option{height:88px;padding:0 24px}
+  .form-option-label{font-size:18px;line-height:18px}
+  .form-option-double{padding:28px 24px}
+  .form-option-sublabel{font-size:15px;line-height:16px}
+  .form-next{width:min(600px,calc(100% - 96px));left:max(48px,calc((100% - 600px) / 2));bottom:28px}
+}
+
+/* Tablet en horizontal: la altura disponible prima sobre el tamaño de los controles. */
+@media (min-width:600px) and (max-width:1024px) and (max-height:800px){
+  .form-header{top:24px}
+  .form-progress{top:64px}
+  .step-content{padding-top:96px;padding-bottom:80px}
+  .form-intro-heading{font-size:30px;line-height:34px}
+  .form-step-heading{font-size:28px;line-height:32px;margin-top:16px;margin-bottom:32px}
+  .form-option{height:64px}
+  .form-option-double{padding:18px 24px}
+  .form-option-label{font-size:16px}
+  .form-option-sublabel{font-size:14px}
+  .step-content .form-options{gap:8px}
+  .form-next{height:56px;bottom:12px}
+}
