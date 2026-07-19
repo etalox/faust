@@ -1642,69 +1642,28 @@ class FaustFlowCanvas extends HTMLElement {
       const glowOuter = this.closest('.canvas-outer');
       if (glowOuter) {
         const exitDuration = 4000;
-        const beginGlowEntry = () => {
-          glowOuter.classList.add('is-glow-resetting');
-          /* Deja que el navegador pinte primero la máscara cerrada; en el
-             siguiente frame la apertura puede interpolarse desde los bordes. */
-          this._glowActivationFrame = requestAnimationFrame(() => {
-            glowOuter.classList.remove('is-glow-resetting');
-            this._glowActivationFrame = requestAnimationFrame(() => {
-              if (glowOuter.matches(':hover')) {
-                glowOuter.classList.add('is-glow-active');
-                this._glowSettleTimeout = setTimeout(() => {
-                  if (glowOuter.matches(':hover')) glowOuter.classList.add('is-glow-settled');
-                  this._glowSettleTimeout = null;
-                }, 2000);
-              }
-              this._glowActivationFrame = null;
-            });
-          });
+        const scheduleGlowSettling = () => {
+          this._glowSettleTimeout = setTimeout(() => {
+            if (glowOuter.matches(':hover')) glowOuter.classList.add('is-glow-settled');
+            this._glowSettleTimeout = null;
+          }, 2000);
         };
         this._onGlowPointerEnter = () => {
-          const wasExiting = glowOuter.classList.contains('is-glow-exiting');
-          const exitGlowOpacity = wasExiting ? getComputedStyle(glowOuter, '::before').opacity : null;
           if (this._glowExitTimeout) clearTimeout(this._glowExitTimeout);
           if (this._glowSettleTimeout) clearTimeout(this._glowSettleTimeout);
-          if (this._glowReentryTimeout) clearTimeout(this._glowReentryTimeout);
-          if (this._glowActivationFrame) cancelAnimationFrame(this._glowActivationFrame);
           this._glowExitTimeout = null;
           this._glowSettleTimeout = null;
-          this._glowReentryTimeout = null;
-          this._glowActivationFrame = null;
-          if (wasExiting) {
-            glowOuter.style.setProperty('--canvas-glow-reentry-opacity', exitGlowOpacity);
-            glowOuter.classList.add('is-glow-reenter-fading');
-            /* Fija el cuadro visible antes de modificar los demás estados.
-               Sin esta lectura el navegador compacta ambos cambios y parece
-               ocultar la luz de golpe. */
-            void glowOuter.offsetWidth;
-            glowOuter.classList.remove('is-glow-exiting', 'is-glow-resetting', 'is-glow-settled', 'is-glow-active');
-            requestAnimationFrame(() => {
-              if (glowOuter.matches(':hover')) glowOuter.classList.add('is-glow-reenter-fading-out');
-            });
-            this._glowReentryTimeout = setTimeout(() => {
-              glowOuter.classList.remove('is-glow-reenter-fading', 'is-glow-reenter-fading-out');
-              glowOuter.style.removeProperty('--canvas-glow-reentry-opacity');
-              this._glowReentryTimeout = null;
-              if (glowOuter.matches(':hover')) beginGlowEntry();
-            }, 400);
-          } else {
-            glowOuter.classList.remove('is-glow-exiting', 'is-glow-resetting', 'is-glow-settled', 'is-glow-active');
-            beginGlowEntry();
-          }
+          /* La misma propiedad personalizada invierte su interpolación al
+             reingresar: no se reinicia ni pierde el punto intermedio. */
+          glowOuter.classList.remove('is-glow-exiting', 'is-glow-settled');
+          glowOuter.classList.add('is-glow-active');
+          scheduleGlowSettling();
         };
         this._onGlowPointerLeave = () => {
           if (glowOuter.classList.contains('is-expanded')) return;
           if (this._glowSettleTimeout) clearTimeout(this._glowSettleTimeout);
-          if (this._glowReentryTimeout) clearTimeout(this._glowReentryTimeout);
-          if (this._glowActivationFrame) cancelAnimationFrame(this._glowActivationFrame);
           this._glowSettleTimeout = null;
-          this._glowReentryTimeout = null;
-          this._glowActivationFrame = null;
-          /* La máscara no se repliega: vuelve a su estado base cuando ya
-             terminó el desvanecido de salida. */
-          glowOuter.classList.remove('is-glow-reenter-fading', 'is-glow-reenter-fading-out', 'is-glow-resetting', 'is-glow-settled', 'is-glow-active');
-          glowOuter.style.removeProperty('--canvas-glow-reentry-opacity');
+          glowOuter.classList.remove('is-glow-settled', 'is-glow-active');
           glowOuter.classList.add('is-glow-exiting');
           if (this._glowExitTimeout) clearTimeout(this._glowExitTimeout);
           this._glowExitTimeout = setTimeout(() => {
@@ -2677,19 +2636,10 @@ class FaustFlowCanvas extends HTMLElement {
       clearTimeout(this._glowSettleTimeout);
       this._glowSettleTimeout = null;
     }
-    if (this._glowReentryTimeout) {
-      clearTimeout(this._glowReentryTimeout);
-      this._glowReentryTimeout = null;
-    }
-    if (this._glowActivationFrame) {
-      cancelAnimationFrame(this._glowActivationFrame);
-      this._glowActivationFrame = null;
-    }
     if (this._glowOuter) {
       this._glowOuter.removeEventListener('pointerenter', this._onGlowPointerEnter);
       this._glowOuter.removeEventListener('pointerleave', this._onGlowPointerLeave);
-      this._glowOuter.classList.remove('is-glow-reenter-fading', 'is-glow-reenter-fading-out', 'is-glow-resetting', 'is-glow-exiting', 'is-glow-settled', 'is-glow-active');
-      this._glowOuter.style.removeProperty('--canvas-glow-reentry-opacity');
+      this._glowOuter.classList.remove('is-glow-exiting', 'is-glow-settled', 'is-glow-active');
       this._glowOuter = null;
     }
     if (this._replayFeedbackTimeout) {
