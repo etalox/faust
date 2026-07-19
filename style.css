@@ -973,12 +973,55 @@ h2.lead.reveal-item.reveal-visible {
     animation-play-state: running;
   }
 
-  .canvas-outer:not(.is-expanded):hover::before {
+  /* Si se reingresa durante la salida, se apaga primero la luz residual y
+     después se inicia un nuevo despliegue limpio desde los bordes. */
+  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::before,
+  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::after {
+    opacity: var(--canvas-glow-reentry-opacity);
+    transition: opacity 400ms ease;
+  }
+
+  /* Conserva la geometría abierta mientras se desvanece. De otro modo la
+     transición del hover replegaría la máscara antes de completar la salida. */
+  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::before {
+    --canvas-embedded-glow-reveal: 31% !important;
+  }
+
+  .canvas-outer:not(.is-expanded).is-glow-reenter-fading:hover::after {
+    --canvas-embedded-glow-reveal-secondary: 28% !important;
+  }
+
+  .canvas-outer:not(.is-expanded).is-glow-reenter-fading.is-glow-reenter-fading-out:hover::before,
+  .canvas-outer:not(.is-expanded).is-glow-reenter-fading.is-glow-reenter-fading-out:hover::after {
+    opacity: 0;
+  }
+
+  /* Reinicio instantáneo de la máscara antes de cada nueva entrada. Evita que
+     una salida todavía en curso haga que el siguiente despliegue se salte. */
+  .canvas-outer:not(.is-expanded).is-glow-resetting::before {
+    --canvas-embedded-glow-reveal: 84% !important;
+    transition: none !important;
+  }
+
+  .canvas-outer:not(.is-expanded).is-glow-resetting::after {
+    --canvas-embedded-glow-reveal-secondary: 82% !important;
+    transition: none !important;
+  }
+
+  .canvas-outer:not(.is-expanded).is-glow-active:hover::before {
     --canvas-embedded-glow-reveal: 31%;
   }
 
-  .canvas-outer:not(.is-expanded):hover::after {
+  .canvas-outer:not(.is-expanded).is-glow-active:hover::after {
     --canvas-embedded-glow-reveal-secondary: 28%;
+  }
+
+  /* Tras el primer impulso, la luz se asienta gradualmente al 50% sin
+     interrumpir su rotación ni su respiración. */
+  .canvas-outer:not(.is-expanded).is-glow-settled:hover::before,
+  .canvas-outer:not(.is-expanded).is-glow-settled:hover::after {
+    opacity: .43;
+    transition: opacity 6000ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal 1800ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal-secondary 2000ms cubic-bezier(.16, 1, .3, 1);
   }
 }
 
