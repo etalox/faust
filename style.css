@@ -906,11 +906,11 @@ h2.lead.reveal-item.reveal-visible {
 .canvas-outer:not(.is-expanded)::before,
 .canvas-outer:not(.is-expanded)::after {
   position: absolute;
-  z-index: 0;
+  z-index: 3;
   pointer-events: none;
   content: '';
   opacity: 0;
-  transition: opacity 3400ms cubic-bezier(.16, 1, .3, 1) 600ms, --canvas-embedded-glow-reveal 0ms linear 4000ms, --canvas-embedded-glow-reveal-secondary 0ms linear 4000ms;
+  transition: opacity 4000ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal 0ms linear 4000ms, --canvas-embedded-glow-reveal-secondary 0ms linear 4000ms;
   will-change: background-position, background-size, filter, opacity;
 }
 
@@ -950,7 +950,14 @@ h2.lead.reveal-item.reveal-visible {
 }
 
 .canvas-outer:not(.is-expanded) > faust-flow-canvas {
-  z-index: 1;
+  /* Sin contexto de apilamiento propio, la luz puede quedar entre el
+     diagrama y la leyenda. */
+  z-index: auto;
+}
+
+.canvas-outer:not(.is-expanded) .canvas-legend {
+  position: relative;
+  z-index: 4;
 }
 
 @media (hover: hover) and (pointer: fine) {
