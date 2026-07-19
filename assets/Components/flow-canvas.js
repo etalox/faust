@@ -1638,6 +1638,28 @@ class FaustFlowCanvas extends HTMLElement {
       const mount = this.querySelector('.flow-content-mount');
       children.forEach(child => mount.appendChild(child));
       this.initializePieceDragging();
+
+      const glowOuter = this.closest('.canvas-outer');
+      if (glowOuter) {
+        const exitDuration = 4000;
+        this._onGlowPointerEnter = () => {
+          if (this._glowExitTimeout) clearTimeout(this._glowExitTimeout);
+          this._glowExitTimeout = null;
+          glowOuter.classList.remove('is-glow-exiting');
+        };
+        this._onGlowPointerLeave = () => {
+          if (glowOuter.classList.contains('is-expanded')) return;
+          glowOuter.classList.add('is-glow-exiting');
+          if (this._glowExitTimeout) clearTimeout(this._glowExitTimeout);
+          this._glowExitTimeout = setTimeout(() => {
+            glowOuter.classList.remove('is-glow-exiting');
+            this._glowExitTimeout = null;
+          }, exitDuration);
+        };
+        this._glowOuter = glowOuter;
+        glowOuter.addEventListener('pointerenter', this._onGlowPointerEnter);
+        glowOuter.addEventListener('pointerleave', this._onGlowPointerLeave);
+      }
     }
 
     // Geometry is static between layout changes. Batch its measurements into one frame.
@@ -2591,6 +2613,16 @@ class FaustFlowCanvas extends HTMLElement {
 
   disconnectedCallback() {
     this.clearTimers();
+    if (this._glowExitTimeout) {
+      clearTimeout(this._glowExitTimeout);
+      this._glowExitTimeout = null;
+    }
+    if (this._glowOuter) {
+      this._glowOuter.removeEventListener('pointerenter', this._onGlowPointerEnter);
+      this._glowOuter.removeEventListener('pointerleave', this._onGlowPointerLeave);
+      this._glowOuter.classList.remove('is-glow-exiting');
+      this._glowOuter = null;
+    }
     if (this._replayFeedbackTimeout) {
       clearTimeout(this._replayFeedbackTimeout);
       this._replayFeedbackTimeout = null;
