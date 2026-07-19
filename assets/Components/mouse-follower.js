@@ -126,7 +126,7 @@
           return;
         }
 
-        const ease = 0.05; // Slightly slower tracking speed for premium feel
+        const ease = 0.07; // Faster while preserving the same soft trailing motion
         currentX += dx * ease;
         currentY += dy * ease;
 

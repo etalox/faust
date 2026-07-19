@@ -3595,24 +3595,24 @@ body.hide-page-grid .section-grid-bg::after {
   50%      { transform: translateY(var(--pull-amount)); }
 }
 
-/* ── Blue Accent Highlight for Illustrations (Vibrant Tech Blue with White Borders - ONLY when background is light in mobile active state) ── */
+/* ── Legacy mobile accent treatment (kept opt-in; scroll activation itself remains active). ── */
 @media (max-width: 980px) {
-  .perk-interactive-item.is-active .perk-mobile-visual .revenue-layer path,
-  .perk-interactive-item.is-active .perk-mobile-visual .auto-accent path,
-  .perk-interactive-item.is-active .perk-mobile-visual .evidence-accent path,
-  .perk-interactive-item.is-active .perk-mobile-visual .infra-top path {
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .revenue-layer path,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .auto-accent path,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .evidence-accent path,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .infra-top path {
     fill: #0022ff !important; /* Premium tech blue fill */
     stroke: #ffffff !important; /* Clean white border */
     stroke-opacity: 0.95 !important;
   }
 
-  .perk-interactive-item.is-active .perk-mobile-visual .auto-accent circle,
-  .perk-interactive-item.is-active .perk-mobile-visual .auto-accent ellipse {
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .auto-accent circle,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .auto-accent ellipse {
     stroke: #08090a !important;
     opacity: 0.35 !important;
   }
 
-  .perk-interactive-item.is-active .perk-mobile-visual .infra-top ellipse {
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .infra-top ellipse {
     stroke: #ffffff !important;
     opacity: 0.8 !important;
   }
@@ -4074,8 +4074,8 @@ body.hide-page-grid .section-grid-bg::after {
                 opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  /* Active visual state: background becomes light gray with vertical lines, borders dark-gray, strokes black */
-  .perk-interactive-item.is-active .perk-mobile-visual {
+  /* Tratamiento visual activo anterior, ahora opt-in. */
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual {
     background-color: #f4f4f6; /* Premium light gray background */
     background-image: linear-gradient(
       90deg,
@@ -4092,7 +4092,7 @@ body.hide-page-grid .section-grid-bg::after {
     --illustration-fill: #e5e5ea; /* Shaded gray fill for 3D visual weight */
   }
 
-  .perk-interactive-item.is-active .perk-mobile-visual svg {
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual svg {
     filter: contrast(1.15) brightness(0.95); /* Boosts lines contrast and weight */
   }
 
@@ -4306,7 +4306,8 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
     --speed-scale: 1.2; /* Fixed scale for premium, fluid, non-disruptive animation speed */
   }
 
-  /* Animación de hover: opaca y ensancha la tarjeta seleccionada, desvanece y reduce las demás */
+  /* En hover, la tarjeta elegida gana foco y las demás se atenúan. Esto sólo
+     responde al puntero; no puede activarse por el ciclo automático. */
   .perks-interactive-list.is-hovering .perk-interactive-item {
     opacity: 0.45 !important;
     flex: 0.8 1 0% !important;
@@ -4315,8 +4316,20 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
     opacity: 1 !important;
     flex: 1.4 1 0% !important;
   }
+
+  /* El ancho de una tarjeta cambia al hover, pero su ilustración conserva la
+     altura pre-hover para que el aspect-ratio no empuje la sección completa. */
+  .perks-interactive-list.is-hovering .perk-mobile-visual {
+    height: var(--perk-hover-visual-height) !important;
+    aspect-ratio: auto !important;
+  }
+
   .perks-interactive-list .perk-interactive-item.is-active {
     opacity: 1 !important;
+  }
+
+  .perks-interactive-list.is-hovering .perk-interactive-item.is-active:not(.is-hovered) {
+    opacity: 0.45 !important;
   }
 
   /* Asegurar que las tarjetas con inline display: none se oculten en desktop (evita conflicto con display: flex !important) */
@@ -4523,7 +4536,7 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
   }
 
   /* Efecto de hover original: superficie clara con retícula oscura. */
-  .perk-interactive-item:hover .perk-mobile-visual {
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual {
     background-color: #f4f4f6 !important;
     background-image: linear-gradient(
       90deg,
@@ -4540,24 +4553,36 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
     --illustration-fill: #e5e5ea !important;
   }
 
-  .perk-interactive-item:hover .perk-mobile-visual .revenue-layer path,
-  .perk-interactive-item:hover .perk-mobile-visual .auto-accent path,
-  .perk-interactive-item:hover .perk-mobile-visual .evidence-accent path,
-  .perk-interactive-item:hover .perk-mobile-visual .infra-top path {
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .revenue-layer path,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .auto-accent path,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .evidence-accent path,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .infra-top path {
     fill: #0022ff !important;
     stroke: #ffffff !important;
     stroke-opacity: 0.95 !important;
   }
 
-  .perk-interactive-item:hover .perk-mobile-visual .auto-accent circle,
-  .perk-interactive-item:hover .perk-mobile-visual .auto-accent ellipse {
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .auto-accent circle,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .auto-accent ellipse {
     stroke: #08090a !important;
     opacity: 0.35 !important;
   }
 
-  .perk-interactive-item:hover .perk-mobile-visual .infra-top ellipse {
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .infra-top ellipse {
     stroke: #ffffff !important;
     opacity: 0.8 !important;
+  }
+
+  /* Luz interna compartida con los canvas. Ilumina desde el perímetro sin
+     recolorear las ilustraciones ni cambiar la geometría de las tarjetas. */
+  .perk-interactive-item .perk-mobile-visual {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .perk-interactive-item .perk-mobile-visual > * {
+    position: relative;
+    z-index: 1;
   }
 
   /* Optional canvas-inspired hover. Enable with hover-style="canvas" on faust-ecosystem.
@@ -4734,6 +4759,20 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
   .canvas-mouse-follower.is-over-light.is-over-blue::before {
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)) !important;
   }
+
+  /* Ecosistema ya no usa una superficie clara al hover: su seguidor conserva
+     siempre el chip gris, incluso sobre las ilustraciones. */
+  .perk-mouse-follower.is-over-light,
+  .perk-mouse-follower.is-over-light.is-over-blue {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+  }
+
+  .perk-mouse-follower.is-over-light::before,
+  .perk-mouse-follower.is-over-light.is-over-blue::before {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)) !important;
+  }
+
   .perk-mouse-follower.is-visible,
   .canvas-mouse-follower.is-visible {
     transform: translate3d(var(--follower-x), var(--follower-y), 0) scale(1) !important;
