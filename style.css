@@ -910,7 +910,7 @@ h2.lead.reveal-item.reveal-visible {
   pointer-events: none;
   content: '';
   opacity: 0;
-  transition: opacity 4000ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal 0ms linear 4000ms, --canvas-embedded-glow-reveal-secondary 0ms linear 4000ms;
+  transition: opacity 4000ms linear, --canvas-embedded-glow-reveal 4000ms linear, --canvas-embedded-glow-reveal-secondary 4000ms linear;
   will-change: background-position, background-size, filter, opacity;
 }
 

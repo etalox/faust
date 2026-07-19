@@ -1648,21 +1648,34 @@ class FaustFlowCanvas extends HTMLElement {
             this._glowSettleTimeout = null;
           }, 2000);
         };
+        const activateGlowMask = () => {
+          this._glowActivationFrame = requestAnimationFrame(() => {
+            this._glowActivationFrame = requestAnimationFrame(() => {
+              if (glowOuter.matches(':hover')) {
+                glowOuter.classList.add('is-glow-active');
+                scheduleGlowSettling();
+              }
+              this._glowActivationFrame = null;
+            });
+          });
+        };
         this._onGlowPointerEnter = () => {
           if (this._glowExitTimeout) clearTimeout(this._glowExitTimeout);
           if (this._glowSettleTimeout) clearTimeout(this._glowSettleTimeout);
+          if (this._glowActivationFrame) cancelAnimationFrame(this._glowActivationFrame);
           this._glowExitTimeout = null;
           this._glowSettleTimeout = null;
           /* La misma propiedad personalizada invierte su interpolación al
              reingresar: no se reinicia ni pierde el punto intermedio. */
           glowOuter.classList.remove('is-glow-exiting', 'is-glow-settled');
-          glowOuter.classList.add('is-glow-active');
-          scheduleGlowSettling();
+          activateGlowMask();
         };
         this._onGlowPointerLeave = () => {
           if (glowOuter.classList.contains('is-expanded')) return;
           if (this._glowSettleTimeout) clearTimeout(this._glowSettleTimeout);
+          if (this._glowActivationFrame) cancelAnimationFrame(this._glowActivationFrame);
           this._glowSettleTimeout = null;
+          this._glowActivationFrame = null;
           glowOuter.classList.remove('is-glow-settled', 'is-glow-active');
           glowOuter.classList.add('is-glow-exiting');
           if (this._glowExitTimeout) clearTimeout(this._glowExitTimeout);
@@ -2635,6 +2648,10 @@ class FaustFlowCanvas extends HTMLElement {
     if (this._glowSettleTimeout) {
       clearTimeout(this._glowSettleTimeout);
       this._glowSettleTimeout = null;
+    }
+    if (this._glowActivationFrame) {
+      cancelAnimationFrame(this._glowActivationFrame);
+      this._glowActivationFrame = null;
     }
     if (this._glowOuter) {
       this._glowOuter.removeEventListener('pointerenter', this._onGlowPointerEnter);
