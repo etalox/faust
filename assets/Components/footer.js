@@ -1553,7 +1553,7 @@ class FaustFooter extends HTMLElement {
 
     const handleScrollDelta = (rawDy) => {
       // Tablet/desktop only
-      if (window.innerWidth < 768) {
+      if (window.innerWidth <= 430) {
         clearAutoCollapse();
         cancelAutoCollapseAnimation();
         if (target > 0 || current > SNAP_THRESHOLD) {

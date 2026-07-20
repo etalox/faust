@@ -1151,7 +1151,111 @@ class FaustFlowCanvas extends HTMLElement {
       clearTimeout(this._replayTimeout);
       this._replayTimeout = null;
     }
+    this.stopAutoCanvasScroll();
     this.stopSweepLoop();
+  }
+
+  stopAutoCanvasScroll() {
+    if (this._autoCanvasScrollFrame) {
+      cancelAnimationFrame(this._autoCanvasScrollFrame);
+      this._autoCanvasScrollFrame = null;
+    }
+    const wrapper = this.querySelector('.flow-wrapper');
+    wrapper?.classList.remove('is-auto-scrolling');
+    this.classList.remove('is-auto-scrolling');
+    this.style.removeProperty('--canvas-auto-scroll-x');
+  }
+
+  startAutoCanvasScroll(animationDuration) {
+    const wrapper = this.querySelector('.flow-wrapper');
+    // 430px es la referencia de escala visual del iPhone, pero un navegador
+    // móvil puede reportar un layout viewport mayor. 767px conserva iPad fuera.
+    const isPhone = window.innerWidth <= 767;
+    const isExpanded = this.closest('.canvas-outer')?.classList.contains('is-expanded');
+    if (!wrapper || !isPhone || isExpanded) return;
+
+    this.stopAutoCanvasScroll();
+    // La escala móvil se actualiza en el siguiente frame. Esperar dos frames
+    // evita tomar un scrollWidth aún igual al ancho visible y abortar el paseo.
+    this._autoCanvasScrollFrame = requestAnimationFrame(() => {
+      this._autoCanvasScrollFrame = requestAnimationFrame(() => {
+        if (!this.isConnected || window.innerWidth > 767 || this.closest('.canvas-outer')?.classList.contains('is-expanded')) {
+          this._autoCanvasScrollFrame = null;
+          return;
+        }
+
+        const scaler = wrapper.querySelector('.flow-scaler');
+        const baseWidth = parseInt(this.getAttribute('frame-width') || '1040', 10);
+        const canvasScale = parseFloat(getComputedStyle(this).getPropertyValue('--canvas-scale')) || 0.6;
+        const contentWidth = Math.max(
+          wrapper.scrollWidth,
+          scaler?.getBoundingClientRect().width || 0,
+          baseWidth * canvasScale
+        );
+        const maxScroll = Math.max(0, contentWidth - wrapper.clientWidth);
+        if (maxScroll < 2) {
+          this._autoCanvasScrollFrame = null;
+          return;
+        }
+
+        // La secuencia se construye de izquierda a derecha. Al recorrer de forma
+        // lineal el rango útil durante la duración real de la animación, el foco
+        // acompaña cada pieza/flecha nueva sin los saltos de una serie de scrollTo.
+        wrapper.classList.add('is-auto-scrolling');
+        this.classList.add('is-auto-scrolling');
+        wrapper.scrollLeft = 0;
+        const setSequencePosition = (position) => {
+          // En móvil el escenario se desplaza visualmente dentro del clip. Esto
+          // evita depender de implementaciones de scrollLeft que no animan de
+          // forma fiable mientras el elemento recibe gestos táctiles.
+          this.style.setProperty('--canvas-auto-scroll-x', `${-position}px`);
+        };
+        setSequencePosition(0);
+        // La rejilla aparece al inicio, pero la primera flecha/pieza de la
+        // pasada lenta comienza al segundo 1. El recorrido debe arrancar ahí;
+        // en replay rápido el primer elemento aparece inmediatamente.
+        const sequenceLeadIn = this.classList.contains('fast-replay') ? 0 : 1000;
+        const forwardStartedAt = performance.now() + sequenceLeadIn;
+        const forwardDuration = Math.max(1, animationDuration - sequenceLeadIn);
+
+        const returnToStart = () => {
+          const returnStartedAt = performance.now();
+          const returnDuration = 720;
+          const startLeft = wrapper.scrollLeft;
+          const returnFrame = (now) => {
+            const progress = Math.min(1, (now - returnStartedAt) / returnDuration);
+            const eased = progress * progress * (3 - 2 * progress);
+            setSequencePosition(startLeft * (1 - eased));
+            if (progress < 1) {
+              this._autoCanvasScrollFrame = requestAnimationFrame(returnFrame);
+              return;
+            }
+            wrapper.scrollLeft = 0;
+            setSequencePosition(0);
+            this._autoCanvasScrollFrame = null;
+            wrapper.classList.remove('is-auto-scrolling');
+            this.classList.remove('is-auto-scrolling');
+            this.style.removeProperty('--canvas-auto-scroll-x');
+          };
+          this._autoCanvasScrollFrame = requestAnimationFrame(returnFrame);
+        };
+
+        const followSequence = (now) => {
+          if (now < forwardStartedAt) {
+            this._autoCanvasScrollFrame = requestAnimationFrame(followSequence);
+            return;
+          }
+          const progress = Math.min(1, (now - forwardStartedAt) / forwardDuration);
+          setSequencePosition(maxScroll * progress);
+          if (progress < 1) {
+            this._autoCanvasScrollFrame = requestAnimationFrame(followSequence);
+            return;
+          }
+          returnToStart();
+        };
+        this._autoCanvasScrollFrame = requestAnimationFrame(followSequence);
+      });
+    });
   }
 
   checkAndTriggerAnimation(enteredFromBelow) {
@@ -1212,7 +1316,12 @@ class FaustFlowCanvas extends HTMLElement {
 
     if (!this._hasPlayed || forceSlow) {
       // If user scrolls fast (dumb scroll) before canvas enters, or if dumb scroll was triggered globally, trigger fast animation immediately
-      const isFastScroll = !forceSlow && (globalScrollSpeed > 1.5 || globalDumbScrollTriggered);
+      // En teléfono, la secuencia debe ser idéntica al llegar desde arriba o
+      // al recargar sobre el canvas. El atajo global de fast-replay se reserva
+      // para los breakpoints no móviles.
+      const isFastScroll = window.innerWidth > 767
+        && !forceSlow
+        && (globalScrollSpeed > 1.5 || globalDumbScrollTriggered);
       if (isFastScroll) {
         globalDumbScrollTriggered = true;
         this.classList.remove('animating', 'fast-replay');
@@ -1324,7 +1433,7 @@ class FaustFlowCanvas extends HTMLElement {
   }
 
   openExpandedView() {
-    const isPhone = window.innerWidth <= 767;
+    const isPhone = window.innerWidth <= 430;
     const canvasOuter = this.closest('.canvas-outer');
     if (!canvasOuter) return;
     const sourceRect = canvasOuter.getBoundingClientRect();
@@ -1687,6 +1796,37 @@ class FaustFlowCanvas extends HTMLElement {
         this._glowOuter = glowOuter;
         glowOuter.addEventListener('pointerenter', this._onGlowPointerEnter);
         glowOuter.addEventListener('pointerleave', this._onGlowPointerLeave);
+
+        // En tablet el hover se obtiene por proximidad al centro del viewport,
+        // igual que el foco automático de Ecosistema. En teléfono se gobierna
+        // exclusivamente desde el desplazamiento horizontal del propio canvas.
+        let viewportGlowFrame = null;
+        const updateViewportGlow = () => {
+          viewportGlowFrame = null;
+          if (window.innerWidth <= 430 || window.innerWidth > 980 || glowOuter.classList.contains('is-expanded')) {
+            glowOuter.classList.remove('is-viewport-hovered');
+            return;
+          }
+          const rect = glowOuter.getBoundingClientRect();
+          const viewportCenter = window.innerHeight / 2;
+          const distance = Math.abs(rect.top + rect.height / 2 - viewportCenter);
+      const activationRange = Math.max(rect.height * 0.25, window.innerHeight * 0.1);
+          const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+          glowOuter.classList.toggle('is-viewport-hovered', isVisible && distance <= activationRange);
+        };
+        const scheduleViewportGlow = () => {
+          if (viewportGlowFrame !== null) return;
+          viewportGlowFrame = requestAnimationFrame(updateViewportGlow);
+        };
+        this._onViewportGlowScroll = scheduleViewportGlow;
+        this._cancelViewportGlow = () => {
+          if (viewportGlowFrame !== null) cancelAnimationFrame(viewportGlowFrame);
+          viewportGlowFrame = null;
+          glowOuter.classList.remove('is-viewport-hovered');
+        };
+        window.addEventListener('scroll', scheduleViewportGlow, { passive: true });
+        window.addEventListener('resize', scheduleViewportGlow, { passive: true });
+        scheduleViewportGlow();
       }
     }
 
@@ -1758,6 +1898,23 @@ class FaustFlowCanvas extends HTMLElement {
       this._revealObserver.observe(parentReveal, { attributes: true, attributeFilter: ['class'] });
     }
 
+    // El auto-scroll móvil observa el estado visual efectivo de la animación,
+    // no una rama particular de reproducción. Así acompaña tanto la primera
+    // pasada como un reinicio lento o una reproducción rápida.
+    this._autoScrollAnimationObserver = new MutationObserver((mutations) => {
+      const animationTransition = mutations.find((mutation) => {
+        const wasAnimating = mutation.oldValue?.split(/\s+/).includes('animating');
+        return wasAnimating !== this.classList.contains('animating');
+      });
+      if (!animationTransition) return;
+      if (this.classList.contains('animating')) {
+        this.startAutoCanvasScroll(this._animationDuration || 5500);
+      } else {
+        this.stopAutoCanvasScroll();
+      }
+    });
+    this._autoScrollAnimationObserver.observe(this, { attributes: true, attributeFilter: ['class'], attributeOldValue: true });
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1788,6 +1945,29 @@ class FaustFlowCanvas extends HTMLElement {
 
     // Centrar scroll horizontal por defecto y al redimensionar la ventana
     const wrapper = this.querySelector('.flow-wrapper');
+    let mobileGlowTimeout = null;
+    let previousMobileScrollLeft = wrapper?.scrollLeft ?? 0;
+    this._onMobileCanvasScrollGlow = () => {
+      if (!wrapper || window.innerWidth > 430 || this.closest('.canvas-outer')?.classList.contains('is-expanded')) return;
+
+      const movedHorizontally = Math.abs(wrapper.scrollLeft - previousMobileScrollLeft) > 0.5;
+      previousMobileScrollLeft = wrapper.scrollLeft;
+      if (!movedHorizontally) return;
+
+      const glowOuter = this.closest('.canvas-outer');
+      glowOuter?.classList.add('is-horizontal-scroll-hovered');
+      if (mobileGlowTimeout) clearTimeout(mobileGlowTimeout);
+      mobileGlowTimeout = setTimeout(() => {
+        glowOuter?.classList.remove('is-horizontal-scroll-hovered');
+        mobileGlowTimeout = null;
+      }, 900);
+    };
+    this._clearMobileCanvasScrollGlow = () => {
+      if (mobileGlowTimeout) clearTimeout(mobileGlowTimeout);
+      mobileGlowTimeout = null;
+      this.closest('.canvas-outer')?.classList.remove('is-horizontal-scroll-hovered');
+    };
+    wrapper?.addEventListener('scroll', this._onMobileCanvasScrollGlow, { passive: true });
     const updateScaleAndCenter = () => {
       const w = window.innerWidth;
       let scale = 1.0;
@@ -2543,7 +2723,7 @@ class FaustFlowCanvas extends HTMLElement {
     };
     this._onExplainerResizeEnd = () => stopResize();
     this._onExplainerResizeStart = (event) => {
-      if (window.innerWidth < 768 || !this._explainerPanel.classList.contains('is-open')) return;
+      if (window.innerWidth <= 430 || !this._explainerPanel.classList.contains('is-open')) return;
       event.preventDefault();
       event.stopPropagation();
       this._explainerResizeStartX = event.clientX;
@@ -2659,6 +2839,13 @@ class FaustFlowCanvas extends HTMLElement {
       this._glowOuter.classList.remove('is-glow-exiting', 'is-glow-settled', 'is-glow-active');
       this._glowOuter = null;
     }
+    if (this._onViewportGlowScroll) {
+      window.removeEventListener('scroll', this._onViewportGlowScroll);
+      window.removeEventListener('resize', this._onViewportGlowScroll);
+      this._onViewportGlowScroll = null;
+    }
+    this._cancelViewportGlow?.();
+    this._cancelViewportGlow = null;
     if (this._replayFeedbackTimeout) {
       clearTimeout(this._replayFeedbackTimeout);
       this._replayFeedbackTimeout = null;
@@ -2673,6 +2860,10 @@ class FaustFlowCanvas extends HTMLElement {
       this._revealObserver.disconnect();
       this._revealObserver = null;
     }
+    if (this._autoScrollAnimationObserver) {
+      this._autoScrollAnimationObserver.disconnect();
+      this._autoScrollAnimationObserver = null;
+    }
     if (this._intersectionObserver) {
       this._intersectionObserver.disconnect();
       this._intersectionObserver = null;
@@ -2681,7 +2872,6 @@ class FaustFlowCanvas extends HTMLElement {
       window.removeEventListener('resize', this._onResize);
       this._onResize = null;
     }
-
     if (this._onCanvasReplayClick) {
       this.removeEventListener('click', this._onCanvasReplayClick);
       this._onCanvasReplayClick = null;
@@ -2719,6 +2909,12 @@ class FaustFlowCanvas extends HTMLElement {
     // Quitar listeners de revert scroll
     const wrapper = this.querySelector('.flow-wrapper');
     if (wrapper) {
+      if (this._onMobileCanvasScrollGlow) {
+        wrapper.removeEventListener('scroll', this._onMobileCanvasScrollGlow);
+        this._onMobileCanvasScrollGlow = null;
+      }
+      this._clearMobileCanvasScrollGlow?.();
+      this._clearMobileCanvasScrollGlow = null;
       if (this._scrollHandler) {
         wrapper.removeEventListener('scroll', this._scrollHandler);
       }

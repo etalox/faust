@@ -722,6 +722,14 @@ h2.lead.reveal-item.reveal-visible {
   }
 }
 
+/* La referencia móvil usa el viewport del iPhone 14 Pro Max: reducimos sólo
+   los logotipos de partners, sin alterar su escala en tablet o escritorio. */
+@media (max-width: 430px) {
+  .supported .logos img {
+    height: 24px;
+  }
+}
+
 .lead {
   font-size: var(--lead-font-size);
   line-height: 1.15;
@@ -844,6 +852,26 @@ h2.lead.reveal-item.reveal-visible {
   -webkit-overflow-scrolling: touch;
   border-radius: 24px;
   display: flex;
+}
+
+/* En teléfono, la secuencia inicial toma temporalmente el recorrido horizontal.
+   El gesto vertical sigue perteneciendo a la página; al terminar vuelve el
+   desplazamiento manual del canvas. */
+@media (max-width: 767px) {
+  .flow-wrapper.is-auto-scrolling {
+    touch-action: pan-y;
+    scrollbar-color: transparent transparent;
+  }
+
+  /* Recorrido visual controlado por la secuencia. El wrapper permanece como
+     superficie de scroll normal y recupera el gesto al terminar. */
+  faust-flow-canvas.is-auto-scrolling .flow-scaler {
+    transform: translate3d(var(--canvas-auto-scroll-x, 0px), 0, 0);
+  }
+
+  .flow-wrapper.is-auto-scrolling::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
 }
 
 .flow-scaler {
@@ -987,6 +1015,29 @@ h2.lead.reveal-item.reveal-visible {
   .canvas-outer:not(.is-expanded).is-glow-settled:hover::after {
     opacity: .43;
     transition: opacity 6000ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal 1800ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal-secondary 2000ms cubic-bezier(.16, 1, .3, 1);
+  }
+}
+
+/* Tablet usa proximidad al centro del viewport; teléfono, el scroll horizontal
+   del canvas. Escritorio permanece gobernado exclusivamente por el puntero. */
+@media (max-width: 980px) {
+  .canvas-outer:not(.is-expanded).is-viewport-hovered::before,
+  .canvas-outer:not(.is-expanded).is-viewport-hovered::after,
+  .canvas-outer:not(.is-expanded).is-horizontal-scroll-hovered::before,
+  .canvas-outer:not(.is-expanded).is-horizontal-scroll-hovered::after {
+    opacity: .86;
+    animation-play-state: running;
+    transition: opacity 1900ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal 1800ms cubic-bezier(.16, 1, .3, 1), --canvas-embedded-glow-reveal-secondary 2000ms cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .canvas-outer:not(.is-expanded).is-viewport-hovered::before,
+  .canvas-outer:not(.is-expanded).is-horizontal-scroll-hovered::before {
+    --canvas-embedded-glow-reveal: 31%;
+  }
+
+  .canvas-outer:not(.is-expanded).is-viewport-hovered::after,
+  .canvas-outer:not(.is-expanded).is-horizontal-scroll-hovered::after {
+    --canvas-embedded-glow-reveal-secondary: 28%;
   }
 }
 
@@ -1912,7 +1963,7 @@ faust-flow-canvas.has-explainer-open .canvas-explainer-close-icon {
 
 /* En teléfonos el reinicio queda reservado para la presentación completa;
    tablet conserva el control fijo dentro del Canvas normal. */
-@media (max-width: 767px) {
+@media (max-width: 430px) {
   faust-flow-canvas:not(.is-expanded-view) .canvas-replay-button {
     display: none;
   }
@@ -2052,7 +2103,7 @@ faust-flow-canvas.has-explainer-open .canvas-explainer-close-icon {
 
 /* En teléfono la leyenda conserva su posición baja original; la composición
    elevada de la placa se reserva para tablet y escritorio. */
-@media (max-width: 767px) {
+@media (max-width: 430px) {
   .canvas-outer.is-expanded.is-mobile-presentation .canvas-window-breadcrumb {
     position: absolute;
     top: 14px;
@@ -4196,7 +4247,7 @@ body.hide-page-grid .section-grid-bg::after {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 430px) {
   .legal-sidebar {
     display: none;
   }
@@ -4256,6 +4307,11 @@ faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
     grid-template-columns: 1fr !important;
     gap: 0 !important;
     margin-top: 40px;
+  }
+
+  .perks-showcase-container.is-hover-locked {
+    height: var(--perk-hover-showcase-height);
+    box-sizing: border-box;
   }
 
   /* Fila horizontal con scroll si es necesario (Estilo Grid) */

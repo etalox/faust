@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta id="faust-viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <script>if (window.matchMedia('(max-width: 767px)').matches) document.getElementById('faust-viewport').content = 'width=430, viewport-fit=cover';</script>
+  <script>(() => { const v = document.getElementById('faust-viewport'), n = 'width=device-width, initial-scale=1, viewport-fit=cover', i = 'width=430, viewport-fit=cover'; let f = null, applying = false; const refresh = () => { applying = true; v.content = n; requestAnimationFrame(() => { v.content = window.innerWidth <= 430 ? i : n; requestAnimationFrame(() => { applying = false; }); }); }; const schedule = () => { if (applying || f !== null) return; f = requestAnimationFrame(() => { f = null; refresh(); }); }; refresh(); window.addEventListener('resize', schedule, { passive: true }); })();</script>
   <title>Faust Partners</title>
   <script>
     localStorage.setItem('faust-user-role', 'Talento');
