@@ -1138,7 +1138,7 @@ class FaustFlowCanvas extends HTMLElement {
     runSweep();
   }
 
-  clearTimers() {
+  clearTimers(preserveAutoCanvasScroll = false) {
     if (this._seenTimeout) {
       clearTimeout(this._seenTimeout);
       this._seenTimeout = null;
@@ -1151,7 +1151,7 @@ class FaustFlowCanvas extends HTMLElement {
       clearTimeout(this._replayTimeout);
       this._replayTimeout = null;
     }
-    this.stopAutoCanvasScroll();
+    if (!preserveAutoCanvasScroll) this.stopAutoCanvasScroll();
     this.stopSweepLoop();
   }
 
@@ -1164,6 +1164,24 @@ class FaustFlowCanvas extends HTMLElement {
     wrapper?.classList.remove('is-auto-scrolling');
     this.classList.remove('is-auto-scrolling');
     this.style.removeProperty('--canvas-auto-scroll-x');
+    this.animateScrollIndicatorOpacity(0.45);
+  }
+
+  animateScrollIndicatorOpacity(opacity) {
+    const indicator = this.querySelector('.canvas-scroll-indicator');
+    if (!indicator || window.innerWidth > 767) return;
+    this._scrollIndicatorOpacityAnimation?.cancel();
+    const currentOpacity = Number.parseFloat(getComputedStyle(indicator).opacity) || 0;
+    const animation = indicator.animate(
+      [{ opacity: currentOpacity }, { opacity }],
+      { duration: 620, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'forwards' }
+    );
+    this._scrollIndicatorOpacityAnimation = animation;
+    animation.onfinish = () => {
+      if (this._scrollIndicatorOpacityAnimation !== animation) return;
+      indicator.style.opacity = String(opacity);
+      this._scrollIndicatorOpacityAnimation = null;
+    };
   }
 
   startAutoCanvasScroll(animationDuration) {
@@ -1172,7 +1190,7 @@ class FaustFlowCanvas extends HTMLElement {
     // móvil puede reportar un layout viewport mayor. 767px conserva iPad fuera.
     const isPhone = window.innerWidth <= 767;
     const isExpanded = this.closest('.canvas-outer')?.classList.contains('is-expanded');
-    if (!wrapper || !isPhone || isExpanded) return;
+    if (!wrapper || !isPhone || isExpanded || this._hasAutoCanvasScrolled) return;
 
     this.stopAutoCanvasScroll();
     // La escala móvil se actualiza en el siguiente frame. Esperar dos frames
@@ -1198,16 +1216,24 @@ class FaustFlowCanvas extends HTMLElement {
           return;
         }
 
+        // Igual que la primera pasada lenta, el acompañamiento horizontal es
+        // una única experiencia de entrada y no se repite al volver a cruzar
+        // el canvas durante la navegación.
+        this._hasAutoCanvasScrolled = true;
+
         // La secuencia se construye de izquierda a derecha. Al recorrer de forma
         // lineal el rango útil durante la duración real de la animación, el foco
         // acompaña cada pieza/flecha nueva sin los saltos de una serie de scrollTo.
         wrapper.classList.add('is-auto-scrolling');
         this.classList.add('is-auto-scrolling');
+        this.animateScrollIndicatorOpacity(0.3);
         wrapper.scrollLeft = 0;
+        let currentSequencePosition = 0;
         const setSequencePosition = (position) => {
           // En móvil el escenario se desplaza visualmente dentro del clip. Esto
           // evita depender de implementaciones de scrollLeft que no animan de
           // forma fiable mientras el elemento recibe gestos táctiles.
+          currentSequencePosition = position;
           this.style.setProperty('--canvas-auto-scroll-x', `${-position}px`);
         };
         setSequencePosition(0);
@@ -1220,8 +1246,8 @@ class FaustFlowCanvas extends HTMLElement {
 
         const returnToStart = () => {
           const returnStartedAt = performance.now();
-          const returnDuration = 720;
-          const startLeft = wrapper.scrollLeft;
+          const returnDuration = 900;
+          const startLeft = currentSequencePosition;
           const returnFrame = (now) => {
             const progress = Math.min(1, (now - returnStartedAt) / returnDuration);
             const eased = progress * progress * (3 - 2 * progress);
@@ -1236,6 +1262,7 @@ class FaustFlowCanvas extends HTMLElement {
             wrapper.classList.remove('is-auto-scrolling');
             this.classList.remove('is-auto-scrolling');
             this.style.removeProperty('--canvas-auto-scroll-x');
+            this.animateScrollIndicatorOpacity(0.45);
           };
           this._autoCanvasScrollFrame = requestAnimationFrame(returnFrame);
         };
@@ -1246,7 +1273,8 @@ class FaustFlowCanvas extends HTMLElement {
             return;
           }
           const progress = Math.min(1, (now - forwardStartedAt) / forwardDuration);
-          setSequencePosition(maxScroll * progress);
+          const eased = progress * progress * (3 - 2 * progress);
+          setSequencePosition(maxScroll * eased);
           if (progress < 1) {
             this._autoCanvasScrollFrame = requestAnimationFrame(followSequence);
             return;
@@ -1283,7 +1311,9 @@ class FaustFlowCanvas extends HTMLElement {
           const remaining = duration - elapsed;
           const isReplay = this.classList.contains('fast-replay');
           
-          this.clearTimers(); // Clear any stale timers first
+          // La animación visual ya sigue en marcha. Sólo renovamos su timer de
+          // terminación; el recorrido horizontal móvil no debe reiniciarse.
+          this.clearTimers(true);
           if (isReplay) {
             this._replayTimeout = setTimeout(() => {
               this._hasPlayed = true;
@@ -1610,6 +1640,7 @@ class FaustFlowCanvas extends HTMLElement {
             </div>
           </div>
         </div>
+        <div class="canvas-scroll-indicator" aria-hidden="true"><span></span></div>
         <div class="canvas-edge-fade" aria-hidden="true"></div>
         <div class="canvas-grain" aria-hidden="true"></div>
         <div class="canvas-foreground-blur" aria-hidden="true"></div>
@@ -1945,9 +1976,33 @@ class FaustFlowCanvas extends HTMLElement {
 
     // Centrar scroll horizontal por defecto y al redimensionar la ventana
     const wrapper = this.querySelector('.flow-wrapper');
+    this._updateMobileScrollIndicator = () => {
+      if (!wrapper || window.innerWidth > 767) return;
+      const trackWidth = Math.max(0, wrapper.clientWidth);
+      const maxScroll = Math.max(0, wrapper.scrollWidth - wrapper.clientWidth);
+      const visibleRatio = wrapper.scrollWidth > 0
+        ? Math.min(1, wrapper.clientWidth / wrapper.scrollWidth)
+        : 1;
+      const thumbWidth = Math.max(20, trackWidth * visibleRatio);
+      const progress = maxScroll > 0 ? wrapper.scrollLeft / maxScroll : 0;
+      this.style.setProperty('--canvas-scroll-thumb-width', `${Math.min(trackWidth, thumbWidth)}px`);
+      this.style.setProperty('--canvas-scroll-thumb-offset', `${Math.max(0, trackWidth - thumbWidth) * progress}px`);
+    };
     let mobileGlowTimeout = null;
+    let mobileScrollIndicatorTimeout = null;
     let previousMobileScrollLeft = wrapper?.scrollLeft ?? 0;
     this._onMobileCanvasScrollGlow = () => {
+      this._updateMobileScrollIndicator?.();
+      if (window.innerWidth <= 767 && !this.classList.contains('is-auto-scrolling')) {
+        if (!this.classList.contains('is-scroll-active')) this.animateScrollIndicatorOpacity(1);
+        this.classList.add('is-scroll-active');
+        if (mobileScrollIndicatorTimeout) clearTimeout(mobileScrollIndicatorTimeout);
+        mobileScrollIndicatorTimeout = setTimeout(() => {
+          this.classList.remove('is-scroll-active');
+          this.animateScrollIndicatorOpacity(0.45);
+          mobileScrollIndicatorTimeout = null;
+        }, 750);
+      }
       if (!wrapper || window.innerWidth > 430 || this.closest('.canvas-outer')?.classList.contains('is-expanded')) return;
 
       const movedHorizontally = Math.abs(wrapper.scrollLeft - previousMobileScrollLeft) > 0.5;
@@ -1964,10 +2019,14 @@ class FaustFlowCanvas extends HTMLElement {
     };
     this._clearMobileCanvasScrollGlow = () => {
       if (mobileGlowTimeout) clearTimeout(mobileGlowTimeout);
+      if (mobileScrollIndicatorTimeout) clearTimeout(mobileScrollIndicatorTimeout);
       mobileGlowTimeout = null;
+      mobileScrollIndicatorTimeout = null;
       this.closest('.canvas-outer')?.classList.remove('is-horizontal-scroll-hovered');
+      this.classList.remove('is-scroll-active');
     };
     wrapper?.addEventListener('scroll', this._onMobileCanvasScrollGlow, { passive: true });
+    requestAnimationFrame(() => this._updateMobileScrollIndicator?.());
     const updateScaleAndCenter = () => {
       const w = window.innerWidth;
       let scale = 1.0;
@@ -1991,6 +2050,7 @@ class FaustFlowCanvas extends HTMLElement {
         scale = 0.90 + 0.10 * tEased;
       }
       this.style.setProperty('--canvas-scale', scale.toFixed(4));
+      requestAnimationFrame(() => this._updateMobileScrollIndicator?.());
       
       if (wrapper && (w > 980 || isMobilePresentation)) {
         wrapper.scrollLeft = (wrapper.scrollWidth - wrapper.clientWidth) / 2;
@@ -2821,6 +2881,8 @@ class FaustFlowCanvas extends HTMLElement {
 
   disconnectedCallback() {
     this.clearTimers();
+    this._scrollIndicatorOpacityAnimation?.cancel();
+    this._scrollIndicatorOpacityAnimation = null;
     if (this._glowExitTimeout) {
       clearTimeout(this._glowExitTimeout);
       this._glowExitTimeout = null;
