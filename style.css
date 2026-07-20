@@ -859,8 +859,9 @@ h2.lead.reveal-item.reveal-visible {
    desplazamiento manual del canvas. */
 @media (max-width: 767px) {
   .flow-wrapper.is-auto-scrolling {
+    overflow-x: hidden;
     touch-action: pan-y;
-    scrollbar-color: transparent transparent;
+    scrollbar-color: rgba(255, 255, 255, .12) transparent;
   }
 
   /* Recorrido visual controlado por la secuencia. El wrapper permanece como
@@ -870,7 +871,11 @@ h2.lead.reveal-item.reveal-visible {
   }
 
   .flow-wrapper.is-auto-scrolling::-webkit-scrollbar-thumb {
-    background: transparent;
+    background-color: transparent;
+  }
+
+  .flow-wrapper.is-auto-scrolling::-webkit-scrollbar-track {
+    background-color: transparent;
   }
 }
 
@@ -896,17 +901,64 @@ h2.lead.reveal-item.reveal-visible {
 }
 
 .flow-wrapper::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background-color: rgba(255, 255, 255, 0.02);
   border-radius: 2px;
+  transition: background-color 420ms ease 100ms;
 }
 
 .flow-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   border-radius: 2px;
+  transition: background-color 420ms ease 100ms;
 }
 
 .flow-wrapper::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.6);
+}
+
+.canvas-scroll-indicator {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .flow-wrapper::-webkit-scrollbar {
+    height: 0;
+  }
+
+  .canvas-scroll-indicator {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 4;
+    display: block;
+    height: 2px;
+    border-radius: 999px;
+    pointer-events: none;
+    opacity: .45;
+    background: rgba(255, 255, 255, .02);
+    will-change: opacity;
+    transform: translateZ(0);
+    transition: opacity 620ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .canvas-scroll-indicator > span {
+    display: block;
+    width: var(--canvas-scroll-thumb-width, 100%);
+    height: 100%;
+    border-radius: inherit;
+    background: rgba(255, 255, 255, .3);
+    transform: translateX(var(--canvas-scroll-thumb-offset, 0px));
+    transition: transform 120ms linear;
+  }
+
+  faust-flow-canvas.is-scroll-active .canvas-scroll-indicator {
+    opacity: 1;
+  }
+
+  faust-flow-canvas.is-auto-scrolling .canvas-scroll-indicator {
+    opacity: .3;
+  }
 }
 
 @media (min-width: 981px) {
