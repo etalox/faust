@@ -722,6 +722,14 @@ h2.lead.reveal-item.reveal-visible {
   }
 }
 
+/* La referencia móvil usa el viewport del iPhone 14 Pro Max: reducimos sólo
+   los logotipos de partners, sin alterar su escala en tablet o escritorio. */
+@media (max-width: 430px) {
+  .supported .logos img {
+    height: 24px;
+  }
+}
+
 .lead {
   font-size: var(--lead-font-size);
   line-height: 1.15;
