@@ -277,6 +277,7 @@
       const clickListeners = [];
       const hoverListeners = [];
       const interactiveList = this.querySelector('.perks-interactive-list');
+      const showcase = this.querySelector('.perks-showcase-container');
       items.forEach((item, idx) => {
         const listener = () => {
           if (window.innerWidth <= 980) {
@@ -293,6 +294,10 @@
         const onMouseEnter = () => {
           if (window.innerWidth <= 980 || !interactiveList) return;
           if (!interactiveList.classList.contains('is-hovering')) {
+            if (showcase) {
+              showcase.style.setProperty('--perk-hover-showcase-height', `${showcase.offsetHeight}px`);
+              showcase.classList.add('is-hover-locked');
+            }
             const visual = item.querySelector('.perk-mobile-visual');
             if (visual) {
               interactiveList.style.setProperty('--perk-hover-visual-height', `${visual.getBoundingClientRect().height}px`);
@@ -309,6 +314,10 @@
           if (!event.relatedTarget?.closest?.('.perk-interactive-item')) {
             interactiveList.classList.remove('is-hovering');
             interactiveList.style.removeProperty('--perk-hover-visual-height');
+            if (showcase) {
+              showcase.classList.remove('is-hover-locked');
+              showcase.style.removeProperty('--perk-hover-showcase-height');
+            }
           }
         };
         item.addEventListener('mouseenter', onMouseEnter);
