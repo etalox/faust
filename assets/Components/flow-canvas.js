@@ -1426,22 +1426,43 @@ class FaustFlowCanvas extends HTMLElement {
   }
 
   restartSlowAnimation() {
-    // Keep a brief visual acknowledgement while the next frame starts immediately.
-    // The class is also used to remove the artificial one-second lead-in of the
-    // first visible connection in each canvas.
-    this.classList.add('is-restarting', 'is-replay-feedback');
-    if (this._replayFeedbackTimeout) clearTimeout(this._replayFeedbackTimeout);
-    this._replayFeedbackTimeout = setTimeout(() => {
-      this.classList.remove('is-replay-feedback');
-      this._replayFeedbackTimeout = null;
-    }, 340);
-    this.classList.remove('animation-complete', 'animating', 'fast-replay');
+    if (this.classList.contains('is-replay-transitioning')) return;
     this.hideCanvasFollower();
-    this._hasPlayed = false;
-    this.clearTimers();
-    this.stopLabelTracking();
-    void this.offsetWidth;
-    this.triggerActualAnimation(false, true);
+    const flow = this.querySelector('.Flow');
+    let hasExited = false;
+
+    const continueAfterExit = () => {
+      if (hasExited) return;
+      hasExited = true;
+      this._replayTransitionTimeout = null;
+      this._replayTransitionCleanup?.();
+      this._replayTransitionCleanup = null;
+      this.classList.add('is-restarting', 'is-replay-feedback', 'is-replay-entering');
+      this.classList.remove('animation-complete', 'animating', 'fast-replay');
+      this._hasPlayed = false;
+      this.clearTimers();
+      this.stopLabelTracking();
+      void this.offsetWidth;
+      this.classList.remove('is-replay-exiting');
+      this.triggerActualAnimation(false, true);
+
+      if (this._replayFeedbackTimeout) clearTimeout(this._replayFeedbackTimeout);
+      this._replayFeedbackTimeout = setTimeout(() => {
+        this.classList.remove('is-replay-feedback', 'is-replay-entering', 'is-replay-transitioning');
+        this._replayFeedbackTimeout = null;
+      }, 720);
+    };
+
+    // La entrada se encadena al transitionend de la salida, con un fallback
+    // para navegadores que no emiten ese evento al reducir movimiento.
+    const onExitEnd = (event) => {
+      if (event.target === flow && event.propertyName === 'opacity') continueAfterExit();
+    };
+    this._replayTransitionCleanup = () => flow?.removeEventListener('transitionend', onExitEnd);
+    flow?.addEventListener('transitionend', onExitEnd);
+    void flow?.offsetWidth;
+    this.classList.add('is-replay-transitioning', 'is-replay-exiting');
+    this._replayTransitionTimeout = setTimeout(continueAfterExit, 440);
   }
 
   hideCanvasFollower() {
@@ -2881,6 +2902,12 @@ class FaustFlowCanvas extends HTMLElement {
 
   disconnectedCallback() {
     this.clearTimers();
+    if (this._replayTransitionTimeout) {
+      clearTimeout(this._replayTransitionTimeout);
+      this._replayTransitionTimeout = null;
+    }
+    this._replayTransitionCleanup?.();
+    this._replayTransitionCleanup = null;
     this._scrollIndicatorOpacityAnimation?.cancel();
     this._scrollIndicatorOpacityAnimation = null;
     if (this._glowExitTimeout) {
