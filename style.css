@@ -1174,6 +1174,27 @@ faust-flow-canvas {
   position: relative;
 }
 
+/* Reinicio manual: la escena completa desaparece primero y vuelve enfocada
+   mientras sus piezas recuperan la animación lenta individual. */
+faust-flow-canvas.has-animations.is-replay-exiting .Flow {
+  opacity: 0;
+  filter: blur(10px);
+  scale: .985;
+  transition: opacity 360ms cubic-bezier(.4, 0, 1, 1), filter 360ms cubic-bezier(.4, 0, 1, 1), scale 360ms cubic-bezier(.4, 0, 1, 1) !important;
+}
+
+faust-flow-canvas.has-animations.is-replay-entering .Flow {
+  opacity: 1;
+  filter: blur(0);
+  scale: 1;
+  transition: opacity 680ms cubic-bezier(.16, 1, .3, 1), filter 680ms cubic-bezier(.16, 1, .3, 1), scale 680ms cubic-bezier(.16, 1, .3, 1) !important;
+}
+
+faust-flow-canvas.is-replay-transitioning .canvas-replay-button {
+  opacity: .32;
+  pointer-events: none;
+}
+
 /* Los conectores pertenecen al plano de fondo del diagrama; las piezas los
    cubren incluso cuando una flecha se deforma durante el arrastre. */
 faust-flow-canvas faust-flow-arrow,
