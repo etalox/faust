@@ -267,6 +267,188 @@ p,
   padding: 140px 0;
 }
 
+/* FaustOS — el texto sigue el margen editorial de la página; el dashboard
+   ocupa la mitad opuesta y se prolonga hasta el borde físico del viewport. */
+.faustos-showcase {
+  padding: 140px 0;
+  overflow: hidden;
+}
+
+.faustos-showcase-inner {
+  position: relative;
+  width: 100%;
+  height: 754px;
+}
+
+.faustos-copy {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 56px;
+  padding: 52px 64px 52px clamp(4vw, 19.48vw - 151.74px, 160px);
+}
+
+.faustos-copy-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.faustos-logo {
+  display: block;
+  width: auto;
+  height: 20px;
+  margin-bottom: 48px;
+}
+
+.faustos-title {
+  max-width: 700px;
+  margin: 0;
+  color: var(--fg);
+  font-size: clamp(38px, 5vw, 68px);
+  font-weight: 400;
+  letter-spacing: -1.6px;
+  line-height: 1.08;
+}
+
+.faustos-description {
+  max-width: 700px;
+  margin: 36px 0 0;
+  color: rgba(255, 255, 255, .7);
+  font-size: 17px;
+  letter-spacing: .01em;
+  line-height: 1.4;
+}
+
+.faustos-actions {
+  margin-top: 46px;
+}
+
+.faustos-actions .btn {
+  min-height: 60px;
+  padding: 16px 24px;
+}
+
+.faustos-logos {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.faustos-logos img {
+  display: block;
+  width: auto;
+  height: 30px;
+  max-width: 108px;
+  object-fit: contain;
+  opacity: 1;
+}
+
+.faustos-dashboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.faustos-dashboard img {
+  display: block;
+  width: auto;
+  min-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+}
+
+@media (max-width: 980px) {
+  .faustos-showcase-inner {
+    height: auto;
+    min-height: 0;
+  }
+
+  .faustos-copy {
+    width: 100%;
+    height: auto;
+    min-height: 620px;
+    padding: 84px 4vw 64px;
+  }
+
+  .faustos-dashboard {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: min(68vw, 520px);
+  }
+
+  .faustos-dashboard img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .faustos-showcase-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .faustos-copy {
+    display: contents;
+  }
+
+  .faustos-copy-main {
+    grid-row: 1;
+    padding: 68px 4vw 48px;
+  }
+
+  .faustos-dashboard {
+    grid-row: 2;
+  }
+
+  .faustos-logos {
+    grid-row: 3;
+    padding: 56px 4vw 48px;
+  }
+
+  .faustos-logo {
+    height: 17px;
+    margin-bottom: 38px;
+  }
+
+  .faustos-description {
+    margin-top: 28px;
+    font-size: 16px;
+  }
+
+  .faustos-actions {
+    margin-top: 34px;
+  }
+
+  .faustos-actions .btn {
+    min-height: 56px;
+  }
+
+  .faustos-logos {
+    gap: 26px;
+  }
+
+  .faustos-logos img {
+    height: 24px;
+    max-width: 86px;
+  }
+
+  .faustos-dashboard {
+    width: calc(100% - 4vw);
+    margin-left: 4vw;
+    height: 68vw;
+  }
+}
+
 .muted {
   color: var(--muted);
 }
