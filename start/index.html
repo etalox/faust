@@ -320,6 +320,32 @@
       </div>
     </section>
 
+    <section class="section faustos-showcase" id="faustos">
+      <div class="faustos-showcase-inner">
+        <div class="faustos-copy">
+          <div class="faustos-copy-main">
+            <img class="faustos-logo reveal-item" data-faustos-sequence data-reveal-order="1" src="../assets/FaustOS_logo.svg" alt="FaustOS" draggable="false">
+            <h2 class="faustos-title reveal-item" data-faustos-sequence data-reveal-order="2">Presentamos el nuevo Faust OS: Rastrea los resultados en vivo.</h2>
+            <p class="faustos-description reveal-item" data-faustos-sequence data-reveal-order="3">Sabemos que la transparencia es fundamental. A partir de ahora, obtén acceso a las métricas que te interesan en tiempo real, todo en un solo lugar, en FaustOS.</p>
+            <div class="btn-row faustos-actions reveal-item" data-faustos-sequence data-reveal-order="4">
+              <a class="btn btn-primary" href="#faq">Conoce más <img class="arrow" src="../assets/Icons/button_arrow.svg" alt=""></a>
+              <a class="btn btn-secondary" href="#aplicar">Entrar</a>
+            </div>
+          </div>
+
+          <div class="faustos-logos reveal-item" data-faustos-sequence data-reveal-order="6" aria-label="Respaldado por Finsus, Herdez y Hábita 360">
+            <img src="../assets/Logotypes/finsus.svg" alt="Finsus" draggable="false">
+            <img src="../assets/Logotypes/herdez.svg" alt="Herdez" draggable="false">
+            <img src="../assets/Logotypes/habita-360.svg" alt="Hábita 360" draggable="false">
+          </div>
+        </div>
+
+        <div class="faustos-dashboard reveal-item" data-faustos-sequence data-reveal-order="5">
+          <img src="../assets/OS_Dashboard.png" alt="Vista del dashboard de FaustOS" draggable="false">
+        </div>
+      </div>
+    </section>
+
     <section class="section section-grid-bg" id="faq">
       <div class="wrap">
         <div class="pill reveal-item">/ Preguntas frecuentes</div>
@@ -933,6 +959,12 @@
         groupsPush(currentGroup);
       }
 
+      // FaustOS se revela como una composición completa: sus extremos no
+      // deben depender de entrar individualmente al viewport.
+      document.querySelectorAll('[data-faustos-sequence]').forEach(function(item) {
+        item.setAttribute('data-reveal-group', 'faustos-sequence');
+      });
+
       function groupsPush(group) {
         groupIndex++;
         group.forEach(function(el) {
@@ -1036,6 +1068,12 @@
 
       function revealElements(elements) {
         elements.sort(function(a, b) {
+          var sequenceOrderA = parseInt(a.getAttribute('data-reveal-order'), 10);
+          var sequenceOrderB = parseInt(b.getAttribute('data-reveal-order'), 10);
+          if (!isNaN(sequenceOrderA) && !isNaN(sequenceOrderB)) {
+            return sequenceOrderA - sequenceOrderB;
+          }
+
           var rectA = a.getBoundingClientRect();
           var rectB = b.getBoundingClientRect();
           if (Math.abs(rectA.top - rectB.top) < 10) {
