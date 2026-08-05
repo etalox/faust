@@ -558,7 +558,9 @@ class FaustNavbar extends HTMLElement {
         }
 
         .nav-inner { height: 80px; display: flex; justify-content: space-between; align-items: center; position: relative; }
-        .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; color: #7c7f84; font-size: 14px; user-select: none !important; }
+        .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 18px; color: #7c7f84; font-size: 14px; user-select: none !important; }
+        .nav-links a { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 12px 16px; }
+        .nav-links a + a::before { content: ''; position: absolute; left: -10px; top: 50%; width: 1px; height: 20px; background: rgba(255, 255, 255, 0.10); transform: translateY(-50%); pointer-events: none; }
         .nav.nav-contacto-hidden #nav-contacto { display: none; }
         .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
 
@@ -993,7 +995,7 @@ class FaustNavbar extends HTMLElement {
 
       if (ctaLogo) {
         if (isCtaIntersecting) {
-          ctaLogo.style.color = '#0022FF';
+          ctaLogo.style.color = '#0D3AFF';
         } else {
           ctaLogo.style.color = 'white';
         }

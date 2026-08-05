@@ -68,7 +68,7 @@ html {
   --muted: #4A4B4F;
   --blue: #0022ff;
   --line: rgba(255, 255, 255, .07);
-  --chip: rgba(253, 253, 255, .06);
+  --chip: rgba(232, 232, 255, .06);
   --sb-v: 0;
   --lead-font-size: clamp(32px, 4.2vw, 54px);
   --canvas-scale: 1;
@@ -363,6 +363,107 @@ p,
   height: 100%;
   object-fit: cover;
   object-position: left center;
+}
+
+/* Paso de calificación previo a la aplicación. FaustOS queda oculto de forma
+   temporal, pero se conserva intacto en el HTML para poder restituirlo. */
+.application-qualifier {
+  overflow: hidden;
+}
+
+.application-qualifier-inner {
+  min-height: 514px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.application-qualifier .pill {
+  margin-bottom: 42px;
+}
+
+.application-qualifier-title {
+  max-width: 1200px;
+  margin: 0;
+  color: var(--fg);
+  font-size: clamp(44px, 5vw, 68px);
+  font-weight: 400;
+  letter-spacing: -1.6px;
+  line-height: 1.08;
+}
+
+.application-qualifier-description {
+  max-width: 1200px;
+  margin: 32px 0 0;
+  color: rgba(255, 255, 255, .7);
+  font-size: 17px;
+  letter-spacing: .01em;
+  line-height: 1.4;
+}
+
+.application-qualifier-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 42px;
+}
+
+.application-qualifier-actions .btn {
+  min-height: 60px;
+  padding: 16px 24px;
+}
+
+.application-qualifier-note {
+  max-width: 440px;
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: max-height 280ms ease, margin-top 280ms ease, opacity 220ms ease, transform 280ms ease;
+}
+
+.application-qualifier.is-not-eligible .application-qualifier-note {
+  max-height: 44px;
+  margin-top: 22px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 430px) {
+  .application-qualifier-inner {
+    min-height: 0;
+    padding: 24px 0;
+  }
+
+  .application-qualifier .pill {
+    margin-bottom: 32px;
+  }
+
+  .application-qualifier-title {
+    font-size: clamp(38px, 10.2vw, 48px);
+    letter-spacing: -1.1px;
+  }
+
+  .application-qualifier-description {
+    margin-top: 26px;
+    font-size: 16px;
+  }
+
+  .application-qualifier-actions {
+    margin-top: 34px;
+  }
+
+  .application-qualifier-actions .btn {
+    min-height: 56px;
+  }
 }
 
 @media (max-width: 980px) {
@@ -676,7 +777,7 @@ p,
   overflow: hidden;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 16s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hero-video-container.is-loaded {
@@ -848,16 +949,24 @@ h2.lead.reveal-item.reveal-visible {
 
 .supported {
   margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
 }
 
 .supported .label {
   font-size: 14px;
   color: rgba(255, 255, 255, .7);
-  margin-bottom: 20px;
+  line-height: 1.4;
+  letter-spacing: .28px;
+  margin: 0;
+  text-align: center;
 }
 
 .supported .logos {
   display: flex;
+  height: 24px;
   gap: 40px;
   justify-content: center;
   align-items: center;
@@ -866,18 +975,24 @@ h2.lead.reveal-item.reveal-visible {
 
 .supported .logos .partner-logo {
   display: inline-flex;
-  flex: 0 1 calc((100% - 80px) / 3);
+  flex: 0 1 auto;
   min-width: 0;
   align-items: center;
   justify-content: center;
 }
 
 .supported .logos img {
-  height: 32px;
+  display: block;
+  width: auto;
+  height: 24px;
   max-width: 100%;
   object-fit: contain;
   opacity: .8;
   transition: opacity 180ms ease;
+}
+
+.supported .logos .partner-logo--fatisa img {
+  height: 23px;
 }
 
 .supported .logos .partner-logo:hover img,
@@ -909,6 +1024,10 @@ h2.lead.reveal-item.reveal-visible {
 @media (max-width: 430px) {
   .supported .logos img {
     height: 24px;
+  }
+
+  .supported .logos .partner-logo--fatisa img {
+    height: 23px;
   }
 }
 
@@ -2513,10 +2632,30 @@ body.has-canvas-window .nav-logo-icon {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 30px;
+  gap: 18px;
   color: #7c7f84;
   font-size: 14px;
   user-select: none !important;
+}
+
+.nav-links a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+}
+
+.nav-links a + a::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .nav.nav-contacto-hidden #nav-contacto {
@@ -3465,6 +3604,10 @@ body.hide-page-grid .section-grid-bg::after {
   font-size: 16px;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.6);
+  /* FAQ responses need their natural line box; they do not use the compact
+     Figma-style trimming applied to global paragraph elements. */
+  text-box-trim: none;
+  text-box-edge: initial;
 }
 
 /* 3. Clean Feature List Perks (Careers List Rows - AgentPilot Style) */

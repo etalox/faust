@@ -62,19 +62,6 @@ const faustIsAnalyticsEnabled = () => {
   try {
     const visited = JSON.parse(localStorage.getItem('faust-visited-pages') || '[]');
     const path = window.location.pathname.toLowerCase();
-    const isCareers = path.includes('/careers/') || path.endsWith('/careers');
-    
-    if (localStorage.getItem('faust-user-role') !== 'Talento') {
-      if (isCareers) {
-        if (visited.length === 0 || (visited.length === 1 && visited[0] !== 'careers/index.html')) {
-          localStorage.setItem('faust-user-role', 'Talento');
-        } else {
-          localStorage.setItem('faust-user-role', 'Standard');
-        }
-      } else {
-        localStorage.setItem('faust-user-role', 'Standard');
-      }
-    }
 
     let current;
     if (path.includes('/start/') || path.endsWith('/start')) {
@@ -134,6 +121,134 @@ try {
 } catch(e) {
   console.error("Error al inicializar scripts de rastreo:", e);
 }
+
+/* ── Silent historical cookie-consent telemetry ── */
+(function() {
+  const TELEMETRY_KEY = 'faust-cookie-consent-telemetry-sent';
+  const SPLITFORMS_ENDPOINT = 'https://splitforms.com/api/submit';
+  const SPLITFORMS_ACCESS_KEY = 'f6778d6ae57e42a5a319d81048ab8db7';
+  let isSending = false;
+
+  function readJson(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key) || '{}');
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function getSessionTime() {
+    const seconds = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
+    if (seconds < 60) return `${seconds}s`;
+    const minutes = Math.floor(seconds / 60);
+    return minutes < 60
+      ? `${minutes}m ${seconds % 60}s`
+      : `${Math.floor(minutes / 60)}h ${minutes % 60}m ${seconds % 60}s`;
+  }
+
+  function getDeviceDetails() {
+    const ua = navigator.userAgent || '';
+    const os = ua.includes('Windows') ? 'Windows'
+      : ua.includes('Macintosh') ? 'macOS'
+      : ua.includes('iPhone') ? 'iOS (iPhone)'
+      : ua.includes('iPad') ? 'iOS (iPad)'
+      : ua.includes('Android') ? 'Android'
+      : ua.includes('Linux') ? 'Linux'
+      : 'Otro OS';
+    const deviceType = /mobile|android|iphone|ipod|phone/i.test(ua) ? 'Mobile'
+      : /ipad|tablet/i.test(ua) ? 'Tablet'
+      : 'Desktop';
+    const browser = ua.includes('Firefox') ? 'Firefox'
+      : ua.includes('SamsungBrowser') ? 'Samsung Browser'
+      : ua.includes('Opera') || ua.includes('OPR') ? 'Opera'
+      : ua.includes('Edg') ? 'Edge'
+      : ua.includes('Chrome') ? 'Chrome'
+      : ua.includes('Safari') ? 'Safari'
+      : 'Desconocido';
+
+    return { os, deviceType, browser };
+  }
+
+  function buildTelemetryPayload() {
+    const ipData = readJson('faust-detected-ip-data');
+    const device = getDeviceDetails();
+    const pages = readJson('faust-visited-pages');
+    const visitedPages = Array.isArray(pages) && pages.length ? pages.join(' -> ') : 'Ninguna';
+    const city = ipData.city || '';
+    const region = ipData.region || ipData.region_name || '';
+    const country = ipData.country_name || ipData.country || localStorage.getItem('faust-detected-country-code') || '';
+    const location = city || region || country
+      ? `${city}${city && region ? ', ' : ''}${region}${(city || region) && country ? ' - ' : ''}${country}`
+      : 'Desconocida';
+    const consent = `Decisión Tomada: ${localStorage.getItem('faust-cookie-consent-choice-made') || 'false'} | Analytics: ${localStorage.getItem('faust-cookie-consent-analytics') || 'false'} | Clarity: ${localStorage.getItem('faust-cookie-consent-clarity') || 'false'}`;
+    const screenResolution = `${window.screen.width}x${window.screen.height} (Profundidad: ${window.screen.colorDepth} bits)`;
+    const viewportSize = `${window.innerWidth}x${window.innerHeight} (DPR: ${window.devicePixelRatio})`;
+    const hardwareInfo = `Cores CPU: ${navigator.hardwareConcurrency || 'N/D'} | RAM: ${navigator.deviceMemory || 'N/D'}GB | Puntos Táctiles: ${navigator.maxTouchPoints || 0}`;
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
+    const connectionSpeed = `Tipo: ${connection.effectiveType || 'N/D'} | Velocidad de Descarga: ${connection.downlink ? `${connection.downlink} Mbps` : 'N/D'} | Latencia (RTT): ${connection.rtt ? `${connection.rtt} ms` : 'N/D'}`;
+    const ip = localStorage.getItem('faust-detected-ip') || 'No detectada';
+    const language = `${navigator.language || 'N/D'} [Idiomas admitidos: ${navigator.languages ? navigator.languages.join(', ') : 'N/D'}]`;
+
+    return {
+      access_key: SPLITFORMS_ACCESS_KEY,
+      _subject: '[Consentimiento] Cookies aceptadas - Faust Partners',
+      'Tipo de Evento': 'Aceptación de cookies analíticas',
+      'Origen del Evento': 'Banner de consentimiento o consentimiento previo',
+      'IP de Origen': ip,
+      'Ubicación Estimada (IP)': location,
+      'Proveedor de Internet (ISP)': ipData.org || ipData.asn || 'Desconocido',
+      'Tipo de Dispositivo': device.deviceType,
+      'Sistema Operativo': device.os,
+      'Navegador': device.browser,
+      'Resolución de Pantalla': screenResolution,
+      'Resolución de Viewport': viewportSize,
+      'Especificaciones de Hardware': hardwareInfo,
+      'Zona Horaria': Intl.DateTimeFormat().resolvedOptions().timeZone || 'Desconocida',
+      'Marca de Tiempo Local': new Date().toString(),
+      'Idioma del Navegador': language,
+      'Ruta de Navegación': visitedPages,
+      'Tiempo de Sesión Acumulado': getSessionTime(),
+      'Página de Referencia': document.referrer || 'Acceso Directo / Sin Referencia',
+      'URL Actual': window.location.href,
+      'Velocidad de Conexión (Estimada)': connectionSpeed,
+      'Preferencia de Cookies': consent,
+      'Rol de Usuario': window.faustGetProfile?.() || 'Indefinido',
+      'Dumb Scroll Activado': window.globalDumbScrollTriggered ? 'Sí' : 'No',
+      botcheck: ''
+    };
+  }
+
+  async function sendCookieConsentTelemetry() {
+    try {
+      if (isSending || localStorage.getItem(TELEMETRY_KEY) === 'true') return;
+      if (localStorage.getItem('faust-cookie-consent-analytics') !== 'true') return;
+
+      isSending = true;
+      const response = await fetch(SPLITFORMS_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(buildTelemetryPayload())
+      });
+
+      if (!response.ok) throw new Error('Splitforms request failed');
+      localStorage.setItem(TELEMETRY_KEY, 'true');
+    } catch (error) {
+      // Stay silent and leave the key unset so a future visit can retry.
+    } finally {
+      isSending = false;
+    }
+  }
+
+  window.faustSendCookieConsentTelemetry = sendCookieConsentTelemetry;
+
+  // A person who consented in an earlier session is registered on their first
+  // subsequent visit. Once Splitforms accepts it, the local key makes it a
+  // one-time historical event instead of a record on every page load.
+  window.setTimeout(sendCookieConsentTelemetry, 1500);
+})();
 
 /* ── Premium Glassmorphic Cookie Consent Banner ── */
 (function() {
@@ -463,6 +578,7 @@ try {
       if (typeof faustInitTrackingScripts === 'function') {
         faustInitTrackingScripts();
       }
+      window.setTimeout(() => window.faustSendCookieConsentTelemetry?.(), 500);
       
       const overlayClarityCheckbox = document.getElementById('overlay-cookie-clarity-toggle');
       if (overlayClarityCheckbox) overlayClarityCheckbox.checked = true;

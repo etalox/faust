@@ -44,6 +44,49 @@
       window.addEventListener('resize', scheduleViewportRefresh, { passive: true });
     })();
   </script>
+  <script>
+    // This promotion path intentionally lives in the document shell, ahead of
+    // asynchronously loaded components. A qualifying action must never depend
+    // on the component loader having finished first.
+    (() => {
+      const profileKey = 'faust-user-profile';
+      const compact = (profile) => profile === 'Talento' ? 'T' : profile === 'Lead' ? 'L' : 'I';
+
+      window.faustPromoteLead = (source = 'unknown') => {
+        let previous = 'Indefinido';
+        try {
+          const saved = localStorage.getItem(profileKey);
+          previous = saved === 'Lead' || saved === 'Talento' ? saved : 'Indefinido';
+          // Talent is sticky; only a submitted application can promote it.
+          if (previous === 'Talento' && source !== 'application-submitted') return 'Talento';
+          localStorage.setItem(profileKey, 'Lead');
+          localStorage.setItem('faust-user-role', 'Standard');
+        } catch (error) {
+          // Keep the current document coherent even when storage is unavailable.
+        }
+
+        document.documentElement.dataset.faustProfile = 'lead';
+        if (previous !== 'Lead') {
+          console.info(`[Perfil] ${compact(previous)} → L`);
+          window.dispatchEvent(new CustomEvent('faust-profile-changed', {
+            detail: { previous, profile: 'Lead', source }
+          }));
+        }
+        requestAnimationFrame(() => document.querySelector('faust-footer')?.render?.());
+        return 'Lead';
+      };
+
+      // The global press microinteraction intercepts trusted clicks during the
+      // capture phase. Register this first, in the same phase, so the Lead
+      // signal is never prevented before it reaches its normal click handler.
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof Element && target.closest('[data-lead-profile-yes]')) {
+          window.faustPromoteLead('qualification-confirmed');
+        }
+      }, true);
+    })();
+  </script>
   <title>FaustPartners™ | Growth Partner Líder en México</title>
   <link rel="icon" type="image/png" href="../assets/Icons/tab_icon.png">
 
@@ -56,7 +99,7 @@
     })(window, document, "clarity", "script", "wuwhfucwt0");
   </script>
   <script src="../assets/translation.js" defer></script>
-  <script src="../assets/components.js" defer></script>
+  <script src="../assets/components.js?v=profiles-20260805e" defer></script>
   <link rel="stylesheet" href="../style.css">
 </head>
 
@@ -81,10 +124,10 @@
   <main>
     <section class="hero wrap section-grid-bg" id="aplicar">
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
-      <h1 class="reveal-item" id="hero-title">Maximizamos el MRR <br>de las empresas más grandes <br>de México.</h1>
+      <h1 class="reveal-item" id="hero-title">Maximizamos el MRR <br>de las empresas que hoy son<br>líderes en México.</h1>
       <script>
         if (localStorage.getItem('faust-user-role') === 'Talento') {
-          document.getElementById('hero-title').innerHTML = 'Maximizamos el MRR <br>de las empresas más grandes <br>de México.';
+          document.getElementById('hero-title').innerHTML = 'Desarrollamos las plataformas <br>de las empresas líderes en México.';
         }
       </script>
       <p class="reveal-item">Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
@@ -94,13 +137,13 @@
       </div>
       <div style="position: relative; top: -120px; height: 0; pointer-events: none; visibility: hidden;"></div>
       <div class="supported reveal-item">
-        <div class="label">Respaldado por</div>
+        <div class="label">Respaldado por equipos de</div>
         <div class="logos">
           <a class="partner-logo" href="https://finsus.mx" aria-label="Visitar Finsus">
             <img src="../assets/Logotypes/finsus.svg" alt="Finsus" draggable="false">
           </a>
-          <a class="partner-logo" href="https://grupoherdez.com.mx" aria-label="Visitar Grupo Herdez">
-            <img src="../assets/Logotypes/herdez.svg" alt="Herdez" draggable="false">
+          <a class="partner-logo partner-logo--fatisa" href="https://fatisa.com.mx/" aria-label="Visitar Fatisa">
+            <img src="../assets/Logotypes/Fatisa.svg" alt="Fatisa" draggable="false">
           </a>
           <a class="partner-logo" href="https://habita-360.xyz" aria-label="Visitar Hábita-360">
             <img src="../assets/Logotypes/habita-360.svg" alt="Hábita-360" draggable="false">
@@ -122,20 +165,40 @@
           <faust-btn-strategy></faust-btn-strategy>
         </div>
         <div class="stats" id="stats-container">
-          <!-- Stats will be loaded dynamically by the script below -->
+          <!-- metrics:generated:start -->
+          <article class="stat reveal-item">
+            <div class="stat-heading">Impacto</div>
+            <div class="stat-number-wrap">
+              <h3>730 mil</h3>
+              <p class="title">Usuarios Impactados</p>
+            </div>
+            <p class="desc">Impactamos la experiencia de cientos de miles de usuarios a través de nuestras optimizaciones.</p>
+          </article>
+          <article class="stat reveal-item">
+            <div class="stat-heading">Partners</div>
+            <div class="stat-number-wrap">
+              <h3>5</h3>
+              <p class="title">Empresas en México</p>
+            </div>
+            <p class="desc">Nos asociamos con un selecto número de empresas en México y el resto del continente.</p>
+          </article>
+          <article class="stat reveal-item">
+            <div class="stat-heading">Resultados</div>
+            <div class="stat-number-wrap">
+              <h3>+35.9%</h3>
+              <p class="title">CRO (Conversión)</p>
+            </div>
+            <p class="desc">Es el porcentaje de tráfico que realiza una acción determinada en la plataforma.</p>
+          </article>
+          <!-- metrics:generated:end -->
         </div>
         <script>
           (function() {
             var container = document.getElementById('stats-container');
             if (!container) return;
 
-            var fallbackStats = [
-              { name: "Impacto", number: "710 mil", title: "Usuarios Impactados", desc: "Impactamos la experiencia de cientos de miles de usuarios a través de nuestras optimizaciones." },
-              { name: "Partners", number: "5", title: "Empresas en México", desc: "Nos asociamos con un selecto número de empresas en México y el resto del continente." },
-              { name: "Resultados", number: "+35.9%", title: "CRO (Conversión)", desc: "Es el porcentaje de tráfico que realiza una acción determinada en la plataforma." }
-            ];
-
             function renderStats(stats) {
+              container.hidden = false;
               container.innerHTML = '';
               stats.forEach(function(s) {
                 var article = document.createElement('article');
@@ -185,27 +248,21 @@
               return stats;
             }
 
-            if (window.location.protocol === 'file:') {
-              renderStats(fallbackStats);
-            } else {
-              fetch('../live/metrics.txt')
-                .then(function(res) {
-                  if (!res.ok) throw new Error('Failed to load metrics.txt');
-                  return res.text();
-                })
-                .then(function(text) {
-                  var stats = parseStatsText(text);
-                  if (stats.length > 0) {
-                    renderStats(stats);
-                  } else {
-                    renderStats(fallbackStats);
-                  }
-                })
-                .catch(function(err) {
-                  console.warn("Could not fetch metrics.txt from live, using fallback:", err);
-                  renderStats(fallbackStats);
-                });
-            }
+            fetch('../live/metrics.txt', { cache: 'no-store' })
+              .then(function(res) {
+                if (!res.ok) throw new Error('Failed to load metrics.txt');
+                return res.text();
+              })
+              .then(function(text) {
+                var stats = parseStatsText(text);
+                if (!stats.length) throw new Error('metrics.txt contains no valid metrics');
+                renderStats(stats);
+              })
+              .catch(function(err) {
+                // The server-rendered values remain visible for crawlers,
+                // offline previews and transient network failures.
+                console.warn('Could not fetch metrics.txt:', err);
+              });
           })();
         </script>
       </div>
@@ -320,7 +377,8 @@
       </div>
     </section>
 
-    <section class="section faustos-showcase" id="faustos">
+    <!-- FaustOS se conserva intacto para reactivarlo cuando corresponda. -->
+    <section class="section faustos-showcase" id="faustos" hidden aria-hidden="true">
       <div class="faustos-showcase-inner">
         <div class="faustos-copy">
           <div class="faustos-copy-main">
@@ -333,9 +391,9 @@
             </div>
           </div>
 
-          <div class="faustos-logos reveal-item" data-faustos-sequence data-reveal-order="6" aria-label="Respaldado por Finsus, Grupo Herdez y Hábita 360">
+          <div class="faustos-logos reveal-item" data-faustos-sequence data-reveal-order="6" aria-label="Respaldado por Finsus, Fatisa y Hábita 360">
             <img src="../assets/Logotypes/finsus.svg" alt="Finsus" draggable="false">
-            <img src="../assets/Logotypes/herdez.svg" alt="Herdez" draggable="false">
+            <img src="../assets/Logotypes/Fatisa.svg" alt="Fatisa" draggable="false">
             <img src="../assets/Logotypes/habita-360.svg" alt="Hábita 360" draggable="false">
           </div>
         </div>
@@ -346,15 +404,30 @@
       </div>
     </section>
 
+    <section class="section application-qualifier section-grid-bg" id="validacion">
+      <div class="wrap">
+        <div class="application-qualifier-inner">
+          <div class="pill reveal-item">/ Aplicar</div>
+          <h2 class="application-qualifier-title reveal-item">¿Tu empresa opera en México?</h2>
+          <p class="application-qualifier-description reveal-item">Antes de aplicar, confirmemos que estamos en el mismo punto de partida.</p>
+          <div class="application-qualifier-actions reveal-item" role="group" aria-label="Confirmar si tu empresa opera en México">
+            <button class="btn btn-secondary application-qualifier-no" type="button" aria-expanded="false" aria-controls="application-qualifier-note">No, aún no</button>
+            <a class="btn btn-primary faust-apply-btn" data-action="apply" data-lead-profile-yes data-press-delay="off" href="#aplicar" onclick="window.faustPromoteLead?.('qualification-confirmed')">Sí, continuar <img class="arrow" src="../assets/Icons/button_arrow.svg" alt=""></a>
+          </div>
+          <p class="application-qualifier-note" id="application-qualifier-note" aria-live="polite">Por ahora, colaboramos con empresas que operan en México.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="section section-grid-bg" id="faq">
       <div class="wrap">
-        <div class="pill reveal-item">/ Preguntas frecuentes</div>
-        <h2 class="section-title reveal-item" style="margin: 0 0 40px 0;">¿Tienes preguntas? Te damos respuestas.</h2>
+        <div class="pill reveal-item">/ FAQ</div>
+        <h2 class="section-title reveal-item" style="margin: 0 0 40px 0;">Tenemos respuestas a todas tus preguntas.</h2>
         
         <div class="faq-grid">
-          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+          <div class="faq-item reveal-item" data-profile-hidden-for="Talento" onclick="toggleFaq(this)">
             <button class="faq-trigger" aria-expanded="false">
-              <span>¿Qué es un Growth Partner CRO y en qué se diferencia de una agencia?</span>
+              <span>¿Qué es un Growth Partner CRO y en qué se diferencia de una agencia UX/UI?</span>
               <span class="faq-icon" aria-hidden="true"><svg class="faq-icon-mark" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="m3 5 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
             <div class="faq-content">
@@ -362,7 +435,7 @@
             </div>
           </div>
 
-          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+          <div class="faq-item reveal-item" data-profile-hidden-for="Talento" onclick="toggleFaq(this)">
             <button class="faq-trigger" aria-expanded="false">
               <span>¿Cómo funciona exactamente el modelo de Revenue Share?</span>
               <span class="faq-icon" aria-hidden="true"><svg class="faq-icon-mark" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="m3 5 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -372,13 +445,13 @@
             </div>
           </div>
 
-          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+          <div class="faq-item reveal-item" data-lead-profile-faq="safe-traffic" onclick="toggleFaq(this)">
             <button class="faq-trigger" aria-expanded="false">
               <span>¿Es seguro redirigir el tráfico a su interfaz optimizada?</span>
               <span class="faq-icon" aria-hidden="true"><svg class="faq-icon-mark" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="m3 5 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
             <div class="faq-content">
-              <p>Completamente seguro. Utilizamos redirección gradual y controlada. Empezamos enviando solo un 10% del tráfico a la variante optimizada. Evaluamos el comportamiento en tiempo real y, solo cuando validamos científicamente que la nueva versión convierte mejor que el control (A), aumentamos gradualmente el porcentaje de tráfico para mitigar cualquier riesgo operativo.</p>
+              <p>Completamente seguro. Utilizamos redirección gradual y controlada. En algunos casos, empezamos enviando solo un 10% del tráfico a la variante optimizada. Evaluamos el comportamiento en tiempo real y, solo cuando validamos científicamente que la nueva versión (B) convierte mejor que el control (A), aumentamos gradualmente el porcentaje de tráfico para mitigar cualquier riesgo operativo.</p>
             </div>
           </div>
 
@@ -392,7 +465,7 @@
             </div>
           </div>
 
-          <div class="faq-item reveal-item" onclick="toggleFaq(this)">
+          <div class="faq-item reveal-item" data-lead-profile-faq="company-requirements" onclick="toggleFaq(this)">
             <button class="faq-trigger" aria-expanded="false">
               <span>¿Qué requisitos debe cumplir mi empresa para colaborar con Faust?</span>
               <span class="faq-icon" aria-hidden="true"><svg class="faq-icon-mark" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="m3 5 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -1134,8 +1207,20 @@
       if (!isOpen) {
         element.classList.add('is-open');
         element.querySelector('.faq-trigger').setAttribute('aria-expanded', 'true');
+        window.faustProfileTrackFaq?.(element);
       }
     }
+
+    (function initApplicationQualifier() {
+      const noButton = document.querySelector('.application-qualifier-no');
+      const qualifier = document.querySelector('.application-qualifier');
+      if (!noButton || !qualifier) return;
+
+      noButton.addEventListener('click', function() {
+        const isOpen = qualifier.classList.toggle('is-not-eligible');
+        noButton.setAttribute('aria-expanded', String(isOpen));
+      });
+    })();
   </script>
 
   <script>
