@@ -267,6 +267,10 @@
 
     <section class="section section-grid-bg" id="metricas">
       <div class="wrap wrap-narrow">
+        <header class="metrics-header reveal-item">
+          <div class="pill">/ Resultados</div>
+          <h2>Nuestros resultados hablan por sí mismos</h2>
+        </header>
         <div class="stats" id="stats-container">
           <!-- metrics:generated:start -->
           <article class="stat reveal-item">
@@ -381,7 +385,7 @@
       })();
     </script>
 
-    <section class="section centered section-grid-bg optimization-section">
+    <section class="section centered section-grid-bg" id="optimizacion">
       <div class="wrap wrap-narrow">
         <div class="pill reveal-item">/ Optimización</div>
         <h2 class="headline reveal-item">Desarrollamos arquitectura que escala volumen de conversión.</h2>
@@ -422,6 +426,15 @@
         </div>
       </div>
     </section>
+
+    <script>
+      // Keep the optimisation canvas between the metrics and the system phases.
+      (function placeOptimizationBeforeServicePhases() {
+        const optimization = document.getElementById('optimizacion');
+        const phases = document.querySelector('.service-phases-section');
+        if (optimization && phases && phases.parentNode) phases.parentNode.insertBefore(optimization, phases);
+      })();
+    </script>
 
     <!-- Section 2: Philosophy (Sequential Text Lighting Effect) -->
     <section class="section centered section-grid-bg" id="filosofia">

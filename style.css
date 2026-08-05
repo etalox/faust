@@ -268,7 +268,7 @@ p,
   overflow: clip;
 }
 
-.section.optimization-section {
+section#filosofia {
   padding-top: clamp(180px, 14vw, 240px);
 }
 
@@ -1242,6 +1242,20 @@ h2.lead.reveal-item.reveal-visible {
   grid-template-columns: repeat(3, 1fr);
   gap: 0px;
   margin-top: 70px;
+}
+
+.metrics-header {
+  max-width: 1200px;
+}
+
+.metrics-header h2 {
+  margin: 22px 0 0;
+  color: #f2f2f2;
+  font-size: clamp(38px, 4.4vw, 64px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .stat {
