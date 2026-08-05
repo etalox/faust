@@ -1,4 +1,33 @@
 (function() {
+  // Available on every route, including pages without the landing shell. It
+  // deliberately has no dependency on custom elements or loaded components.
+  if (typeof window.faustPromoteLead !== 'function') {
+    window.faustPromoteLead = function(source) {
+      const profileKey = 'faust-user-profile';
+      let previous = 'Indefinido';
+      try {
+        const saved = localStorage.getItem(profileKey);
+        previous = saved === 'Lead' || saved === 'Talento' ? saved : 'Indefinido';
+        // Talent is intentionally sticky. Only a successfully submitted
+        // application is allowed to explicitly convert it into Lead.
+        if (previous === 'Talento' && source !== 'application-submitted') return 'Talento';
+        localStorage.setItem(profileKey, 'Lead');
+        localStorage.setItem('faust-user-role', 'Standard');
+      } catch (error) {}
+
+      document.documentElement.dataset.faustProfile = 'lead';
+      if (previous !== 'Lead') {
+        const compact = previous === 'Talento' ? 'T' : 'I';
+        console.info(`[Perfil] ${compact} → L`);
+        window.dispatchEvent(new CustomEvent('faust-profile-changed', {
+          detail: { previous, profile: 'Lead', source: source || 'unknown' }
+        }));
+      }
+      requestAnimationFrame(() => document.querySelector('faust-footer')?.render?.());
+      return 'Lead';
+    };
+  }
+
   // Sandbox registries for page-specific scripts
   const pageEventListeners = [];
   const pageObservers = [];
@@ -244,6 +273,310 @@
     document.addEventListener('DOMContentLoaded', setupBottomBlur, { once: true });
   }
 
+  /* ── Visitor profile ────────────────────────────────────────────────
+     A profile is an experience state, not an analytics guess. Lead is
+     deliberately sticky; Talent is inferred from the entry route or the
+     first navigation of the current browser session. */
+  const FAUST_PROFILE_KEY = 'faust-user-profile';
+  const FAUST_PROFILE_ENTRY_KEY = 'faust-profile-entry-route';
+  const FAUST_PROFILE_LAST_ROUTE_KEY = 'faust-profile-last-route';
+  const FAUST_PROFILE_ROUTE_COUNT_KEY = 'faust-profile-route-count';
+  const FAUST_PROFILE_FAQ_PREFIX = 'faust-profile-faq-read-ms:';
+  const FAUST_PROFILE_APPLICATION_FIELDS_KEY = 'faust-profile-application-fields';
+  const FAUST_PROFILES = new Set(['Indefinido', 'Talento', 'Lead']);
+  let profileFaqFrame = null;
+  let profileFaqCandidates = [];
+
+  function normalizeFaustProfile(value) {
+    return FAUST_PROFILES.has(value) ? value : 'Indefinido';
+  }
+
+  function compactFaustProfile(profile) {
+    return profile === 'Indefinido' ? 'I' : profile === 'Talento' ? 'T' : 'L';
+  }
+
+  function getFaustPathname() {
+    return window.location.pathname.toLowerCase();
+  }
+
+  function isFaustCareersPath(pathname) {
+    return pathname.includes('/careers/') || pathname.endsWith('/careers');
+  }
+
+  function getFaustProfile() {
+    try {
+      return normalizeFaustProfile(localStorage.getItem(FAUST_PROFILE_KEY));
+    } catch (error) {
+      return 'Indefinido';
+    }
+  }
+
+  function applyFaustProfileVisibility() {
+    const profile = getFaustProfile();
+    document.documentElement.dataset.faustProfile = profile.toLowerCase();
+
+    document.querySelectorAll('[data-profile-hidden-for]').forEach((element) => {
+      const restrictedProfiles = (element.getAttribute('data-profile-hidden-for') || '')
+        .split(',')
+        .map(value => value.trim())
+        .filter(Boolean);
+      element.hidden = restrictedProfiles.includes(profile);
+    });
+  }
+
+  function setFaustProfile(nextProfile, source) {
+    const normalized = normalizeFaustProfile(nextProfile);
+    const previous = getFaustProfile();
+
+    // Both known profiles are sticky. Talent can only be upgraded through a
+    // completed application, never by an inferred or lightweight signal.
+    if (previous === 'Lead' && normalized !== 'Lead') {
+      applyFaustProfileVisibility();
+      return previous;
+    }
+    if (previous === 'Talento' && (normalized !== 'Lead' || source !== 'application-submitted')) {
+      applyFaustProfileVisibility();
+      return previous;
+    }
+
+    // The document shell owns an early, dependency-free Lead path. Reuse it
+    // here so every qualification signal shares the exact same persistence and
+    // UI refresh behaviour.
+    if (normalized === 'Lead' && typeof window.faustPromoteLead === 'function') {
+      const promoted = window.faustPromoteLead(source || 'unknown');
+      applyFaustProfileVisibility();
+      return promoted;
+    }
+
+    try {
+      localStorage.setItem(FAUST_PROFILE_KEY, normalized);
+      // Compatibility for legacy presentation code while it is gradually
+      // migrated to the explicit three-profile model.
+      localStorage.setItem('faust-user-role', normalized === 'Talento' ? 'Talento' : 'Standard');
+    } catch (error) {
+      // The UI can still reflect the current profile during this page view.
+    }
+
+    applyFaustProfileVisibility();
+    if (previous !== normalized) {
+      console.info(`[Perfil] ${compactFaustProfile(previous)} → ${compactFaustProfile(normalized)}`);
+      window.dispatchEvent(new CustomEvent('faust-profile-changed', {
+        detail: { previous, profile: normalized, source: source || 'unknown' }
+      }));
+    }
+    return normalized;
+  }
+
+  function initialiseFaustEntryProfile() {
+    let entryPath = '';
+    const currentPath = getFaustPathname();
+    try {
+      entryPath = sessionStorage.getItem(FAUST_PROFILE_ENTRY_KEY) || '';
+      if (!entryPath) {
+        entryPath = currentPath;
+        sessionStorage.setItem(FAUST_PROFILE_ENTRY_KEY, entryPath);
+        sessionStorage.setItem(FAUST_PROFILE_LAST_ROUTE_KEY, currentPath);
+        sessionStorage.setItem(FAUST_PROFILE_ROUTE_COUNT_KEY, '0');
+
+        if (getFaustProfile() !== 'Lead') {
+          setFaustProfile(isFaustCareersPath(entryPath) ? 'Talento' : 'Indefinido', 'entry-route');
+        } else {
+          applyFaustProfileVisibility();
+        }
+        return;
+      }
+    } catch (error) {
+      entryPath = currentPath;
+    }
+
+    // A hard navigation can recreate the page without going through the
+    // client router. Register it with the same session route counter.
+    registerFaustRouteNavigation(currentPath, entryPath);
+  }
+
+  function registerFaustRouteNavigation(pathname, knownEntryPath) {
+    const currentPath = (pathname || getFaustPathname()).toLowerCase();
+    let entryPath = knownEntryPath || '';
+    let lastPath = '';
+    let routeCount = 0;
+
+    try {
+      entryPath = entryPath || sessionStorage.getItem(FAUST_PROFILE_ENTRY_KEY) || currentPath;
+      lastPath = sessionStorage.getItem(FAUST_PROFILE_LAST_ROUTE_KEY) || entryPath;
+      routeCount = Math.max(0, Number(sessionStorage.getItem(FAUST_PROFILE_ROUTE_COUNT_KEY)) || 0);
+
+      if (lastPath !== currentPath) {
+        routeCount += 1;
+        sessionStorage.setItem(FAUST_PROFILE_LAST_ROUTE_KEY, currentPath);
+        sessionStorage.setItem(FAUST_PROFILE_ROUTE_COUNT_KEY, String(routeCount));
+      }
+    } catch (error) {
+      return;
+    }
+
+    // Carreras qualifies the visitor only as the entry page or the first
+    // page reached after that entry. Lead always keeps precedence.
+    if (getFaustProfile() !== 'Lead' && isFaustCareersPath(currentPath) && routeCount === 1) {
+      setFaustProfile('Talento', 'first-navigation-to-careers');
+    }
+  }
+
+  function isFullyVisibleInViewport(element) {
+    if (!element || element.hidden) return false;
+    const rect = element.getBoundingClientRect();
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const tolerance = 1;
+    return rect.width > 0 && rect.height > 0 &&
+      rect.top >= -tolerance && rect.left >= -tolerance &&
+      rect.bottom <= viewportHeight + tolerance && rect.right <= viewportWidth + tolerance;
+  }
+
+  function stopFaqLeadTracking() {
+    if (profileFaqFrame !== null) {
+      cancelAnimationFrame(profileFaqFrame);
+      profileFaqFrame = null;
+    }
+    profileFaqCandidates = [];
+  }
+
+  function startFaqLeadTracking() {
+    stopFaqLeadTracking();
+    if (getFaustProfile() === 'Lead') return;
+
+    profileFaqCandidates = Array.from(document.querySelectorAll('[data-lead-profile-faq]'))
+      .map((item) => {
+        const key = item.getAttribute('data-lead-profile-faq');
+        const content = item.querySelector('.faq-content');
+        let elapsed = 0;
+        try {
+          elapsed = Math.max(0, Number(sessionStorage.getItem(FAUST_PROFILE_FAQ_PREFIX + key)) || 0);
+        } catch (error) {}
+        return { item, content, key, elapsed, lastPersistedAt: 0 };
+      })
+      .filter(candidate => candidate.content && candidate.key);
+
+    if (!profileFaqCandidates.length) return;
+
+    let previousTime = performance.now();
+    const tick = (now) => {
+      const elapsedSinceFrame = Math.min(Math.max(now - previousTime, 0), 250);
+      previousTime = now;
+      const tabIsFocused = document.visibilityState === 'visible' && document.hasFocus();
+
+      if (tabIsFocused) {
+        for (const candidate of profileFaqCandidates) {
+          const isBeingRead = candidate.item.classList.contains('is-open') &&
+            isFullyVisibleInViewport(candidate.content);
+          if (!isBeingRead) continue;
+
+          candidate.elapsed += elapsedSinceFrame;
+          if (now - candidate.lastPersistedAt > 250) {
+            try {
+              sessionStorage.setItem(FAUST_PROFILE_FAQ_PREFIX + candidate.key, String(Math.round(candidate.elapsed)));
+            } catch (error) {}
+            candidate.lastPersistedAt = now;
+          }
+
+          if (candidate.elapsed >= 4000) {
+            setFaustProfile('Lead', 'faq-read:' + candidate.key);
+            stopFaqLeadTracking();
+            return;
+          }
+        }
+      }
+
+      profileFaqFrame = requestAnimationFrame(tick);
+    };
+
+    profileFaqFrame = requestAnimationFrame(tick);
+  }
+
+  function countCompletedApplicationFields() {
+    const overlay = document.querySelector('.apply-overlay.is-open');
+    if (!overlay) return 0;
+
+    const fields = [
+      overlay.querySelector('#apply-company'),
+      overlay.querySelector('#apply-name'),
+      overlay.querySelector('#apply-role'),
+      overlay.querySelector('#apply-contact')
+    ];
+    return fields.reduce((count, field) => {
+      const value = field && typeof field.value === 'string' ? field.value.trim() : '';
+      return count + (value ? 1 : 0);
+    }, 0);
+  }
+
+  function evaluateApplicationLeadSignal() {
+    if (getFaustProfile() === 'Lead') return;
+    if (countCompletedApplicationFields() >= 2) {
+      setFaustProfile('Lead', 'application-fields');
+    }
+  }
+
+  function recordCompletedApplicationField(fieldName, value) {
+    if (getFaustProfile() === 'Lead' || !fieldName) return;
+    let completedFields = [];
+    try {
+      completedFields = JSON.parse(sessionStorage.getItem(FAUST_PROFILE_APPLICATION_FIELDS_KEY) || '[]');
+      if (!Array.isArray(completedFields)) completedFields = [];
+    } catch (error) {
+      completedFields = [];
+    }
+
+    const hasValue = typeof value === 'string' ? value.trim().length > 0 : Boolean(value);
+    const uniqueFields = new Set(completedFields);
+    if (hasValue) uniqueFields.add(fieldName);
+    else uniqueFields.delete(fieldName);
+
+    try {
+      sessionStorage.setItem(FAUST_PROFILE_APPLICATION_FIELDS_KEY, JSON.stringify([...uniqueFields]));
+    } catch (error) {}
+
+    if (uniqueFields.size >= 2) {
+      setFaustProfile('Lead', 'application-fields');
+    }
+  }
+
+  window.faustGetProfile = getFaustProfile;
+  window.faustSetProfile = setFaustProfile;
+  window.faustProfileRegisterRouteNavigation = registerFaustRouteNavigation;
+  window.faustProfileRecordApplicationField = recordCompletedApplicationField;
+  window.faustProfileTrackFaq = function(item) {
+    if (item && item.matches?.('[data-lead-profile-faq]')) {
+      startFaqLeadTracking();
+    }
+  };
+  window.faustProfileRefresh = function() {
+    applyFaustProfileVisibility();
+    startFaqLeadTracking();
+    evaluateApplicationLeadSignal();
+  };
+
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) return;
+    if (event.target.closest('[data-lead-profile-yes]')) {
+      setFaustProfile('Lead', 'qualification-confirmed');
+      return;
+    }
+    if (event.target.closest('.faust-apply-btn')) {
+      requestAnimationFrame(evaluateApplicationLeadSignal);
+    }
+  });
+  document.addEventListener('input', evaluateApplicationLeadSignal);
+  document.addEventListener('change', evaluateApplicationLeadSignal);
+  window.addEventListener('faust-profile-changed', () => {
+    applyFaustProfileVisibility();
+    const footer = document.querySelector('faust-footer');
+    if (footer && typeof footer.render === 'function') {
+      requestAnimationFrame(() => footer.render());
+    }
+  });
+
+  initialiseFaustEntryProfile();
+  window.faustProfileRefresh();
+
   document.addEventListener('click', function(event) {
     if (!event.isTrusted || event.detail === 0 || event.defaultPrevented) return;
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -279,20 +612,22 @@
     basePath = src.substring(0, src.lastIndexOf('/') + 1);
   }
 
+  const componentCacheVersion = 'profiles-20260805e';
+  const withComponentVersion = (src) => `${src}?v=${componentCacheVersion}`;
   const componentScripts = [
-    { src: 'Components/consent.js', always: true },
-    { src: 'Components/navbar.js', always: true },
-    { src: 'Components/footer.js', always: true },
-    { src: 'Components/buttons.js', always: true },
-    { src: 'Components/apply-modal.js', always: true },
-    { src: 'Components/logo-lockup.js', selector: 'faust-logo-lockup' },
-    { src: 'Components/vacancy-card.js', selector: 'faust-vacancy-card, #vacancies-container' },
-    { src: 'Components/responsive-br.js', selector: 'h1 br, h2 br, h3 br, h4 br, h5 br, h6 br, p br' },
-    { src: 'Components/flow-canvas.js', selector: 'faust-flow-canvas' },
-    { src: 'Components/perk-illustrations.js', selector: 'faust-ecosystem' },
-    { src: 'Components/mouse-follower.js', selector: 'faust-ecosystem' },
-    { src: 'Components/ecosystem.js', selector: 'faust-ecosystem' },
-    { src: 'Components/documentation.js', selector: 'faust-documentation' }
+    { src: withComponentVersion('Components/consent.js'), always: true },
+    { src: withComponentVersion('Components/navbar.js'), always: true },
+    { src: withComponentVersion('Components/footer.js'), always: true },
+    { src: withComponentVersion('Components/buttons.js'), always: true },
+    { src: withComponentVersion('Components/apply-modal.js'), always: true },
+    { src: withComponentVersion('Components/logo-lockup.js'), selector: 'faust-logo-lockup' },
+    { src: withComponentVersion('Components/vacancy-card.js'), selector: 'faust-vacancy-card, #vacancies-container' },
+    { src: withComponentVersion('Components/responsive-br.js'), selector: 'h1 br, h2 br, h3 br, h4 br, h5 br, h6 br, p br' },
+    { src: withComponentVersion('Components/flow-canvas.js'), selector: 'faust-flow-canvas' },
+    { src: withComponentVersion('Components/perk-illustrations.js'), selector: 'faust-ecosystem' },
+    { src: withComponentVersion('Components/mouse-follower.js'), selector: 'faust-ecosystem' },
+    { src: withComponentVersion('Components/ecosystem.js'), selector: 'faust-ecosystem' },
+    { src: withComponentVersion('Components/documentation.js'), selector: 'faust-documentation' }
   ];
   const componentLoads = new Map();
 
@@ -413,6 +748,7 @@
       if (!isPopState) {
         history.pushState({ path: url }, doc.title, url);
       }
+      window.faustProfileRegisterRouteNavigation?.();
 
       // Update document title and meta description
       if (doc.title) {
@@ -566,6 +902,7 @@
         oldScript.parentNode.replaceChild(newScript, oldScript);
       });
       window.isRunningPageScripts = false;
+      window.faustProfileRefresh?.();
 
       // This class only suppresses the initial reveal while the new page is mounted.
       // Do not let it leak into interactive transitions such as Careers filters.

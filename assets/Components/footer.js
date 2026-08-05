@@ -388,7 +388,14 @@ class FaustFooter extends HTMLElement {
       return './';
     };
     const rootPrefix = getRootPrefix();
-    const isTalent = localStorage.getItem('faust-user-role') === 'Talento';
+    const storedProfile = localStorage.getItem('faust-user-profile');
+    // Prefer the persisted value. This keeps the audience-specific links in
+    // sync even while the profile engine is still loading after navigation.
+    const profile = storedProfile === 'Lead' || storedProfile === 'Talento' || storedProfile === 'Indefinido'
+      ? storedProfile
+      : (window.faustGetProfile?.() || 'Indefinido');
+    const isTalent = profile === 'Talento';
+    const isLead = profile === 'Lead';
 
     // 1. Check if the modal overlay was open before rendering
     const overlay = this.querySelector('#lang-menu-overlay');
@@ -862,8 +869,8 @@ class FaustFooter extends HTMLElement {
               <div class="footer-col-links">
               <a href="${rootPrefix}start/index.html">Inicio</a>
                 <a href="${rootPrefix}start/index.html#">Partnering</a>
-                ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Revenue Share</a>`}
-                <a href="${rootPrefix}start/index.html#">Licenciamiento</a>
+                ${isLead ? `<a href="${rootPrefix}start/index.html#">Revenue Share</a>` : ''}
+                ${isLead ? `<a href="${rootPrefix}start/index.html#">Licenciamiento</a>` : ''}
                 <a href="${rootPrefix}start/index.html#">Consultoría</a>
                 <a href="${rootPrefix}start/index.html#">Faust Max</a>
               </div>
@@ -871,8 +878,8 @@ class FaustFooter extends HTMLElement {
             <div class="footer-col">
               <h4>Estrategia</h4>
               <div class="footer-col-links">
-                <a href="${rootPrefix}docs/introduccion.html">Documentación</a>
-                ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>`}
+                ${isLead ? `<a href="${rootPrefix}docs/introduccion.html">Documentación</a>` : ''}
+                ${isLead ? `<a href="${rootPrefix}start/index.html#">Estrategia de crecimiento</a>` : ''}
                 <a href="${rootPrefix}start/index.html#">Neurociencia Conductual</a>
                 <a href="${rootPrefix}start/index.html#">UX/UI Design</a>
                 <a href="${rootPrefix}start/index.html#">Desarrollo Web</a>
@@ -887,7 +894,7 @@ class FaustFooter extends HTMLElement {
                 <a href="https://www.behance.net/faustpartners" target="_blank" rel="noopener noreferrer">Partners</a>
                 ${isTalent ? '' : `<a href="${rootPrefix}start/index.html#">Deseo Invertir</a>`}
                 <a href="${rootPrefix}careers">Carreras</a>
-                <a href="${rootPrefix}start/index.html#">Faust OS</a>
+                ${isLead ? `<a href="${rootPrefix}OS/index.html">Faust OS</a>` : ''}
               </div>
             </div>
           </div>

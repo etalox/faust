@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es-MX" class="os-loading">
+<head>
+  <meta charset="utf-8">
+  <script src="../assets/lead-access.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090a">
+  <title>FaustOS — Base de Datos</title>
+  <link rel="icon" type="image/svg+xml" href="./tab_icon_white.svg" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/svg+xml" href="./tab_icon_dark.svg" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="preload" as="image" href="../assets/FaustOS_logo.svg" type="image/svg+xml" fetchpriority="high">
+  <link rel="stylesheet" href="./os.css?v=20260727-switch-layout-1">
+  <script>
+    window.__faustosLastPointer = null;
+    window.addEventListener('pointermove', function (event) {
+      window.__faustosLastPointer = { clientX: event.clientX, clientY: event.clientY };
+    }, { passive: true });
+  </script>
+</head>
+<body>
+  <div class="os-loading-screen" data-os-loader role="status" aria-label="Cargando FaustOS">
+    <div class="os-loading-mark" aria-hidden="true">
+      <img class="os-loading-logo" src="../assets/FaustOS_logo.svg" alt="" fetchpriority="high" decoding="sync">
+      <span class="os-loading-bar"><span class="os-loading-bar-line"></span></span>
+    </div>
+  </div>
+  <main class="os-app">
+    <header class="os-header">
+      <a class="os-brand" href="../start/index.html" aria-label="Faust Partners">
+        <img src="../assets/FaustOS_logo.svg" alt="FaustOS">
+        <span aria-hidden="true">/</span>
+        <strong>Base de Datos</strong>
+      </a>
+      <div class="os-header-actions">
+        <a class="os-contact" href="mailto:hola@faustpartners.mx">Contacto</a>
+        <div class="notifications-control" data-notifications-control>
+          <button class="notifications-toggle" type="button" data-notifications-toggle aria-expanded="false" aria-label="Notificaciones">
+            <span class="notifications-toggle-surface"><svg aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M12.4 6.6a4.4 4.4 0 0 0-8.8 0c0 4-1.6 4.5-1.6 5.1h12c0-.6-1.6-1.1-1.6-5.1ZM6.25 13.15c.28.53.89.85 1.75.85s1.47-.32 1.75-.85" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="notifications-badge" data-notifications-count hidden>0</span>
+          </button>
+          <div class="notifications-menu" data-notifications-menu aria-label="Bandeja de notificaciones"><p class="notifications-menu-title">Notificaciones</p><div class="notifications-list" data-notifications-list><p class="notifications-empty">Sin alertas críticas en esta vista.</p></div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="os-page-host">
+    <div class="os-page-content" data-os-page-content data-os-page="database" data-os-title="Base de Datos">
+    <section class="database-view" aria-label="Base de datos de transacciones">
+      <header class="database-header">
+        <div class="database-title-block">
+          <h1>Registro de Transacciones</h1>
+        </div>
+        <div class="database-header-actions">
+          <span class="database-count" data-transaction-count></span>
+          <div class="download-control" data-download-control>
+            <button class="download-toggle" type="button" data-download-toggle aria-expanded="false">Descargar <svg class="download-icon" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M8 2.25v7.2m0 0 2.7-2.7M8 9.45l-2.7-2.7M3 11.75v1.5c0 .69.56 1.25 1.25 1.25h7.5c.69 0 1.25-.56 1.25-1.25v-1.5" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="download-menu" data-download-menu>
+              <button type="button" data-download-format="xlsx">Archivo Excel</button>
+              <button type="button" data-download-format="csv">Archivo .csv</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="database-collection" aria-label="Transacciones registradas">
+        <div class="database-toolbar">
+          <label class="database-search"><span class="sr-only">Buscar</span><svg aria-hidden="true" viewBox="0 0 16 16" fill="none"><circle cx="7.1" cy="7.1" r="4.35" stroke="currentColor" stroke-width="1.15"/><path d="m10.35 10.35 3 3" stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/></svg><input type="search" data-transaction-search placeholder="Buscar transacción o artículo"></label>
+          <div class="database-filters" aria-label="Filtros de transacciones">
+            <label><span>Periodo</span><select data-transaction-date><option value="all">Todo el historial</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 3 meses</option><option value="365">Último año</option></select></label>
+            <label><span>Tipo de artículo</span><select data-transaction-type><option value="all">Todos</option></select></label>
+            <label><span>Grupo A/B</span><select data-transaction-ab><option value="all">A y B</option><option value="A">Grupo A</option><option value="B">Grupo B</option></select></label>
+          </div>
+        </div>
+
+        <div class="transaction-table-shell">
+          <table class="transaction-table">
+            <thead><tr><th>Fecha y hora</th><th>Tipo de artículo</th><th>Ingreso neto</th><th>A/B</th></tr></thead>
+            <tbody data-transaction-rows></tbody>
+          </table>
+          <p class="transaction-empty" data-transaction-empty hidden>No hay transacciones que coincidan con los filtros.</p>
+        </div>
+      </section>
+    </section>
+
+    </div>
+    </div>
+    <nav class="os-tabs" aria-label="Navegación de FaustOS">
+      <a class="os-tab" href="./index.html" data-os-view="dashboard">Dashboard</a>
+      <a class="os-tab is-active" href="./database.html" data-os-view="database" aria-current="page">Base de Datos</a>
+      <a class="os-tab" href="./settings.html" data-os-view="settings">Configuración</a>
+      <button class="os-tab" type="button">Analíticas</button>
+      <button class="os-tab" type="button">Pagos</button>
+      <button class="os-tab" type="button">Revenue Share</button>
+      <button class="os-tab" type="button">Legal</button>
+      <button class="os-tab" type="button">Notificaciones</button>
+    </nav>
+  </main>
+  <script src="./data.js"></script>
+  <script src="./settings.js"></script>
+  <script src="./config.js"></script>
+  <script src="./dashboard.js"></script>
+  <script src="./database.js"></script>
+  <script src="./navigation.js"></script>
+</body>
+</html>

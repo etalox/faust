@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es-MX" class="os-loading">
+<head>
+  <meta charset="utf-8">
+  <script src="../assets/lead-access.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090a">
+  <title>FaustOS — Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="./tab_icon_white.svg" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/svg+xml" href="./tab_icon_dark.svg" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="../assets/favicon.ico">
+  <link rel="preload" as="image" href="../assets/FaustOS_logo.svg" type="image/svg+xml" fetchpriority="high">
+  <link rel="stylesheet" href="./os.css?v=20260727-switch-layout-1">
+  <script>
+    window.__faustosLastPointer = null;
+    window.addEventListener('pointermove', function (event) {
+      window.__faustosLastPointer = { clientX: event.clientX, clientY: event.clientY };
+    }, { passive: true });
+  </script>
+</head>
+<body>
+  <div class="os-loading-screen" data-os-loader role="status" aria-label="Cargando FaustOS">
+    <div class="os-loading-mark" aria-hidden="true">
+      <img class="os-loading-logo" src="../assets/FaustOS_logo.svg" alt="" fetchpriority="high" decoding="sync">
+      <span class="os-loading-bar"><span class="os-loading-bar-line"></span></span>
+    </div>
+  </div>
+  <main class="os-app">
+    <header class="os-header">
+      <a class="os-brand" href="../start/index.html" aria-label="Faust Partners">
+        <img src="../assets/FaustOS_logo.svg" alt="FaustOS">
+        <span aria-hidden="true">/</span>
+        <strong>Dashboard</strong>
+      </a>
+      <div class="os-header-actions">
+        <a class="os-contact" href="mailto:hola@faustpartners.mx">Contacto</a>
+        <div class="notifications-control" data-notifications-control>
+          <button class="notifications-toggle" type="button" data-notifications-toggle aria-expanded="false" aria-label="Notificaciones">
+            <span class="notifications-toggle-surface"><svg aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M12.4 6.6a4.4 4.4 0 0 0-8.8 0c0 4-1.6 4.5-1.6 5.1h12c0-.6-1.6-1.1-1.6-5.1ZM6.25 13.15c.28.53.89.85 1.75.85s1.47-.32 1.75-.85" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="notifications-badge" data-notifications-count hidden>0</span>
+          </button>
+          <div class="notifications-menu" data-notifications-menu aria-label="Bandeja de notificaciones">
+            <p class="notifications-menu-title">Notificaciones</p>
+            <div class="notifications-list" data-notifications-list><p class="notifications-empty">Sin alertas críticas en esta vista.</p></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="os-page-host">
+    <div class="os-page-content" data-os-page-content data-os-page="dashboard" data-os-title="Dashboard">
+    <section class="os-overview" aria-label="Resumen de ingresos">
+      <div class="primary-metric">
+        <p class="eyebrow" data-primary-context>IR Net. (-RevS)</p>
+        <p class="primary-value" data-primary-value>$1,900,412</p>
+        <p class="primary-description" data-primary-description>MRR incremental (después de Rev. Share)</p>
+        <div class="period-controls" role="group" aria-label="Periodo de la gráfica">
+          <div class="period-picker">
+            <button type="button" class="period-current period-button" tabindex="-1" aria-hidden="true" data-period-current>1m</button>
+            <div class="period-options">
+              <button type="button" class="period-button is-active" data-period="1m" aria-pressed="true">1m</button>
+              <button type="button" class="period-button" data-period="3m" aria-pressed="false">3m</button>
+              <button type="button" class="period-button" data-period="6m" aria-pressed="false">6m</button>
+              <button type="button" class="period-button" data-period="1y" aria-pressed="false">1y</button>
+            </div>
+          </div>
+          <div class="chart-mode-picker" role="group" aria-label="Modo de visualización">
+            <button class="chart-mode-current period-button" type="button" tabindex="-1" aria-hidden="true" data-chart-mode-current>Absoluto</button>
+            <div class="chart-mode-options">
+              <button class="chart-mode-button period-button is-active" type="button" data-chart-mode="standard" aria-pressed="true">Absoluto</button>
+              <button class="chart-mode-button period-button" type="button" data-chart-mode="normalized" aria-pressed="false">Dif.</button>
+              <button class="chart-mode-button period-button" type="button" data-chart-mode="cumulative" aria-pressed="false">Acum.</button>
+            </div>
+          </div>
+          <div class="chart-metric-picker" role="group" aria-label="Unidad del gráfico">
+            <button class="chart-metric-current period-button" type="button" tabindex="-1" aria-hidden="true" data-chart-metric-current>Revenue</button>
+            <div class="chart-metric-options">
+              <button class="chart-metric-button period-button is-active" type="button" data-chart-metric="revenue" aria-pressed="true">Revenue</button>
+              <button class="chart-metric-button period-button" type="button" data-chart-metric="conversion" aria-pressed="false">CR%</button>
+            </div>
+          </div>
+          <div class="settings-control" data-settings-control>
+            <button class="settings-toggle" type="button" data-settings-toggle aria-expanded="false" aria-label="Ajustes de la gráfica">
+              <span class="settings-toggle-surface"><svg aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h10M3 12h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="6" cy="4" r="1.3" fill="#0c0c0d" stroke="currentColor" stroke-width="1.1"/><circle cx="10" cy="8" r="1.3" fill="#0c0c0d" stroke="currentColor" stroke-width="1.1"/><circle cx="5" cy="12" r="1.3" fill="#0c0c0d" stroke="currentColor" stroke-width="1.1"/></svg></span>
+            </button>
+            <div class="settings-menu" data-settings-menu>
+              <div class="settings-menu-row">
+                <span>Marcadores A/B Testing</span>
+                <button class="settings-switch is-active" type="button" data-markers-toggle aria-pressed="true" aria-label="Ocultar marcadores A/B Testing"><span aria-hidden="true"></span></button>
+              </div>
+              <div class="settings-menu-row">
+                <span>Gráfico Renovado (Beta)</span>
+                <button class="settings-switch" type="button" data-alternate-chart-toggle aria-pressed="false" aria-label="Activar modo avanzado"><span aria-hidden="true"></span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <article class="stat-card">
+          <p class="eyebrow">Ingreso Neto</p>
+          <div>
+            <p class="stat-value" data-total-value>$2.4M</p>
+            <p class="stat-description">Ingresos netos del periodo seleccionado</p>
+          </div>
+        </article>
+        <article class="stat-card">
+          <p class="eyebrow">Aumento IR (1m)</p>
+          <div>
+            <p class="stat-value" data-mrr-growth-value>+0.0%</p>
+            <p class="stat-description" data-mrr-growth-description>Vs. los 30 días anteriores</p>
+          </div>
+        </article>
+        <article class="stat-card">
+          <p class="eyebrow">Aumento CR (1m)</p>
+          <div>
+            <p class="stat-value" data-conversion-value>+25.7%</p>
+            <p class="stat-description">Ingreso promedio de B frente a A</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="revenue-chart" aria-label="Evolución de ingresos incrementales">
+      <div class="chart-y-axis" aria-hidden="true">
+        <span>2.00M</span><span>1.95M</span><span>1.90M</span><span>1.85M</span>
+        <span>1.80M</span><span>1.75M</span><span>1.70M</span><span>1.65M</span>
+      </div>
+      <div class="chart-stage">
+        <div class="chart-annotations" aria-hidden="true">
+          <span class="chart-annotation annotation-one" data-chart-time=".46">A/B</span>
+          <span class="chart-annotation annotation-two" data-chart-time=".80">A/B</span>
+          <span class="chart-annotation annotation-three" data-chart-time=".89">A/B</span>
+        </div>
+        <div class="chart-loss-alert" data-chart-loss-alert aria-hidden="true">
+          <svg width="16" height="16" viewBox="-1 -1 16 16" fill="none" aria-hidden="true"><path d="M7 0C3.13438 0 0 3.13438 0 7C0 10.8656 3.13438 14 7 14C10.8656 14 14 10.8656 14 7C14 3.13438 10.8656 0 7 0ZM6.5 3.625C6.5 3.55625 6.55625 3.5 6.625 3.5H7.375C7.44375 3.5 7.5 3.55625 7.5 3.625V7.875C7.5 7.94375 7.44375 8 7.375 8H6.625C6.55625 8 6.5 7.94375 6.5 7.875V3.625ZM7 10.5C6.80374 10.496 6.61687 10.4152 6.47948 10.275C6.3421 10.1348 6.26515 9.9463 6.26515 9.75C6.26515 9.5537 6.3421 9.36522 6.47948 9.225C6.61687 9.08478 6.80374 9.00401 7 9C7.19626 9.00401 7.38313 9.08478 7.52052 9.225C7.6579 9.36522 7.73485 9.5537 7.73485 9.75C7.73485 9.9463 7.6579 10.1348 7.52052 10.275C7.38313 10.4152 7.19626 10.496 7 10.5Z" fill="#FF7A00"></path></svg>
+          <span class="chart-loss-alert-copy">Alerta</span>
+        </div>
+        <div class="chart-month-guides" data-chart-month-guides aria-hidden="true"></div>
+        <svg class="chart-svg" viewBox="0 0 1200 360" preserveAspectRatio="none" role="img" aria-label="Gráfica de ingresos incrementales">
+          <defs>
+            <linearGradient id="os-area-base" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0000ff" stop-opacity=".23"></stop>
+              <stop offset=".58" stop-color="#08090a" stop-opacity=".08"></stop>
+              <stop offset="1" stop-color="#08090a" stop-opacity="0"></stop>
+            </linearGradient>
+            <linearGradient id="os-area-light" x1="0" y1="1" x2="1" y2="0">
+              <stop offset=".46" stop-color="#08090a" stop-opacity="0"></stop>
+              <stop offset="1" stop-color="#0000ff" stop-opacity=".28"></stop>
+            </linearGradient>
+            <linearGradient id="os-diff-positive" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse" data-chart-diff-gradient="positive">
+              <stop offset="0" stop-color="#2864ff" stop-opacity="0"></stop>
+              <stop offset="1" stop-color="#2864ff" stop-opacity="0"></stop>
+            </linearGradient>
+            <linearGradient id="os-diff-negative" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse" data-chart-diff-gradient="negative">
+              <stop offset="0" stop-color="#ff7a00" stop-opacity="0"></stop>
+              <stop offset="1" stop-color="#ff7a00" stop-opacity="0"></stop>
+            </linearGradient>
+            <linearGradient id="os-hover-diff-positive" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#2864ff" stop-opacity="0"></stop>
+              <stop offset=".22" stop-color="#2864ff" stop-opacity=".08"></stop>
+              <stop offset=".5" stop-color="#2864ff" stop-opacity=".5"></stop>
+              <stop offset=".78" stop-color="#2864ff" stop-opacity=".08"></stop>
+              <stop offset="1" stop-color="#2864ff" stop-opacity="0"></stop>
+            </linearGradient>
+            <linearGradient id="os-hover-diff-negative" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#ff7a00" stop-opacity="0"></stop>
+              <stop offset=".22" stop-color="#ff7a00" stop-opacity=".08"></stop>
+              <stop offset=".5" stop-color="#ff7a00" stop-opacity=".5"></stop>
+              <stop offset=".78" stop-color="#ff7a00" stop-opacity=".08"></stop>
+              <stop offset="1" stop-color="#ff7a00" stop-opacity="0"></stop>
+            </linearGradient>
+            <linearGradient id="os-advanced-negative-line" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse" data-chart-negative-line-gradient>
+              <stop offset="0" stop-color="#7d8188"></stop>
+              <stop offset="1" stop-color="#7d8188"></stop>
+            </linearGradient>
+            <linearGradient id="os-critical-hover-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ff7a00" stop-opacity="0"></stop>
+              <stop offset=".55" stop-color="#ff7a00" stop-opacity="0"></stop>
+              <stop offset="1" stop-color="#ff7a00" stop-opacity=".28"></stop>
+            </linearGradient>
+            <linearGradient id="os-line" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop>
+              <stop offset=".24" stop-color="#d9d9ff"></stop>
+              <stop offset=".68" stop-color="#3773ff"></stop>
+              <stop offset="1" stop-color="#d9d9ff"></stop>
+            </linearGradient>
+            <linearGradient id="os-line-control" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop>
+              <stop offset=".18" stop-color="#d8d9dc" stop-opacity=".58"></stop>
+              <stop offset=".72" stop-color="#f4f4f6" stop-opacity=".88"></stop>
+              <stop offset="1" stop-color="#d8d9dc" stop-opacity=".42"></stop>
+            </linearGradient>
+            <linearGradient id="os-hover-line" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop>
+              <stop offset=".22" stop-color="#ffffff" stop-opacity=".12"></stop>
+              <stop offset=".5" stop-color="#ffffff" stop-opacity="1"></stop>
+              <stop offset=".78" stop-color="#ffffff" stop-opacity=".12"></stop>
+              <stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop>
+            </linearGradient>
+            <linearGradient id="os-hover-line-critical" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#ff7a00" stop-opacity="0"></stop>
+              <stop offset=".22" stop-color="#ff7a00" stop-opacity=".18"></stop>
+              <stop offset=".5" stop-color="#ff7a00" stop-opacity="1"></stop>
+              <stop offset=".78" stop-color="#ff7a00" stop-opacity=".18"></stop>
+              <stop offset="1" stop-color="#ff7a00" stop-opacity="0"></stop>
+            </linearGradient>
+            <clipPath id="os-advanced-entry-clip">
+              <rect x="0" y="0" width="1200" height="360" data-chart-advanced-entry-clip></rect>
+            </clipPath>
+            <filter id="os-blue-glow" x="-10%" y="-50%" width="120%" height="200%">
+              <feGaussianBlur stdDeviation="13" result="blurOne"></feGaussianBlur>
+              <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blurTwo"></feGaussianBlur>
+              <feMerge><feMergeNode in="blurOne"></feMergeNode><feMergeNode in="blurTwo"></feMergeNode></feMerge>
+            </filter>
+            <filter id="os-hover-light" x="-180%" y="-500%" width="460%" height="1100%" color-interpolation-filters="sRGB">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="outerBlur"></feGaussianBlur>
+              <feFlood flood-color="#ffffff" flood-opacity=".48" result="outerColor"></feFlood>
+              <feComposite in="outerColor" in2="outerBlur" operator="in" result="outerGlow"></feComposite>
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2.1" result="nearBlur"></feGaussianBlur>
+              <feFlood flood-color="#ffffff" flood-opacity=".94" result="nearColor"></feFlood>
+              <feComposite in="nearColor" in2="nearBlur" operator="in" result="nearGlow"></feComposite>
+              <feMerge>
+                <feMergeNode in="outerGlow"></feMergeNode>
+                <feMergeNode in="nearGlow"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+              </feMerge>
+            </filter>
+          </defs>
+          <line class="chart-normalized-baseline" x1="0" x2="1200" y1="180" y2="180" data-chart-normalized-baseline></line>
+          <path class="chart-area chart-area-base" data-chart-area></path>
+          <path class="chart-area chart-area-light" data-chart-area></path>
+          <path class="chart-diff-area chart-diff-positive" data-chart-diff-positive></path>
+          <path class="chart-diff-area chart-diff-negative" data-chart-diff-negative></path>
+          <path class="chart-hover-diff-area chart-hover-diff-positive" data-chart-hover-diff-positive></path>
+          <path class="chart-hover-diff-area chart-hover-diff-negative" data-chart-hover-diff-negative></path>
+          <path class="chart-critical-hover-fill" data-chart-critical-hover-fill></path>
+          <path class="chart-line-control" data-chart-line-a></path>
+          <path class="chart-line-glow" data-chart-line filter="url(#os-blue-glow)"></path>
+          <path class="chart-line" data-chart-line></path>
+          <path class="chart-advanced-line chart-advanced-positive-glow" data-chart-advanced-positive filter="url(#os-blue-glow)"></path>
+          <path class="chart-advanced-line chart-advanced-positive" data-chart-advanced-positive></path>
+          <path class="chart-advanced-line chart-advanced-negative" data-chart-advanced-negative></path>
+          <line class="chart-guide" data-chart-guide y1="0" y2="360"></line>
+          <line class="chart-guide chart-guide-horizontal" data-chart-guide-horizontal x1="0" x2="1200"></line>
+          <path class="chart-line-light-glow" data-chart-light-glow filter="url(#os-hover-light)"></path>
+          <path class="chart-line-light" data-chart-light></path>
+          <path class="chart-line-light-critical" data-chart-light-critical></path>
+          <rect class="chart-hit-area" x="0" y="0" width="1200" height="360" data-chart-hit></rect>
+        </svg>
+        <div class="chart-tooltip" data-chart-tooltip aria-hidden="true">
+          <span data-tooltip-label>Semana 1</span>
+          <div class="chart-tooltip-series" aria-label="Valores por variante">
+            <span class="chart-tooltip-series-item"><span class="chart-tooltip-swatch chart-tooltip-swatch-b" aria-label="Ingreso real"></span><strong data-tooltip-value-b>$1.86M</strong></span>
+            <span class="chart-tooltip-series-item"><span class="chart-tooltip-swatch chart-tooltip-swatch-a" aria-label="Baseline estimado"></span><strong data-tooltip-value-a>$1.84M</strong></span>
+          </div>
+        </div>
+        <div class="chart-x-axis" data-chart-labels aria-hidden="true"></div>
+      </div>
+      <p class="sr-only" data-chart-status aria-live="polite"></p>
+    </section>
+    </div>
+    </div>
+    <nav class="os-tabs" aria-label="Navegación de FaustOS">
+      <a class="os-tab is-active" href="./index.html" data-os-view="dashboard" aria-current="page">Dashboard</a>
+      <a class="os-tab" href="./database.html" data-os-view="database">Base de Datos</a>
+      <a class="os-tab" href="./settings.html" data-os-view="settings">Configuración</a>
+      <button class="os-tab" type="button">Analíticas</button>
+      <button class="os-tab" type="button">Pagos</button>
+      <button class="os-tab" type="button">Revenue Share</button>
+      <button class="os-tab" type="button">Legal</button>
+      <button class="os-tab" type="button">Notificaciones</button>
+    </nav>
+  </main>
+  <script src="./data.js"></script>
+  <script src="./settings.js"></script>
+  <script src="./config.js"></script>
+  <script src="./dashboard.js"></script>
+  <script src="./database.js"></script>
+  <script src="./navigation.js"></script>
+</body>
+</html>

@@ -26,7 +26,7 @@ customElements.define('faust-btn-message', FaustBtnMessage);
 class FaustBtnStrategy extends HTMLElement {
   connectedCallback() {
     this.style.display = 'contents';
-    const isTalent = localStorage.getItem('faust-user-role') === 'Talento';
+    const isTalent = (window.faustGetProfile?.() || 'Indefinido') === 'Talento';
     const rootPrefix = getRootPrefix();
     
     if (isTalent) {

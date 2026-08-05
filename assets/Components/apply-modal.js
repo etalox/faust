@@ -92,12 +92,37 @@ class FaustApplyModal extends HTMLElement {
       name: '',
       role: '',
       company: '',
-      revenue: '',
-      teams: [],
       contact: '',
       date: ''
     };
     window.confirmedCompany = '';
+
+    // Persist only field identifiers (never their values). The form advances
+    // through independent DOM steps, so counting inputs currently on screen is
+    // not a reliable qualification signal.
+    const profileFieldStorageKey = 'faust-profile-application-fields';
+    function recordLeadQualifiedField(name, value) {
+      window.faustProfileRecordApplicationField?.(name, value);
+
+      let fields = [];
+      try {
+        const stored = JSON.parse(sessionStorage.getItem(profileFieldStorageKey) || '[]');
+        fields = Array.isArray(stored) ? stored : [];
+      } catch (error) {}
+
+      const completed = new Set(fields);
+      const hasValue = typeof value === 'string' ? value.trim().length > 0 : Boolean(value);
+      if (hasValue) completed.add(name);
+      else completed.delete(name);
+
+      try {
+        sessionStorage.setItem(profileFieldStorageKey, JSON.stringify([...completed]));
+      } catch (error) {}
+
+      if (completed.size >= 2) {
+        window.faustPromoteLead?.('application-fields');
+      }
+    }
 
     let calendarYear = new Date().getFullYear();
     let calendarMonth = new Date().getMonth();
@@ -191,11 +216,11 @@ class FaustApplyModal extends HTMLElement {
         // Step 1: Name and Cargo
         render: (data) => `
           <div class="apply-group">
-            <label class="apply-label" for="apply-name">¿Cuál es su nombre?*</label>
+            <label class="apply-label" for="apply-name">¿Cuál es tu nombre?*</label>
             <input type="text" id="apply-name" class="apply-input" placeholder="Nombre completo" value="${data.name || ''}">
           </div>
           <div class="apply-group" id="apply-role-container" style="margin-top: 24px; display: none;">
-            <label class="apply-label" for="apply-role">Por favor, seleccione su cargo.</label>
+            <label class="apply-label" for="apply-role">¿Cuál es tu cargo?</label>
             <select id="apply-role" class="apply-input">
               <option value="" disabled ${!data.role ? 'selected' : ''}>Seleccione su cargo...</option>
               <option value="Director General / CEO" ${data.role === 'Director General / CEO' ? 'selected' : ''}>Director General / CEO</option>
@@ -241,6 +266,7 @@ class FaustApplyModal extends HTMLElement {
           if (nameInput) {
             nameInput.addEventListener('input', () => {
               data.name = nameInput.value;
+              recordLeadQualifiedField('name', validateFullName(data.name) ? data.name : '');
               checkRoleVisibility();
               updateValid();
             });
@@ -262,6 +288,7 @@ class FaustApplyModal extends HTMLElement {
           if (roleSelect) {
             roleSelect.addEventListener('change', () => {
               data.role = roleSelect.value;
+              recordLeadQualifiedField('role', data.role);
               updateValid();
             });
             roleSelect.addEventListener('keydown', (e) => {
@@ -279,7 +306,7 @@ class FaustApplyModal extends HTMLElement {
         // Step 2: Company Name
         render: (data) => `
           <div class="apply-group">
-            <label class="apply-label" for="apply-company">¿Cuál es el nombre de su empresa?*</label>
+            <label class="apply-label" for="apply-company">¿Cuál es el nombre de tu empresa?*</label>
             <input type="text" id="apply-company" class="apply-input" placeholder="Nombre de la empresa" value="${data.company || ''}">
           </div>
         `,
@@ -291,6 +318,7 @@ class FaustApplyModal extends HTMLElement {
           if (companyInput) {
             companyInput.addEventListener('input', () => {
               data.company = companyInput.value;
+              recordLeadQualifiedField('company', data.company);
               updateValid();
             });
             companyInput.addEventListener('keydown', (e) => {
@@ -303,112 +331,17 @@ class FaustApplyModal extends HTMLElement {
         }
       },
       {
-        // Step 3: Gross Monthly Revenue
-        render: (data) => {
-          const options = [
-            "Menos de $1M",
-            "De $1M a $5M",
-            "De $5M a $10M",
-            "De $10M a $50M",
-            "Más de $50M"
-          ];
-          return `
-            <div class="apply-group">
-              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los ingresos brutos mensuales de su empresa (MXN).*</label>
-              <div class="apply-options-list">
-                ${options.map(opt => {
-                  const selected = data.revenue === opt;
-                  return `
-                    <div class="apply-option-item ${selected ? 'is-selected' : ''}" data-value="${opt}">
-                      <span>${opt}</span>
-                      <div class="apply-option-checkmark">✓</div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          `;
-        },
-        validate: (data) => {
-          return !!data.revenue;
-        },
-        bind: (data, updateValid) => {
-          const items = document.querySelectorAll('.apply-option-item');
-          items.forEach(item => {
-            item.addEventListener('click', () => {
-              items.forEach(el => el.classList.remove('is-selected'));
-              item.classList.add('is-selected');
-              data.revenue = item.getAttribute('data-value');
-              updateValid();
-              setTimeout(() => {
-                if (currentStep === 2) {
-                  navigateNext();
-                }
-              }, 200);
-            });
-          });
-        }
-      },
-      {
-        // Step 4: Available Teams (optional)
-        render: (data) => {
-          const options = [
-            "Diseño UX/UI",
-            "Desarrollo Front-End",
-            "Marketing Digital",
-            "Análisis de Datos"
-          ];
-          const selectedTeams = data.teams || [];
-          return `
-            <div class="apply-group">
-              <label class="apply-label" style="margin-bottom: 8px;">Seleccione los equipos de su empresa con disponibilidad para colaborar con el nuestro (opcional)</label>
-              <div class="apply-options-list">
-                ${options.map(opt => {
-                  const selected = selectedTeams.includes(opt);
-                  return `
-                    <div class="apply-option-item ${selected ? 'is-selected' : ''}" data-value="${opt}">
-                      <span>${opt}</span>
-                      <div class="apply-option-checkmark">✓</div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          `;
-        },
-        validate: (data) => {
-          return true;
-        },
-        bind: (data, updateValid) => {
-          const items = document.querySelectorAll('.apply-option-item');
-          if (!data.teams) data.teams = [];
-          items.forEach(item => {
-            item.addEventListener('click', () => {
-              const val = item.getAttribute('data-value');
-              const idx = data.teams.indexOf(val);
-              if (idx > -1) {
-                data.teams.splice(idx, 1);
-                item.classList.remove('is-selected');
-              } else {
-                data.teams.push(val);
-                item.classList.add('is-selected');
-              }
-              updateValid();
-            });
-          });
-        }
-      },
-      {
-        // Step 5: Contact Info
+        // Step 3: Contact Info
         render: (data) => `
           <div class="apply-group">
-            <label class="apply-label" for="apply-contact">Por favor, ingrese un correo electrónico o número de contacto.</label>
+            <label class="apply-label" for="apply-contact">¿Cuál es el mejor medio para contactarte?*</label>
             <input type="text" id="apply-contact" class="apply-input" placeholder="${buildContactPlaceholder(data)}" value="${data.contact || ''}">
             <div id="apply-contact-error" style="color: #ff4a4a; font-size: 14px; margin-top: 8px; display: none;">Por favor, verifique que el medio de contacto es válido.</div>
           </div>
         `,
         validate: (data) => {
-          return true;
+          const contact = (data.contact || '').trim();
+          return contact.length > 0 && validateContactMethod(contact);
         },
         bind: (data, updateValid) => {
           const contactInput = document.getElementById('apply-contact');
@@ -434,6 +367,7 @@ class FaustApplyModal extends HTMLElement {
           if (contactInput) {
             contactInput.addEventListener('input', () => {
               checkContactValidity();
+              recordLeadQualifiedField('contact', validateContactMethod(data.contact) ? data.contact : '');
               updateValid();
             });
             contactInput.addEventListener('keydown', (e) => {
@@ -448,7 +382,7 @@ class FaustApplyModal extends HTMLElement {
         }
       },
       {
-        // Step 6: Date (optional)
+        // Appointment date (shown only after the application is submitted)
         render: (data) => `
           <div class="apply-group">
             <label class="apply-label" style="margin-bottom: 8px;">Seleccione una fecha para agendar una llamada o videoconferencia (opcional).</label>
@@ -735,8 +669,12 @@ class FaustApplyModal extends HTMLElement {
       }
     ];
 
+    // Conservamos el selector de agenda (steps[3]) para la confirmación
+    // posterior al envío. El flujo de aplicación sólo pide lo indispensable.
+    const applicationSteps = [steps[1], steps[0], steps[2]];
+
     progressBar.innerHTML = '';
-    for (let i = 0; i < steps.length; i++) {
+    for (let i = 0; i < applicationSteps.length; i++) {
       const line = document.createElement('div');
       line.className = 'apply-step-line';
       progressBar.appendChild(line);
@@ -754,7 +692,7 @@ class FaustApplyModal extends HTMLElement {
       });
     }
 
-    const DRAFT_KEY = 'faust-apply-draft';
+    const DRAFT_KEY = 'faust-apply-draft-v2';
 
     function saveFormDraft() {
       try {
@@ -774,7 +712,7 @@ class FaustApplyModal extends HTMLElement {
           const parsed = JSON.parse(draft);
           if (parsed && parsed.formData) {
             Object.assign(formData, parsed.formData);
-            if (typeof parsed.currentStep === 'number' && parsed.currentStep >= 0 && parsed.currentStep < steps.length) {
+            if (typeof parsed.currentStep === 'number' && parsed.currentStep >= 0 && parsed.currentStep < applicationSteps.length) {
               currentStep = parsed.currentStep;
             }
             if (formData.company && currentStep > 1) {
@@ -809,7 +747,7 @@ class FaustApplyModal extends HTMLElement {
     }
 
     function checkValidation() {
-      const current = steps[currentStep];
+      const current = applicationSteps[currentStep];
       const isValid = current.validate(formData);
       if (isValid) {
         btnNext.removeAttribute('disabled');
@@ -817,24 +755,8 @@ class FaustApplyModal extends HTMLElement {
         btnNext.setAttribute('disabled', 'true');
       }
 
-      if (currentStep === steps.length - 1) {
-        if (formData.date && formData.date.trim() !== '') {
-          btnNext.textContent = 'Enviar';
-        } else {
-          btnNext.textContent = 'Omitir y enviar';
-        }
-      } else if (currentStep === 3) {
-        if (formData.teams && formData.teams.length > 0) {
-          btnNext.textContent = 'Siguiente';
-        } else {
-          btnNext.textContent = 'Omitir';
-        }
-      } else if (currentStep === 4) {
-        if (formData.contact && formData.contact.trim() !== '') {
-          btnNext.textContent = 'Siguiente';
-        } else {
-          btnNext.textContent = 'Omitir';
-        }
+      if (currentStep === applicationSteps.length - 1) {
+        btnNext.textContent = 'Enviar';
       } else {
         btnNext.textContent = 'Siguiente';
       }
@@ -877,7 +799,7 @@ class FaustApplyModal extends HTMLElement {
     function renderStep(isOpening, isBack) {
       const container = document.querySelector('.apply-modal-container');
       const prevHeight = (container && !isOpening) ? container.offsetHeight : 0;
-      const step = steps[currentStep];
+      const step = applicationSteps[currentStep];
 
       if (prevHeight === 0) {
         modalBody.innerHTML = step.render(formData);
@@ -937,17 +859,17 @@ class FaustApplyModal extends HTMLElement {
     }
 
     function navigateNext() {
-      const current = steps[currentStep];
+      const current = applicationSteps[currentStep];
       if (!current.validate(formData)) return;
 
       cancelPendingBackHeightAdjustment();
 
-      if (currentStep === 1) {
+      if (currentStep === 0) {
         window.confirmedCompany = formData.company || '';
         window.dispatchEvent(new CustomEvent('faust-company-confirmed', { detail: window.confirmedCompany }));
       }
 
-      if (currentStep === steps.length - 1) {
+      if (currentStep === applicationSteps.length - 1) {
         submitForm();
       } else {
         currentStep++;
@@ -1126,61 +1048,6 @@ class FaustApplyModal extends HTMLElement {
     // Run block cleanup on load
     checkBlockedState();
 
-    function getAutomaticCollectionData() {
-      const ip = localStorage.getItem('faust-detected-ip') || 'No detectada';
-      
-      let visitedPages = 'Ninguna';
-      try {
-        const pages = JSON.parse(localStorage.getItem('faust-visited-pages') || '[]');
-        if (pages.length > 0) {
-          visitedPages = pages.join(' -> ');
-        }
-      } catch (e) {
-        console.error("Error parsing visited pages", e);
-      }
-
-      const lang = localStorage.getItem('faust-lang-native') || localStorage.getItem('faust-lang') || document.documentElement.lang || navigator.language || 'No detectado';
-      
-      const countryCode = localStorage.getItem('faust-detected-country-code') || 'Desconocido';
-      const countryName = localStorage.getItem('faust-lang-country') || '';
-      const countryStr = countryName ? `${countryName} (${countryCode})` : countryCode;
-      
-      const ua = navigator.userAgent;
-      let os = "Otro OS";
-      if (ua.includes("Windows")) os = "Windows";
-      else if (ua.includes("Macintosh")) os = "macOS";
-      else if (ua.includes("iPhone")) os = "iOS (iPhone)";
-      else if (ua.includes("iPad")) os = "iOS (iPad)";
-      else if (ua.includes("Android")) os = "Android";
-      else if (ua.includes("Linux")) os = "Linux";
-      
-      let type = "Desktop";
-      if (/mobile|android|iphone|ipod|phone/i.test(ua)) {
-        type = "Mobile";
-      } else if (/ipad|tablet/i.test(ua)) {
-        type = "Tablet";
-      }
-      const deviceStr = `${type} - ${os}`;
-      
-      const totalSeconds = parseInt(localStorage.getItem('faust-cumulative-session-time') || '0', 10);
-      let sessionTimeStr = '';
-      if (totalSeconds < 60) {
-        sessionTimeStr = `${totalSeconds}s`;
-      } else {
-        const minutes = Math.floor(totalSeconds / 60);
-        const remainingSeconds = totalSeconds % 60;
-        if (minutes < 60) {
-          sessionTimeStr = `${minutes}m ${remainingSeconds}s`;
-        } else {
-          const hours = Math.floor(minutes / 60);
-          const remainingMinutes = minutes % 60;
-          sessionTimeStr = `${hours}h ${remainingMinutes}m ${remainingSeconds}s`;
-        }
-      }
-      
-      return `IP: ${ip} | Páginas Visitadas: ${visitedPages} | Idioma: ${lang} | País: ${countryStr} | Dispositivo: ${deviceStr} | Tiempo: ${sessionTimeStr}`;
-    }
-
     function getDetailedAutomaticCollectionData() {
       const ip = localStorage.getItem('faust-detected-ip') || 'No detectada';
       
@@ -1302,7 +1169,7 @@ class FaustApplyModal extends HTMLElement {
       const cookiePreference = `Decisión Tomada: ${consentMade} | Analytics: ${consentAnalytics} | Clarity: ${consentClarity}`;
 
       // 13. User role
-      const userRole = localStorage.getItem('faust-user-role') || 'Standard';
+      const userRole = window.faustGetProfile?.() || 'Indefinido';
 
       // 14. Scroll speed info (dumbscroll status)
       const dumbScroll = window.globalDumbScrollTriggered ? 'Sí' : 'No';
@@ -1338,18 +1205,11 @@ class FaustApplyModal extends HTMLElement {
       btnNext.setAttribute('disabled', 'true');
       btnNext.textContent = 'Enviando...';
 
-      if (localStorage.getItem('faust-user-role') === 'Talento') {
-        localStorage.setItem('faust-user-role', 'Standard');
-        window._needsReloadOnClose = true;
-      }
-
-      const autoData = getAutomaticCollectionData();
       const detailedData = getDetailedAutomaticCollectionData();
 
       try {
         const saved = JSON.parse(localStorage.getItem('faust-applications') || '[]');
         const fullData = Object.assign({}, formData, {
-          autoCollected: autoData,
           detailedCollected: detailedData
         });
         saved.push({
@@ -1376,10 +1236,7 @@ class FaustApplyModal extends HTMLElement {
           Nombre: formData.name.trim(),
           Cargo: formData.role,
           Empresa: formData.company.trim(),
-          "Ingresos brutos": formData.revenue,
-          "Equipos disponibles": (formData.teams && formData.teams.length > 0) ? formData.teams.join(', ') : 'Ninguno',
           "Contacto": formData.contact.trim(),
-          "Fecha propuesta": formData.date || 'No especificada',
           
           // Automatic data collection details
           "IP de Origen": detailedData.ip,
@@ -1401,13 +1258,15 @@ class FaustApplyModal extends HTMLElement {
           "Preferencia de Cookies": detailedData.cookiePreference,
           "Rol de Usuario": detailedData.userRole,
           "Dumb Scroll Activado": detailedData.dumbScroll,
-
-          "Recopilado Automáticamente": autoData,
           botcheck: ""
         })
       })
-      .then(async () => {
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Splitforms respondió ${response.status}`);
         await recordSubmission();
+        // A submitted application is the sole permitted Talent → Lead
+        // transition. Other Lead signals remain valid for Indefinido only.
+        window.faustPromoteLead?.('application-submitted');
         showSuccessScreen();
       })
       .catch(async err => {
@@ -1430,9 +1289,9 @@ class FaustApplyModal extends HTMLElement {
           <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
             <div class="apply-success-icon" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px;">✓</div>
             <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">¡Gracias por aplicar!</h3>
-            <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto con usted o su empresa muy pronto.</p>
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 320px;">Hemos recibido tus datos correctamente. Nuestro equipo se pondrá en contacto contigo muy pronto.</p>
             <div style="display: flex; gap: 12px; margin-top: 10px; width: 100%; justify-content: center;">
-              <button class="btn btn-secondary" id="apply-success-message-btn" style="border: 1px solid rgba(255,255,255,0.15) !important; background: transparent; color: #fff; cursor: pointer;">Escribir un mensaje</button>
+              <button class="btn btn-secondary" id="apply-success-schedule-btn" style="border: 1px solid rgba(255,255,255,0.15) !important; background: transparent; color: #fff; cursor: pointer;">Agendar una llamada</button>
               <button class="btn btn-primary" id="apply-success-close-btn" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
             </div>
           </div>
@@ -1440,12 +1299,11 @@ class FaustApplyModal extends HTMLElement {
         
         document.getElementById('apply-success-close-btn').addEventListener('click', window.closeApplyModal);
         
-        const msgBtn = document.getElementById('apply-success-message-btn');
-        if (msgBtn) {
-          msgBtn.addEventListener('click', (e) => {
+        const scheduleBtn = document.getElementById('apply-success-schedule-btn');
+        if (scheduleBtn) {
+          scheduleBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            window.closeApplyModal(true);
-            window.openMessageModal();
+            showAppointmentScheduler();
           });
         }
         
@@ -1459,6 +1317,107 @@ class FaustApplyModal extends HTMLElement {
         modalBody.style.opacity = '0';
         setTimeout(renderContent, 150);
       }
+    }
+
+    function showAppointmentScheduler() {
+      const container = document.querySelector('.apply-modal-container');
+      const prevHeight = container ? container.offsetHeight : 0;
+      const appointmentStep = steps[3];
+
+      modalBody.style.opacity = '0';
+      setTimeout(() => {
+        modalBody.innerHTML = `
+          <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 12px 0;">
+            <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">Elige una fecha</h3>
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 340px;">Es opcional. Nuestro equipo confirmará contigo la hora de la llamada.</p>
+            ${appointmentStep.render(formData)}
+            <div style="display: flex; gap: 12px; margin-top: 4px; width: 100%; justify-content: center;">
+              <button class="btn btn-secondary" id="apply-schedule-skip-btn" type="button">Ahora no</button>
+              <button class="btn btn-primary" id="apply-schedule-confirm-btn" type="button" disabled>Confirmar fecha</button>
+            </div>
+          </div>
+        `;
+
+        const confirmButton = document.getElementById('apply-schedule-confirm-btn');
+        const updateScheduleState = () => {
+          if (formData.date) {
+            confirmButton.removeAttribute('disabled');
+          } else {
+            confirmButton.setAttribute('disabled', 'true');
+          }
+        };
+
+        appointmentStep.bind(formData, updateScheduleState);
+        updateScheduleState();
+
+        document.getElementById('apply-schedule-skip-btn').addEventListener('click', window.closeApplyModal);
+        confirmButton.addEventListener('click', async () => {
+          if (!formData.date) return;
+          confirmButton.setAttribute('disabled', 'true');
+          confirmButton.textContent = 'Guardando...';
+          await submitAppointmentDate();
+          showAppointmentConfirmation();
+        });
+
+        adjustModalHeight(prevHeight);
+        modalBody.style.opacity = '1';
+      }, 150);
+    }
+
+    async function submitAppointmentDate() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('faust-applications') || '[]');
+        const latestApplication = saved[saved.length - 1];
+        if (latestApplication && latestApplication.data) {
+          latestApplication.data.date = formData.date;
+          localStorage.setItem('faust-applications', JSON.stringify(saved));
+        }
+      } catch (e) {
+        console.warn('No se pudo actualizar la fecha propuesta localmente:', e);
+      }
+
+      const detailedData = getDetailedAutomaticCollectionData();
+      try {
+        const response = await fetch('https://splitforms.com/api/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: 'f6778d6ae57e42a5a319d81048ab8db7',
+            _subject: `Fecha propuesta Faust Partners - ${formData.company.trim()}`,
+            Nombre: formData.name.trim(),
+            Empresa: formData.company.trim(),
+            Contacto: formData.contact.trim(),
+            'Fecha propuesta': formData.date,
+            'Marca de Tiempo Local': detailedData.submitTime,
+            botcheck: ''
+          })
+        });
+        if (!response.ok) throw new Error(`Splitforms respondió ${response.status}`);
+      } catch (e) {
+        console.warn('No se pudo enviar la fecha propuesta:', e);
+      }
+    }
+
+    function showAppointmentConfirmation() {
+      const container = document.querySelector('.apply-modal-container');
+      const prevHeight = container ? container.offsetHeight : 0;
+      modalBody.style.opacity = '0';
+      setTimeout(() => {
+        modalBody.innerHTML = `
+          <div class="apply-success-screen" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px 0;">
+            <div class="apply-success-icon" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px;">✓</div>
+            <h3 style="color: #fff; font-size: 20px; font-weight: 500; margin: 0;">Fecha propuesta registrada</h3>
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.5; margin: 0; max-width: 330px;">Confirmaremos contigo la hora de la llamada.</p>
+            <button class="btn btn-primary" id="apply-appointment-close-btn" type="button" style="background: #fff; color: #000; border-color: #fff;">Listo</button>
+          </div>
+        `;
+        document.getElementById('apply-appointment-close-btn').addEventListener('click', window.closeApplyModal);
+        adjustModalHeight(prevHeight);
+        modalBody.style.opacity = '1';
+      }, 150);
     }
 
     /* ── Independent Contact Message Modal Controller ── */
@@ -1669,7 +1628,6 @@ class FaustApplyModal extends HTMLElement {
           cancelBtn.style.opacity = '0.5';
           cancelBtn.style.pointerEvents = 'none';
 
-          const autoData = getAutomaticCollectionData();
           const detailedData = getDetailedAutomaticCollectionData();
 
           fetch('https://splitforms.com/api/submit', {
@@ -1705,8 +1663,6 @@ class FaustApplyModal extends HTMLElement {
               "Preferencia de Cookies": detailedData.cookiePreference,
               "Rol de Usuario": detailedData.userRole,
               "Dumb Scroll Activado": detailedData.dumbScroll,
-
-              "Recopilado Automáticamente": autoData,
               botcheck: ""
             })
           })
@@ -1800,8 +1756,6 @@ class FaustApplyModal extends HTMLElement {
       formData.name = '';
       formData.role = '';
       formData.company = '';
-      formData.revenue = '';
-      formData.teams = [];
       formData.contact = '';
       formData.date = '';
       currentStep = 0;
@@ -1916,115 +1870,6 @@ class FaustApplyModal extends HTMLElement {
       set(val) { currentStep = val; }
     });
 
-    // ── Email Campaign Visitor Telemetry ──
-    function faustIsVisitorFromEmail() {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const utmSource = urlParams.get('utm_source') || '';
-        const utmMedium = urlParams.get('utm_medium') || '';
-        const utmCampaign = urlParams.get('utm_campaign') || '';
-        const source = urlParams.get('source') || urlParams.get('src') || '';
-        const emailRef = document.referrer || '';
-
-        return (
-          utmSource.toLowerCase().includes('email') ||
-          utmSource.toLowerCase().includes('correo') ||
-          utmMedium.toLowerCase().includes('email') ||
-          utmMedium.toLowerCase().includes('correo') ||
-          utmCampaign.toLowerCase().includes('email') ||
-          utmCampaign.toLowerCase().includes('correo') ||
-          source.toLowerCase().includes('email') ||
-          source.toLowerCase().includes('correo') ||
-          emailRef.toLowerCase().includes('mail') ||
-          urlParams.has('email') ||
-          urlParams.has('e')
-        );
-      } catch (e) {
-        return false;
-      }
-    }
-
-    function checkAndSendEmailTelemetry() {
-      try {
-        if (sessionStorage.getItem('faust-email-telemetry-sent') === 'true') {
-          return;
-        }
-        if (!faustIsVisitorFromEmail()) {
-          return;
-        }
-        const consentAnalytics = localStorage.getItem('faust-cookie-consent-analytics');
-        if (consentAnalytics !== 'true') {
-          return;
-        }
-        sendEmailTelemetry();
-      } catch (e) {
-        console.error("Error checking email telemetry status:", e);
-      }
-    }
-
-    function sendEmailTelemetry() {
-      try {
-        sessionStorage.setItem('faust-email-telemetry-sent', 'true');
-
-        const autoData = getAutomaticCollectionData();
-        const detailedData = getDetailedAutomaticCollectionData();
-
-        fetch('https://splitforms.com/api/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            access_key: 'f6778d6ae57e42a5a319d81048ab8db7',
-            _subject: `[Telemetría] Nuevo visitante desde correo - Faust Partners`,
-            "Tipo de Evento": "Ingreso por correo y consentimiento de cookies",
-            
-            "IP de Origen": detailedData.ip,
-            "Ubicación Estimada (IP)": detailedData.ipLocation,
-            "Proveedor de Internet (ISP)": detailedData.isp,
-            "Tipo de Dispositivo": detailedData.deviceType,
-            "Sistema Operativo": detailedData.os,
-            "Navegador": detailedData.browser,
-            "Resolución de Pantalla": detailedData.screenResolution,
-            "Resolución de Viewport": detailedData.viewportSize,
-            "Especificaciones de Hardware": detailedData.hardwareInfo,
-            "Zona Horaria": detailedData.timezone,
-            "Marca de Tiempo Local": detailedData.submitTime,
-            "Idioma del Navegador": detailedData.browserLanguage,
-            "Ruta de Navegación": detailedData.navigationPath,
-            "Tiempo de Sesión Acumulado": detailedData.sessionTime,
-            "Página de Referencia": detailedData.referrer,
-            "Velocidad de Conexión (Estimada)": detailedData.connectionSpeed,
-            "Preferencia de Cookies": detailedData.cookiePreference,
-            "Rol de Usuario": detailedData.userRole,
-            "Dumb Scroll Activado": detailedData.dumbScroll,
-
-            "Recopilado Automáticamente": autoData,
-            botcheck: ""
-          })
-        })
-        .then(() => {
-          console.log("Telemetría de visita por correo enviada con éxito.");
-        })
-        .catch(err => {
-          console.warn("Error enviando telemetría de visita por correo:", err);
-          sessionStorage.removeItem('faust-email-telemetry-sent');
-        });
-      } catch (e) {
-        console.error("Error in sendEmailTelemetry:", e);
-      }
-    }
-
-    // Check on initial page load
-    setTimeout(checkAndSendEmailTelemetry, 1500);
-
-    // Listen for cookie acceptance clicks
-    document.addEventListener('click', (e) => {
-      if (e.target && (e.target.id === 'btn-cookie-accept' || e.target.closest('#btn-cookie-accept'))) {
-        setTimeout(checkAndSendEmailTelemetry, 500);
-      }
-    });
   })();
 
     // Add global click listener for client apply and contact buttons
