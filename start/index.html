@@ -265,18 +265,8 @@
       })();
     </script>
 
-    <section class="section section-grid-bg" id="gestion">
-      <div id="Sobre nosotros" style="position: relative; top: -100px; height: 0; pointer-events: none; visibility: hidden;"></div>
+    <section class="section section-grid-bg" id="metricas">
       <div class="wrap wrap-narrow">
-        <div class="pill reveal-item">/ Sobre nosotros</div>
-        <h2 class="lead reveal-item">
-          <div class="lead-title" style="display: inline;"></div>
-          <div class="muted" style="display: inline;">Usamos Neurociencia Conductual y Análisis de Datos para optimizar la Tasa de Conversión (%) de tu sitio web. Cubrimos el ciclo de Investigación, Prototipado y Desarrollo iterativo.</div>
-        </h2>
-        <div class="btn-row reveal-item">
-          <faust-btn-apply></faust-btn-apply>
-          <faust-btn-strategy></faust-btn-strategy>
-        </div>
         <div class="stats" id="stats-container">
           <!-- metrics:generated:start -->
           <article class="stat reveal-item">
@@ -381,7 +371,17 @@
       </div>
     </section>
 
-    <section class="section centered section-grid-bg">
+    <script>
+      // Keep metrics directly after the hero, ahead of the service phases,
+      // without duplicating their dynamically maintained markup.
+      (function placeMetricsBeforeServicePhases() {
+        const metrics = document.getElementById('metricas');
+        const phases = document.querySelector('.service-phases-section');
+        if (metrics && phases && phases.parentNode) phases.parentNode.insertBefore(metrics, phases);
+      })();
+    </script>
+
+    <section class="section centered section-grid-bg optimization-section">
       <div class="wrap wrap-narrow">
         <div class="pill reveal-item">/ Optimización</div>
         <h2 class="headline reveal-item">Desarrollamos arquitectura que escala volumen de conversión.</h2>
