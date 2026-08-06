@@ -196,23 +196,71 @@ body.is-ready .page-fade-overlay {
   opacity: 0;
 }
 
-/* Experimental — a masked backdrop layer creates a gradual blur toward the
-   bottom edge of the viewport. Disable with body.is-bottom-blur-disabled. */
+/* Several overlapping backdrop-filter layers create a true progressive blur
+   toward the bottom edge, rather than fading a single uniform blur. */
 .page-bottom-blur {
   position: fixed;
   right: 0;
-  bottom: 0;
+  bottom: -2px;
   left: 0;
   z-index: 18;
-  height: clamp(112px, 18vh, 240px);
+  height: clamp(96px, 16vh, 210px);
+  overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(10, 10, 12, 0), rgba(10, 10, 12, 0.01));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 100%);
   opacity: 1;
   transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.page-bottom-blur__layer,
+.page-bottom-blur__fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.page-bottom-blur__layer {
+  -webkit-backdrop-filter: blur(var(--progressive-blur));
+  backdrop-filter: blur(var(--progressive-blur));
+}
+
+.page-bottom-blur__layer:nth-child(1) {
+  --progressive-blur: 2px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(2) {
+  --progressive-blur: 4px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 8%, #000 48%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 8%, #000 48%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(3) {
+  --progressive-blur: 7px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 22%, #000 62%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 22%, #000 62%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(4) {
+  --progressive-blur: 12px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 38%, #000 74%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 38%, #000 74%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(5) {
+  --progressive-blur: 19px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 55%, #000 86%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 55%, #000 86%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(6) {
+  --progressive-blur: 28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 72%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 72%, #000 100%);
+}
+
+.page-bottom-blur__fade {
+  background: linear-gradient(to bottom, rgba(8, 9, 10, 0) 0%, rgba(8, 9, 10, .02) 50%, rgba(8, 9, 10, .12) 100%);
 }
 
 body.is-footer-near .page-bottom-blur {
@@ -274,40 +322,45 @@ section#filosofia {
 
 .service-phases-intro {
   max-width: none;
-  display: grid;
-  grid-template-columns: minmax(42px, .14fr) minmax(250px, .52fr) minmax(260px, 1fr) 48px;
-  gap: clamp(20px, 3.2vw, 72px);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   padding: 0 clamp(4vw, 19.48vw - 151.74px, 160px) clamp(52px, 7vw, 110px);
 }
 
 .service-phases-intro .pill {
-  grid-column: 1 / 3;
   width: max-content;
-  margin: 7px 0 0;
+  margin: 0 0 50px;
 }
 
 .service-phases-intro h2 {
-  grid-column: 3 / 5;
-  max-width: 880px;
+  max-width: 1200px;
   margin: 0;
   color: #f2f2f2;
-  font-size: clamp(30px, 3.35vw, 58px);
+  font-size: clamp(38px, 5vw, 68px);
   font-weight: 400;
-  line-height: 1.04;
-  letter-spacing: -0.045em;
+  line-height: 1.08;
+  letter-spacing: -1.6px;
   text-wrap: balance;
 }
 
 .service-phase-list {
-  border-top: 1px solid rgba(255, 255, 255, .12);
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0 clamp(4vw, 19.48vw - 151.74px, 160px);
+  display: grid;
+  gap: 8px;
 }
 
 .service-phase {
   position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, .04);
+  overflow: hidden;
+  border: 0;
+  border-radius: 40px;
   background: #0c0d0f;
-  transition: background-color .7s cubic-bezier(.16, 1, .3, 1), border-color .5s ease;
+  transition: background-color .7s cubic-bezier(.16, 1, .3, 1);
 }
 
 .service-phase::before {
@@ -316,7 +369,29 @@ section#filosofia {
 
 .service-phase:hover,
 .service-phase.is-active {
-  border-color: rgba(255, 255, 255, .1);
+  background: #f2f2f2;
+}
+
+.service-phase-number,
+.service-phase-name,
+.service-phase-summary,
+.service-phase-toggle {
+  transition: color .45s ease, background-color .45s ease, border-color .45s ease;
+}
+
+.service-phase:hover .service-phase-number,
+.service-phase.is-active .service-phase-number {
+  color: rgba(24, 24, 24, .48);
+}
+
+.service-phase:hover .service-phase-name,
+.service-phase.is-active .service-phase-name {
+  color: #181818;
+}
+
+.service-phase:hover .service-phase-summary,
+.service-phase.is-active .service-phase-summary {
+  color: rgba(24, 24, 24, .62);
 }
 
 .service-phase-trigger {
@@ -324,7 +399,7 @@ section#filosofia {
   z-index: 1;
   width: 100%;
   margin: 0;
-  padding: clamp(30px, 3.7vw, 70px) clamp(4vw, 19.48vw - 151.74px, 160px);
+  padding: clamp(30px, 3.7vw, 70px) clamp(28px, 3vw, 56px);
   color: inherit;
   border: 0;
   background: transparent;
@@ -351,7 +426,7 @@ section#filosofia {
   font-size: clamp(28px, 2.45vw, 46px);
   font-weight: 400;
   line-height: 1.02;
-  letter-spacing: -.045em;
+  letter-spacing: -.024em;
 }
 
 .service-phase-summary {
@@ -367,9 +442,18 @@ section#filosofia {
   margin-top: -8px;
 }
 
+.service-phase-toggle::before { transition: opacity .45s ease; }
+
+.service-phase:hover .service-phase-toggle,
 .service-phase.is-active .service-phase-toggle {
-  color: #fff;
-  background: rgba(238, 238, 241, .10);
+  color: #181818;
+  background: transparent;
+  border: 1px solid rgba(24, 24, 24, .56);
+}
+
+.service-phase:hover .service-phase-toggle::before,
+.service-phase.is-active .service-phase-toggle::before {
+  opacity: 0;
 }
 
 .service-phase.is-active .service-phase-toggle .faq-icon-mark { transform: rotate(180deg); }
@@ -378,7 +462,7 @@ section#filosofia {
   position: relative;
   z-index: 1;
   max-height: 0;
-  padding: 0 clamp(4vw, 19.48vw - 151.74px, 160px);
+  padding: 0 clamp(28px, 3vw, 56px);
   overflow: hidden;
   opacity: 0;
   display: grid;
@@ -400,14 +484,18 @@ section#filosofia {
   width: min(100%, 640px);
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 8px;
   list-style: none;
 }
 
 .service-phase-details li {
   position: relative;
+  justify-self: start;
+  width: fit-content;
+  max-width: 100%;
   min-height: 50px;
   padding: 16px 18px;
   border: 0;
@@ -419,6 +507,18 @@ section#filosofia {
   gap: 10px;
   font-size: 14px;
   line-height: 1.25;
+  transition: color .45s ease, background-color .45s ease;
+}
+
+.service-phase:hover .service-phase-details li,
+.service-phase.is-active .service-phase-details li {
+  color: #fff;
+  background: #181818;
+}
+
+.service-phase:hover .service-phase-details li::after,
+.service-phase.is-active .service-phase-details li::after {
+  opacity: 0;
 }
 
 .service-phase-details li::after {
@@ -431,6 +531,7 @@ section#filosofia {
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  transition: opacity .45s ease;
   pointer-events: none;
 }
 
@@ -439,6 +540,12 @@ section#filosofia {
   height: 16px;
   flex: 0 0 16px;
   stroke: #181818;
+  transition: stroke .45s ease;
+}
+
+.service-phase:hover .service-phase-details li svg,
+.service-phase.is-active .service-phase-details li svg {
+  stroke: #fff;
 }
 
 .service-phase-trigger:focus-visible {
@@ -448,35 +555,33 @@ section#filosofia {
 
 @media (max-width: 850px) {
   .service-phases-intro {
-    grid-template-columns: 1fr;
-    gap: 22px;
+    gap: 0;
   }
-
-  .service-phases-intro h2 { grid-column: auto; }
 
   .service-phase-list { margin-top: 40px; }
 
-  .service-phases-intro .pill { grid-column: auto; margin-top: 0; }
+  .service-phases-intro .pill { margin-top: 0; }
 
   .service-phase-trigger {
-    padding: 32px 4vw;
-    grid-template-columns: 38px minmax(0, 1fr) 42px;
+    padding: 32px 24px;
+    grid-template-columns: minmax(0, 1fr) 42px;
     gap: 14px;
   }
 
+  .service-phase-number { display: none; }
   .service-phase-name { font-size: clamp(27px, 7.4vw, 40px); }
-  .service-phase-summary { grid-column: 2; padding-top: 2px; }
-  .service-phase-toggle { grid-column: 3; grid-row: 1 / span 2; margin-top: 0; }
+  .service-phase-summary { grid-column: 1; padding-top: 2px; }
+  .service-phase-toggle { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
 
   .service-phase-details {
-    padding-right: 4vw;
-    padding-left: 4vw;
-    grid-template-columns: 38px minmax(0, 1fr) 42px;
+    padding-right: 24px;
+    padding-left: 24px;
+    grid-template-columns: minmax(0, 1fr) 42px;
     gap: 14px;
   }
 
   .service-phase.is-active .service-phase-details { max-height: 500px; padding-bottom: 34px; }
-  .service-phase-details ul { grid-column: 2 / 4; grid-template-columns: 1fr; }
+  .service-phase-details ul { grid-column: 1 / 3; }
 }
 
 .section {
@@ -1419,7 +1524,7 @@ h2.lead.reveal-item.reveal-visible {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: 24px;
+  border-radius: 40px;
   display: flex;
 }
 
@@ -1543,7 +1648,7 @@ h2.lead.reveal-item.reveal-visible {
 .canvas-outer {
   position: relative;
   z-index: 1;
-  border-radius: 24px;
+  border-radius: 40px;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.03) 100%);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -2220,7 +2325,7 @@ faust-flow-canvas.has-explainer-open .canvas-explainer-close-icon {
     display: grid;
     align-items: center;
     margin: 0 !important;
-    border-radius: 24px;
+    border-radius: 40px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.03) 100%), #08090a;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -2594,7 +2699,7 @@ faust-flow-canvas.has-explainer-open .canvas-explainer-close-icon {
   }
 
   .canvas-outer {
-    border-radius: 16px;
+    border-radius: 40px;
   }
 
   .canvas-replay-button:active {

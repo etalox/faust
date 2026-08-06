@@ -241,6 +241,16 @@
     const blurLayer = document.createElement('div');
     blurLayer.className = 'page-bottom-blur';
     blurLayer.setAttribute('aria-hidden', 'true');
+    const fragment = document.createDocumentFragment();
+    for (let index = 0; index < 6; index += 1) {
+      const layer = document.createElement('span');
+      layer.className = 'page-bottom-blur__layer';
+      fragment.appendChild(layer);
+    }
+    const fade = document.createElement('span');
+    fade.className = 'page-bottom-blur__fade';
+    fragment.appendChild(fade);
+    blurLayer.appendChild(fragment);
     document.body.appendChild(blurLayer);
   };
 
@@ -612,7 +622,7 @@
     basePath = src.substring(0, src.lastIndexOf('/') + 1);
   }
 
-  const componentCacheVersion = 'profiles-20260805e';
+  const componentCacheVersion = 'progressive-blur-20260805f';
   const withComponentVersion = (src) => `${src}?v=${componentCacheVersion}`;
   const componentScripts = [
     { src: withComponentVersion('Components/consent.js'), always: true },
