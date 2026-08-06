@@ -1,4 +1,13 @@
 (function() {
+  // Campaign override: until this instant every visit uses the Talent
+  // experience. It intentionally does not alter the persisted profile, so a
+  // visitor returns to their previous experience once the window ends.
+  const FAUST_TALENT_CAMPAIGN_UNTIL = Date.parse(
+    window.FAUST_TALENT_CAMPAIGN_UNTIL || '2026-08-08T07:27:04.000Z'
+  );
+  const isFaustTalentCampaignActive = () =>
+    Number.isFinite(FAUST_TALENT_CAMPAIGN_UNTIL) && Date.now() < FAUST_TALENT_CAMPAIGN_UNTIL;
+
   // Available on every route, including pages without the landing shell. It
   // deliberately has no dependency on custom elements or loaded components.
   if (typeof window.faustPromoteLead !== 'function') {
@@ -15,7 +24,7 @@
         localStorage.setItem('faust-user-role', 'Standard');
       } catch (error) {}
 
-      document.documentElement.dataset.faustProfile = 'lead';
+      document.documentElement.dataset.faustProfile = isFaustTalentCampaignActive() ? 'talento' : 'lead';
       if (previous !== 'Lead') {
         const compact = previous === 'Talento' ? 'T' : 'I';
         console.info(`[Perfil] ${compact} → L`);
@@ -313,12 +322,16 @@
     return pathname.includes('/careers/') || pathname.endsWith('/careers');
   }
 
-  function getFaustProfile() {
+  function getStoredFaustProfile() {
     try {
       return normalizeFaustProfile(localStorage.getItem(FAUST_PROFILE_KEY));
     } catch (error) {
       return 'Indefinido';
     }
+  }
+
+  function getFaustProfile() {
+    return isFaustTalentCampaignActive() ? 'Talento' : getStoredFaustProfile();
   }
 
   function applyFaustProfileVisibility() {
@@ -336,7 +349,7 @@
 
   function setFaustProfile(nextProfile, source) {
     const normalized = normalizeFaustProfile(nextProfile);
-    const previous = getFaustProfile();
+    const previous = getStoredFaustProfile();
 
     // Both known profiles are sticky. Talent can only be upgraded through a
     // completed application, never by an inferred or lightweight signal.
@@ -550,6 +563,8 @@
   }
 
   window.faustGetProfile = getFaustProfile;
+  window.faustGetEffectiveProfile = getFaustProfile;
+  window.faustIsTalentCampaignActive = isFaustTalentCampaignActive;
   window.faustSetProfile = setFaustProfile;
   window.faustProfileRegisterRouteNavigation = registerFaustRouteNavigation;
   window.faustProfileRecordApplicationField = recordCompletedApplicationField;

@@ -389,11 +389,12 @@ class FaustFooter extends HTMLElement {
     };
     const rootPrefix = getRootPrefix();
     const storedProfile = localStorage.getItem('faust-user-profile');
-    // Prefer the persisted value. This keeps the audience-specific links in
-    // sync even while the profile engine is still loading after navigation.
-    const profile = storedProfile === 'Lead' || storedProfile === 'Talento' || storedProfile === 'Indefinido'
-      ? storedProfile
-      : (window.faustGetProfile?.() || 'Indefinido');
+    // The effective profile can temporarily differ from the persisted one
+    // during a campaign, while retaining the original profile in storage.
+    const profile = window.faustGetEffectiveProfile?.()
+      || (storedProfile === 'Lead' || storedProfile === 'Talento' || storedProfile === 'Indefinido'
+        ? storedProfile
+        : (window.faustGetProfile?.() || 'Indefinido'));
     const isTalent = profile === 'Talento';
     const isLead = profile === 'Lead';
 

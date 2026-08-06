@@ -49,8 +49,10 @@
     // asynchronously loaded components. A qualifying action must never depend
     // on the component loader having finished first.
     (() => {
+      window.FAUST_TALENT_CAMPAIGN_UNTIL = '2026-08-08T07:27:04.000Z';
       const profileKey = 'faust-user-profile';
       const compact = (profile) => profile === 'Talento' ? 'T' : profile === 'Lead' ? 'L' : 'I';
+      const isTalentCampaignActive = () => Date.now() < Date.parse(window.FAUST_TALENT_CAMPAIGN_UNTIL);
 
       window.faustPromoteLead = (source = 'unknown') => {
         let previous = 'Indefinido';
@@ -65,7 +67,7 @@
           // Keep the current document coherent even when storage is unavailable.
         }
 
-        document.documentElement.dataset.faustProfile = 'lead';
+        document.documentElement.dataset.faustProfile = isTalentCampaignActive() ? 'talento' : 'lead';
         if (previous !== 'Lead') {
           console.info(`[Perfil] ${compact(previous)} → L`);
           window.dispatchEvent(new CustomEvent('faust-profile-changed', {
@@ -127,7 +129,8 @@
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
       <h1 class="reveal-item" id="hero-title">Maximizamos el MRR <br>de las empresas que hoy son<br>líderes en México.</h1>
       <script>
-        if (localStorage.getItem('faust-user-role') === 'Talento') {
+        const isTalentCampaignActive = Date.now() < Date.parse(window.FAUST_TALENT_CAMPAIGN_UNTIL || '');
+        if (isTalentCampaignActive || localStorage.getItem('faust-user-role') === 'Talento') {
           document.getElementById('hero-title').innerHTML = 'Desarrollamos las <br>plataformas de las empresas <br>líderes en México.';
         }
       </script>
