@@ -275,17 +275,20 @@ section#filosofia {
 .service-phases-intro {
   max-width: none;
   display: grid;
-  grid-template-columns: minmax(150px, .42fr) minmax(0, 1fr);
-  gap: clamp(28px, 5vw, 96px);
+  grid-template-columns: minmax(42px, .14fr) minmax(250px, .52fr) minmax(260px, 1fr) 48px;
+  gap: clamp(20px, 3.2vw, 72px);
   align-items: start;
   padding: 0 clamp(4vw, 19.48vw - 151.74px, 160px) clamp(52px, 7vw, 110px);
 }
 
 .service-phases-intro .pill {
+  grid-column: 1 / 3;
+  width: max-content;
   margin: 7px 0 0;
 }
 
 .service-phases-intro h2 {
+  grid-column: 3 / 5;
   max-width: 880px;
   margin: 0;
   color: #f2f2f2;
@@ -302,7 +305,7 @@ section#filosofia {
 
 .service-phase {
   position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  border-bottom: 1px solid rgba(255, 255, 255, .04);
   background: #0c0d0f;
   transition: background-color .7s cubic-bezier(.16, 1, .3, 1), border-color .5s ease;
 }
@@ -313,8 +316,7 @@ section#filosofia {
 
 .service-phase:hover,
 .service-phase.is-active {
-  border-color: rgba(255, 255, 255, .13);
-  background: #0f1012;
+  border-color: rgba(255, 255, 255, .1);
 }
 
 .service-phase-trigger {
@@ -327,7 +329,7 @@ section#filosofia {
   border: 0;
   background: transparent;
   display: grid;
-  grid-template-columns: minmax(42px, .28fr) minmax(250px, 1fr) minmax(260px, .9fr) 48px;
+  grid-template-columns: minmax(42px, .14fr) minmax(250px, .52fr) minmax(260px, 1fr) 48px;
   gap: clamp(20px, 3.2vw, 72px);
   align-items: start;
   text-align: left;
@@ -354,7 +356,7 @@ section#filosofia {
 
 .service-phase-summary {
   max-width: 385px;
-  padding-top: .25em;
+  padding-top: .0em;
   color: rgba(255, 255, 255, .48);
   font-size: clamp(15px, 1.05vw, 18px);
   font-weight: 400;
@@ -380,7 +382,7 @@ section#filosofia {
   overflow: hidden;
   opacity: 0;
   display: grid;
-  grid-template-columns: minmax(42px, .28fr) minmax(250px, 1fr) minmax(260px, .9fr) 48px;
+  grid-template-columns: minmax(42px, .14fr) minmax(250px, .52fr) minmax(260px, 1fr) 48px;
   gap: clamp(20px, 3.2vw, 72px);
   transform: translateY(-14px);
   transition: max-height .8s cubic-bezier(.16, 1, .3, 1), padding .8s cubic-bezier(.16, 1, .3, 1), opacity .45s ease, transform .7s cubic-bezier(.16, 1, .3, 1);
@@ -395,6 +397,7 @@ section#filosofia {
 
 .service-phase-details ul {
   grid-column: 3 / 5;
+  width: min(100%, 640px);
   margin: 0;
   padding: 0;
   display: grid;
@@ -404,17 +407,31 @@ section#filosofia {
 }
 
 .service-phase-details li {
+  position: relative;
   min-height: 50px;
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, .85);
-  border-radius: 10px;
+  padding: 16px 18px;
+  border: 0;
+  border-radius: 40px;
   color: #181818;
-  background: #fff;
+  background: #dedee4;
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 14px;
   line-height: 1.25;
+}
+
+.service-phase-details li::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .4), rgba(255, 255, 255, .1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .service-phase-details li svg {
@@ -435,9 +452,11 @@ section#filosofia {
     gap: 22px;
   }
 
+  .service-phases-intro h2 { grid-column: auto; }
+
   .service-phase-list { margin-top: 40px; }
 
-  .service-phases-intro .pill { margin-top: 0; }
+  .service-phases-intro .pill { grid-column: auto; margin-top: 0; }
 
   .service-phase-trigger {
     padding: 32px 4vw;
@@ -570,7 +589,7 @@ section#filosofia {
 }
 
 .application-qualifier-inner {
-  min-height: 514px;
+  min-height: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -774,16 +793,34 @@ section#filosofia {
 }
 
 .btn-primary {
+  position: relative;
   background: var(--fg);
   color: #161616;
   font-weight: 600;
   transition: background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out, transform 120ms ease-out;
 }
 
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .4), rgba(255, 255, 255, .1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease-out;
+}
+
 .btn-primary:hover {
   background: #0022ff;
   color: #fff;
 }
+
+.btn-primary:hover::before { opacity: 1; }
 
 .btn-primary:hover .arrow {
   filter: invert(1);
@@ -833,11 +870,12 @@ section#filosofia {
 }
 
 .btn-secondary::before {
-  transition: opacity 180ms ease-out;
+  transition: opacity 180ms ease-out, background 240ms ease-out;
 }
 
 .btn-nav:hover::before {
-  opacity: 0;
+  opacity: 1;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .4), rgba(255, 255, 255, .1));
 }
 
 .btn:not(:disabled):active {
@@ -888,14 +926,32 @@ section#filosofia {
 }
 
 .modal-action--primary {
+  position: relative;
   background: #f2f2f2;
   color: #161616;
+}
+
+.modal-action--primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .4), rgba(255, 255, 255, .1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease-out;
 }
 
 .modal-action--primary:hover {
   background: #0022ff;
   color: #fff;
 }
+
+.modal-action--primary:hover::before { opacity: 1; }
 
 /* Prominent confirmation actions may fill a dialog footer while retaining
    the shared modal button treatment. */
@@ -1245,7 +1301,7 @@ h2.lead.reveal-item.reveal-visible {
 }
 
 .metrics-header {
-  max-width: 1200px;
+  max-width: 1600px;
 }
 
 .metrics-header h2 {

@@ -262,10 +262,13 @@ if (!window.showPrototypeToast) {
         }
         .proto-btn-secondary:hover { background: rgba(238,238,241,0.10); }
         .proto-btn-primary {
+          position: relative;
           background: #f2f2f2;
           color: #161616;
         }
+        .proto-btn-primary::before { content: ''; position: absolute; inset: 0; padding: 1px; border-radius: inherit; background: linear-gradient(to bottom, rgba(255,255,255,.4), rgba(255,255,255,.1)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; pointer-events: none; transition: opacity 240ms ease-out; }
         .proto-btn-primary:hover { background: #0022ff; color: #fff; }
+        .proto-btn-primary:hover::before { opacity: 1; }
 
         @media (max-width: 768px) {
           .proto-grid {
@@ -458,8 +461,10 @@ class FaustNavbar extends HTMLElement {
       <style>
         /* ── Base Styles for Navbar Components ── */
         .btn { border-radius: 999px; padding: 16px 24px; font-size: 16px; border: 1px solid transparent; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; text-decoration: none; box-sizing: border-box; font-family: inherit; }
-        .btn-primary { background: #f2f2f2; color: #161616 !important; font-weight: 600; transition: background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out; }
+        .btn-primary { position: relative; background: #f2f2f2; color: #161616 !important; font-weight: 600; transition: background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out; }
+        .btn-primary::before { content: ''; position: absolute; inset: -1px; padding: 1px; border-radius: inherit; background: linear-gradient(to bottom, rgba(255,255,255,.4), rgba(255,255,255,.1)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; pointer-events: none; transition: opacity 240ms ease-out; }
         .btn-primary:hover { background: #0022ff; color: #fff !important; }
+        .btn-primary:hover::before { opacity: 1; }
         .btn-primary:hover .arrow { filter: invert(1); }
         .btn-secondary { 
           position: relative; 
@@ -486,8 +491,8 @@ class FaustNavbar extends HTMLElement {
         .btn-secondary:hover { background: rgba(238, 238, 241, 0.10); color: #fff; }
         .btn-nav { height: 50px; padding: 18px 20px; font-size: 14px; color: #fff; border-radius: 40px; backdrop-filter: blur(20px); overflow: hidden; }
         .btn-nav:hover { background: #0022ff; }
-        .btn-secondary::before { transition: opacity 180ms ease-out; }
-        .btn-nav:hover::before { opacity: 0; }
+        .btn-secondary::before { transition: opacity 180ms ease-out, background 240ms ease-out; }
+        .btn-nav:hover::before { opacity: 1; background: linear-gradient(to bottom, rgba(255,255,255,.4), rgba(255,255,255,.1)); }
         
         .arrow { width: 14px; height: 10px; transition: filter 240ms ease-out; }
         .arrow-light { filter: invert(1); }
