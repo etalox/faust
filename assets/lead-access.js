@@ -3,13 +3,36 @@
 
   // These product surfaces are reserved for confirmed Leads. It runs before
   // each protected page paints and does not depend on the component loader.
-  const campaignUntil = Date.parse(
-    window.FAUST_TALENT_CAMPAIGN_UNTIL || '2026-08-08T07:27:04.000Z'
-  );
-  const isTalentCampaignActive = Number.isFinite(campaignUntil) && Date.now() < campaignUntil;
+  const facebookEntryKey = 'faust-profile-facebook-entry';
+  const isFacebookEntry = () => {
+    try {
+      if (window.sessionStorage.getItem(facebookEntryKey) === '1') return true;
+      const params = new URLSearchParams(window.location.search);
+      const utmSource = (params.get('utm_source') || '').trim().toLowerCase();
+      const hasSource = /^(facebook|fb|meta)$/.test(utmSource) || params.has('fbclid');
+      let hasReferrer = false;
+      if (document.referrer) {
+        const hostname = new URL(document.referrer).hostname.toLowerCase();
+        hasReferrer = hostname === 'facebook.com' || hostname.endsWith('.facebook.com') ||
+          hostname === 'fb.com' || hostname.endsWith('.fb.com') ||
+          hostname === 'messenger.com' || hostname.endsWith('.messenger.com');
+      }
+      const detected = hasSource || hasReferrer;
+      if (detected) window.sessionStorage.setItem(facebookEntryKey, '1');
+      return detected;
+    } catch (error) {
+      return false;
+    }
+  };
+  const enteredFromFacebook = isFacebookEntry();
   let isLead = false;
   try {
-    isLead = !isTalentCampaignActive && window.localStorage.getItem('faust-user-profile') === 'Lead';
+    const storedProfile = window.localStorage.getItem('faust-user-profile');
+    if (enteredFromFacebook && storedProfile !== 'Lead') {
+      window.localStorage.setItem('faust-user-profile', 'Talento');
+      window.localStorage.setItem('faust-user-role', 'Talento');
+    }
+    isLead = storedProfile === 'Lead';
   } catch (error) {}
 
   if (isLead) return;

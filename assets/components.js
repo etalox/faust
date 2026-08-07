@@ -1,12 +1,33 @@
 (function() {
-  // Campaign override: until this instant every visit uses the Talent
-  // experience. It intentionally does not alter the persisted profile, so a
-  // visitor returns to their previous experience once the window ends.
-  const FAUST_TALENT_CAMPAIGN_UNTIL = Date.parse(
-    window.FAUST_TALENT_CAMPAIGN_UNTIL || '2026-08-08T07:27:04.000Z'
-  );
-  const isFaustTalentCampaignActive = () =>
-    Number.isFinite(FAUST_TALENT_CAMPAIGN_UNTIL) && Date.now() < FAUST_TALENT_CAMPAIGN_UNTIL;
+  // Facebook recruitment traffic may arrive through the Facebook app,
+  // facebook.com, Messenger, or with the tracking parameters preserved but
+  // without a referrer. Remember the entry for the browser session so the
+  // profile survives client-side navigation.
+  const FAUST_FACEBOOK_ENTRY_KEY = 'faust-profile-facebook-entry';
+  const isFaustFacebookEntry = () => {
+    try {
+      if (sessionStorage.getItem(FAUST_FACEBOOK_ENTRY_KEY) === '1') return true;
+
+      const params = new URLSearchParams(window.location.search);
+      const utmSource = (params.get('utm_source') || '').trim().toLowerCase();
+      const sourceMatches = /^(facebook|fb|meta)$/.test(utmSource);
+      const hasFacebookClickId = params.has('fbclid');
+      let referrerMatches = false;
+      if (document.referrer) {
+        const hostname = new URL(document.referrer).hostname.toLowerCase();
+        referrerMatches = hostname === 'facebook.com' || hostname.endsWith('.facebook.com') ||
+          hostname === 'fb.com' || hostname.endsWith('.fb.com') ||
+          hostname === 'messenger.com' || hostname.endsWith('.messenger.com');
+      }
+
+      const detected = sourceMatches || hasFacebookClickId || referrerMatches;
+      if (detected) sessionStorage.setItem(FAUST_FACEBOOK_ENTRY_KEY, '1');
+      return detected;
+    } catch (error) {
+      return false;
+    }
+  };
+  window.faustHasFacebookEntry = isFaustFacebookEntry;
 
   // Available on every route, including pages without the landing shell. It
   // deliberately has no dependency on custom elements or loaded components.
@@ -24,7 +45,7 @@
         localStorage.setItem('faust-user-role', 'Standard');
       } catch (error) {}
 
-      document.documentElement.dataset.faustProfile = isFaustTalentCampaignActive() ? 'talento' : 'lead';
+      document.documentElement.dataset.faustProfile = 'lead';
       if (previous !== 'Lead') {
         const compact = previous === 'Talento' ? 'T' : 'I';
         console.info(`[Perfil] ${compact} → L`);
@@ -331,7 +352,7 @@
   }
 
   function getFaustProfile() {
-    return isFaustTalentCampaignActive() ? 'Talento' : getStoredFaustProfile();
+    return getStoredFaustProfile();
   }
 
   function applyFaustProfileVisibility() {
@@ -402,7 +423,11 @@
         sessionStorage.setItem(FAUST_PROFILE_ROUTE_COUNT_KEY, '0');
 
         if (getFaustProfile() !== 'Lead') {
-          setFaustProfile(isFaustCareersPath(entryPath) ? 'Talento' : 'Indefinido', 'entry-route');
+          const detectedFacebookEntry = isFaustFacebookEntry();
+          setFaustProfile(
+            detectedFacebookEntry || isFaustCareersPath(entryPath) ? 'Talento' : 'Indefinido',
+            detectedFacebookEntry ? 'facebook-entry' : 'entry-route'
+          );
         } else {
           applyFaustProfileVisibility();
         }
@@ -564,7 +589,6 @@
 
   window.faustGetProfile = getFaustProfile;
   window.faustGetEffectiveProfile = getFaustProfile;
-  window.faustIsTalentCampaignActive = isFaustTalentCampaignActive;
   window.faustSetProfile = setFaustProfile;
   window.faustProfileRegisterRouteNavigation = registerFaustRouteNavigation;
   window.faustProfileRecordApplicationField = recordCompletedApplicationField;
