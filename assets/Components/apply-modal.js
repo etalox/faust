@@ -66,6 +66,8 @@ class FaustApplyModal extends HTMLElement {
     if (!overlay || !modalBody || !progressBar || !btnBack || !btnNext || !modalFooter) return;
 
     let currentStep = 0;
+    let hasQualifierProgress = false;
+    let renderedProgressStep = null;
     let pendingBackHeight = null;
     let mobileBackTimeout = null;
 
@@ -673,23 +675,34 @@ class FaustApplyModal extends HTMLElement {
     // posterior al envío. El flujo de aplicación sólo pide lo indispensable.
     const applicationSteps = [steps[1], steps[0], steps[2]];
 
-    progressBar.innerHTML = '';
-    for (let i = 0; i < applicationSteps.length; i++) {
-      const line = document.createElement('div');
-      line.className = 'apply-step-line';
-      progressBar.appendChild(line);
+    function buildProgressBar() {
+      progressBar.innerHTML = '';
+      const lineCount = applicationSteps.length + (hasQualifierProgress ? 1 : 0);
+      for (let i = 0; i < lineCount; i++) {
+        const line = document.createElement('div');
+        line.className = 'apply-step-line';
+        progressBar.appendChild(line);
+      }
     }
+
+    buildProgressBar();
 
     function updateProgressBar() {
       const lines = progressBar.querySelectorAll('.apply-step-line');
+      const shouldDelayActiveLine = renderedProgressStep !== null && currentStep !== renderedProgressStep;
       lines.forEach((line, idx) => {
-        line.classList.remove('is-active', 'is-completed');
-        if (idx < currentStep) {
+        line.classList.remove('is-active', 'is-completed', 'is-delayed');
+        const stepIndex = idx - (hasQualifierProgress ? 1 : 0);
+        if (hasQualifierProgress && idx === 0) {
           line.classList.add('is-completed');
-        } else if (idx === currentStep) {
+        } else if (stepIndex < currentStep) {
+          line.classList.add('is-completed');
+        } else if (stepIndex === currentStep) {
           line.classList.add('is-active');
+          if (shouldDelayActiveLine) line.classList.add('is-delayed');
         }
       });
+      renderedProgressStep = currentStep;
     }
 
     const DRAFT_KEY = 'faust-apply-draft-v2';
@@ -698,7 +711,8 @@ class FaustApplyModal extends HTMLElement {
       try {
         localStorage.setItem(DRAFT_KEY, JSON.stringify({
           formData: formData,
-          currentStep: currentStep
+          currentStep: currentStep,
+          qualifierProgress: hasQualifierProgress
         }));
       } catch (e) {
         console.warn("Failed to save draft:", e);
@@ -712,6 +726,7 @@ class FaustApplyModal extends HTMLElement {
           const parsed = JSON.parse(draft);
           if (parsed && parsed.formData) {
             Object.assign(formData, parsed.formData);
+            hasQualifierProgress = Boolean(parsed.qualifierProgress);
             if (typeof parsed.currentStep === 'number' && parsed.currentStep >= 0 && parsed.currentStep < applicationSteps.length) {
               currentStep = parsed.currentStep;
             }
@@ -1759,13 +1774,15 @@ class FaustApplyModal extends HTMLElement {
       formData.contact = '';
       formData.date = '';
       currentStep = 0;
+      hasQualifierProgress = false;
+      renderedProgressStep = null;
       clearFormDraft();
       cancelPendingBackHeightAdjustment();
       window.confirmedCompany = '';
       window.dispatchEvent(new CustomEvent('faust-company-confirmed', { detail: '' }));
     };
 
-    window.openApplyModal = function() {
+    window.openApplyModal = function(options = {}) {
       window.faustOpenSurface?.('apply');
       ensureIpDetected();
       const isOpening = !overlay.classList.contains('is-open');
@@ -1781,9 +1798,11 @@ class FaustApplyModal extends HTMLElement {
       if (checkBlockedState()) {
         showSuccessScreen();
       } else {
-        const hasDraft = loadFormDraft();
-        if (!hasDraft) {
-          window.resetForm();
+        if (isOpening) {
+          const hasDraft = loadFormDraft();
+          if (!hasDraft) window.resetForm();
+          if (options.origin === 'qualifier') hasQualifierProgress = true;
+          buildProgressBar();
         }
         progressBar.style.display = 'flex';
         btnNext.style.display = 'block';
@@ -1852,7 +1871,7 @@ class FaustApplyModal extends HTMLElement {
       } else if (hasApplyAction || isApplyHref || isApplyText) {
         if (window.openApplyModal) {
           e.preventDefault();
-          window.openApplyModal();
+          window.openApplyModal({ origin: btn.getAttribute('data-apply-origin') || '' });
         }
       }
     });
@@ -1898,7 +1917,7 @@ class FaustApplyModal extends HTMLElement {
       } else if (hasApplyAction || isApplyHref || isApplyText) {
         if (window.openApplyModal) {
           e.preventDefault();
-          window.openApplyModal();
+          window.openApplyModal({ origin: btn.getAttribute('data-apply-origin') || '' });
         }
       }
     });
