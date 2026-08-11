@@ -395,6 +395,10 @@ class FaustNavbar extends HTMLElement {
       this.render();
     };
     window.addEventListener('faust-language-changed', this._onLanguageChanged);
+    this._onCountryDetected = () => {
+      this.render();
+    };
+    window.addEventListener('faust-country-detected', this._onCountryDetected);
 
     this.render();
   }
@@ -420,6 +424,13 @@ class FaustNavbar extends HTMLElement {
 
     const activeCode = getSelectedCode();
     const isLATAM = (activeCode === 'es-LA');
+    let detectedCountry = '';
+    try {
+      detectedCountry = (localStorage.getItem('faust-detected-country-code') || '').toUpperCase();
+    } catch (error) {}
+    // Spanish alone is not proof of a Mexican visitor. Keep language choice
+    // available until geolocation has explicitly resolved Mexico.
+    const shouldShowLanguageSelector = detectedCountry !== 'MX';
 
     let navLangHtml = '';
     let aplicarBtnClass = `btn btn-secondary btn-nav ${applyBtnBaseClass}`.trim();
@@ -428,7 +439,9 @@ class FaustNavbar extends HTMLElement {
     if (!isLATAM) {
       aplicarBtnClass = `btn btn-primary btn-nav ${applyBtnBaseClass}`.trim();
       arrowClass = 'arrow';
+    }
 
+    if (shouldShowLanguageSelector) {
       const buttonLabel = getButtonLabelHtml(activeCode);
       const navbarButtonLabel = buttonLabel.replace(
         /^(<img[^>]+>)\s*(.+)$/i,
@@ -652,11 +665,13 @@ class FaustNavbar extends HTMLElement {
           color: #fff !important;
         }
 
-        /* Ensure the gradient border outline remains visible on hover/open, matching standard secondary buttons */
+        /* Keep this secondary control's outline identical in every state.
+           Unlike blue navigation actions, opening the language menu must not
+           promote its subtle gray-button border into the bright hover border. */
         .nav-lang-selector:hover .nav-lang-btn::before,
         .nav-lang-selector:has(.is-open) .nav-lang-btn::before,
         .nav-lang-btn:hover::before {
-          opacity: 1 !important;
+          background: linear-gradient(to bottom, rgba(255,255,255,.08), rgba(255,255,255,.03)) !important;
         }
 
         .nav-lang-btn-text {
@@ -1148,6 +1163,10 @@ class FaustNavbar extends HTMLElement {
     if (this._onLanguageChanged) {
       window.removeEventListener('faust-language-changed', this._onLanguageChanged);
       this._onLanguageChanged = null;
+    }
+    if (this._onCountryDetected) {
+      window.removeEventListener('faust-country-detected', this._onCountryDetected);
+      this._onCountryDetected = null;
     }
   }
 }

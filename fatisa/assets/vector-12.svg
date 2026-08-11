@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon">
+<rect width="48" height="48" rx="24" fill="#181818"/>
+<g id="Vector 2">
+<path d="M31 28.5L34 24.5L24 16.5L24.0574 16.701C25.3314 21.16 27.7208 25.2208 31 28.5Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M17 28.5C20.2792 25.2208 22.6686 21.16 23.9426 16.701L24 16.5H19L17 28.5Z" fill="white"/>
+<path d="M17 28.5V32.5L31 28.5C26.4249 27.1928 21.5751 27.1928 17 28.5Z" fill="white"/>
+</g>
+</g>
+</svg>

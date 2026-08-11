@@ -226,11 +226,13 @@
     closeScrollSurfaces({ closeFooterSurfaces: direction === 'up' });
   };
 
-  // Footer language and cookie menus contain their own scrollable body. Events
-  // that originate there are not page navigation and must not dismiss a menu.
+  // Language menus contain their own scrollable body. Events that originate
+  // there are not page navigation and must not dismiss the active menu.
   const isInternalSurfaceScroll = function(target) {
     return target instanceof Element && Boolean(
-      target.closest('.lang-overlay.is-open .lang-modal-body')
+      target.closest(
+        '.lang-overlay.is-open .lang-modal-body, .nav-lang-dropdown.is-open .lang-modal-body'
+      )
     );
   };
 
@@ -661,7 +663,7 @@
     basePath = src.substring(0, src.lastIndexOf('/') + 1);
   }
 
-  const componentCacheVersion = 'progressive-blur-20260805f';
+  const componentCacheVersion = 'progress-sequence-bidir-20260808';
   const withComponentVersion = (src) => `${src}?v=${componentCacheVersion}`;
   const componentScripts = [
     { src: withComponentVersion('Components/consent.js'), always: true },

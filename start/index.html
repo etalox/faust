@@ -124,7 +124,7 @@
   </script>
   <script src="../assets/translation.js" defer></script>
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" data-lucide-library defer></script>
-  <script src="../assets/components.js?v=facebook-talent-20260806" defer></script>
+  <script src="../assets/components.js?v=progress-sequence-bidir-20260808" defer></script>
   <link rel="stylesheet" href="../style.css">
 </head>
 
@@ -151,9 +151,87 @@
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
       <h1 class="reveal-item" id="hero-title">Maximizamos el MRR <br>de las empresas que hoy son<br>líderes en México.</h1>
       <script>
-        if (window.faustHasFacebookEntry?.() || localStorage.getItem('faust-user-role') === 'Talento') {
-          document.getElementById('hero-title').innerHTML = 'Desarrollamos las <br>plataformas de las empresas <br>líderes en México.';
-        }
+        (() => {
+          const heroTitle = document.getElementById('hero-title');
+          const defaultHero = 'Maximizamos el MRR <br>de las empresas que hoy son<br>líderes en México.';
+          const talentHero = 'Desarrollamos las <br>plataformas de las empresas <br>líderes en México.';
+          const internationalHero = 'Maximizamos el MRR de las empresas que hoy lideran nacionalmente';
+
+          const getStorageValue = (key) => {
+            try { return localStorage.getItem(key) || ''; } catch (error) { return ''; }
+          };
+
+          const getSelectedLanguageIsSpanish = () => {
+            const selectedCode = getStorageValue('faust-lang-selection-code').toLowerCase();
+            if (selectedCode) {
+              return selectedCode === 'auto'
+                ? (navigator.language || '').toLowerCase().startsWith('es')
+                : selectedCode.startsWith('es');
+            }
+            const nativeLanguage = getStorageValue('faust-lang-native').toLowerCase();
+            if (nativeLanguage) return nativeLanguage === 'español';
+            return (navigator.language || '').toLowerCase().startsWith('es');
+          };
+
+          const getDetectedCountry = () => {
+            const countryCode = getStorageValue('faust-detected-country-code').toUpperCase();
+            if (!countryCode) return { code: '', name: 'México' };
+            try {
+              const countryName = new Intl.DisplayNames(['es'], { type: 'region' }).of(countryCode);
+              return { code: countryCode, name: countryName || 'México' };
+            } catch (error) {
+              return { code: countryCode, name: countryCode === 'MX' ? 'México' : countryCode };
+            }
+          };
+
+          const isMexicanTimeZone = () => {
+            try {
+              const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+              return new Set([
+                'America/Mexico_City', 'America/Cancun', 'America/Chihuahua',
+                'America/Hermosillo', 'America/Mazatlan', 'America/Monterrey',
+                'America/Ojinaga', 'America/Tijuana', 'America/Bahia_Banderas',
+                'America/Matamoros', 'America/Merida'
+              ]).has(timeZone);
+            } catch (error) {
+              // Missing timezone data is ambiguous, so keep the Mexican copy.
+              return true;
+            }
+          };
+
+          const refreshLandingLocationCopy = () => {
+            const country = getDetectedCountry();
+            const qualifierTitle = document.querySelector('.application-qualifier-title');
+            const qualifierActions = document.querySelector('.application-qualifier-actions');
+            const qualifierNote = document.getElementById('application-qualifier-note');
+            const isTalent = document.documentElement.dataset.faustProfile === 'talento' ||
+              window.faustGetProfile?.() === 'Talento' ||
+              getStorageValue('faust-user-role') === 'Talento';
+            const contextLooksForeign = Boolean(country.code && country.code !== 'MX') &&
+              !getSelectedLanguageIsSpanish() && !isMexicanTimeZone();
+            // A single foreign signal is not enough: VPNs and English browser
+            // interfaces are common among Mexican visitors. Prefer the local
+            // experience unless all three signals agree.
+            const displayedCountry = contextLooksForeign ? country : { code: 'MX', name: 'México' };
+
+            if (heroTitle) {
+              if (contextLooksForeign) heroTitle.textContent = internationalHero;
+              else if (isTalent) heroTitle.innerHTML = talentHero;
+              else heroTitle.innerHTML = defaultHero;
+            }
+
+            if (qualifierTitle) qualifierTitle.textContent = `¿Tu empresa opera en ${displayedCountry.name}?`;
+            if (qualifierActions) qualifierActions.setAttribute('aria-label', `Confirmar si tu empresa opera en ${displayedCountry.name}`);
+            if (qualifierNote) qualifierNote.textContent = `Por ahora, colaboramos con empresas que operan en ${displayedCountry.name}.`;
+          };
+
+          window.faustRefreshLandingLocationCopy = refreshLandingLocationCopy;
+          refreshLandingLocationCopy();
+          document.addEventListener('DOMContentLoaded', refreshLandingLocationCopy, { once: true });
+          window.addEventListener('faust-country-detected', refreshLandingLocationCopy);
+          window.addEventListener('faust-language-changed', refreshLandingLocationCopy);
+          window.addEventListener('faust-profile-changed', refreshLandingLocationCopy);
+        })();
       </script>
       <p class="reveal-item">Nuestros partners añadieron 57 mil USD a su MRR este trimestre.</p>
       <div class="btn-row reveal-item" style="justify-content:center">
@@ -175,6 +253,9 @@
           </a>
         </div>
       </div>
+      <div class="hero-disclaimer" role="note">
+        <sup>1</sup><span>Referencias de trayectoria individual de nuestros colaboradores; no implican patrocinio, afiliación, aprobación ni relación comercial vigente con FaustPartners.</span>
+      </div>
     </section>
 
     <section class="service-phases-section" id="servicios" aria-labelledby="service-phases-title" data-profile-hidden-for="Talento">
@@ -187,7 +268,7 @@
         <article class="service-phase is-active" data-service-phase>
           <button class="service-phase-trigger" type="button" aria-expanded="true">
             <span class="service-phase-number">01</span>
-            <span class="service-phase-name">Análisis de conversión</span>
+            <span class="service-phase-name">Auditoría de Conversión</span>
             <span class="service-phase-summary">Revisamos cómo llegan tus usuarios, qué hacen dentro de la plataforma y en qué momento abandonan. Sumamos investigación y analítica para encontrar oportunidades reales.</span>
             <span class="faq-icon service-phase-toggle" aria-hidden="true"><svg class="faq-icon-mark" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="m3 5 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
@@ -229,7 +310,7 @@
         <article class="service-phase" data-service-phase>
           <button class="service-phase-trigger" type="button" aria-expanded="false">
             <span class="service-phase-number">04</span>
-            <span class="service-phase-name">Experimentación y optimización</span>
+            <span class="service-phase-name">Análisis e Iteración</span>
             <span class="service-phase-summary">Comparamos cada mejora contra tu versión actual y aumentamos su exposición sólo cuando genera un resultado comprobable. Cada prueba alimenta la siguiente decisión de producto.</span>
             <span class="faq-icon service-phase-toggle" aria-hidden="true"><svg class="faq-icon-mark" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="m3 5 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </button>
@@ -465,7 +546,7 @@
       <div class="wrap wrap-narrow">
         <div class="pill reveal-item">/ Nuestra visión</div>
         <h2 class="lead reveal-item">
-          <div class="muted" style="display: inline;">No nos importan las tendencias ni los frameworks de moda. Nos importa la ciencia detrás de la toma de decisiones y la ingeniería que hace que las cosas funcionen.</div>
+          <div class="muted" style="display: inline;">Nos importa la ciencia detrás de la toma de decisiones y la ingeniería que hace que las cosas funcionen, no los frameworks de moda.</div>
         </h2>
         <div class="btn-row reveal-item" style="margin-top: 40px; justify-content: center;">
           <faust-btn-apply></faust-btn-apply>
@@ -559,10 +640,9 @@
           <h2 class="application-qualifier-title reveal-item">¿Tu empresa opera en México?</h2>
           <p class="application-qualifier-description reveal-item">Antes de aplicar, confirmemos que estamos en el mismo punto de partida.</p>
           <div class="application-qualifier-actions reveal-item" role="group" aria-label="Confirmar si tu empresa opera en México">
-            <button class="btn btn-secondary application-qualifier-no" type="button" aria-expanded="false" aria-controls="application-qualifier-note">No, aún no</button>
-            <a class="btn btn-primary faust-apply-btn" data-action="apply" data-lead-profile-yes data-press-delay="off" href="#aplicar" onclick="window.faustPromoteLead?.('qualification-confirmed')">Sí, continuar <img class="arrow" src="../assets/Icons/button_arrow.svg" alt=""></a>
+            <button class="btn btn-secondary application-qualifier-no faust-apply-btn" type="button" data-action="apply" data-apply-origin="qualifier" data-press-delay="off">No, aún no</button>
+            <a class="btn btn-primary faust-apply-btn" data-action="apply" data-apply-origin="qualifier" data-press-delay="off" href="#aplicar">Sí, continuar <img class="arrow" src="../assets/Icons/button_arrow.svg" alt=""></a>
           </div>
-          <p class="application-qualifier-note" id="application-qualifier-note" aria-live="polite">Por ahora, colaboramos con empresas que operan en México.</p>
         </div>
       </div>
     </section>
@@ -570,7 +650,7 @@
     <section class="section section-grid-bg" id="faq">
       <div class="wrap">
         <div class="pill reveal-item">/ FAQ</div>
-        <h2 class="section-title reveal-item" style="margin: 0 0 40px 0;">Tenemos respuestas a todas tus preguntas.</h2>
+        <h2 class="section-title reveal-item" style="margin: 0 0 40px 0;">Preguntas Más Frecuentes</h2>
         
         <div class="faq-grid">
           <div class="faq-item reveal-item" data-profile-hidden-for="Talento" onclick="toggleFaq(this)">
@@ -1359,16 +1439,6 @@
       }
     }
 
-    (function initApplicationQualifier() {
-      const noButton = document.querySelector('.application-qualifier-no');
-      const qualifier = document.querySelector('.application-qualifier');
-      if (!noButton || !qualifier) return;
-
-      noButton.addEventListener('click', function() {
-        const isOpen = qualifier.classList.toggle('is-not-eligible');
-        noButton.setAttribute('aria-expanded', String(isOpen));
-      });
-    })();
   </script>
 
   <script>
