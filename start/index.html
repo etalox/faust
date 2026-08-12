@@ -124,7 +124,7 @@
   </script>
   <script src="../assets/translation.js" defer></script>
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" data-lucide-library defer></script>
-  <script src="../assets/components.js?v=progress-sequence-bidir-20260808" defer></script>
+  <script src="../assets/components.js?v=bottom-blur-layer-opacity-20260811" defer></script>
   <link rel="stylesheet" href="../style.css">
 </head>
 
@@ -147,7 +147,7 @@
   <div class="page-fade-overlay"></div>
   <faust-navbar></faust-navbar>
   <main>
-    <section class="hero wrap section-grid-bg" id="aplicar">
+    <section class="hero wrap" id="aplicar">
       <faust-logo-lockup id="hero-logo" class="reveal-item"></faust-logo-lockup>
       <h1 class="reveal-item" id="hero-title">Maximizamos el MRR <br>de las empresas que hoy son<br>líderes en México.</h1>
       <script>
@@ -253,9 +253,71 @@
           </a>
         </div>
       </div>
-      <div class="hero-disclaimer" role="note">
-        <span>¹Referencias de trayectoria individual de nuestros colaboradores; no implican patrocinio, afiliación, aprobación ni relación comercial vigente con FaustPartners.</span>
+      <div class="hero-legal-disclosure">
+        <img class="hero-legal-shadow" src="../assets/Hero_Shadow.svg" alt="" aria-hidden="true">
+        <button
+          class="hero-legal-trigger"
+          type="button"
+          aria-expanded="false"
+          aria-controls="hero-legal-panel"
+        >
+          Cómo debe interpretarse esta sección
+        </button>
       </div>
+      <div class="hero-legal-overlay" id="hero-legal-panel" role="dialog" aria-modal="true" aria-label="Aclaración legal" aria-hidden="true" inert>
+        <div class="wrap hero-legal-overlay-wrap">
+          <section class="hero-legal-panel" tabindex="-1">
+            <header class="hero-legal-header">
+              <div class="hero-legal-title-row"><span>Aclaración legal</span></div>
+            </header>
+            <div class="hero-legal-body">
+              <p>Las referencias corresponden exclusivamente a la trayectoria profesional individual de determinados colaboradores y no implican patrocinio, afiliación, aprobación ni relación comercial con FaustPartners. Puede solicitar la eliminación del logotipo de su empresa contactándose con nosotros.</p>
+            </div>
+            <div class="hero-legal-actions">
+              <a class="btn btn-secondary hero-legal-contact" href="mailto:francohumbertoquinonesramirez@gmail.com" aria-label="Enviar un correo a Francisco Humberto Quiñones Ramírez">Contacto</a>
+              <button class="btn btn-primary hero-legal-acknowledge" type="button">Cerrar</button>
+            </div>
+          </section>
+        </div>
+      </div>
+      <script>
+        (() => {
+          const disclosure = document.querySelector('.hero-legal-disclosure');
+          const trigger = disclosure?.querySelector('.hero-legal-trigger');
+          const overlay = document.querySelector('.hero-legal-overlay');
+          const panel = overlay?.querySelector('.hero-legal-panel');
+          const contactButton = overlay?.querySelector('.hero-legal-contact');
+          const acknowledgeButton = overlay?.querySelector('.hero-legal-acknowledge');
+
+          if (!disclosure || !trigger || !overlay || !panel || !contactButton || !acknowledgeButton) return;
+
+          const setOpen = (isOpen) => {
+            trigger.setAttribute('aria-expanded', String(isOpen));
+            overlay.setAttribute('aria-hidden', String(!isOpen));
+            overlay.inert = !isOpen;
+            overlay.classList.toggle('is-open', isOpen);
+            if (isOpen) requestAnimationFrame(() => panel.focus());
+          };
+
+          trigger.addEventListener('click', () => setOpen(!overlay.classList.contains('is-open')));
+          contactButton.addEventListener('click', (event) => {
+            setOpen(false);
+            event.stopPropagation();
+          });
+          acknowledgeButton.addEventListener('click', () => {
+            setOpen(false);
+            trigger.focus();
+          });
+
+          overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && overlay.classList.contains('is-open')) {
+              event.preventDefault();
+              setOpen(false);
+              trigger.focus();
+            }
+          });
+        })();
+      </script>
     </section>
 
     <section class="service-phases-section" id="servicios" aria-labelledby="service-phases-title" data-profile-hidden-for="Talento">
@@ -370,37 +432,28 @@
       })();
     </script>
 
-    <section class="section section-grid-bg" id="metricas">
-      <div class="wrap wrap-narrow">
-        <header class="metrics-header reveal-item">
-          <div class="pill">/ Resultados</div>
-          <h2>Nuestros resultados hablan por sí mismos</h2>
-        </header>
+    <section class="metrics-section" id="metricas">
+      <div class="wrap metrics-wrap">
+        <p class="metrics-description reveal-item">Nuestros resultados hablan por sí mismos.</p>
         <div class="stats" id="stats-container">
           <!-- metrics:generated:start -->
           <article class="stat reveal-item">
-            <div class="stat-heading">Impacto</div>
             <div class="stat-number-wrap">
-              <h3>730 mil</h3>
+              <h3>250M+</h3>
               <p class="title">Usuarios Impactados</p>
             </div>
-            <p class="desc">Impactamos la experiencia de cientos de miles de usuarios a través de nuestras optimizaciones.</p>
           </article>
           <article class="stat reveal-item">
-            <div class="stat-heading">Partners</div>
             <div class="stat-number-wrap">
-              <h3>5</h3>
-              <p class="title">Empresas en México</p>
+              <h3>100+</h3>
+              <p class="title">Socios del ExpertNetwork</p>
             </div>
-            <p class="desc">Nos asociamos con un selecto número de empresas en México y el resto del continente.</p>
           </article>
           <article class="stat reveal-item">
-            <div class="stat-heading">Resultados</div>
             <div class="stat-number-wrap">
-              <h3>+35.9%</h3>
-              <p class="title">CRO (Conversión)</p>
+              <h3>1</h3>
+              <p class="title">Objetivo común: Crecimiento</p>
             </div>
-            <p class="desc">Es el porcentaje de tráfico que realiza una acción determinada en la plataforma.</p>
           </article>
           <!-- metrics:generated:end -->
         </div>
@@ -408,6 +461,117 @@
           (function() {
             var container = document.getElementById('stats-container');
             if (!container) return;
+            var counterPrepareObserver = null;
+            var counterPlayObserver = null;
+
+            function parseMetricNumber(value) {
+              var match = value.trim().match(/^([^0-9]*)([0-9]+(?:[.,][0-9]+)?)(.*)$/);
+              if (!match) return null;
+
+              var decimalPart = match[2].match(/[.,]([0-9]+)$/);
+              return {
+                prefix: match[1],
+                value: Number(match[2].replace(',', '.')),
+                suffix: match[3],
+                decimals: decimalPart ? decimalPart[1].length : 0
+              };
+            }
+
+            function formatMetricNumber(metric, value, isFinal) {
+              var precision = metric.decimals;
+              var formatted = value.toFixed(precision);
+              return metric.prefix + formatted + metric.suffix;
+            }
+
+            function getMetricCounterConfig(node, metric) {
+              // Las métricas son evidencia, no un elemento decorativo: se muestran
+              // siempre en su valor definitivo, sin contador ascendente.
+              return { fixed: true };
+            }
+
+            function animateMetricNumber(node) {
+              if (node.dataset.counterPlayed === 'true') return;
+              var metric = parseMetricNumber(node.dataset.metricFinal || node.textContent);
+              if (!metric) return;
+
+              var config = getMetricCounterConfig(node, metric);
+              if (config.fixed) return;
+
+              node.dataset.counterPlayed = 'true';
+              var startValue = config.startValue;
+              var startTime = null;
+              var duration = config.duration;
+              var lastOutput = null;
+
+              function step(timestamp) {
+                if (startTime === null) startTime = timestamp;
+                var progress = Math.min((timestamp - startTime) / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 5);
+                var current = startValue + ((metric.value - startValue) * eased);
+                if (config.steps) {
+                  current = startValue + Math.min(config.steps, Math.floor(eased * (config.steps + 0.0001)));
+                }
+                var output = formatMetricNumber(metric, current, progress === 1);
+                if (output !== lastOutput) {
+                  node.textContent = output;
+                  lastOutput = output;
+                }
+
+                if (progress < 1) requestAnimationFrame(step);
+              }
+
+              requestAnimationFrame(step);
+            }
+
+            function setupStatCounters() {
+              if (!('IntersectionObserver' in window)) return;
+              if (counterPrepareObserver) counterPrepareObserver.disconnect();
+              if (counterPlayObserver) counterPlayObserver.disconnect();
+
+              var numbers = Array.prototype.slice.call(container.querySelectorAll('.stat-number-wrap h3'));
+              numbers.forEach(function(node) {
+                var finalValue = node.textContent.trim();
+                var metric = parseMetricNumber(finalValue);
+                var config = metric ? getMetricCounterConfig(node, metric) : null;
+                node.dataset.metricFinal = finalValue;
+                node.dataset.counterPrepared = 'false';
+                node.dataset.counterPlayed = 'false';
+                node.setAttribute('aria-label', finalValue);
+                if (config?.fixed) {
+                  node.dataset.counterPrepared = 'true';
+                  node.dataset.counterPlayed = 'true';
+                }
+              });
+
+              counterPrepareObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                  if (!entry.isIntersecting) return;
+                  var node = entry.target;
+                  if (node.dataset.counterPrepared === 'true') return;
+                  var metric = parseMetricNumber(node.dataset.metricFinal);
+                  if (!metric) return;
+                  var config = getMetricCounterConfig(node, metric);
+
+                  node.dataset.counterPrepared = 'true';
+                  node.textContent = formatMetricNumber(metric, config.startValue, false);
+                  counterPrepareObserver.unobserve(node);
+                });
+              }, { rootMargin: '0px 0px 35% 0px', threshold: 0 });
+
+              counterPlayObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                  if (!entry.isIntersecting) return;
+                  animateMetricNumber(entry.target);
+                  counterPlayObserver.unobserve(entry.target);
+                });
+              }, { threshold: 0.15 });
+
+              numbers.forEach(function(node) {
+                if (node.dataset.counterPlayed === 'true') return;
+                counterPrepareObserver.observe(node);
+                counterPlayObserver.observe(node);
+              });
+            }
 
             function renderStats(stats) {
               container.hidden = false;
@@ -416,12 +580,10 @@
                 var article = document.createElement('article');
                 article.className = 'stat reveal-item';
                 article.innerHTML = 
-                  '<div class="stat-heading">' + s.name + '</div>' +
                   '<div class="stat-number-wrap">' +
                     '<h3>' + s.number + '</h3>' +
                     '<p class="title">' + s.title + '</p>' +
-                  '</div>' +
-                  '<p class="desc">' + s.desc + '</p>';
+                  '</div>';
                 container.appendChild(article);
               });
 
@@ -429,6 +591,7 @@
               if (window.initReveal) {
                 window.initReveal();
               }
+              setupStatCounters();
             }
 
             function parseStatsText(text) {
@@ -475,6 +638,10 @@
                 // offline previews and transient network failures.
                 console.warn('Could not fetch metrics.txt:', err);
               });
+
+            // Server-rendered values stay intact for crawlers and initial
+            // paint; counters prepare only as they approach the viewport.
+            setupStatCounters();
           })();
         </script>
       </div>
