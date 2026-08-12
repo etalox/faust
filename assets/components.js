@@ -268,8 +268,55 @@
   // Experimental visual treatment. Set this to false before components.js
   // loads, or add `is-bottom-blur-disabled` to <body>, to turn it off.
   const enableBottomPageBlur = window.FAUST_ENABLE_BOTTOM_PAGE_BLUR !== false;
+  const bottomBlurShowThreshold = 40;
+  const bottomBlurHideThreshold = 2;
+  let bottomBlurVisible = false;
+
+  const isLegalPage = function() {
+    return document.documentElement?.classList.contains('legal-page');
+  };
+
+  const setBottomBlurVisible = function(shouldShow) {
+    const blurLayer = document.querySelector('.page-bottom-blur');
+    const hasActiveClass = document.body.classList.contains('is-bottom-blur-active');
+    if (!blurLayer || (bottomBlurVisible === shouldShow && hasActiveClass === shouldShow)) return;
+
+    bottomBlurVisible = shouldShow;
+    const visualLayers = Array.from(blurLayer.querySelectorAll('.page-bottom-blur__layer, .page-bottom-blur__fade'));
+    document.body.classList.toggle('is-bottom-blur-active', shouldShow);
+
+    // Animate every filtered layer directly. Animating only their fixed parent
+    // can be composed as a discrete change by some browsers.
+    visualLayers.forEach((layer) => {
+      const fromOpacity = Number.parseFloat(getComputedStyle(layer).opacity) || 0;
+      layer.getAnimations().forEach(animation => animation.cancel());
+      const animation = layer.animate(
+        [{ opacity: fromOpacity }, { opacity: shouldShow ? 1 : 0 }],
+        { duration: 400, easing: 'ease-out', fill: 'forwards' }
+      );
+      animation.onfinish = () => animation.cancel();
+    });
+  };
+
+  const syncBottomBlurScrollState = function() {
+    if (!enableBottomPageBlur || !document.body || isLegalPage()) return;
+
+    const scrollTop = Math.max(
+      window.scrollY || 0,
+      document.scrollingElement?.scrollTop || 0,
+      document.documentElement?.scrollTop || 0,
+      document.body?.scrollTop || 0
+    );
+
+    if (scrollTop >= bottomBlurShowThreshold) {
+      setBottomBlurVisible(true);
+    } else if (scrollTop < bottomBlurHideThreshold) {
+      setBottomBlurVisible(false);
+    }
+  };
+
   window.faustEnsureBottomPageBlur = function() {
-    if (!enableBottomPageBlur || !document.body || document.querySelector('.page-bottom-blur')) return;
+    if (!enableBottomPageBlur || !document.body || isLegalPage() || document.querySelector('.page-bottom-blur')) return;
     const blurLayer = document.createElement('div');
     blurLayer.className = 'page-bottom-blur';
     blurLayer.setAttribute('aria-hidden', 'true');
@@ -294,7 +341,21 @@
 
   let bottomBlurFooterObserver = null;
   window.faustSyncBottomPageBlurVisibility = function() {
-    if (!enableBottomPageBlur || !document.body || !('IntersectionObserver' in window)) return;
+    if (!enableBottomPageBlur || !document.body) return;
+
+    if (isLegalPage()) {
+      bottomBlurFooterObserver?.disconnect();
+      bottomBlurFooterObserver = null;
+      document.querySelector('.page-bottom-blur')?.remove();
+      bottomBlurVisible = false;
+      document.body.classList.remove('is-footer-near');
+      return;
+    }
+
+    window.faustEnsureBottomPageBlur();
+    syncBottomBlurScrollState();
+
+    if (!('IntersectionObserver' in window)) return;
     const footer = document.querySelector('faust-footer');
     if (!footer) return;
 
@@ -314,6 +375,9 @@
   } else {
     document.addEventListener('DOMContentLoaded', setupBottomBlur, { once: true });
   }
+
+  window.addEventListener('scroll', syncBottomBlurScrollState, { passive: true, capture: true });
+  document.addEventListener('scroll', syncBottomBlurScrollState, { passive: true, capture: true });
 
   /* ── Visitor profile ────────────────────────────────────────────────
      A profile is an experience state, not an analytics guess. Lead is
@@ -663,15 +727,17 @@
     basePath = src.substring(0, src.lastIndexOf('/') + 1);
   }
 
-  const componentCacheVersion = 'progress-sequence-bidir-20260808';
+  const componentCacheVersion = 'bottom-blur-layer-opacity-20260811';
   const withComponentVersion = (src) => `${src}?v=${componentCacheVersion}`;
   const componentScripts = [
     { src: withComponentVersion('Components/consent.js'), always: true },
+    // The navbar creates this element during its own render, so register it
+    // before the navbar rather than discovering it from the pre-rendered DOM.
+    { src: withComponentVersion('Components/logo-lockup.js'), always: true },
     { src: withComponentVersion('Components/navbar.js'), always: true },
     { src: withComponentVersion('Components/footer.js'), always: true },
     { src: withComponentVersion('Components/buttons.js'), always: true },
     { src: withComponentVersion('Components/apply-modal.js'), always: true },
-    { src: withComponentVersion('Components/logo-lockup.js'), selector: 'faust-logo-lockup' },
     { src: withComponentVersion('Components/vacancy-card.js'), selector: 'faust-vacancy-card, #vacancies-container' },
     { src: withComponentVersion('Components/responsive-br.js'), selector: 'h1 br, h2 br, h3 br, h4 br, h5 br, h6 br, p br' },
     { src: withComponentVersion('Components/flow-canvas.js'), selector: 'faust-flow-canvas' },
