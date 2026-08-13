@@ -184,6 +184,24 @@
     .solution-card-art img { display:block; width:var(--solution-art-width); height:100%; object-fit:contain; object-position:center; }
     .solution-card:nth-child(2) { --solution-art-width:66%; }
     .solution-card:nth-child(3) { --solution-art-width:98%; }
+    .company { padding-top:180px; }
+    .company-layout { display:flex; min-height:520px; padding:46px 52px 0; overflow:hidden; flex-direction:column; background:var(--ink); color:var(--paper); clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
+    .company-label { margin:0; color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
+    .company-statement { max-width:1060px; margin-top:54px; }
+    .company-statement h2 { margin:0; font:400 clamp(48px, 4.75vw, 72px)/.94 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.058em; }
+    .company-context { max-width:510px; margin-top:30px; }
+    .company-context p { margin:0; color:rgba(240,240,240,.7); font:400 14px/21px "BDO Grotesk", Arial, sans-serif; }
+    .company-principles { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); margin:auto 0 0; padding:0; border-top:1px solid rgba(240,240,240,.24); list-style:none; }
+    .company-principles li { min-width:0; padding:22px 28px 26px 0; }
+    .company-principles li + li { padding-left:28px; border-left:1px solid rgba(240,240,240,.24); }
+    .company-principles span { display:block; margin-bottom:13px; color:var(--red); font:500 12px/1 "BDO Grotesk", Arial, sans-serif; }
+    .company-principles p { max-width:280px; margin:0; font:400 18px/22px "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.045em; }
+    @media (min-width:1200px) {
+      .company-layout { min-height:0; }
+      .company-statement { margin-top:36px; }
+      .company-context { margin-top:28px; }
+      .company-principles { margin-top:44px; }
+    }
     .workflow { padding-top:180px; }
     .workflow-header { display:grid; grid-template-columns:minmax(0, 1fr) minmax(340px, 500px); gap:40px; align-items:end; }
     .workflow-header p { max-width:470px; margin:0; color:rgba(24,24,24,.68); font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
@@ -282,11 +300,17 @@
       .service-system-summary { font-size:14px; line-height:21px; }
       .service-system-offerings li { padding:9px 0; font-size:12px; }
       .service-system-detail p { margin-bottom:18px; font-size:12px; line-height:18px; }
-      .solutions, .workflow { padding-top:140px; }
+      .solutions, .company, .workflow { padding-top:140px; }
       .solutions-header, .workflow-header { grid-template-columns:minmax(0, 1fr) 400px; }
       .solution-card { min-height:238px; padding:24px; }
       .solution-card h3 { font-size:27px; letter-spacing:-1.08px; }
       .solution-card p { font-size:12px; line-height:18px; }
+      .company-layout { min-height:440px; padding:38px 42px 0; }
+      .company-statement { margin-top:42px; }
+      .company-principles li { padding:18px 22px 22px 0; }
+      .company-principles li + li { padding-left:22px; }
+      .company-principles span { font-size:12px; }
+      .company-principles p { font-size:16px; line-height:21px; }
       .workflow-step { grid-template-columns:44px minmax(210px, .7fr) minmax(0, 1fr); gap:22px; padding:24px 0; }
       .workflow-step h3 { font-size:24px; }
       .workflow-step p { font-size:12px; line-height:18px; }
@@ -399,12 +423,15 @@
       .service-system.is-active { min-height:180px; }
       .service-system-visual { right:48px; }
       .service-system-name { font-size:29px; }
-      .solutions, .workflow { padding-top:130px; }
+      .solutions, .company, .workflow { padding-top:130px; }
       .solutions-header, .workflow-header { grid-template-columns:1fr; gap:24px; }
       .solutions-grid { grid-template-columns:1fr; column-gap:0; row-gap:var(--solutions-gap); }
       .solution-card { --solution-art-width:70%; min-height:270px; }
       .solution-card:nth-child(2) { --solution-art-width:58%; }
       .solution-card:nth-child(3) { --solution-art-width:86%; }
+      .company-layout { min-height:420px; padding:34px 36px 0; }
+      .company-statement { max-width:780px; margin-top:38px; }
+      .company-context { max-width:420px; }
       .workflow-step { grid-template-columns:42px minmax(190px, .7fr) minmax(0, 1fr); gap:20px; }
       .workflow-note { padding-inline:62px; }
       .shipping { padding-top:130px; }
@@ -470,7 +497,7 @@
       .service-system:not(.is-active) .service-system-visual { display:none; }
       .services-kicker, .section-kicker { margin-bottom:16px; font-size:14px; }
       .solutions-header .section-kicker, .workflow-header .section-kicker { margin-bottom:16px; font-size:14px; }
-      .solutions, .workflow { padding-top:100px; }
+      .solutions, .company, .workflow { padding-top:100px; }
       .solutions-header, .workflow-header { display:block; }
       .solutions-header p, .workflow-header p { margin-top:26px; font-size:16px; line-height:24px; }
       .solutions { --solutions-gap:12px; }
@@ -481,6 +508,15 @@
       .solution-card-art { display:contents; }
       .solution-card-art img { position:absolute; top:auto; right:24px; bottom:24px; left:24px; width:calc(100% - 48px); height:46%; padding:12px; object-fit:contain; object-position:center; }
       .solution-card:nth-child(3) .solution-card-art img { right:48px; left:48px; width:calc(100% - 96px); }
+      .company-layout { display:flex; min-height:0; padding:24px 24px 0; }
+      .company-statement { margin-top:42px; }
+      .company-statement h2 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:36px; font-weight:500; line-height:39px; letter-spacing:-1.44px; text-transform:uppercase; }
+      .company-context { max-width:none; margin-top:24px; padding:0 0 38px; }
+      .company-context p { font-size:14px; line-height:21px; }
+      .company-principles { display:block; }
+      .company-principles li { padding:18px 0; }
+      .company-principles li + li { padding-left:0; border-top:1px solid rgba(240,240,240,.24); border-left:0; }
+      .company-principles p { max-width:none; font-family:"BDO Grotesk", Arial, sans-serif; font-size:18px; font-weight:500; line-height:22px; letter-spacing:-.72px; text-transform:uppercase; }
       .workflow-list { margin-top:40px; }
       .workflow-step { grid-template-columns:38px 1fr; gap:14px; padding:22px 0; }
       .workflow-step h3 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:20px; font-weight:500; line-height:24px; letter-spacing:-.8px; text-transform:uppercase; }
@@ -702,7 +738,7 @@
       <div class="workflow-note"><p>Para iniciar una cotización, comparta la información disponible de su proyecto: pieza, muestra física, plano o requerimiento técnico.</p><a class="button button--dark" href="#contacto" data-quote-trigger>Solicitar una cotización</a></div>
     </section>
 
-    <section class="shipping" id="empresa">
+    <section class="shipping" id="envios">
       <div class="shipping-copy">
         <div class="brand"><img src="assets/vector-10.svg" alt=""><span>Fatisa<sup>®</sup></span></div>
         <h2>Hacemos envíos a Estados Unidos</h2>
@@ -723,6 +759,21 @@
           </div>
           <a class="route-confirm" href="#contacto" data-quote-trigger>Confirmar</a>
         </div>
+      </div>
+    </section>
+
+    <section class="company page-wrap" id="empresa">
+      <div class="company-layout">
+        <p class="company-label">Empresa</p>
+        <div class="company-statement">
+          <h2 class="section-title">Fabricación especializada, con una relación de trabajo que perdura.</h2>
+        </div>
+        <div class="company-context"><p>En Fatisa desarrollamos soluciones industriales desde la ingeniería hasta la fabricación, con atención técnica a cada requerimiento y un enfoque claro en calidad, precisión y viabilidad.</p></div>
+        <ul class="company-principles">
+          <li><span>Criterio técnico</span><p>Soluciones técnicas ajustadas a las necesidades específicas de cada proyecto.</p></li>
+          <li><span>Calidad accesible</span><p>Productos de alta calidad con precios competitivos.</p></li>
+          <li><span>Continuidad</span><p>Relaciones de trabajo duraderas, construidas proyecto a proyecto.</p></li>
+        </ul>
       </div>
     </section>
 
@@ -993,6 +1044,12 @@
         'Torneado CNC':'CNC turning', 'Fresado CNC':'CNC milling', 'Piezas de alta precisión':'High-precision parts', 'Geometrías complejas':'Complex geometries',
         'Moldes de inyección y termoformado':'Injection and thermoforming molds', 'Troqueles y dados de forja':'Dies and forging dies', 'Fixtures de inspección y ensamble':'Inspection and assembly fixtures', 'Modelos para fundición':'Casting patterns',
         'Fundición de hierro, aluminio y bronce':'Iron, aluminum, and bronze casting', 'Soldadura TIG y de precisión':'TIG and precision welding', 'Reparación de componentes':'Component repair', 'Mantenimiento de moldes':'Mold maintenance',
+        'Fabricación especializada, con una relación de trabajo que perdura.':'Specialized manufacturing, with a working relationship built to last.',
+        'En Fatisa desarrollamos soluciones industriales desde la ingeniería hasta la fabricación, con atención técnica a cada requerimiento y un enfoque claro en calidad, precisión y viabilidad.':'At Fatisa, we develop industrial solutions from engineering through manufacturing, with technical attention to every requirement and a clear focus on quality, precision, and feasibility.',
+        'Criterio técnico':'Technical rigor', 'Calidad accesible':'Accessible quality', 'Continuidad':'Continuity',
+        'Soluciones técnicas ajustadas a las necesidades específicas de cada proyecto.':'Technical solutions tailored to the specific needs of every project.',
+        'Productos de alta calidad con precios competitivos.':'High-quality products at competitive prices.',
+        'Relaciones de trabajo duraderas, construidas proyecto a proyecto.':'Lasting working relationships, built project by project.',
         'Reconstruimos modelos CAD y desarrollamos soluciones a partir de muestras, planos o croquis.':'We reconstruct CAD models and develop solutions from samples, drawings, or sketches.',
         'Capacidad para manufacturar componentes industriales con control técnico y atención a los requerimientos de cada proyecto.':'Capacity to manufacture industrial components with technical control and attention to every project’s requirements.',
         'Integramos ingeniería y fabricación para crear moldes, troqueles y fixtures ajustados a su proceso de producción.':'We integrate engineering and fabrication to create molds, dies, and fixtures tailored to your production process.',
