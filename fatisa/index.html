@@ -203,17 +203,18 @@
       .company-context { margin-top:28px; }
       .company-principles { margin-top:72px; }
     }
-    .workflow { padding-top:180px; }
+    .workflow { box-sizing:border-box; margin-top:180px; padding:46px 52px 0; overflow:hidden; background:var(--ink); color:var(--paper); clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
     .workflow-header { display:grid; grid-template-columns:minmax(0, 1fr) minmax(340px, 500px); gap:40px; align-items:end; }
-    .workflow-header p { max-width:470px; margin:0; color:rgba(24,24,24,.68); font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
-    .workflow-list { margin-top:50px; border-top:1px solid rgba(24,24,24,.18); }
-    .workflow-step { display:grid; grid-template-columns:52px minmax(240px, .7fr) minmax(0, 1fr); gap:28px; padding:28px 0; border-bottom:1px solid rgba(24,24,24,.18); }
+    .workflow .section-kicker, .workflow-header .section-kicker { color:rgba(240,240,240,.62); }
+    .workflow-header p { max-width:470px; margin:0; color:rgba(240,240,240,.7); font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
+    .workflow-list { margin-top:50px; border-top:1px solid rgba(240,240,240,.24); }
+    .workflow-step { display:grid; grid-template-columns:52px minmax(240px, .7fr) minmax(0, 1fr); gap:28px; padding:28px 0; border-bottom:1px solid rgba(240,240,240,.24); }
     .workflow-step span { padding-top:4px; color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
     .workflow-step h3 { margin:0; font:400 28px/1 "PP Neue Montreal", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing:-1.12px; }
-    .workflow-step p { max-width:500px; margin:0; color:rgba(24,24,24,.68); font:400 14px/21px "BDO Grotesk", Arial, sans-serif; }
-    .workflow-note { display:flex; justify-content:space-between; gap:40px; margin-top:28px; padding:24px 80px 0; }
+    .workflow-step p { max-width:500px; margin:0; color:rgba(240,240,240,.7); font:400 14px/21px "BDO Grotesk", Arial, sans-serif; }
+    .workflow-note { display:flex; justify-content:space-between; gap:40px; margin-top:28px; padding:24px 0 42px; }
     .workflow-note p { max-width:540px; margin:0; font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
-    .workflow-note .button { flex:0 0 auto; align-self:center; }
+    .workflow-note .button { flex:0 0 auto; align-self:center; background:var(--paper); color:var(--ink); }
     .gallery-rail { position:relative; width:100%; margin-top:40px; overflow:visible; touch-action:pan-y; cursor:grab; }
     .gallery-rail.is-dragging { cursor:grabbing; }
     .gallery-track { display:flex; gap:20px; width:max-content; will-change:transform; }
@@ -301,7 +302,8 @@
       .service-system-summary { font-size:14px; line-height:21px; }
       .service-system-offerings li { padding:9px 0; font-size:12px; }
       .service-system-detail p { margin-bottom:18px; font-size:12px; line-height:18px; }
-      .solutions, .company, .workflow { padding-top:140px; }
+      .solutions, .company { padding-top:140px; }
+      .workflow { padding:38px 42px 0; }
       .solutions-header, .workflow-header { grid-template-columns:minmax(0, 1fr) 400px; }
       .solution-card { min-height:238px; padding:24px; }
       .solution-card h3 { font-size:27px; letter-spacing:-1.08px; }
@@ -369,7 +371,8 @@
       .service-system-index, .service-system-detail .text-link, .service-system-offerings li, .service-system-detail p { font-size:clamp(12px, calc(.277778vw + 8.666667px), 14px); }
       .service-system-name { font-size:clamp(27px, calc(.694444vw + 18.666667px), 32px); letter-spacing:-.04em; }
       .service-system-summary { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); line-height:clamp(21px, calc(.416667vw + 16px), 24px); }
-      .solutions, .workflow { padding-top:clamp(140px, calc(5.555556vw + 73.333333px), 180px); }
+      .solutions { padding-top:clamp(140px, calc(5.555556vw + 73.333333px), 180px); }
+      .workflow { margin-top:clamp(140px, calc(5.555556vw + 73.333333px), 180px); }
       .solution-card { min-height:clamp(238px, calc(5.277778vw + 174.666667px), 276px); padding:clamp(24px, calc(.833333vw + 14px), 30px); }
       .solution-card h3 { font-size:clamp(27px, calc(.694444vw + 18.666667px), 32px); letter-spacing:-.04em; }
       .solution-card p { font-size:clamp(12px, calc(.277778vw + 8.666667px), 14px); line-height:clamp(18px, calc(.416667vw + 13px), 21px); }
@@ -424,7 +427,8 @@
       .service-system.is-active { min-height:180px; }
       .service-system-visual { right:48px; }
       .service-system-name { font-size:29px; }
-      .solutions, .company, .workflow { padding-top:130px; }
+      .solutions, .company { padding-top:130px; }
+      .workflow { margin-top:130px; padding:34px 36px 0; }
       .solutions-header, .workflow-header { grid-template-columns:1fr; gap:24px; }
       .solutions-grid { grid-template-columns:1fr; column-gap:0; row-gap:var(--solutions-gap); }
       .solution-card { --solution-art-width:70%; min-height:270px; }
@@ -499,7 +503,8 @@
       .service-system:not(.is-active) .service-system-visual { display:none; }
       .services-kicker, .section-kicker { margin-bottom:16px; font-size:14px; }
       .solutions-header .section-kicker, .workflow-header .section-kicker { margin-bottom:16px; font-size:14px; }
-      .solutions, .company, .workflow { padding-top:100px; }
+      .solutions, .company { padding-top:100px; }
+      .workflow { margin-top:100px; padding:24px 24px 0; clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
       .solutions-header, .workflow-header { display:block; }
       .solutions-header p, .workflow-header p { margin-top:26px; font-size:16px; line-height:24px; }
       .solutions { --solutions-gap:12px; }
