@@ -433,7 +433,7 @@
       .intro--desktop { display:none; }
       .intro--mobile { display:block; }
       .hero-actions, .copyright, .powered { display:none; }
-      .hero-art { right:-100px; left:auto; width:814.729px; height:auto; max-width:none; transform:none; object-fit:contain; object-position:center bottom; }
+      .hero-art { right:-100px; left:auto; width:814.729px; height:auto; max-width:none; transform:translateY(var(--hero-parallax)); object-fit:contain; object-position:center bottom; }
       .page-wrap { width:calc(100% - 40px); }
       .section-title { font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
       .services { padding-top:50px; }
@@ -853,9 +853,9 @@
       let ticking = false;
       const updateParallax = () => {
         ticking = false;
-        if (window.matchMedia('(max-width: 700px)').matches) return;
+        const isMobile = window.matchMedia('(max-width: 700px)').matches;
         const progress = Math.max(0, Math.min(window.scrollY, hero.offsetHeight));
-        art.style.setProperty('--hero-parallax', `${Math.min(progress * 0.12, 72)}px`);
+        art.style.setProperty('--hero-parallax', `${Math.min(progress * (isMobile ? 0.13 : 0.12), isMobile ? 76 : 72)}px`);
       };
       updateParallax();
       window.addEventListener('scroll', () => {
