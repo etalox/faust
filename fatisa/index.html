@@ -173,7 +173,7 @@
     .service-system-visual { display:block; position:absolute; top:50%; right:60px; width:56px; height:56px; margin:0; overflow:hidden; transform:translateY(-50%); background:#fff; clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); transition:top .5s cubic-bezier(.16,1,.3,1), bottom .5s cubic-bezier(.16,1,.3,1), width .5s cubic-bezier(.16,1,.3,1), height .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1); }
     .service-system.is-active .service-system-visual { top:var(--service-visual-inset); bottom:var(--service-visual-inset); width:auto; height:auto; max-width:var(--service-visual-column-size, var(--service-visual-size)); aspect-ratio:1; transform:none; }
     .service-system-visual::after { content:""; position:absolute; right:0; bottom:0; width:42px; height:2px; background:var(--red); }
-    .service-system-visual img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; filter:grayscale(1); transition:filter .5s cubic-bezier(.16,1,.3,1); }
+    .service-system-visual img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; filter:grayscale(1); transition:transform 10s cubic-bezier(.08,.82,.14,1), filter .5s cubic-bezier(.16,1,.3,1); }
     .service-system.is-active .service-system-visual img { padding:0; filter:grayscale(0); }
     .solutions-header .section-kicker, .workflow-header .section-kicker { max-width:none; margin:0 0 18px; color:rgba(24,24,24,.6); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
     .solutions { --solutions-gap:20px; min-width:0; max-width:100%; padding-top:180px; }
@@ -265,7 +265,7 @@
       .facilities { width:calc(100% - var(--gutter)); max-width:none; margin-left:var(--gutter); margin-right:0; }
     }
     .facility { position:relative; flex:0 0 500px; height:320px; margin:0; overflow:hidden; background:#fff; clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
-    .facility img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; pointer-events:none; -webkit-user-drag:none; user-select:none; transition:transform .6s cubic-bezier(.16,1,.3,1), filter .4s ease; }
+    .facility img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; pointer-events:none; -webkit-user-drag:none; user-select:none; transition:transform 10s cubic-bezier(.08,.82,.14,1), filter .4s ease; }
     .cta { padding:200px 20px 150px; text-align:center; }
     .cta .brand { margin-bottom:40px; }
     .cta h2 { max-width:997px; margin:auto; font-size:48px; font-weight:400; line-height:52px; letter-spacing:-1.92px; }
@@ -281,8 +281,8 @@
     .mobile-quote { transition:transform .24s cubic-bezier(.16,1,.3,1), background-color .2s ease, box-shadow .24s cubic-bezier(.16,1,.3,1); }
 
     @media (hover:hover) and (pointer:fine) {
-      .button:hover { transform:translateY(-2px); box-shadow:0 8px 18px rgba(24,24,24,.16); }
-      .button:active { transform:translateY(0); box-shadow:none; }
+      .button:hover { box-shadow:0 6px 16px rgba(24,24,24,.14); }
+      .button:active { box-shadow:none; }
       .button--dark:hover { background:#303030; }
       .button--red:hover { background:#e62d00; }
       .workflow-note .button:hover { background:#fff; color:var(--ink); box-shadow:0 8px 20px rgba(0,0,0,.24); }
@@ -294,13 +294,13 @@
       .quote-field input[type="file"]:hover::file-selector-button { background:#303030; transform:translateY(-1px); }
       .service-system:not(.is-active):hover .service-system-name { color:rgba(24,24,24,.62); }
       .service-system:not(.is-active):hover .service-system-toggle { border-color:var(--ink); transform:rotate(90deg); }
-      .service-system:hover .service-system-visual img { transform:scale(1.035); }
+      .service-system:hover .service-system-visual img { transform:scale(1.3); }
       .solution-card:hover .solution-card-art img { transform:scale(1.035); }
       .workflow-step:hover { background:rgba(255,255,255,.045); }
       .workflow-step:hover span { transform:translateX(5px); }
-      .facility:hover img { transform:scale(1.035); }
-      .route-confirm:hover { transform:translateY(-2px); background:#303030; box-shadow:0 8px 18px rgba(24,24,24,.18); }
-      .mobile-quote:hover { transform:translateX(-50%) translateY(-2px); background:#303030; box-shadow:0 10px 24px rgba(24,24,24,.2); }
+      .facility:hover img { transform:scale(1.3); }
+      .route-confirm:hover { background:#303030; box-shadow:0 6px 16px rgba(24,24,24,.16); }
+      .mobile-quote:hover { transform:translateX(-50%); background:#303030; box-shadow:0 8px 18px rgba(24,24,24,.18); }
     }
 
     @media (prefers-reduced-motion:reduce) {
