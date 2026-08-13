@@ -89,6 +89,13 @@
   };
   function uniform1(name, value) { gl.uniform1f(gl.getUniformLocation(program, name), value); }
   function uniform3(name, value) { gl.uniform3f(gl.getUniformLocation(program, name), value[0], value[1], value[2]); }
+  function paletteValue(value, fallback) {
+    if (!value) return fallback;
+    var parsed = value.split(',').map(function (component) { return Number.parseFloat(component.trim()); });
+    return parsed.length === 3 && parsed.every(Number.isFinite) ? parsed : fallback;
+  }
+  var animationSpeed = Number.parseFloat(canvas.dataset.metallicSpeed);
+  animationSpeed = Number.isFinite(animationSpeed) && animationSpeed >= 0 ? animationSpeed : 1;
   // Valores del ejemplo MetallicPaint proporcionado para FaustOS.
   uniform1('u_seed', 42);
   uniform1('u_scale', 4);
@@ -105,9 +112,9 @@
   uniform1('u_chroma', 2);
   uniform1('u_distort', 1);
   uniform1('u_contour', .2);
-  uniform3('u_lightColor', [1, 1, 1]);
-  uniform3('u_darkColor', [0, .30196, 1]);
-  uniform3('u_tint', [0.996, .702, 1]);
+  uniform3('u_lightColor', paletteValue(canvas.dataset.metallicLight, [1, 1, 1]));
+  uniform3('u_darkColor', paletteValue(canvas.dataset.metallicDark, [0, .30196, 1]));
+  uniform3('u_tint', paletteValue(canvas.dataset.metallicTint, [0.996, .702, 1]));
 
   var image = new Image();
   image.onload = function () {
@@ -122,8 +129,6 @@
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, pixels.width, pixels.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels.data);
     gl.uniform1i(uniforms.texture, 0);
     gl.uniform1f(uniforms.imageRatio, pixels.width / pixels.height);
-    canvas.classList.add('is-ready');
-
     function resize() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       var width = Math.max(1, Math.round(canvas.clientWidth * dpr));
@@ -132,15 +137,19 @@
       gl.uniform1f(uniforms.ratio, width / height);
     }
     function render(time) {
-      if (!document.documentElement.classList.contains('os-loading')) return;
+      if (!document.documentElement.classList.contains('os-loading') && !document.documentElement.classList.contains('fatisa-loading')) return;
       resize();
-      gl.uniform1f(uniforms.time, time);
+      gl.uniform1f(uniforms.time, time * animationSpeed);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       window.requestAnimationFrame(render);
     }
-    window.requestAnimationFrame(render);
+    render(window.performance.now());
+    gl.finish();
+    window.requestAnimationFrame(function () {
+      canvas.classList.add('is-ready');
+    });
   };
-  image.src = '../assets/FaustOS_logo.svg';
+  image.src = canvas.dataset.metallicSource || '../assets/FaustOS_logo.svg';
 })();
