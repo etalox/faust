@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="assets/tab_icon.png">
   <title>Fatisa</title>
   <style>
     @font-face { font-family:"BDO Grotesk"; src:url("../assets/Fonts/BDOGrotesk-Regular.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
@@ -238,6 +239,67 @@
       .cta { padding-top:160px; }
       .cta h2 { max-width:800px; font-size:40px; line-height:44px; letter-spacing:-1.6px; }
       .cta p { margin-block:32px; font-size:14px; line-height:21px; }
+
+      /* Escala continua entre la composición laptop (1200 px) y desktop (1920 px). */
+      :root { --gutter:clamp(96px, calc(8.888889vw - 10.666667px), 160px); }
+      .site-header { height:clamp(76px, calc(1.944444vw + 52.666667px), 90px); }
+      section[id] { scroll-margin-top:clamp(76px, calc(1.944444vw + 52.666667px), 90px); }
+      .brand { font-size:clamp(20px, calc(.555556vw + 13.333333px), 24px); line-height:clamp(20px, calc(.416667vw + 15px), 23px); }
+      .brand img { width:clamp(21px, calc(.416667vw + 16px), 24px); height:clamp(20px, calc(.416667vw + 15px), 23px); }
+      .site-nav { gap:clamp(32px, calc(1.111111vw + 18.666667px), 40px); font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); }
+      .text-link { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); }
+      .button { height:clamp(46px, calc(.555556vw + 39.333333px), 50px); padding-inline:clamp(20px, calc(.555556vw + 13.333333px), 24px); font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); }
+      .hero-copy { width:min(clamp(1060px, calc(29.722222vw + 703.333333px), 1274px), calc(100% - 80px)); padding-top:clamp(210px, calc(12.5vw + 60px), 300px); }
+      .hero-copy .brand { margin-bottom:clamp(40px, calc(1.388889vw + 23.333333px), 50px); }
+      .hero h1 { font-size:clamp(52px, calc(1.666667vw + 32px), 64px); line-height:clamp(54px, calc(1.388889vw + 37.333333px), 64px); letter-spacing:-.04em; }
+      .hero .intro { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); line-height:clamp(21px, calc(.416667vw + 16px), 24px); }
+      .hero-text { gap:clamp(21px, calc(.555556vw + 14.333333px), 25px); }
+      .hero-actions { gap:clamp(16px, calc(.555556vw + 9.333333px), 20px); margin-top:clamp(40px, calc(1.388889vw + 23.333333px), 50px); }
+      .hero-art { width:min(44.25vw, clamp(725px, calc(17.361111vw + 516.666667px), 850px), 85dvh); }
+      .copyright, .powered { bottom:clamp(150px, calc(1.388889vw + 133.333333px), 160px); font-size:clamp(11px, calc(.138889vw + 9.333333px), 12px); }
+      .page-wrap { width:calc(100% - (var(--gutter) * 2)); }
+      .section-title { font-size:clamp(40px, calc(1.111111vw + 26.666667px), 48px); letter-spacing:-.04em; }
+      .services { padding-top:clamp(80px, calc(2.777778vw + 46.666667px), 100px); }
+      .services-head, .solutions-header, .workflow-header { grid-template-columns:minmax(0, 1fr) clamp(400px, calc(13.888889vw + 233.333333px), 500px); }
+      .services-kicker, .section-kicker, .solutions-header .section-kicker, .workflow-header .section-kicker { margin-bottom:clamp(16px, calc(.277778vw + 12.666667px), 18px); font-size:clamp(12px, calc(.277778vw + 8.666667px), 14px); }
+      .services-intro, .solutions-header p, .workflow-header p { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); line-height:clamp(21px, calc(.416667vw + 16px), 24px); }
+      .service-systems { margin-top:clamp(56px, calc(1.944444vw + 32.666667px), 70px); }
+      .service-system { --service-visual-size:clamp(190px, calc(15.277778vw + 6.666667px), 300px); --service-visual-inset:clamp(15px, calc(.694444vw + 6.666667px), 20px); --service-details-bottom:clamp(30px, calc(.833333vw + 20px), 36px); grid-template-columns:clamp(44px, calc(1.111111vw + 30.666667px), 52px) minmax(0, 1fr) minmax(0, 1fr) var(--service-visual-column-size, var(--service-visual-size)) clamp(28px, calc(.555556vw + 21.333333px), 32px); column-gap:clamp(34px, calc(1.944444vw + 10.666667px), 48px); }
+      .service-system-trigger, .service-system-details { grid-template-columns:clamp(44px, calc(1.111111vw + 30.666667px), 52px) minmax(0, 1fr) minmax(0, 1fr) var(--service-visual-column-size, var(--service-visual-size)) clamp(28px, calc(.555556vw + 21.333333px), 32px); gap:clamp(34px, calc(1.944444vw + 10.666667px), 48px); }
+      .service-system-trigger { padding-block:clamp(26px, calc(.555556vw + 19.333333px), 30px); }
+      .service-system { min-height:clamp(220px, calc(16.666667vw + 20px), 340px); }
+      .service-system-visual { right:clamp(50px, calc(1.388889vw + 33.333333px), 60px); }
+      .service-system-index, .service-system-detail .text-link, .service-system-offerings li, .service-system-detail p { font-size:clamp(12px, calc(.277778vw + 8.666667px), 14px); }
+      .service-system-name { font-size:clamp(27px, calc(.694444vw + 18.666667px), 32px); letter-spacing:-.04em; }
+      .service-system-summary { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); line-height:clamp(21px, calc(.416667vw + 16px), 24px); }
+      .solutions, .workflow { padding-top:clamp(140px, calc(5.555556vw + 73.333333px), 180px); }
+      .solution-card { min-height:clamp(238px, calc(5.277778vw + 174.666667px), 276px); padding:clamp(24px, calc(.833333vw + 14px), 30px); }
+      .solution-card h3 { font-size:clamp(27px, calc(.694444vw + 18.666667px), 32px); letter-spacing:-.04em; }
+      .solution-card p { font-size:clamp(12px, calc(.277778vw + 8.666667px), 14px); line-height:clamp(18px, calc(.416667vw + 13px), 21px); }
+      .workflow-step { grid-template-columns:clamp(44px, calc(1.111111vw + 30.666667px), 52px) minmax(clamp(210px, calc(4.166667vw + 160px), 240px), .7fr) minmax(0, 1fr); gap:clamp(22px, calc(.833333vw + 12px), 28px); padding-block:clamp(24px, calc(.555556vw + 17.333333px), 28px); }
+      .workflow-step h3 { font-size:clamp(24px, calc(.555556vw + 17.333333px), 28px); }
+      .workflow-step p, .workflow-note p { font-size:clamp(12px, calc(.555556vw + 9.333333px), 16px); line-height:clamp(18px, calc(.833333vw + 8px), 24px); }
+      .workflow-note { padding-inline:clamp(66px, calc(1.944444vw + 42.666667px), 80px); }
+      .shipping { padding-top:clamp(155px, calc(6.25vw + 80px), 200px); }
+      .shipping-copy h2 { font-size:clamp(40px, calc(1.111111vw + 26.666667px), 48px); letter-spacing:-.04em; }
+      .shipping-copy p { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); line-height:clamp(21px, calc(.416667vw + 16px), 24px); }
+      .map-panel { width:min(clamp(920px, calc(32.083333vw + 535px), 1151px), calc(100% - (var(--gutter) * 2))); height:clamp(300px, calc(10.277778vw + 176.666667px), 374px); margin-top:clamp(42px, calc(1.111111vw + 28.666667px), 50px); }
+      .route-card { width:clamp(380px, calc(8.333333vw + 280px), 440px); height:clamp(252px, calc(7.777778vw + 158.666667px), 308px); }
+      .route-card { padding:clamp(32px, calc(1.111111vw + 18.666667px), 40px) clamp(42px, calc(1.111111vw + 28.666667px), 50px) clamp(98px, calc(3.055556vw + 61.333333px), 120px); }
+      .route-card h3, .route-confirm { font-size:clamp(12px, calc(.277778vw + 8.666667px), 14px); }
+      .route-info { gap:clamp(20px, calc(.555556vw + 13.333333px), 24px); margin-top:clamp(32px, calc(1.111111vw + 18.666667px), 40px); }
+      .route-origin { flex-basis:clamp(70px, calc(1.388889vw + 53.333333px), 80px); width:clamp(70px, calc(1.388889vw + 53.333333px), 80px); height:clamp(42px, calc(.833333vw + 32px), 48px); }
+      .route img { width:clamp(42px, calc(.833333vw + 32px), 48px); height:clamp(42px, calc(.833333vw + 32px), 48px); }
+      .route-origin img:last-child { left:clamp(28px, calc(.555556vw + 21.333333px), 32px); }
+      .route-line { flex-basis:clamp(180px, calc(3.611111vw + 136.666667px), 206px); width:clamp(180px, calc(3.611111vw + 136.666667px), 206px); height:clamp(9px, calc(.138889vw + 7.333333px), 10px); }
+      .route-marker { left:clamp(150px, calc(3.055556vw + 113.333333px), 172px); width:clamp(42px, calc(.833333vw + 32px), 48px); height:clamp(42px, calc(.833333vw + 32px), 48px); }
+      .route-labels { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); }
+      .route-confirm { top:clamp(185px, calc(5.694444vw + 116.666667px), 226px); left:clamp(276px, calc(5.972222vw + 204.333333px), 319px); min-height:clamp(35px, calc(.972222vw + 23.333333px), 42px); padding:clamp(11px, calc(.416667vw + 6px), 14px); }
+      .facilities { padding-top:clamp(120px, calc(4.166667vw + 70px), 150px); }
+      .facility { flex-basis:clamp(420px, calc(11.111111vw + 286.666667px), 500px); height:clamp(270px, calc(6.944444vw + 186.666667px), 320px); }
+      .cta { padding-top:clamp(160px, calc(5.555556vw + 93.333333px), 200px); }
+      .cta h2 { max-width:clamp(800px, calc(27.361111vw + 471.666667px), 997px); font-size:clamp(40px, calc(1.111111vw + 26.666667px), 48px); line-height:clamp(44px, calc(1.111111vw + 30.666667px), 52px); letter-spacing:-.04em; }
+      .cta p { margin-block:clamp(32px, calc(1.111111vw + 18.666667px), 40px); font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); line-height:clamp(21px, calc(.416667vw + 16px), 24px); }
     }
 
     @media (min-width:701px) and (max-width:1199px) {
