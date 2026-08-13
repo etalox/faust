@@ -122,8 +122,9 @@
     .workflow-note { display:flex; justify-content:space-between; gap:40px; margin-top:28px; padding:24px 80px 0; }
     .workflow-note p { max-width:540px; margin:0; font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
     .workflow-note .button { flex:0 0 auto; align-self:center; }
-    .gallery-rail { display:flex; gap:20px; margin-top:40px; overflow-x:auto; scrollbar-width:none; }
-    .gallery-rail::-webkit-scrollbar { display:none; }
+    .gallery-rail { position:relative; width:100%; margin-top:40px; overflow:visible; touch-action:pan-y; cursor:grab; }
+    .gallery-rail.is-dragging { cursor:grabbing; }
+    .gallery-track { display:flex; gap:20px; width:max-content; will-change:transform; }
 
     .shipping { padding-top:200px; text-align:center; }
     .shipping-copy { width:min(1000px, calc(100% - 80px)); margin-inline:auto; }
@@ -163,8 +164,11 @@
     }
 
     .facilities { padding-top:150px; }
+    @media (min-width:701px) {
+      .facilities { width:calc(100% - var(--gutter)); max-width:none; margin-left:var(--gutter); margin-right:0; }
+    }
     .facility { position:relative; flex:0 0 500px; height:320px; margin:0; overflow:hidden; background:#fff; clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
-    .facility img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; }
+    .facility img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; pointer-events:none; -webkit-user-drag:none; user-select:none; }
     .cta { padding:200px 20px 150px; text-align:center; }
     .cta .brand { margin-bottom:40px; }
     .cta h2 { max-width:997px; margin:auto; font-size:48px; font-weight:400; line-height:52px; letter-spacing:-1.92px; }
@@ -370,7 +374,7 @@
       .route-labels { gap:0; font-size:16px; }
       .route-labels em { display:none; }
       .facilities { padding-top:100px; }
-      .gallery-rail { gap:20px; margin-top:40px; margin-right:-20px; }
+      .gallery-rail { width:auto; margin-top:40px; margin-right:-20px; }
       .facility { flex-basis:360px; height:250px; }
       .cta { padding:100px 20px 80px; text-align:center; }
       .cta .brand { margin-bottom:40px; }
@@ -564,7 +568,7 @@
 
     <section class="facilities page-wrap" id="instalaciones">
       <p class="section-kicker">/ Capacidad industrial</p><h2 class="section-title">Nuestras Instalaciones</h2>
-      <div class="gallery-rail" aria-label="Galería visual FATISA"><figure class="facility"><img src="assets/instalaciones/01.png" alt="Galería FATISA 01"></figure><figure class="facility"><img src="assets/instalaciones/02.png" alt="Galería FATISA 02"></figure><figure class="facility"><img src="assets/instalaciones/03.png" alt="Galería FATISA 03"></figure><figure class="facility"><img src="assets/instalaciones/04.png" alt="Galería FATISA 04"></figure></div>
+      <div class="gallery-rail" aria-label="Galería visual FATISA"><div class="gallery-track"><figure class="facility"><img src="assets/instalaciones/01.png" alt="Galería FATISA 01"></figure><figure class="facility"><img src="assets/instalaciones/02.png" alt="Galería FATISA 02"></figure><figure class="facility"><img src="assets/instalaciones/03.png" alt="Galería FATISA 03"></figure><figure class="facility"><img src="assets/instalaciones/04.png" alt="Galería FATISA 04"></figure></div></div>
     </section>
 
     <section class="cta" id="contacto">
@@ -634,6 +638,49 @@
         }
       }, { passive:true });
       window.addEventListener('resize', updateParallax);
+    })();
+
+    (() => {
+      document.querySelectorAll('.gallery-rail').forEach((rail) => {
+        const track = rail.querySelector('.gallery-track');
+        if (!track) return;
+        let offset = 0;
+        let startX = 0;
+        let startOffset = 0;
+        let dragging = false;
+        const limit = () => Math.max(0, track.scrollWidth - rail.clientWidth);
+        const render = () => track.style.transform = `translate3d(${offset}px, 0, 0)`;
+        const moveTo = (next) => {
+          offset = Math.max(-limit(), Math.min(0, next));
+          render();
+        };
+        rail.addEventListener('wheel', (event) => {
+          const horizontal = event.shiftKey ? event.deltaY : event.deltaX;
+          if (!horizontal) return;
+          event.preventDefault();
+          moveTo(offset - horizontal);
+        }, { passive:false });
+        rail.addEventListener('pointerdown', (event) => {
+          dragging = true;
+          startX = event.clientX;
+          startOffset = offset;
+          rail.classList.add('is-dragging');
+          rail.setPointerCapture(event.pointerId);
+        });
+        rail.addEventListener('pointermove', (event) => {
+          if (!dragging) return;
+          moveTo(startOffset + event.clientX - startX);
+        });
+        const release = (event) => {
+          if (!dragging) return;
+          dragging = false;
+          rail.classList.remove('is-dragging');
+          if (rail.hasPointerCapture(event.pointerId)) rail.releasePointerCapture(event.pointerId);
+        };
+        rail.addEventListener('pointerup', release);
+        rail.addEventListener('pointercancel', release);
+        window.addEventListener('resize', () => moveTo(offset), { passive:true });
+      });
     })();
 
     (() => {
