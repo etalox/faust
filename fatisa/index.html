@@ -195,7 +195,7 @@
     .company-principles li { min-width:0; padding:22px 28px 26px 0; }
     .company-principles li + li { padding-left:28px; border-left:1px solid rgba(240,240,240,.24); }
     .company-principles span { display:block; margin-bottom:13px; color:var(--red); font:500 12px/1 "BDO Grotesk", Arial, sans-serif; }
-    .company-principles p { max-width:280px; margin:0; font:400 18px/22px "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.045em; }
+    .company-principles p { max-width:280px; margin:0; font:400 18px/22px "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:normal; }
     @media (min-width:1200px) {
       .company-layout { min-height:0; }
       .company-statement { margin-top:36px; }
@@ -469,8 +469,8 @@
       .desktop-break { display:none; }
       .hero-text { gap:28px; }
       .hero .intro { font-size:16px; line-height:24px; }
-      .intro--desktop { display:none; }
-      .intro--mobile { display:block; }
+      .intro--desktop { display:block; }
+      .intro--mobile { display:none; }
       .hero-actions, .copyright, .powered { display:none; }
       .hero-art { right:-100px; left:auto; width:814.729px; height:auto; max-width:none; transform:translateY(var(--hero-parallax)); object-fit:contain; object-position:center bottom; }
       .page-wrap { width:calc(100% - 40px); }
@@ -518,7 +518,7 @@
       .company-principles { display:block; }
       .company-principles li { padding:18px 0; }
       .company-principles li + li { padding-left:0; border-top:1px solid rgba(240,240,240,.24); border-left:0; }
-      .company-principles p { max-width:none; font-family:"BDO Grotesk", Arial, sans-serif; font-size:18px; font-weight:500; line-height:22px; letter-spacing:-.72px; text-transform:uppercase; }
+      .company-principles p { max-width:none; font:400 14px/21px "BDO Grotesk", Arial, sans-serif; letter-spacing:normal; text-transform:none; }
       .workflow-list { margin-top:40px; }
       .workflow-step { grid-template-columns:38px 1fr; gap:14px; padding:22px 0; }
       .workflow-step h3 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:20px; font-weight:500; line-height:24px; letter-spacing:-.8px; text-transform:uppercase; }
@@ -744,7 +744,7 @@
       <div class="shipping-copy">
         <div class="brand"><img src="assets/vector-10.svg" alt=""><span>Fatisa<sup>®</sup></span></div>
         <h2>Atendemos proyectos en Estados Unidos</h2>
-        <p>La meta que nos esmeramos por cumplir es de proveer productos de alta calidad sin afectar nuestros precios bajos. Nuestro objetivo es de satisfacer las necesidades específicas de cada uno de nuestros clientes y establecer una relación de trabajo duradera.</p>
+        <p>Colaboramos con clientes en Estados Unidos mediante comunicación directa, desarrollo técnico y fabricación especializada desde México.</p>
       </div>
       <div class="map-panel">
         <img src="assets/vector-6.svg" alt="Mapa de la ruta de Nuevo León a Austin, Texas">
@@ -768,13 +768,13 @@
       <div class="company-layout">
         <p class="company-label">Empresa</p>
         <div class="company-statement">
-          <h2 class="section-title">Fabricación especializada, con una relación de trabajo que perdura.</h2>
+          <h2 class="section-title">Más de tres décadas convirtiendo precisión en confianza.</h2>
         </div>
-        <div class="company-context"><p>En Fatisa desarrollamos soluciones industriales desde la ingeniería hasta la fabricación, con atención técnica a cada requerimiento y un enfoque claro en calidad, precisión y viabilidad.</p></div>
+        <div class="company-context"><p>Desde 1988, FATISA reúne maquinado CNC, fabricación de moldes industriales y modelos de fundición para clientes nacionales e internacionales.</p></div>
         <ul class="company-principles">
-          <li><span>Criterio técnico</span><p>Soluciones técnicas ajustadas a las necesidades específicas de cada proyecto.</p></li>
-          <li><span>Calidad accesible</span><p>Productos de alta calidad con precios competitivos.</p></li>
-          <li><span>Continuidad</span><p>Relaciones de trabajo duraderas, construidas proyecto a proyecto.</p></li>
+          <li><span>Especialización</span><p>Herramentales, moldes de inyección y termoformado, modelos industriales y maquinado CNC general.</p></li>
+          <li><span>Equipo y capacidad</span><p>Programadores, modelistas y maquinaria moderna para abordar requerimientos técnicos diversos.</p></li>
+          <li><span>Forma de trabajar</span><p>Atención directa a cada proyecto para cumplir necesidades específicas y construir relaciones duraderas.</p></li>
         </ul>
       </div>
     </section>
@@ -1046,12 +1046,12 @@
         'Torneado CNC':'CNC turning', 'Fresado CNC':'CNC milling', 'Piezas de alta precisión':'High-precision parts', 'Geometrías complejas':'Complex geometries',
         'Moldes de inyección y termoformado':'Injection and thermoforming molds', 'Troqueles y dados de forja':'Dies and forging dies', 'Fixtures de inspección y ensamble':'Inspection and assembly fixtures', 'Modelos para fundición':'Casting patterns',
         'Fundición de hierro, aluminio y bronce':'Iron, aluminum, and bronze casting', 'Soldadura TIG y de precisión':'TIG and precision welding', 'Reparación de componentes':'Component repair', 'Mantenimiento de moldes':'Mold maintenance',
-        'Fabricación especializada, con una relación de trabajo que perdura.':'Specialized manufacturing, with a working relationship built to last.',
-        'En Fatisa desarrollamos soluciones industriales desde la ingeniería hasta la fabricación, con atención técnica a cada requerimiento y un enfoque claro en calidad, precisión y viabilidad.':'At Fatisa, we develop industrial solutions from engineering through manufacturing, with technical attention to every requirement and a clear focus on quality, precision, and feasibility.',
-        'Criterio técnico':'Technical rigor', 'Calidad accesible':'Accessible quality', 'Continuidad':'Continuity',
-        'Soluciones técnicas ajustadas a las necesidades específicas de cada proyecto.':'Technical solutions tailored to the specific needs of every project.',
-        'Productos de alta calidad con precios competitivos.':'High-quality products at competitive prices.',
-        'Relaciones de trabajo duraderas, construidas proyecto a proyecto.':'Lasting working relationships, built project by project.',
+        'Más de tres décadas convirtiendo precisión en confianza.':'More than three decades turning precision into trust.',
+        'Desde 1988, FATISA reúne maquinado CNC, fabricación de moldes industriales y modelos de fundición para clientes nacionales e internacionales.':'Since 1988, FATISA has brought together CNC machining, industrial mold manufacturing, and casting patterns for domestic and international clients.',
+        'Especialización':'Specialization', 'Equipo y capacidad':'Team and capability', 'Forma de trabajar':'How we work',
+        'Herramentales, moldes de inyección y termoformado, modelos industriales y maquinado CNC general.':'Tooling, injection and thermoforming molds, industrial patterns, and general CNC machining.',
+        'Programadores, modelistas y maquinaria moderna para abordar requerimientos técnicos diversos.':'Programmers, model makers, and modern machinery for a broad range of technical requirements.',
+        'Atención directa a cada proyecto para cumplir necesidades específicas y construir relaciones duraderas.':'Direct attention to every project to meet specific needs and build lasting working relationships.',
         'Reconstruimos modelos CAD y desarrollamos soluciones a partir de muestras, planos o croquis.':'We reconstruct CAD models and develop solutions from samples, drawings, or sketches.',
         'Capacidad para manufacturar componentes industriales con control técnico y atención a los requerimientos de cada proyecto.':'Capacity to manufacture industrial components with technical control and attention to every project’s requirements.',
         'Integramos ingeniería y fabricación para crear moldes, troqueles y fixtures ajustados a su proceso de producción.':'We integrate engineering and fabrication to create molds, dies, and fixtures tailored to your production process.',
@@ -1072,7 +1072,7 @@
         'Capacidad industrial':'Industrial capability',
         'Atendemos proyectos en Estados Unidos':'We serve projects in the United States', 'Confirmar Envío':'Confirm Shipment',
         'Entrega en':'Delivery in', 'Confirmar':'Confirm',
-        'La meta que nos esmeramos por cumplir es de proveer productos de alta calidad sin afectar nuestros precios bajos. Nuestro objetivo es de satisfacer las necesidades específicas de cada uno de nuestros clientes y establecer una relación de trabajo duradera.':'We strive to provide high-quality products without compromising our competitive prices. Our goal is to meet each client’s specific needs and build a lasting working relationship.',
+        'Colaboramos con clientes en Estados Unidos mediante comunicación directa, desarrollo técnico y fabricación especializada desde México.':'We collaborate with clients in the United States through direct communication, technical development, and specialized manufacturing from Mexico.',
         '¿Tienes una pieza, una muestra o un plano? Convirtámoslo en una solución fabricable.':'Do you have a part, physical sample, or drawing? Let’s turn it into a manufacturable solution.',
         'Compártenos los requerimientos disponibles de tu proyecto para preparar una cotización técnica acorde a tu necesidad.':'Share the available requirements for your project so we can prepare a technical quote tailored to your needs.',
         'Solicitar cotización':'Request a Quote', 'Solicitar una cotización':'Request a Quote'
