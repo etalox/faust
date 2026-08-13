@@ -162,11 +162,11 @@
     .service-system-visual img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; filter:grayscale(1); transition:filter .5s cubic-bezier(.16,1,.3,1); }
     .service-system.is-active .service-system-visual img { padding:0; filter:grayscale(0); }
     .solutions-header .section-kicker, .workflow-header .section-kicker { max-width:none; margin:0 0 18px; color:rgba(24,24,24,.6); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
-    .solutions { padding-top:180px; }
+    .solutions { --solutions-gap:20px; min-width:0; max-width:100%; padding-top:180px; }
     .solutions-header { display:grid; grid-template-columns:minmax(0, 1fr) minmax(340px, 500px); gap:40px; align-items:end; }
     .solutions-header p { max-width:470px; margin:0; color:rgba(24,24,24,.68); font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
-    .solutions-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); grid-auto-rows:1fr; gap:20px; margin-top:50px; }
-    .solution-card { --solution-art-width:80%; position:relative; display:flex; flex-direction:column; aspect-ratio:2.3 / 1; min-height:276px; padding:30px; overflow:hidden; background:#fff; clip-path:polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
+    .solutions-grid { display:grid; width:100%; min-width:0; max-width:100%; grid-template-columns:repeat(2, minmax(0, 1fr)); grid-auto-rows:1fr; column-gap:var(--solutions-gap); row-gap:var(--solutions-gap); margin-top:50px; }
+    .solution-card { --solution-art-width:80%; position:relative; display:flex; width:100%; min-width:0; max-width:100%; box-sizing:border-box; flex-direction:column; aspect-ratio:2.3 / 1; min-height:276px; padding:30px; overflow:hidden; background:#fff; clip-path:polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
     .solution-card-index { color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
     .solution-card h3 { position:relative; z-index:1; max-width:42%; margin:24px 0 0; font:400 32px/1 "PP Neue Montreal", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing:-1.28px; }
     .solution-card p { position:relative; z-index:1; max-width:40%; margin:18px 0 0; color:rgba(24,24,24,.68); font:400 14px/21px "BDO Grotesk", Arial, sans-serif; }
@@ -391,7 +391,7 @@
       .service-system-name { font-size:29px; }
       .solutions, .workflow { padding-top:130px; }
       .solutions-header, .workflow-header { grid-template-columns:1fr; gap:24px; }
-      .solutions-grid { grid-template-columns:1fr; }
+      .solutions-grid { grid-template-columns:1fr; column-gap:0; row-gap:var(--solutions-gap); }
       .solution-card { --solution-art-width:70%; min-height:270px; }
       .solution-card:nth-child(2) { --solution-art-width:58%; }
       .solution-card:nth-child(3) { --solution-art-width:86%; }
@@ -463,7 +463,8 @@
       .solutions, .workflow { padding-top:100px; }
       .solutions-header, .workflow-header { display:block; }
       .solutions-header p, .workflow-header p { margin-top:26px; font-size:16px; line-height:24px; }
-      .solutions-grid { grid-template-columns:1fr; gap:12px; margin-top:40px; }
+      .solutions { --solutions-gap:12px; }
+      .solutions-grid { grid-template-columns:1fr; column-gap:0; row-gap:var(--solutions-gap); margin-top:40px; }
       .solution-card { aspect-ratio:auto; min-height:410px; padding:24px; }
       .solution-card h3 { max-width:100%; margin-top:22px; font-family:"BDO Grotesk", Arial, sans-serif; font-size:24px; font-weight:500; line-height:28px; letter-spacing:-.96px; text-transform:uppercase; }
       .solution-card p { max-width:100%; font-size:14px; line-height:21px; }
