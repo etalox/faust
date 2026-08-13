@@ -38,6 +38,7 @@
     .site-nav { display:flex; align-items:center; gap:40px; font:400 16px/1 "BDO Grotesk", Arial, sans-serif; }
     .site-header.is-scrolled .header-inner { width:min(1600px, calc(100% - var(--gutter) - var(--gutter))); padding-inline:20px; }
     .site-header.is-scrolled .header-inner::before { inset:0; background:rgba(255,255,255,.9); backdrop-filter:blur(20px); }
+    .mobile-nav { display:none; }
 
     .hero { position:relative; width:100%; max-width:100%; height:100vh; height:100dvh; min-height:680px; overflow:hidden; background:radial-gradient(ellipse 620px 160px at 50% 0, #f0f0f0 25%, #dddfe2 100%); }
     .hero-copy { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:min(1274px, calc(100% - 80px)); margin-inline:auto; padding-top:300px; text-align:center; }
@@ -288,6 +289,10 @@
       .site-header .button.menu-toggle { width:50px; padding:0; }
       .menu-toggle > span { display:none; }
       .menu-toggle .menu-icon { display:block; width:50px; height:50px; }
+      .mobile-nav { position:fixed; z-index:9; top:70px; right:20px; left:20px; display:flex; flex-direction:column; gap:0; padding:8px 20px; overflow:hidden; clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); background:rgba(240,240,240,.96); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); opacity:0; visibility:hidden; transform:translateY(-10px); transition:opacity .24s ease, transform .34s cubic-bezier(.16,1,.3,1), visibility 0s linear .34s; }
+      .mobile-nav.is-open { opacity:1; visibility:visible; transform:translateY(0); transition:opacity .24s ease, transform .34s cubic-bezier(.16,1,.3,1), visibility 0s; }
+      .mobile-nav a { display:flex; align-items:center; min-height:56px; border-bottom:1px solid rgba(24,24,24,.16); color:var(--ink); font:500 16px/1 "BDO Grotesk", Arial, sans-serif; text-decoration:none; }
+      .mobile-nav a:last-child { border-bottom:0; }
       .button { height:50px; padding-inline:24px; font-size:16px; }
       section[id] { scroll-margin-top:70px; }
       .hero { width:100%; min-width:0; min-height:0; height:100svh; height:100dvh; }
@@ -384,9 +389,12 @@
       <nav class="site-nav" aria-label="Navegación principal">
         <a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#empresa">Empresa</a><a href="#instalaciones">Nuestras Instalaciones</a>
       </nav>
-      <a class="button button--red menu-toggle" href="#contacto" aria-label="Abrir menú"><span>Contacto</span><svg class="menu-icon" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="50" height="50" fill="#FF0000"/><path d="M13.75 29.3749H36.25V26.8753H13.75V29.3749ZM13.75 20.6251V23.1253H36.25V20.6251H13.75Z" fill="white"/><path d="M51 -1H42V0L50 8H51V-1Z" fill="#F0F0F0"/></svg></a>
+      <a class="button button--red menu-toggle" href="#contacto" aria-label="Abrir menú" aria-controls="mobile-navigation" aria-expanded="false"><span>Contacto</span><svg class="menu-icon" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="50" height="50" fill="#FF0000"/><path d="M13.75 29.3749H36.25V26.8753H13.75V29.3749ZM13.75 20.6251V23.1253H36.25V20.6251H13.75Z" fill="white"/><path d="M51 -1H42V0L50 8H51V-1Z" fill="#F0F0F0"/></svg></a>
     </div>
   </header>
+  <nav class="mobile-nav" id="mobile-navigation" aria-label="Navegación móvil" aria-hidden="true">
+    <a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#empresa">Empresa</a><a href="#instalaciones">Nuestras Instalaciones</a><a href="#contacto">Contacto</a>
+  </nav>
 
   <main>
     <section class="hero" id="inicio">
@@ -574,6 +582,36 @@
       updateHeader();
       window.addEventListener('scroll', updateHeader, { passive:true });
       window.addEventListener('resize', updateHeader);
+    })();
+
+    (() => {
+      const toggle = document.querySelector('.menu-toggle');
+      const menu = document.querySelector('#mobile-navigation');
+      if (!toggle || !menu) return;
+      const mobileQuery = window.matchMedia('(max-width: 700px)');
+      const close = () => {
+        menu.classList.remove('is-open');
+        menu.setAttribute('aria-hidden', 'true');
+        toggle.setAttribute('aria-expanded', 'false');
+      };
+      const open = () => {
+        menu.classList.add('is-open');
+        menu.setAttribute('aria-hidden', 'false');
+        toggle.setAttribute('aria-expanded', 'true');
+      };
+      toggle.addEventListener('click', (event) => {
+        if (!mobileQuery.matches) return;
+        event.preventDefault();
+        menu.classList.contains('is-open') ? close() : open();
+      });
+      menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
+      document.addEventListener('pointerdown', (event) => {
+        if (mobileQuery.matches && menu.classList.contains('is-open') && !menu.contains(event.target) && !toggle.contains(event.target)) close();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') close();
+      });
+      mobileQuery.addEventListener('change', (event) => { if (!event.matches) close(); });
     })();
 
     (() => {
