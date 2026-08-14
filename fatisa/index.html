@@ -511,7 +511,7 @@
       .mobile-nav a:last-child { border-bottom:0; }
       .button { height:50px; padding-inline:24px; font-size:16px; }
       section[id] { scroll-margin-top:70px; }
-      .hero { width:100%; min-width:0; min-height:0; height:100svh; height:100dvh; }
+      .hero { width:100%; min-width:0; min-height:0; height:var(--mobile-hero-height, 100svh); height:var(--mobile-hero-height, 100dvh); }
       .hero-copy { position:absolute; top:177px; left:20px; width:calc(100% - 40px); margin:0; padding:0; }
       .hero-copy .brand { margin-bottom:40px; }
       .hero h1 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
@@ -522,7 +522,7 @@
       .intro--mobile { display:none; }
       .hero-actions, .copyright, .powered { display:none; }
       .hero-art { right:-100px; left:auto; width:814.729px; height:auto; max-width:none; transform:translateY(var(--hero-parallax)); object-fit:contain; object-position:center bottom; }
-      .hero.has-art-overlap .hero-art { top:var(--hero-art-top); bottom:auto; }
+      .hero.has-mobile-art-layout .hero-art { top:var(--hero-art-top); bottom:auto; }
       .page-wrap { width:calc(100% - 40px); }
       .section-title { font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
       .services { padding-top:50px; }
@@ -993,25 +993,37 @@
       if (!hero || !art || !copy) return;
 
       let ticking = false;
+      const syncMobileHeroHeight = (parallax = 0) => {
+        if (!hero.classList.contains('has-mobile-art-layout')) return;
+        const artTop = Number.parseFloat(art.style.getPropertyValue('--hero-art-top')) || 0;
+        hero.style.setProperty('--mobile-hero-height', `${Math.ceil(artTop + art.offsetHeight + parallax)}px`);
+      };
       const syncMobileArtPlacement = () => {
         const isMobile = window.matchMedia('(max-width: 700px)').matches;
-        hero.classList.remove('has-art-overlap');
+        hero.classList.remove('has-art-overlap', 'has-mobile-art-layout');
         art.style.removeProperty('--hero-art-top');
+        hero.style.removeProperty('--mobile-hero-height');
         if (!isMobile) return;
 
         const transparentTop = art.offsetWidth * (70 / 4206);
         const copyBottom = copy.getBoundingClientRect().bottom;
         const visibleArtTop = art.getBoundingClientRect().top + transparentTop;
-        if (visibleArtTop < copyBottom) {
-          art.style.setProperty('--hero-art-top', `${Math.max(0, copy.offsetTop + copy.offsetHeight - transparentTop)}px`);
-          hero.classList.add('has-art-overlap');
-        }
+        const originalArtTop = art.offsetTop;
+        const overlapsCopy = visibleArtTop < copyBottom;
+        const artTop = overlapsCopy
+          ? Math.max(0, copy.offsetTop + copy.offsetHeight - transparentTop)
+          : originalArtTop;
+        art.style.setProperty('--hero-art-top', `${artTop}px`);
+        hero.classList.add('has-mobile-art-layout');
+        if (overlapsCopy) hero.classList.add('has-art-overlap');
+        syncMobileHeroHeight();
       };
       const updateParallax = () => {
         ticking = false;
         const isMobile = window.matchMedia('(max-width: 700px)').matches;
         const progress = Math.max(0, Math.min(window.scrollY, hero.offsetHeight));
-        art.style.setProperty('--hero-parallax', `${Math.min(progress * (isMobile ? 0.13 : 0.12), isMobile ? 76 : 72)}px`);
+        const parallax = Math.min(progress * (isMobile ? 0.13 : 0.12), isMobile ? 76 : 72);
+        art.style.setProperty('--hero-parallax', `${parallax}px`);
       };
       updateParallax();
       requestAnimationFrame(syncMobileArtPlacement);
