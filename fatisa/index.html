@@ -1008,14 +1008,12 @@
         const transparentTop = art.offsetWidth * (70 / 4206);
         const copyBottom = copy.getBoundingClientRect().bottom;
         const visibleArtTop = art.getBoundingClientRect().top + transparentTop;
-        const originalArtTop = art.offsetTop;
         const overlapsCopy = visibleArtTop < copyBottom;
-        const artTop = overlapsCopy
-          ? Math.max(0, copy.offsetTop + copy.offsetHeight - transparentTop)
-          : originalArtTop;
+        if (!overlapsCopy) return;
+
+        const artTop = Math.max(0, copy.offsetTop + copy.offsetHeight - transparentTop);
         art.style.setProperty('--hero-art-top', `${artTop}px`);
-        hero.classList.add('has-mobile-art-layout');
-        if (overlapsCopy) hero.classList.add('has-art-overlap');
+        hero.classList.add('has-art-overlap', 'has-mobile-art-layout');
         syncMobileHeroHeight();
       };
       const updateParallax = () => {
