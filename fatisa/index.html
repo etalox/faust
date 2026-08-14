@@ -1087,11 +1087,11 @@
           glideFrame = 0;
         };
         const glide = () => {
-          if (Math.abs(velocity) < .08) return;
+          if (Math.abs(velocity) < .025) return;
           const before = offset;
           moveTo(offset + velocity * 16);
           if (offset === before) return;
-          velocity *= .92;
+          velocity *= .965;
           glideFrame = requestAnimationFrame(glide);
         };
         const beginDrag = (event) => {
@@ -1142,7 +1142,7 @@
           const elapsed = Math.max(1, event.timeStamp - lastTime);
           const movement = event.clientX - lastX;
           moveTo(startOffset + deltaX);
-          velocity = movement / elapsed;
+          velocity = (velocity * .28) + ((movement / elapsed) * .72);
           lastX = event.clientX;
           lastTime = event.timeStamp;
           event.preventDefault();
