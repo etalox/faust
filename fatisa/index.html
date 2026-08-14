@@ -2,7 +2,8 @@
 <html lang="es-MX">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta id="fatisa-viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script>(() => { const viewport = document.getElementById('fatisa-viewport'), nativeViewport = 'width=device-width, initial-scale=1, viewport-fit=cover', iphoneViewport = 'width=390, viewport-fit=cover'; let frame = null, applying = false; const refresh = () => { applying = true; viewport.content = nativeViewport; requestAnimationFrame(() => { viewport.content = window.innerWidth <= 390 ? iphoneViewport : nativeViewport; requestAnimationFrame(() => { applying = false; }); }); }; const schedule = () => { if (applying || frame !== null) return; frame = requestAnimationFrame(() => { frame = null; refresh(); }); }; refresh(); window.addEventListener('resize', schedule, { passive:true }); })();</script>
   <link rel="icon" type="image/png" href="assets/tab_icon.png">
   <script>/* Loader temporalmente desactivado. */</script>
   <title>Fatisa</title>
@@ -521,6 +522,7 @@
       .intro--mobile { display:none; }
       .hero-actions, .copyright, .powered { display:none; }
       .hero-art { right:-100px; left:auto; width:814.729px; height:auto; max-width:none; transform:translateY(var(--hero-parallax)); object-fit:contain; object-position:center bottom; }
+      .hero.has-art-overlap .hero-art { top:var(--hero-art-top); bottom:auto; }
       .page-wrap { width:calc(100% - 40px); }
       .section-title { font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
       .services { padding-top:50px; }
@@ -987,9 +989,24 @@
     (() => {
       const hero = document.querySelector('.hero');
       const art = document.querySelector('.hero-art');
-      if (!hero || !art) return;
+      const copy = document.querySelector('.hero-copy');
+      if (!hero || !art || !copy) return;
 
       let ticking = false;
+      const syncMobileArtPlacement = () => {
+        const isMobile = window.matchMedia('(max-width: 700px)').matches;
+        hero.classList.remove('has-art-overlap');
+        art.style.removeProperty('--hero-art-top');
+        if (!isMobile) return;
+
+        const transparentTop = art.offsetWidth * (70 / 4206);
+        const copyBottom = copy.getBoundingClientRect().bottom;
+        const visibleArtTop = art.getBoundingClientRect().top + transparentTop;
+        if (visibleArtTop < copyBottom) {
+          art.style.setProperty('--hero-art-top', `${Math.max(0, copy.offsetTop + copy.offsetHeight - transparentTop)}px`);
+          hero.classList.add('has-art-overlap');
+        }
+      };
       const updateParallax = () => {
         ticking = false;
         const isMobile = window.matchMedia('(max-width: 700px)').matches;
@@ -997,13 +1014,15 @@
         art.style.setProperty('--hero-parallax', `${Math.min(progress * (isMobile ? 0.13 : 0.12), isMobile ? 76 : 72)}px`);
       };
       updateParallax();
+      requestAnimationFrame(syncMobileArtPlacement);
+      document.fonts?.ready?.then(() => { updateParallax(); syncMobileArtPlacement(); });
       window.addEventListener('scroll', () => {
         if (!ticking) {
           ticking = true;
           requestAnimationFrame(updateParallax);
         }
       }, { passive:true });
-      window.addEventListener('resize', updateParallax);
+      window.addEventListener('resize', () => { updateParallax(); syncMobileArtPlacement(); });
     })();
 
     (() => {
