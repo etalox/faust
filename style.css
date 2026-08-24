@@ -1512,41 +1512,6 @@ h2.lead.reveal-item.reveal-visible {
   flex-wrap: nowrap;
 }
 
-.supported .partner-logo-carousel {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  width: min(100%, 390px);
-  height: 24px;
-  gap: 40px;
-}
-
-.supported .partner-logo-slot {
-  display: flex;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-}
-
-.supported .partner-logo-slot .partner-logo {
-  will-change: transform, opacity, filter;
-  transition: transform 440ms cubic-bezier(.22, .8, .2, 1), opacity 440ms cubic-bezier(.22, .8, .2, 1), filter 440ms cubic-bezier(.22, .8, .2, 1);
-}
-
-.supported .partner-logo-slot.is-exiting .partner-logo {
-  transform: translateY(-115%);
-  opacity: 0;
-  filter: blur(5px);
-}
-
-.supported .partner-logo-slot.is-entering .partner-logo {
-  transform: translateY(115%);
-  opacity: 0;
-  filter: blur(5px);
-  transition: none;
-}
-
 .supported .logos .partner-logo {
   display: inline-flex;
   flex: 0 1 auto;
@@ -1561,8 +1526,10 @@ h2.lead.reveal-item.reveal-visible {
   height: 24px;
   max-width: 100%;
   object-fit: contain;
-  opacity: .8;
-  transition: opacity 180ms ease;
+  /* Los SVG ya están dibujados a blanco 50%; este ajuste los lleva a #FFF al 60% real. */
+  opacity: 1;
+  filter: brightness(1.2);
+  transition: opacity 180ms ease, filter 180ms ease;
 }
 
 .supported .logos .partner-logo--fatisa img {
@@ -1571,7 +1538,8 @@ h2.lead.reveal-item.reveal-visible {
 
 .supported .logos .partner-logo:hover img,
 .supported .logos .partner-logo:focus-visible img {
-  opacity: .6;
+  opacity: 1;
+  filter: brightness(2);
 }
 
 /* Temporalmente ocultamos el control flotante que abre los canvas. */
@@ -1581,10 +1549,6 @@ h2.lead.reveal-item.reveal-visible {
 
 @media (max-width: 360px) {
   .supported .logos {
-    gap: 20px;
-  }
-
-  .supported .partner-logo-carousel {
     gap: 20px;
   }
 
@@ -1600,6 +1564,10 @@ h2.lead.reveal-item.reveal-visible {
 /* La referencia móvil usa el viewport del iPhone 14 Pro Max: reducimos sólo
    los logotipos de partners, sin alterar su escala en tablet o escritorio. */
 @media (max-width: 430px) {
+  .supported .logos .partner-logo--nescafe {
+    display: none;
+  }
+
   .supported .logos img {
     height: 24px;
   }
