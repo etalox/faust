@@ -241,69 +241,21 @@
       <div style="position: relative; top: -120px; height: 0; pointer-events: none; visibility: hidden;"></div>
       <div class="supported reveal-item">
         <div class="label">Trayectoria profesional del equipo¹</div>
-        <div class="logos partner-logo-carousel" aria-label="Trayectoria profesional del equipo">
-          <div class="partner-logo-slot" data-logo-slot="left">
-            <a class="partner-logo" href="https://finsus.mx" aria-label="Visitar Finsus">
-              <img src="../assets/Logotypes/finsus.svg" alt="Finsus" draggable="false">
-            </a>
-          </div>
-          <div class="partner-logo-slot" data-logo-slot="center">
-            <a class="partner-logo" href="https://www.chevrolet.com.mx/" aria-label="Visitar Chevrolet">
-              <img src="../assets/Logotypes/Chevrolet.svg" alt="Chevrolet" draggable="false">
-            </a>
-          </div>
-          <div class="partner-logo-slot" data-logo-slot="right">
-            <a class="partner-logo" href="https://www.hsbc.com.mx/" aria-label="Visitar HSBC">
-              <img src="../assets/Logotypes/HSBC.svg" alt="HSBC" draggable="false">
-            </a>
-          </div>
+        <div class="logos" aria-label="Trayectoria profesional del equipo">
+          <a class="partner-logo" href="https://finsus.mx" aria-label="Visitar Finsus">
+            <img src="../assets/Logotypes/finsus.svg" alt="Finsus" draggable="false">
+          </a>
+          <a class="partner-logo" href="https://www.chevrolet.com.mx/" aria-label="Visitar Chevrolet">
+            <img src="../assets/Logotypes/Chevrolet.svg" alt="Chevrolet" draggable="false">
+          </a>
+          <a class="partner-logo" href="https://www.hsbc.com.mx/" aria-label="Visitar HSBC">
+            <img src="../assets/Logotypes/HSBC.svg" alt="HSBC" draggable="false">
+          </a>
+          <a class="partner-logo partner-logo--nescafe" href="https://www.nescafe.com/mx/" aria-label="Visitar Nescafé">
+            <img src="../assets/Logotypes/Nescafé.svg" alt="Nescafé" draggable="false">
+          </a>
         </div>
       </div>
-      <script>
-        (() => {
-          const carousel = document.querySelector('.partner-logo-carousel');
-          if (!carousel || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-          const logos = {
-            finsus: ['https://finsus.mx', '../assets/Logotypes/finsus.svg', 'Finsus', ''],
-            chevrolet: ['https://www.chevrolet.com.mx/', '../assets/Logotypes/Chevrolet.svg', 'Chevrolet', ''],
-            hsbc: ['https://www.hsbc.com.mx/', '../assets/Logotypes/HSBC.svg', 'HSBC', ''],
-            fatisa: ['https://faust.mx/fatisa/', '../assets/Logotypes/Fatisa.svg', 'Fatisa', 'partner-logo--fatisa'],
-            habita: ['https://habita-360.xyz', '../assets/Logotypes/habita-360.svg', 'Hábita-360', ''],
-            nescafe: ['https://www.nescafe.com/mx/', '../assets/Logotypes/Nescafé.svg', 'Nescafé', '']
-          };
-          const changes = [
-            ['center', logos.fatisa],
-            ['left', logos.habita],
-            ['right', logos.nescafe],
-            ['center', logos.chevrolet],
-            ['left', logos.finsus],
-            ['right', logos.hsbc]
-          ];
-          let changeIndex = 0;
-
-          const render = (slot, [href, src, name, modifier]) => {
-            slot.innerHTML = `<a class="partner-logo ${modifier}" href="${href}" aria-label="Visitar ${name}"><img src="${src}" alt="${name}" draggable="false"></a>`;
-          };
-
-          const changeLogo = ([position, logo]) => {
-            const slot = carousel.querySelector(`[data-logo-slot="${position}"]`);
-            if (!slot) return;
-            slot.classList.add('is-exiting');
-            window.setTimeout(() => {
-              slot.classList.remove('is-exiting');
-              slot.classList.add('is-entering');
-              render(slot, logo);
-              requestAnimationFrame(() => requestAnimationFrame(() => slot.classList.remove('is-entering')));
-            }, 440);
-          };
-
-          window.setInterval(() => {
-            changeLogo(changes[changeIndex]);
-            changeIndex = (changeIndex + 1) % changes.length;
-          }, 2000);
-        })();
-      </script>
       <div class="hero-legal-disclosure">
         <img class="hero-legal-shadow" src="../assets/Hero_Shadow.svg" alt="" aria-hidden="true">
         <button
