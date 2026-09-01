@@ -661,6 +661,9 @@
       .gallery-rail { width:auto; margin-top:40px; margin-right:-20px; overflow:visible; touch-action:pan-y; cursor:auto; }
       .facility { flex-basis:360px; height:250px; }
       .facility img { transform:scale(1); }
+      body[data-page="trabajos"] .gallery-rail { width:100%; margin-right:0; touch-action:auto; }
+      body[data-page="trabajos"] .gallery-track { display:grid; grid-template-columns:1fr; gap:12px; width:100%; transform:none !important; will-change:auto; }
+      body[data-page="trabajos"] .facility { width:100%; height:clamp(220px, 64vw, 300px); }
       .cta { padding:100px 20px calc(150px + env(safe-area-inset-bottom)); text-align:center; }
       .cta .brand { margin-bottom:40px; }
       .cta h2 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
@@ -1142,8 +1145,14 @@
         let lastTime = 0;
         let velocity = 0;
         let glideFrame = 0;
+        const isVerticalMobileGallery = () => document.body.dataset.page === 'trabajos' && window.matchMedia('(max-width:700px)').matches;
         const limit = () => Math.max(0, track.scrollWidth - rail.clientWidth);
         const moveTo = (next) => {
+          if (isVerticalMobileGallery()) {
+            offset = 0;
+            track.style.removeProperty('transform');
+            return;
+          }
           offset = Math.max(-limit(), Math.min(0, next));
           track.style.transform = `translate3d(${offset}px, 0, 0)`;
         };
@@ -1167,6 +1176,7 @@
         rail.querySelectorAll('img').forEach((image) => image.draggable = false);
         rail.addEventListener('dragstart', (event) => event.preventDefault());
         rail.addEventListener('wheel', (event) => {
+          if (isVerticalMobileGallery()) return;
           const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY)
             ? event.deltaX
             : event.shiftKey ? event.deltaY : 0;
@@ -1176,6 +1186,7 @@
           event.preventDefault();
         }, { passive:false });
         rail.addEventListener('pointerdown', (event) => {
+          if (isVerticalMobileGallery()) return;
           if (event.button !== 0) return;
           stopGlide();
           tracking = true;
@@ -1192,6 +1203,7 @@
           }
         });
         rail.addEventListener('pointermove', (event) => {
+          if (isVerticalMobileGallery()) return;
           if (!tracking || event.pointerId !== pointerId) return;
           const deltaX = event.clientX - startX;
           if (!dragging) {
@@ -1226,6 +1238,7 @@
         rail.addEventListener('pointerup', release);
         rail.addEventListener('pointercancel', release);
         rail.addEventListener('keydown', (event) => {
+          if (isVerticalMobileGallery()) return;
           const step = Math.min(240, Math.max(120, rail.clientWidth * .32));
           if (event.key === 'ArrowRight') { event.preventDefault(); moveTo(offset - step); }
           if (event.key === 'ArrowLeft') { event.preventDefault(); moveTo(offset + step); }
