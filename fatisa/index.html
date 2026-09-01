@@ -139,7 +139,18 @@
     .hero .intro { font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
     .intro--mobile { display:none; }
     .hero-actions { display:flex; align-items:center; justify-content:center; gap:20px; margin-top:50px; }
-    .hero-art { --hero-parallax:0px; position:absolute; z-index:0; bottom:0; left:50%; display:block; width:min(850px, 44.25vw, 85dvh); height:auto; transform:translateX(-50%) translateY(var(--hero-parallax)); will-change:transform; }
+    /* La portada se concentra únicamente en el mensaje principal. */
+    .hero .intro, .hero-actions { display:none; }
+    .hero-page-links { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); width:min(780px, 100%); margin-top:46px; border-top:1px solid rgba(24,24,24,.2); border-bottom:1px solid rgba(24,24,24,.2); }
+    .hero-page-links a { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; align-items:center; gap:12px; min-height:68px; padding:0 16px; background:rgba(240,240,240,.28); color:var(--ink); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; transition:background-color .24s ease, color .24s ease; }
+    .hero-page-links a + a { border-left:1px solid rgba(24,24,24,.2); }
+    .hero-page-link-index { color:var(--red); font-size:12px; }
+    .hero-page-link-arrow { color:rgba(24,24,24,.6); font-size:18px; font-weight:400; line-height:1; transition:color .24s ease; }
+    @media (hover:hover) {
+      .hero-page-links a:hover { background:rgba(255,255,255,.68); }
+      .hero-page-links a:hover .hero-page-link-arrow { color:var(--red); }
+    }
+    .hero-art { --hero-parallax:0px; position:absolute; z-index:0; bottom:0; left:50%; display:block; width:min(915px, 47.5vw, 88dvh); height:auto; transform:translateX(-50%) translateY(var(--hero-parallax)); will-change:transform; }
     .copyright, .powered { position:absolute; z-index:1; bottom:40px; font:12px/1.2 Arial, sans-serif; color:rgba(24,24,24,.62); }
     .copyright { left:var(--gutter); }
     .powered { right:var(--gutter); display:flex; align-items:center; gap:6px; }
@@ -434,7 +445,7 @@
       .hero .intro { font-size:clamp(14px, calc(.277778vw + 10.666667px), 16px); line-height:clamp(21px, calc(.416667vw + 16px), 24px); }
       .hero-text { gap:clamp(21px, calc(.555556vw + 14.333333px), 25px); }
       .hero-actions { gap:clamp(16px, calc(.555556vw + 9.333333px), 20px); margin-top:clamp(40px, calc(1.388889vw + 23.333333px), 50px); }
-      .hero-art { width:min(44.25vw, clamp(725px, calc(17.361111vw + 516.666667px), 850px), 85dvh); }
+      .hero-art { width:min(47.5vw, clamp(780px, calc(18.75vw + 555px), 915px), 88dvh); }
       .copyright, .powered { bottom:clamp(150px, calc(1.388889vw + 133.333333px), 160px); font-size:clamp(11px, calc(.138889vw + 9.333333px), 12px); }
       .page-wrap { width:calc(100% - (var(--gutter) * 2)); }
       .section-title { font-size:clamp(40px, calc(1.111111vw + 26.666667px), 48px); letter-spacing:-.04em; }
@@ -560,6 +571,10 @@
       .intro--desktop { display:block; }
       .intro--mobile { display:none; }
       .hero-actions, .copyright, .powered { display:none; }
+      .hero-page-links { width:100%; margin-top:28px; }
+      .hero-page-links a { grid-template-columns:1fr; gap:6px; min-height:70px; padding:10px 6px; text-align:center; }
+      .hero-page-link-index { font-size:11px; }
+      .hero-page-link-arrow { display:none; }
       .hero-art { right:-100px; left:auto; width:814.729px; height:auto; max-width:none; transform:translateY(var(--hero-parallax)); object-fit:contain; object-position:center bottom; }
       .hero.has-mobile-art-layout .hero-art { top:var(--hero-art-top); bottom:auto; }
       .page-wrap { width:calc(100% - 40px); }
@@ -698,6 +713,11 @@
           <p class="intro intro--desktop">Somos un taller CNC especializado en la fabricación de herramentales como son los modelos industriales, moldes de inyección, termoformado, y vidrio.</p>
           <p class="intro intro--mobile">Modelos industriales, moldes de inyección, termoformado, y vidrio, o cualquier trabajo de maquinado CNC en general.</p>
         </div>
+        <nav class="hero-page-links" aria-label="Secciones principales">
+          <a href="servicios.html"><span class="hero-page-link-index">01</span><span>Servicios</span><span class="hero-page-link-arrow" aria-hidden="true">↗</span></a>
+          <a href="nosotros.html"><span class="hero-page-link-index">02</span><span>Nosotros</span><span class="hero-page-link-arrow" aria-hidden="true">↗</span></a>
+          <a href="trabajos-realizados.html"><span class="hero-page-link-index">03</span><span>Trabajos Realizados</span><span class="hero-page-link-arrow" aria-hidden="true">↗</span></a>
+        </nav>
         <div class="hero-actions">
           <a class="button button--dark" href="servicios.html">Explorar Servicios</a>
           <a class="text-link" href="nosotros.html">Conócenos</a>
@@ -1429,6 +1449,7 @@
           if (english[source]) node.nodeValue = node.nodeValue.replace(source, english[source]);
         });
         document.querySelector('.site-nav')?.setAttribute('aria-label', 'Main navigation');
+        document.querySelector('.hero-page-links')?.setAttribute('aria-label', 'Main sections');
         document.querySelector('.menu-toggle')?.setAttribute('aria-label', 'Open menu');
         document.querySelector('.hero-art')?.setAttribute('alt', 'Fatisa precision tooling');
         document.querySelector('.map-panel > img')?.setAttribute('alt', 'Route map from Nuevo León to Austin, Texas');
