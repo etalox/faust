@@ -22,7 +22,7 @@
     body[data-page="servicios"] main > .services, body[data-page="servicios"] main > .solutions, body[data-page="servicios"] main > .workflow { display:block; }
     body[data-page="nosotros"] main > .company, body[data-page="nosotros"] main > .shipping { display:block; }
     body[data-page="trabajos"] main > .facilities { display:block; }
-    body[data-page]:not([data-page="inicio"]) main { padding-top:90px; }
+    body[data-page]:not([data-page="inicio"]) main { padding-top:90px; padding-bottom:160px; }
     body[data-page="servicios"] .services { margin-top:0; }
     body[data-page="servicios"] .services::before { display:none; }
     body[data-page="nosotros"] .company, body[data-page="trabajos"] .facilities { padding-top:90px; }
@@ -152,6 +152,11 @@
 
       .services { position:relative; z-index:2; isolation:isolate; margin-top:-120px; }
       .services::before { content:""; position:absolute; z-index:-1; top:0; bottom:0; left:50%; width:100vw; transform:translateX(-50%); background:rgba(240,240,240,.50); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px); pointer-events:none; }
+    }
+    @media (min-width:701px) {
+      body[data-page="inicio"] .hero { height:100vh; height:100dvh; }
+      body[data-page="inicio"] .hero-art { bottom:0; }
+      body[data-page="inicio"] .copyright, body[data-page="inicio"] .powered { bottom:40px; }
     }
 
     .section-title { font-size:48px; font-weight:400; line-height:1; letter-spacing:-1.92px; }
@@ -525,7 +530,7 @@
       :root { --gutter:20px; }
       .site-header .brand img { animation:navbar-logo-turn 12s linear infinite; }
       html, body, main { width:100%; max-width:100%; overflow-x:clip; }
-      body[data-page]:not([data-page="inicio"]) main { padding-top:70px; }
+      body[data-page]:not([data-page="inicio"]) main { padding-top:70px; padding-bottom:calc(120px + env(safe-area-inset-bottom)); }
       body[data-page="nosotros"] .company, body[data-page="trabajos"] .facilities { padding-top:70px; }
       .site-header { height:70px; }
       .header-inner { width:100%; grid-template-columns:1fr auto; padding-inline:20px; }
