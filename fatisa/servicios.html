@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Servicios | Fatisa</title>
+  <style>html,body{margin:0;background:#f0f0f0}</style>
+</head>
+<body>
+  <script>
+    fetch('index.html', { cache:'no-cache' }).then((response) => response.text()).then((source) => {
+      document.open();
+      document.write(source.replace(/<body\b[^>]*>/i, '<body data-page="servicios">'));
+      document.close();
+    });
+  </script>
+</body>
+</html>
