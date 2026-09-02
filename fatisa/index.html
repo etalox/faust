@@ -54,6 +54,13 @@
     .quote-close { position:absolute; top:20px; right:20px; display:grid; place-items:center; width:40px; height:40px; padding:0; border:0; border-radius:50%; background:var(--ink); color:#fff; cursor:pointer; }
     .quote-close::before, .quote-close::after { content:""; position:absolute; width:14px; height:1px; background:currentColor; transform:rotate(45deg); }
     .quote-close::after { transform:rotate(-45deg); }
+    .gallery-lightbox { position:fixed; z-index:90; inset:0; width:100vw; max-width:none; height:100dvh; margin:0; padding:max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); border:0; overflow:hidden; background:rgba(8,8,8,.96); }
+    .gallery-lightbox:not([open]) { display:none; }
+    .gallery-lightbox[open] { display:grid; place-items:center; }
+    .gallery-lightbox::backdrop { background:rgba(8,8,8,.96); }
+    .gallery-lightbox img { display:block; max-width:100%; max-height:100%; object-fit:contain; }
+    .gallery-lightbox-close-mobile { display:none; }
+    body.has-gallery-lightbox { overflow:hidden; }
     .quote-heading { max-width:590px; padding-right:40px; }
     .quote-kicker { margin-bottom:16px; color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
     .quote-heading h2 { font:400 clamp(34px, 4vw, 52px)/.98 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.055em; }
@@ -314,6 +321,22 @@
     }
     .facility { position:relative; flex:0 0 500px; height:320px; margin:0; overflow:hidden; background:#fff; clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
     .facility img { display:block; width:100%; height:100%; padding:0; object-fit:cover; object-position:center; pointer-events:none; -webkit-user-drag:none; user-select:none; transform:scale(1.3); transition:transform 10s cubic-bezier(.08,.82,.14,1), filter .4s ease; }
+    /* Trabajos Realizados: retícula editorial de alturas naturales. */
+    body[data-page="trabajos"] .facilities { width:calc(100% - (var(--gutter) * 2)); max-width:1440px; margin-inline:auto; }
+    body[data-page="trabajos"] .gallery-rail { width:100%; margin-right:0; overflow:visible; touch-action:auto; cursor:default; }
+    body[data-page="trabajos"] .gallery-track { display:block; width:100%; columns:3 300px; column-gap:28px; transform:none !important; will-change:auto; }
+    body[data-page="trabajos"] .facility { display:block; width:100%; height:auto; margin:0 0 28px; break-inside:avoid; opacity:0; transform:translateY(12px); transition:opacity .62s cubic-bezier(.16,1,.3,1), transform .72s cubic-bezier(.16,1,.3,1); }
+    body[data-page="trabajos"] .facility { cursor:zoom-in; }
+    body[data-page="trabajos"] .facility:focus-visible { outline:2px solid #ff0000; outline-offset:4px; }
+    body[data-page="trabajos"] .facility.is-revealed { opacity:1; transform:none; }
+    body[data-page="trabajos"] .facility img { width:100%; height:auto; object-fit:initial; transform:scale(1); }
+    @media (min-width:701px) and (max-width:1199px) {
+      body[data-page="trabajos"] .gallery-track { columns:2 300px; column-gap:24px; }
+      body[data-page="trabajos"] .facility { margin-bottom:24px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      body[data-page="trabajos"] .facility { opacity:1; transform:none; transition:none; }
+    }
     .cta { padding:200px 20px 150px; text-align:center; }
     .cta .brand { margin-bottom:40px; }
     .cta h2 { max-width:997px; margin:auto; font-size:48px; font-weight:400; line-height:52px; letter-spacing:-1.92px; }
@@ -662,8 +685,8 @@
       .facility { flex-basis:360px; height:250px; }
       .facility img { transform:scale(1); }
       body[data-page="trabajos"] .gallery-rail { width:100%; margin-right:0; touch-action:auto; }
-      body[data-page="trabajos"] .gallery-track { display:grid; grid-template-columns:1fr; gap:12px; width:100%; transform:none !important; will-change:auto; }
-      body[data-page="trabajos"] .facility { width:100%; height:auto; }
+      body[data-page="trabajos"] .gallery-track { display:block; width:100%; columns:1; column-gap:0; transform:none !important; will-change:auto; }
+      body[data-page="trabajos"] .facility { width:100%; height:auto; margin:0 0 14px; break-inside:avoid; }
       body[data-page="trabajos"] .facility img { width:100%; height:auto; object-fit:initial; }
       .cta { padding:100px 20px calc(150px + env(safe-area-inset-bottom)); text-align:center; }
       .cta .brand { margin-bottom:40px; }
@@ -671,6 +694,8 @@
       .cta p { margin:40px auto; font-size:16px; line-height:24px; }
       .cta-actions { gap:16px; flex-wrap:wrap; }
       .mobile-quote { position:fixed; z-index:20; bottom:20px; left:50%; display:inline-flex; width:min(400px, calc(100% - 40px)); height:69px; transform:translateX(-50%); align-items:center; justify-content:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); background:rgba(24,24,24,.96); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:#fff; font:500 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; text-decoration:none; }
+      .gallery-lightbox-close-mobile { position:fixed; z-index:1; bottom:20px; left:50%; display:inline-flex; width:min(400px, calc(100% - 40px)); height:69px; padding:0; transform:translateX(-50%); align-items:center; justify-content:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); border:0; background:rgba(24,24,24,.96); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:#fff; font:500 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; cursor:pointer; }
+      .gallery-lightbox img { max-height:calc(100% - 109px); }
 
     }
   </style>
@@ -714,6 +739,11 @@
     </section>
   </dialog>
 
+  <dialog class="gallery-lightbox" id="gallery-lightbox" aria-label="Vista ampliada de trabajo realizado">
+    <img data-gallery-lightbox-image alt="">
+    <button class="gallery-lightbox-close-mobile" type="button" data-gallery-lightbox-close data-en="Close">Cerrar</button>
+  </dialog>
+
   <main>
     <section class="hero" id="inicio">
       <div class="hero-copy">
@@ -749,91 +779,225 @@
       </header>
 
       <div class="service-systems" data-service-systems aria-label="Capacidades de FATISA">
-        <article class="service-system is-active">
-          <button class="service-system-trigger" type="button" aria-expanded="true" aria-controls="service-engineering">
-            <span class="service-system-index">01</span>
-            <span class="service-system-name">Ingeniería y digitalización</span>
-            <span class="service-system-summary">Convertimos una idea, una muestra física o un plano en información técnica lista para fabricar.</span>
-            <span class="service-system-toggle" aria-hidden="true"></span>
-          </button>
-          <div class="service-system-details" id="service-engineering">
-            <ul class="service-system-offerings" aria-label="Capacidades de ingeniería y digitalización">
-              <li>Diseño CAD 2D y 3D</li>
-              <li>Desarrollo de ingeniería</li>
-              <li>Escaneo 3D</li>
-              <li>Ingeniería inversa</li>
-            </ul>
-            <div class="service-system-detail">
-              <p>Reconstruimos modelos CAD y desarrollamos soluciones a partir de muestras, planos o croquis.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
-            </div>
-          </div>
-          <figure class="service-system-visual"><img src="assets/servicios/ingenieria-digitalizacion.png" alt="Ingeniería y digitalización FATISA"></figure>
-        </article>
-
         <article class="service-system">
           <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-machining">
-            <span class="service-system-index">02</span>
+            <span class="service-system-index">01</span>
             <span class="service-system-name">Maquinado CNC</span>
-            <span class="service-system-summary">Fabricamos piezas de alta precisión y geometrías complejas para baja y mediana producción.</span>
+            <span class="service-system-summary">Torneado y fresado CNC para piezas de alta precisión y geometrías complejas.</span>
             <span class="service-system-toggle" aria-hidden="true"></span>
           </button>
           <div class="service-system-details" id="service-machining">
             <ul class="service-system-offerings" aria-label="Capacidades de maquinado CNC">
               <li>Torneado CNC</li>
               <li>Fresado CNC</li>
-              <li>Piezas de alta precisión</li>
-              <li>Geometrías complejas</li>
+              <li>Baja y mediana producción</li>
+              <li>Fabricación de piezas de alta precisión</li>
+              <li>Maquinado de geometrías complejas</li>
             </ul>
             <div class="service-system-detail">
-              <p>Capacidad para manufacturar componentes industriales con control técnico y atención a los requerimientos de cada proyecto.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+              <p>Fabricación con control técnico según los requerimientos de cada proyecto.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
             </div>
           </div>
           <figure class="service-system-visual"><img src="assets/servicios/maquinado-cnc.png" alt="Maquinado CNC FATISA"></figure>
         </article>
 
-        <article class="service-system">
-          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-tooling">
-            <span class="service-system-index">03</span>
-            <span class="service-system-name">Moldes y herramentales</span>
-            <span class="service-system-summary">Diseñamos y fabricamos soluciones de tooling para procesos de transformación industrial.</span>
+        <article class="service-system is-active">
+          <button class="service-system-trigger" type="button" aria-expanded="true" aria-controls="service-design">
+            <span class="service-system-index">02</span>
+            <span class="service-system-name">Diseño Mecánico</span>
+            <span class="service-system-summary">Diseño CAD y desarrollo de ingeniería a partir de muestras, planos o croquis.</span>
             <span class="service-system-toggle" aria-hidden="true"></span>
           </button>
-          <div class="service-system-details" id="service-tooling">
-            <ul class="service-system-offerings" aria-label="Capacidades de moldes y herramentales">
-              <li>Moldes de inyección y termoformado</li>
-              <li>Troqueles y dados de forja</li>
-              <li>Fixtures de inspección y ensamble</li>
-              <li>Modelos para fundición</li>
+          <div class="service-system-details" id="service-design">
+            <ul class="service-system-offerings" aria-label="Capacidades de diseño mecánico">
+              <li>Diseño CAD 2D</li>
+              <li>Diseño CAD 3D</li>
+              <li>Desarrollo de ingeniería</li>
+              <li>Diseño a partir de muestras físicas</li>
+              <li>Diseño a partir de planos</li>
+              <li>Diseño a partir de croquis</li>
             </ul>
             <div class="service-system-detail">
-              <p>Integramos ingeniería y fabricación para crear moldes, troqueles y fixtures ajustados a su proceso de producción.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+              <p>Convertimos referencias físicas o documentales en información técnica lista para fabricar.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
             </div>
           </div>
-          <figure class="service-system-visual"><img src="assets/servicios/moldes-herramentales.png" alt="Moldes y herramentales FATISA"></figure>
+          <figure class="service-system-visual"><img src="assets/servicios/ingenieria-digitalizacion.png" alt="Diseño mecánico FATISA"></figure>
         </article>
 
         <article class="service-system">
-          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-support">
-            <span class="service-system-index">04</span>
-            <span class="service-system-name">Fabricación y soporte</span>
-            <span class="service-system-summary">Complementamos el proyecto con fundición, soldadura especializada y mantenimiento de moldes.</span>
+          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-molds">
+            <span class="service-system-index">03</span>
+            <span class="service-system-name">Moldes</span>
+            <span class="service-system-summary">Moldes para inyección, termoformado, forja y fundición.</span>
             <span class="service-system-toggle" aria-hidden="true"></span>
           </button>
-          <div class="service-system-details" id="service-support">
-            <ul class="service-system-offerings" aria-label="Capacidades de fabricación y soporte">
-              <li>Fundición de hierro, aluminio y bronce</li>
-              <li>Soldadura TIG y de precisión</li>
-              <li>Reparación de componentes</li>
-              <li>Mantenimiento de moldes</li>
+          <div class="service-system-details" id="service-molds">
+            <ul class="service-system-offerings" aria-label="Capacidades de moldes">
+              <li>Moldes para inyección de plástico</li>
+              <li>Moldes para inyección de metal</li>
+              <li>Moldes para termoformado</li>
+              <li>Dados de forja</li>
+              <li>Moldes permanentes</li>
+              <li>Modelos para fundición</li>
             </ul>
             <div class="service-system-detail">
-              <p>Extendemos la vida útil de sus componentes y resolvemos necesidades de fabricación especializada.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+              <p>Herramentales desarrollados para procesos de transformación industrial.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
             </div>
           </div>
-          <figure class="service-system-visual"><img src="assets/servicios/fabricacion-soporte.png" alt="Fabricación y soporte FATISA"></figure>
+          <figure class="service-system-visual"><img src="assets/servicios/moldes-herramentales.png" alt="Moldes FATISA"></figure>
+        </article>
+
+        <article class="service-system">
+          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-dies">
+            <span class="service-system-index">04</span>
+            <span class="service-system-name">Troqueles</span>
+            <span class="service-system-summary">Troqueles para procesos simples, compuestos y progresivos.</span>
+            <span class="service-system-toggle" aria-hidden="true"></span>
+          </button>
+          <div class="service-system-details" id="service-dies">
+            <ul class="service-system-offerings" aria-label="Capacidades de troqueles">
+              <li>Troqueles simples</li>
+              <li>Troqueles compuestos</li>
+              <li>Troqueles progresivos</li>
+            </ul>
+            <div class="service-system-detail">
+              <p>Herramentales desarrollados según los requerimientos de cada proceso.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+            </div>
+          </div>
+          <figure class="service-system-visual"><img src="assets/soluciones/troquel-dado-forja.png" alt="Troqueles FATISA"></figure>
+        </article>
+
+        <article class="service-system">
+          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-fixtures">
+            <span class="service-system-index">05</span>
+            <span class="service-system-name">Fixtures</span>
+            <span class="service-system-summary">Diseño y fabricación de fixtures para inspección, maquinado, soldadura y ensamble.</span>
+            <span class="service-system-toggle" aria-hidden="true"></span>
+          </button>
+          <div class="service-system-details" id="service-fixtures">
+            <ul class="service-system-offerings" aria-label="Capacidades de fixtures">
+              <li>Fixtures de inspección</li>
+              <li>Fixtures de maquinado</li>
+              <li>Fixtures de soldadura</li>
+              <li>Fixtures de ensamble</li>
+            </ul>
+            <div class="service-system-detail">
+              <p>Herramentales para inspeccionar, sujetar, maquinar, soldar y ensamblar componentes.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+            </div>
+          </div>
+          <figure class="service-system-visual"><img src="assets/soluciones/fixture-inspeccion-ensamble.png" alt="Fixtures FATISA"></figure>
+        </article>
+
+        <article class="service-system">
+          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-reverse-engineering">
+            <span class="service-system-index">06</span>
+            <span class="service-system-name">Ingeniería Inversa</span>
+            <span class="service-system-summary">Escaneo 3D, digitalización y reconstrucción de modelos CAD.</span>
+            <span class="service-system-toggle" aria-hidden="true"></span>
+          </button>
+          <div class="service-system-details" id="service-reverse-engineering">
+            <ul class="service-system-offerings" aria-label="Capacidades de ingeniería inversa">
+              <li>Escaneo 3D</li>
+              <li>Ingeniería inversa</li>
+              <li>Digitalización de piezas</li>
+              <li>Reconstrucción de modelos CAD</li>
+            </ul>
+            <div class="service-system-detail">
+              <p>Desarrollamos información técnica a partir de piezas o referencias físicas.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+            </div>
+          </div>
+          <figure class="service-system-visual"><img src="assets/servicios/ingenieria-digitalizacion.png" alt="Ingeniería inversa FATISA"></figure>
+        </article>
+
+        <article class="service-system">
+          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-casting">
+            <span class="service-system-index">07</span>
+            <span class="service-system-name">Fundición</span>
+            <span class="service-system-summary">Fundición en hierro gris, aluminio, bronce, aceros e investment casting.</span>
+            <span class="service-system-toggle" aria-hidden="true"></span>
+          </button>
+          <div class="service-system-details" id="service-casting">
+            <ul class="service-system-offerings" aria-label="Materiales de fundición">
+              <li>Hierro gris</li>
+              <li>Aluminio</li>
+              <li>Bronce</li>
+              <li>Aceros</li>
+              <li>Investment Casting</li>
+            </ul>
+            <div class="service-system-detail">
+              <p>Opciones de fundición para distintas necesidades de material y fabricación.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+            </div>
+          </div>
+          <figure class="service-system-visual"><img src="assets/soluciones/modelo-fundicion.png" alt="Fundición FATISA"></figure>
+        </article>
+
+        <article class="service-system">
+          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-welding">
+            <span class="service-system-index">08</span>
+            <span class="service-system-name">Soldadura</span>
+            <span class="service-system-summary">Soldadura TIG y de precisión, reparación de componentes y fabricación especializada.</span>
+            <span class="service-system-toggle" aria-hidden="true"></span>
+          </button>
+          <div class="service-system-details" id="service-welding">
+            <ul class="service-system-offerings" aria-label="Capacidades de soldadura">
+              <li>Soldadura TIG</li>
+              <li>Soldadura de precisión</li>
+              <li>Reparación de componentes</li>
+              <li>Fabricación especializada</li>
+            </ul>
+            <div class="service-system-detail">
+              <p>Servicios especializados para fabricar y recuperar componentes industriales.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+            </div>
+          </div>
+          <figure class="service-system-visual"><img src="assets/servicios/fabricacion-soporte.png" alt="Soldadura FATISA"></figure>
+        </article>
+
+        <article class="service-system">
+          <button class="service-system-trigger" type="button" aria-expanded="false" aria-controls="service-mold-maintenance">
+            <span class="service-system-index">09</span>
+            <span class="service-system-name">Mantenimiento de Moldes</span>
+            <span class="service-system-summary">Acabados, reemplazo de componentes, reparaciones y resistencias para moldes.</span>
+            <span class="service-system-toggle" aria-hidden="true"></span>
+          </button>
+          <div class="service-system-details" id="service-mold-maintenance">
+            <ul class="service-system-offerings" aria-label="Capacidades de mantenimiento de moldes">
+              <li>Acabados</li>
+              <li>Reemplazo de componentes</li>
+              <li>Reparaciones</li>
+              <li>Resistencias</li>
+            </ul>
+            <div class="service-system-detail">
+              <p>Mantenimiento para extender la vida útil y continuidad operativa de sus moldes.</p><a class="text-link" href="#contacto" data-quote-trigger>Solicitar cotización</a>
+            </div>
+          </div>
+          <figure class="service-system-visual"><img src="assets/servicios/fabricacion-soporte.png" alt="Mantenimiento de moldes FATISA"></figure>
         </article>
       </div>
     </section>
+
+    <script>
+      (() => {
+        const root = document.querySelector('[data-service-systems]');
+        if (!root) return;
+        const sequence = [
+          'service-design',
+          'service-reverse-engineering',
+          'service-machining',
+          'service-molds',
+          'service-dies',
+          'service-fixtures',
+          'service-casting',
+          'service-welding',
+          'service-mold-maintenance'
+        ];
+        sequence.forEach((id, index) => {
+          const system = root.querySelector(`#${id}`)?.closest('.service-system');
+          if (!system) return;
+          root.append(system);
+          system.querySelector('.service-system-index').textContent = String(index + 1).padStart(2, '0');
+        });
+      })();
+    </script>
 
     <section class="solutions page-wrap" id="soluciones">
       <header class="solutions-header">
@@ -890,7 +1054,7 @@
       <div class="company-layout">
         <p class="company-label">Nosotros</p>
         <div class="company-statement">
-          <h2 class="section-title">Mas de 35 años convirtiendo precision en confianza.</h2>
+          <h2 class="section-title">Más de 35 años convirtiendo precisión en confianza.</h2>
         </div>
         <div class="company-context"><p>Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico y ofrecemos soluciones integrales de manufactura para la industria</p></div>
         <ul class="company-principles">
@@ -903,7 +1067,7 @@
 
     <section class="facilities page-wrap" id="trabajos-realizados">
       <p class="section-kicker">Capacidad industrial</p><h2 class="section-title">Trabajos Realizados</h2>
-      <div class="gallery-rail" aria-label="Trabajos realizados FATISA" tabindex="0"><div class="gallery-track"><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 01"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 02"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM%20(3).jpeg" alt="Trabajo realizado FATISA 03"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM.jpeg" alt="Trabajo realizado FATISA 04"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 05"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 06"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM%20(3).jpeg" alt="Trabajo realizado FATISA 07"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM.jpeg" alt="Trabajo realizado FATISA 08"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.10%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 09"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.10%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 10"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.10%20AM.jpeg" alt="Trabajo realizado FATISA 11"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.11%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 12"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.11%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 13"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.11%20AM.jpeg" alt="Trabajo realizado FATISA 14"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.12%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 15"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.12%20AM.jpeg" alt="Trabajo realizado FATISA 16"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.13%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 17"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.13%20AM.jpeg" alt="Trabajo realizado FATISA 18"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.14%20AM.jpeg" alt="Trabajo realizado FATISA 19"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.15%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 20"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.15%20AM.jpeg" alt="Trabajo realizado FATISA 21"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.16%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 22"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.16%20AM.jpeg" alt="Trabajo realizado FATISA 23"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.17%20AM.jpeg" alt="Trabajo realizado FATISA 24"></figure></div></div>
+      <div class="gallery-rail" aria-label="Trabajos realizados FATISA"><div class="gallery-track"><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 01"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 02"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM%20(3).jpeg" alt="Trabajo realizado FATISA 03"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.08%20AM.jpeg" alt="Trabajo realizado FATISA 04"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 05"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 06"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM%20(3).jpeg" alt="Trabajo realizado FATISA 07"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.09%20AM.jpeg" alt="Trabajo realizado FATISA 08"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.10%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 09"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.10%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 10"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.10%20AM.jpeg" alt="Trabajo realizado FATISA 11"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.11%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 12"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.11%20AM%20(2).jpeg" alt="Trabajo realizado FATISA 13"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.11%20AM.jpeg" alt="Trabajo realizado FATISA 14"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.12%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 15"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.12%20AM.jpeg" alt="Trabajo realizado FATISA 16"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.13%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 17"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.13%20AM.jpeg" alt="Trabajo realizado FATISA 18"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.14%20AM.jpeg" alt="Trabajo realizado FATISA 19"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.15%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 20"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.15%20AM.jpeg" alt="Trabajo realizado FATISA 21"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.16%20AM%20(1).jpeg" alt="Trabajo realizado FATISA 22"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.16%20AM.jpeg" alt="Trabajo realizado FATISA 23"></figure><figure class="facility"><img src="assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.17%20AM.jpeg" alt="Trabajo realizado FATISA 24"></figure></div></div>
     </section>
 
     <script>
@@ -917,6 +1081,43 @@
         image.alt = 'Trabajo realizado FATISA 25';
         figure.append(image);
         track.append(figure);
+      })();
+    </script>
+
+    <script>
+      (() => {
+        const track = document.querySelector('body[data-page="trabajos"] .gallery-track');
+        if (!track) return;
+        const figures = [...track.querySelectorAll('.facility')];
+        const reveal = (figure, delay = 0) => {
+          const image = figure.querySelector('img');
+          const show = () => window.setTimeout(() => figure.classList.add('is-revealed'), delay);
+          if (!image || (image.complete && image.naturalWidth > 0)) show();
+          else {
+            image?.addEventListener('load', show, { once:true });
+            image?.addEventListener('error', show, { once:true });
+          }
+        };
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          figures.forEach((figure) => figure.classList.add('is-revealed'));
+          return;
+        }
+        if (!('IntersectionObserver' in window)) {
+          figures.forEach((figure, index) => reveal(figure, index * 70));
+          return;
+        }
+        const observer = new IntersectionObserver((entries) => {
+          entries.filter((entry) => entry.isIntersecting).sort((first, second) => {
+            const a = first.target.getBoundingClientRect();
+            const b = second.target.getBoundingClientRect();
+            const verticalDelta = a.top - b.top;
+            return Math.abs(verticalDelta) > 8 ? verticalDelta : a.left - b.left;
+          }).forEach((entry, index) => {
+            observer.unobserve(entry.target);
+            reveal(entry.target, index * 90);
+          });
+        }, { rootMargin:'0px 0px 140px', threshold:.01 });
+        figures.forEach((figure) => observer.observe(figure));
       })();
     </script>
 
@@ -1146,10 +1347,10 @@
         let lastTime = 0;
         let velocity = 0;
         let glideFrame = 0;
-        const isVerticalMobileGallery = () => document.body.dataset.page === 'trabajos' && window.matchMedia('(max-width:700px)').matches;
+        const isMasonryGallery = () => document.body.dataset.page === 'trabajos';
         const limit = () => Math.max(0, track.scrollWidth - rail.clientWidth);
         const moveTo = (next) => {
-          if (isVerticalMobileGallery()) {
+          if (isMasonryGallery()) {
             offset = 0;
             track.style.removeProperty('transform');
             return;
@@ -1177,7 +1378,7 @@
         rail.querySelectorAll('img').forEach((image) => image.draggable = false);
         rail.addEventListener('dragstart', (event) => event.preventDefault());
         rail.addEventListener('wheel', (event) => {
-          if (isVerticalMobileGallery()) return;
+          if (isMasonryGallery()) return;
           const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY)
             ? event.deltaX
             : event.shiftKey ? event.deltaY : 0;
@@ -1187,7 +1388,7 @@
           event.preventDefault();
         }, { passive:false });
         rail.addEventListener('pointerdown', (event) => {
-          if (isVerticalMobileGallery()) return;
+          if (isMasonryGallery()) return;
           if (event.button !== 0) return;
           stopGlide();
           tracking = true;
@@ -1204,7 +1405,7 @@
           }
         });
         rail.addEventListener('pointermove', (event) => {
-          if (isVerticalMobileGallery()) return;
+          if (isMasonryGallery()) return;
           if (!tracking || event.pointerId !== pointerId) return;
           const deltaX = event.clientX - startX;
           if (!dragging) {
@@ -1239,7 +1440,7 @@
         rail.addEventListener('pointerup', release);
         rail.addEventListener('pointercancel', release);
         rail.addEventListener('keydown', (event) => {
-          if (isVerticalMobileGallery()) return;
+          if (isMasonryGallery()) return;
           const step = Math.min(240, Math.max(120, rail.clientWidth * .32));
           if (event.key === 'ArrowRight') { event.preventDefault(); moveTo(offset - step); }
           if (event.key === 'ArrowLeft') { event.preventDefault(); moveTo(offset + step); }
@@ -1421,7 +1622,29 @@
         'Torneado CNC':'CNC turning', 'Fresado CNC':'CNC milling', 'Piezas de alta precisión':'High-precision parts', 'Geometrías complejas':'Complex geometries',
         'Moldes de inyección y termoformado':'Injection and thermoforming molds', 'Troqueles y dados de forja':'Dies and forging dies', 'Fixtures de inspección y ensamble':'Inspection and assembly fixtures', 'Modelos para fundición':'Casting patterns',
         'Fundición de hierro, aluminio y bronce':'Iron, aluminum, and bronze casting', 'Soldadura TIG y de precisión':'TIG and precision welding', 'Reparación de componentes':'Component repair', 'Mantenimiento de moldes':'Mold maintenance',
-        'Mas de 35 años convirtiendo precision en confianza.':'More than 35 years turning precision into trust.',
+        'Torneado y fresado CNC para piezas de alta precisión y geometrías complejas.':'CNC turning and milling for high-precision parts and complex geometries.',
+        'Baja y mediana producción':'Low- and medium-volume production', 'Fabricación de piezas de alta precisión':'High-precision part manufacturing', 'Maquinado de geometrías complejas':'Machining of complex geometries',
+        'Fabricación con control técnico según los requerimientos de cada proyecto.':'Manufacturing with technical control according to each project’s requirements.',
+        'Diseño Mecánico':'Mechanical Design', 'Diseño CAD y desarrollo de ingeniería a partir de muestras, planos o croquis.':'CAD design and engineering development from samples, drawings, or sketches.',
+        'Diseño CAD 2D':'2D CAD design', 'Diseño CAD 3D':'3D CAD design', 'Diseño a partir de muestras físicas':'Design from physical samples', 'Diseño a partir de planos':'Design from drawings', 'Diseño a partir de croquis':'Design from sketches',
+        'Convertimos referencias físicas o documentales en información técnica lista para fabricar.':'We turn physical or documented references into technical information ready for fabrication.',
+        'Moldes':'Molds', 'Moldes para inyección, termoformado, forja y fundición.':'Molds for injection, thermoforming, forging, and casting.',
+        'Moldes para inyección de plástico':'Plastic injection molds', 'Moldes para inyección de metal':'Metal injection molds', 'Moldes para termoformado':'Thermoforming molds', 'Dados de forja':'Forging dies', 'Moldes permanentes':'Permanent molds',
+        'Herramentales desarrollados para procesos de transformación industrial.':'Tooling developed for industrial transformation processes.',
+        'Troqueles':'Dies', 'Troqueles para procesos simples, compuestos y progresivos.':'Dies for simple, compound, and progressive processes.',
+        'Troqueles simples':'Simple dies', 'Troqueles compuestos':'Compound dies', 'Troqueles progresivos':'Progressive dies', 'Herramentales desarrollados según los requerimientos de cada proceso.':'Tooling developed according to the requirements of each process.',
+        'Fixtures':'Fixtures', 'Diseño y fabricación de fixtures para inspección, maquinado, soldadura y ensamble.':'Design and fabrication of fixtures for inspection, machining, welding, and assembly.',
+        'Fixtures de inspección':'Inspection fixtures', 'Fixtures de maquinado':'Machining fixtures', 'Fixtures de soldadura':'Welding fixtures', 'Fixtures de ensamble':'Assembly fixtures',
+        'Herramentales para inspeccionar, sujetar, maquinar, soldar y ensamblar componentes.':'Tooling to inspect, hold, machine, weld, and assemble components.',
+        'Ingeniería Inversa':'Reverse Engineering', 'Escaneo 3D, digitalización y reconstrucción de modelos CAD.':'3D scanning, digitization, and CAD model reconstruction.',
+        'Digitalización de piezas':'Part digitization', 'Reconstrucción de modelos CAD':'CAD model reconstruction', 'Desarrollamos información técnica a partir de piezas o referencias físicas.':'We develop technical information from parts or physical references.',
+        'Fundición':'Casting', 'Fundición en hierro gris, aluminio, bronce, aceros e investment casting.':'Casting in gray iron, aluminum, bronze, steels, and investment casting.',
+        'Hierro gris':'Gray iron', 'Aluminio':'Aluminum', 'Bronce':'Bronze', 'Aceros':'Steels', 'Investment Casting':'Investment casting', 'Opciones de fundición para distintas necesidades de material y fabricación.':'Casting options for different material and manufacturing needs.',
+        'Soldadura':'Welding', 'Soldadura TIG y de precisión, reparación de componentes y fabricación especializada.':'TIG and precision welding, component repair, and specialized fabrication.',
+        'Soldadura TIG':'TIG welding', 'Soldadura de precisión':'Precision welding', 'Fabricación especializada':'Specialized fabrication', 'Servicios especializados para fabricar y recuperar componentes industriales.':'Specialized services to manufacture and restore industrial components.',
+        'Acabados':'Finishing', 'Reemplazo de componentes':'Component replacement', 'Reparaciones':'Repairs', 'Resistencias':'Heating elements', 'Acabados, reemplazo de componentes, reparaciones y resistencias para moldes.':'Finishing, component replacement, repairs, and heating elements for molds.',
+        'Mantenimiento de Moldes':'Mold Maintenance', 'Mantenimiento para extender la vida útil y continuidad operativa de sus moldes.':'Maintenance to extend the useful life and operational continuity of your molds.',
+        'Más de 35 años convirtiendo precisión en confianza.':'More than 35 years turning precision into trust.',
         'Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico y ofrecemos soluciones integrales de manufactura para la industria':'We are a Mexican company with experience in the metalworking sector since 1988, offering comprehensive manufacturing solutions for industry.',
         'Especialización':'Specialization', 'Equipo y capacidad':'Team and capability', 'Forma de trabajar':'How we work',
         'Herramentales, moldes de inyección y termoformado, modelos industriales y maquinado CNC general.':'Tooling, injection and thermoforming molds, industrial patterns, and general CNC machining.',
@@ -1472,6 +1695,7 @@
         document.querySelector('.site-nav')?.setAttribute('aria-label', 'Main navigation');
         document.querySelector('.hero-page-links')?.setAttribute('aria-label', 'Main sections');
         document.querySelector('.menu-toggle')?.setAttribute('aria-label', 'Open menu');
+        document.querySelector('#gallery-lightbox')?.setAttribute('aria-label', 'Expanded work image');
         document.querySelector('.hero-art')?.setAttribute('alt', 'Fatisa precision tooling');
         document.querySelector('.map-panel > img')?.setAttribute('alt', 'Route map from Nuevo León to Austin, Texas');
       };
@@ -1496,6 +1720,48 @@
 
       detectCountry().then((country) => {
         if (country && country !== 'MX') applyEnglish();
+      });
+    })();
+  </script>
+  <script>
+    (() => {
+      const dialog = document.querySelector('#gallery-lightbox');
+      const viewer = dialog?.querySelector('[data-gallery-lightbox-image]');
+      const closeButton = dialog?.querySelector('[data-gallery-lightbox-close]');
+      const figures = [...document.querySelectorAll('body[data-page="trabajos"] .facility')];
+      if (!dialog || !viewer || !closeButton || !figures.length) return;
+
+      const close = () => {
+        if (dialog.open) dialog.close();
+      };
+      const open = (figure) => {
+        const source = figure.querySelector('img');
+        if (!source) return;
+        viewer.src = source.currentSrc || source.src;
+        viewer.alt = source.alt || '';
+        document.body.classList.add('has-gallery-lightbox');
+        dialog.showModal();
+      };
+
+      figures.forEach((figure) => {
+        const image = figure.querySelector('img');
+        figure.tabIndex = 0;
+        figure.setAttribute('role', 'button');
+        figure.setAttribute('aria-label', image?.alt || 'Abrir imagen');
+        figure.addEventListener('click', () => open(figure));
+        figure.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          open(figure);
+        });
+      });
+      closeButton.addEventListener('click', close);
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) close();
+      });
+      dialog.addEventListener('close', () => {
+        document.body.classList.remove('has-gallery-lightbox');
+        viewer.removeAttribute('src');
       });
     })();
   </script>
