@@ -60,7 +60,7 @@
     .gallery-lightbox::backdrop { background:rgba(8,8,8,.96); }
     .gallery-lightbox img { display:block; max-width:100%; max-height:100%; object-fit:contain; }
     .gallery-lightbox-close-mobile { display:none; }
-    body.has-gallery-lightbox { overflow:hidden; }
+    html.has-gallery-lightbox, body.has-gallery-lightbox { overflow:hidden; overscroll-behavior:none; }
     .quote-heading { max-width:590px; padding-right:40px; }
     .quote-kicker { margin-bottom:16px; color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
     .quote-heading h2 { font:400 clamp(34px, 4vw, 52px)/.98 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.055em; }
@@ -1734,12 +1734,29 @@
       const close = () => {
         if (dialog.open) dialog.close();
       };
+      let savedScrollY = 0;
+      const lockPageScroll = () => {
+        savedScrollY = window.scrollY;
+        document.documentElement.classList.add('has-gallery-lightbox');
+        document.body.classList.add('has-gallery-lightbox');
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${savedScrollY}px`;
+        document.body.style.width = '100%';
+      };
+      const unlockPageScroll = () => {
+        document.documentElement.classList.remove('has-gallery-lightbox');
+        document.body.classList.remove('has-gallery-lightbox');
+        document.body.style.removeProperty('position');
+        document.body.style.removeProperty('top');
+        document.body.style.removeProperty('width');
+        window.scrollTo(0, savedScrollY);
+      };
       const open = (figure) => {
         const source = figure.querySelector('img');
         if (!source) return;
         viewer.src = source.currentSrc || source.src;
         viewer.alt = source.alt || '';
-        document.body.classList.add('has-gallery-lightbox');
+        lockPageScroll();
         dialog.showModal();
       };
 
@@ -1760,7 +1777,7 @@
         if (event.target === dialog) close();
       });
       dialog.addEventListener('close', () => {
-        document.body.classList.remove('has-gallery-lightbox');
+        unlockPageScroll();
         viewer.removeAttribute('src');
       });
     })();
