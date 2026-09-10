@@ -184,6 +184,7 @@
       .creator-bar__input::placeholder { color: rgba(242, 242, 242, .48); }
       .creator-bar__button { min-height: 42px; padding: 0 19px; border: 0; border-radius: 999px; color: #181818; background: #f2f2f2; font: inherit; font-weight: 500; cursor: pointer; }
       .creator-bar__button:disabled { cursor: wait; opacity: .7; }
+      .creator-turnstile { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); }
       .creator-status { position: fixed; left: 50%; bottom: 88px; z-index: 11; width: max-content; max-width: calc(100% - 32px); margin: 0; transform: translateX(-50%); color: rgba(242,242,242,.78); font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
       .creator-status.is-visible { opacity: 1; }
 
@@ -240,6 +241,7 @@
     <form class="creator-bar" id="creator-form">
       <input class="creator-bar__input" id="creator-prompt" maxlength="1200" required autocomplete="off" placeholder="Describir miniatura" aria-label="Describir miniatura">
       <button class="creator-bar__button" type="submit">Crear</button>
+      <div class="creator-turnstile" id="turnstile-widget"></div>
     </form>
     <p class="creator-status" id="creator-status" role="status"></p>
 
@@ -365,15 +367,14 @@
         const captcha = document.createElement('script');
         captcha.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
         captcha.async = true;
-        const captchaAnchor = document.createElement('div');
-        captchaAnchor.style.cssText = 'position:fixed;left:-9999px;top:-9999px;';
-        document.body.append(captchaAnchor);
         captcha.onload = () => {
-          turnstileWidgetId = window.turnstile.render(captchaAnchor, {
+          turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
           sitekey: config.turnstileSiteKey,
-          size: 'invisible',
+          execution: 'execute',
+          appearance: 'interaction-only',
+          theme: 'dark',
           callback: (token) => { turnstileToken = token; form.requestSubmit(); },
-          'error-callback': () => { button.disabled = false; showStatus('No se pudo verificar la solicitud.'); },
+          'error-callback': (code) => { button.disabled = false; showStatus(`No se pudo verificar la solicitud (${code}).`); },
           'expired-callback': () => { turnstileToken = ''; button.disabled = false; }
           });
         };
