@@ -22,6 +22,9 @@ jobs:
       - name: Generate indexable landing metrics
         run: node scripts/sync-metrics.js
 
+      - name: Generate Brucolastic thumbnail catalog
+        run: node scripts/generate-thumbnail-manifest.js
+
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:

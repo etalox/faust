@@ -25,6 +25,24 @@ python -m http.server 8000
 # abrir http://localhost:8000
 ```
 
+Nano Banana (miniaturas)
+-------------------------
+
+1. Abre el archivo `.env` de la raíz y pega la clave después de `GEMINI_API_KEY=`.
+2. Genera una miniatura nueva:
+
+```bash
+node scripts/nano-banana.js --prompt "Miniatura editorial de alto contraste para un video sobre ..." --out assets/Thumbnails/Thumbnail_nueva.png
+```
+
+3. Para modificar una existente, añade una referencia:
+
+```bash
+node scripts/nano-banana.js --input assets/Thumbnails/Thumbnail_78294.png --prompt "Conserva la composición y crea una variante con ..." --out assets/Thumbnails/Thumbnail_variante.png
+```
+
+El comando actualiza automáticamente la galería de Brucolastic.
+
 Despliegue
 ---------
 
@@ -51,4 +69,3 @@ Contacto
 --------
 
 Repo: https://github.com/etalox/faust
-

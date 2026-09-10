@@ -7,9 +7,9 @@
   <script>(() => { const v = document.getElementById('faust-viewport'), n = 'width=device-width, initial-scale=1, viewport-fit=cover', i = 'width=430, viewport-fit=cover'; let f = null, applying = false; const refresh = () => { applying = true; v.content = n; requestAnimationFrame(() => { v.content = window.innerWidth <= 430 ? i : n; requestAnimationFrame(() => { applying = false; }); }); }; const schedule = () => { if (applying || f !== null) return; f = requestAnimationFrame(() => { f = null; refresh(); }); }; refresh(); window.addEventListener('resize', schedule, { passive: true }); })();</script>
   <title>Política de Privacidad | Faust Partners™</title>
   <link rel="icon" type="image/png" href="./assets/Icons/tab_icon.png">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=mobile-surface-backdrop-20260825">
   <script src="./assets/translation.js" defer></script>
-  <script src="./assets/components.js?v=bottom-blur-layer-opacity-20260811" defer></script>
+  <script src="./assets/components.js?v=navbar-mobile-contact-20260825" defer></script>
 </head>
 <body>
   <div class="page-fade-overlay"></div>

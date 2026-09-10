@@ -70,6 +70,64 @@ class FaustApplyModal extends HTMLElement {
     let renderedProgressStep = null;
     let pendingBackHeight = null;
     let mobileBackTimeout = null;
+    let isApplyPageScrollLocked = false;
+    let lastApplyTouchY = null;
+
+    const pageScrollKeys = new Set([' ', 'Spacebar', 'PageUp', 'PageDown', 'Home', 'End', 'ArrowUp', 'ArrowDown']);
+    const dampedPageScrollFactor = 0.12;
+
+    function isApplyModalScrollTarget(target) {
+      return target instanceof Element && Boolean(target.closest('.apply-modal-body'));
+    }
+
+    function dampApplyBackgroundWheel(event) {
+      if (!isApplyPageScrollLocked || isApplyModalScrollTarget(event.target)) return;
+      event.preventDefault();
+      window.scrollBy({ top: event.deltaY * dampedPageScrollFactor, left: 0, behavior: 'auto' });
+    }
+
+    function startApplyBackgroundTouch(event) {
+      lastApplyTouchY = isApplyModalScrollTarget(event.target) ? null : (event.touches[0]?.clientY ?? null);
+    }
+
+    function dampApplyBackgroundTouch(event) {
+      if (!isApplyPageScrollLocked || isApplyModalScrollTarget(event.target) || lastApplyTouchY === null) return;
+      const currentY = event.touches[0]?.clientY;
+      if (currentY === undefined) return;
+      event.preventDefault();
+      window.scrollBy({ top: (lastApplyTouchY - currentY) * dampedPageScrollFactor, left: 0, behavior: 'auto' });
+      lastApplyTouchY = currentY;
+    }
+
+    function preventApplyBackgroundKeyboardScroll(event) {
+      if (!isApplyPageScrollLocked || !pageScrollKeys.has(event.key)) return;
+      const target = event.target;
+      if (target instanceof Element && target.closest('button, input, textarea, select, [contenteditable="true"]')) return;
+      if (isApplyModalScrollTarget(target)) return;
+      event.preventDefault();
+      const keyboardDistance = event.key === 'PageUp' || event.key === 'PageDown' || event.key === 'Home' || event.key === 'End' ? 280 : 72;
+      const direction = event.key === 'PageUp' || event.key === 'Home' || event.key === 'ArrowUp' ? -1 : 1;
+      window.scrollBy({ top: keyboardDistance * direction * dampedPageScrollFactor, left: 0, behavior: 'auto' });
+    }
+
+    function lockApplyPageScroll() {
+      if (isApplyPageScrollLocked) return;
+      isApplyPageScrollLocked = true;
+      document.addEventListener('wheel', dampApplyBackgroundWheel, { passive: false, capture: true });
+      document.addEventListener('touchstart', startApplyBackgroundTouch, { passive: true, capture: true });
+      document.addEventListener('touchmove', dampApplyBackgroundTouch, { passive: false, capture: true });
+      document.addEventListener('keydown', preventApplyBackgroundKeyboardScroll, { capture: true });
+    }
+
+    function unlockApplyPageScroll() {
+      if (!isApplyPageScrollLocked) return;
+      isApplyPageScrollLocked = false;
+      lastApplyTouchY = null;
+      document.removeEventListener('wheel', dampApplyBackgroundWheel, { capture: true });
+      document.removeEventListener('touchstart', startApplyBackgroundTouch, { capture: true });
+      document.removeEventListener('touchmove', dampApplyBackgroundTouch, { capture: true });
+      document.removeEventListener('keydown', preventApplyBackgroundKeyboardScroll, { capture: true });
+    }
 
     function triggerPendingBackHeightAdjustment() {
       if (pendingBackHeight === null) return;
@@ -98,6 +156,132 @@ class FaustApplyModal extends HTMLElement {
       date: ''
     };
     window.confirmedCompany = '';
+
+    let googleIdentityScriptPromise = null;
+
+    function getGoogleClientId() {
+      return String(window.FAUST_GOOGLE_CLIENT_ID || '').trim();
+    }
+
+    function loadGoogleIdentityScript() {
+      if (window.google?.accounts?.id) return Promise.resolve();
+      if (googleIdentityScriptPromise) return googleIdentityScriptPromise;
+
+      googleIdentityScriptPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+
+      return googleIdentityScriptPromise;
+    }
+
+    function getGoogleCompany(profile) {
+      const email = String(profile?.email || '').trim().toLowerCase();
+      const hostedDomain = String(profile?.hd || '').trim().toLowerCase();
+      const domain = hostedDomain || (email.includes('@') ? email.split('@').pop() : '');
+      const publicEmailDomains = new Set([
+        'gmail.com', 'googlemail.com', 'outlook.com', 'hotmail.com', 'live.com',
+        'yahoo.com', 'icloud.com', 'me.com', 'proton.me', 'protonmail.com'
+      ]);
+
+      if (!domain || publicEmailDomains.has(domain)) return '';
+
+      const companyStem = domain.split('.')[0]
+        .replace(/[-_]+/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase());
+      return companyStem || domain;
+    }
+
+    function applyGoogleProfile(profile) {
+      if (typeof profile.name === 'string' && profile.name.trim()) {
+        formData.name = profile.name.trim();
+        recordLeadQualifiedField('name', formData.name);
+      }
+      if (typeof profile.email === 'string' && profile.email.trim()) {
+        formData.contact = profile.email.trim();
+        recordLeadQualifiedField('contact', formData.contact);
+      }
+
+      // A corporate Google account supplies a useful company signal through
+      // its hosted domain. Personal accounts fall back to the account name,
+      // so this route never has to ask the visitor for the company twice.
+      formData.company = getGoogleCompany(profile) || formData.name || 'Registro con Google';
+      window.confirmedCompany = formData.company;
+      window.dispatchEvent(new CustomEvent('faust-company-confirmed', { detail: window.confirmedCompany }));
+    }
+
+    function renderGoogleIdentityButton(onProfileApplied) {
+      const button = document.getElementById('apply-google-signin');
+      const status = document.getElementById('apply-google-status');
+      const clientId = getGoogleClientId();
+      if (!button) return;
+
+      const setStatus = (message = '') => {
+        if (!status) return;
+        status.textContent = message;
+        status.hidden = !message;
+      };
+
+      if (!clientId) {
+        button.disabled = true;
+        setStatus('Google no está disponible en este momento.');
+        return;
+      }
+
+      button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
+
+      loadGoogleIdentityScript()
+        .then(() => {
+          button.disabled = false;
+          button.removeAttribute('aria-busy');
+
+          button.addEventListener('click', () => {
+            if (!window.google?.accounts?.oauth2) return;
+            button.disabled = true;
+            button.setAttribute('aria-busy', 'true');
+
+            const tokenClient = window.google.accounts.oauth2.initTokenClient({
+              client_id: clientId,
+              scope: 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+              callback: async response => {
+                try {
+                  if (!response?.access_token || response.error) throw new Error('No Google token received');
+                  const profileResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${response.access_token}` }
+                  });
+                  if (!profileResponse.ok) throw new Error('Could not retrieve Google profile');
+
+                  const profile = await profileResponse.json();
+                  applyGoogleProfile(profile);
+                  saveFormDraft();
+                  onProfileApplied?.(profile);
+                } catch (error) {
+                  button.disabled = false;
+                  button.removeAttribute('aria-busy');
+                  setStatus('No pudimos completar la identificación. Inténtalo de nuevo.');
+                }
+              },
+            error_callback: () => {
+              button.disabled = false;
+              button.removeAttribute('aria-busy');
+              setStatus();
+            }
+            });
+
+            tokenClient.requestAccessToken({ prompt: 'select_account' });
+          });
+        })
+        .catch(() => {
+          button.disabled = true;
+          button.removeAttribute('aria-busy');
+          setStatus('Google no está disponible en este momento.');
+        });
+    }
 
     // Persist only field identifiers (never their values). The form advances
     // through independent DOM steps, so counting inputs currently on screen is
@@ -671,13 +855,76 @@ class FaustApplyModal extends HTMLElement {
       }
     ];
 
+    let googleRegistrationPending = false;
+
+    const registrationChoiceStep = {
+      render: () => `
+        <div class="apply-entry">
+          <div class="apply-entry-lockup" aria-label="FaustPartners">
+            <svg aria-hidden="true" width="34" height="20" viewBox="0 0 34 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 6V10L34 4V0L0 6Z" fill="#0D3AFF"/>
+              <path d="M4.957 11.125C2.09 11.631 0 14.122 0 17.034V20H4V15.294L34 10V6L4.957 11.125Z" fill="#0D3AFF"/>
+            </svg>
+            <span>FaustPartners™</span>
+          </div>
+          <h2 class="apply-entry-title">Para comenzar, selecciona una forma de identificarte.</h2>
+          <div class="apply-entry-actions">
+            <button type="button" class="btn btn-secondary apply-entry-action apply-entry-manual" id="apply-entry-manual">Identificarme manualmente</button>
+            <button type="button" class="apply-entry-action apply-entry-google" id="apply-google-signin" aria-label="Identificarme con Google">
+              <svg aria-hidden="true" width="19" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.482h4.844a4.14 4.14 0 0 1-1.796 2.716v2.258h2.909c1.703-1.568 2.683-3.878 2.683-6.615Z" fill="#4285F4"/>
+                <path d="M9 18c2.43 0 4.468-.806 5.957-2.18l-2.91-2.258c-.806.54-1.838.859-3.047.859-2.344 0-4.328-1.584-5.037-3.71H.956v2.332A9 9 0 0 0 9 18Z" fill="#34A853"/>
+                <path d="M3.963 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.281-1.71V4.958H.956A9 9 0 0 0 0 9c0 1.452.347 2.827.956 4.042l3.007-2.332Z" fill="#FBBC05"/>
+                <path d="M9 3.58c1.321 0 2.508.454 3.442 1.346l2.581-2.58C13.463.89 11.425 0 9 0A9 9 0 0 0 .956 4.958L3.963 7.29C4.672 5.164 6.656 3.58 9 3.58Z" fill="#EA4335"/>
+              </svg>
+              <span>Identificarme con Google</span>
+            </button>
+          </div>
+          <p class="apply-google-note">Al identificarte con Google, sólo obtendremos acceso a tu nombre, dirección de correo electrónico y, cuando aplique, tu dominio institucional.</p>
+          <p class="apply-google-status" id="apply-google-status" role="status" hidden></p>
+        </div>
+      `,
+      validate: () => false,
+      bind: () => {
+        const manualButton = document.getElementById('apply-entry-manual');
+        manualButton?.addEventListener('click', () => {
+          currentStep = 1;
+          renderStep();
+        });
+
+        renderGoogleIdentityButton(() => {
+          // It skips the company prompt because the profile has already
+          // supplied the relevant company/name signal. The visitor still
+          // explicitly confirms before the application is sent.
+          googleRegistrationPending = true;
+          currentStep = applicationSteps.length - 1;
+          renderStep();
+        });
+      }
+    };
+
+    const googleConfirmationStep = {
+      render: () => `
+        <div class="apply-entry apply-google-confirmation">
+          <p class="apply-entry-copy">Hemos completado tu registro con Google.</p>
+          <p class="apply-google-note">Usaremos tu nombre y correo para contactarte. Si tu cuenta es institucional, también identificaremos a tu empresa mediante el dominio.</p>
+        </div>
+      `,
+      validate: data => Boolean(String(data.name || '').trim()) && validateContactMethod(data.contact),
+      bind: () => {}
+    };
+
     // Conservamos el selector de agenda (steps[3]) para la confirmación
-    // posterior al envío. El flujo de aplicación sólo pide lo indispensable.
-    const applicationSteps = [steps[1], steps[0], steps[2]];
+    // posterior al envío. El flujo manual sólo pide lo indispensable.
+    const applicationSteps = [registrationChoiceStep, steps[1], steps[0], steps[2]];
+
+    function getCurrentApplicationStep() {
+      return googleRegistrationPending ? googleConfirmationStep : applicationSteps[currentStep];
+    }
 
     function buildProgressBar() {
       progressBar.innerHTML = '';
-      const lineCount = applicationSteps.length + (hasQualifierProgress ? 1 : 0);
+      const lineCount = (applicationSteps.length - 1) + (hasQualifierProgress ? 1 : 0);
       for (let i = 0; i < lineCount; i++) {
         const line = document.createElement('div');
         line.className = 'apply-step-line';
@@ -690,14 +937,23 @@ class FaustApplyModal extends HTMLElement {
     function updateProgressBar() {
       const lines = progressBar.querySelectorAll('.apply-step-line');
       const shouldDelayActiveLine = renderedProgressStep !== null && currentStep !== renderedProgressStep;
+      if (googleRegistrationPending) {
+        lines.forEach(line => {
+          line.classList.remove('is-active', 'is-delayed');
+          line.classList.add('is-completed');
+        });
+        renderedProgressStep = currentStep;
+        return;
+      }
       lines.forEach((line, idx) => {
         line.classList.remove('is-active', 'is-completed', 'is-delayed');
         const stepIndex = idx - (hasQualifierProgress ? 1 : 0);
+        const workflowStep = currentStep - 1;
         if (hasQualifierProgress && idx === 0) {
           line.classList.add('is-completed');
-        } else if (stepIndex < currentStep) {
+        } else if (currentStep > 0 && stepIndex < workflowStep) {
           line.classList.add('is-completed');
-        } else if (stepIndex === currentStep) {
+        } else if (currentStep > 0 && stepIndex === workflowStep) {
           line.classList.add('is-active');
           if (shouldDelayActiveLine) line.classList.add('is-delayed');
         }
@@ -712,6 +968,8 @@ class FaustApplyModal extends HTMLElement {
         localStorage.setItem(DRAFT_KEY, JSON.stringify({
           formData: formData,
           currentStep: currentStep,
+          flow: 'registration-choice-v1',
+          googleRegistrationPending: googleRegistrationPending,
           qualifierProgress: hasQualifierProgress
         }));
       } catch (e) {
@@ -727,8 +985,13 @@ class FaustApplyModal extends HTMLElement {
           if (parsed && parsed.formData) {
             Object.assign(formData, parsed.formData);
             hasQualifierProgress = Boolean(parsed.qualifierProgress);
-            if (typeof parsed.currentStep === 'number' && parsed.currentStep >= 0 && parsed.currentStep < applicationSteps.length) {
-              currentStep = parsed.currentStep;
+            googleRegistrationPending = Boolean(parsed.googleRegistrationPending);
+            if (typeof parsed.currentStep === 'number') {
+              const isCurrentFlow = parsed.flow === 'registration-choice-v1';
+              const restoredStep = isCurrentFlow ? parsed.currentStep : parsed.currentStep + 1;
+              if (restoredStep >= 0 && restoredStep < applicationSteps.length) {
+                currentStep = restoredStep;
+              }
             }
             if (formData.company && currentStep > 1) {
               window.confirmedCompany = formData.company;
@@ -762,7 +1025,7 @@ class FaustApplyModal extends HTMLElement {
     }
 
     function checkValidation() {
-      const current = applicationSteps[currentStep];
+      const current = getCurrentApplicationStep();
       const isValid = current.validate(formData);
       if (isValid) {
         btnNext.removeAttribute('disabled');
@@ -770,7 +1033,9 @@ class FaustApplyModal extends HTMLElement {
         btnNext.setAttribute('disabled', 'true');
       }
 
-      if (currentStep === applicationSteps.length - 1) {
+      if (googleRegistrationPending) {
+        btnNext.textContent = 'Enviar solicitud';
+      } else if (currentStep === applicationSteps.length - 1) {
         btnNext.textContent = 'Enviar';
       } else {
         btnNext.textContent = 'Siguiente';
@@ -814,18 +1079,23 @@ class FaustApplyModal extends HTMLElement {
     function renderStep(isOpening, isBack) {
       const container = document.querySelector('.apply-modal-container');
       const prevHeight = (container && !isOpening) ? container.offsetHeight : 0;
-      const step = applicationSteps[currentStep];
+      const step = getCurrentApplicationStep();
+      const isRegistrationChoice = currentStep === 0 && !googleRegistrationPending;
+      document.querySelector('.apply-modal')?.classList.toggle('is-registration-choice', isRegistrationChoice);
 
       if (prevHeight === 0) {
         modalBody.innerHTML = step.render(formData);
         step.bind(formData, checkValidation);
         updateProgressBar();
 
-        if (currentStep === 0) {
+        if (isRegistrationChoice) {
           btnBack.style.display = 'none';
         } else {
           btnBack.style.display = 'block';
         }
+
+        modalFooter.style.display = isRegistrationChoice ? 'none' : 'flex';
+        progressBar.style.display = isRegistrationChoice ? 'none' : 'flex';
 
         // btnNext text content is handled by checkValidation()
 
@@ -834,7 +1104,7 @@ class FaustApplyModal extends HTMLElement {
           adjustModalHeight(prevHeight);
         }
         
-        const firstInput = modalBody.querySelector('input, select');
+        const firstInput = modalBody.querySelector('input, select, button') || (googleRegistrationPending ? btnNext : null);
         if (firstInput) {
           firstInput.focus();
         }
@@ -850,11 +1120,14 @@ class FaustApplyModal extends HTMLElement {
         step.bind(formData, checkValidation);
         updateProgressBar();
 
-        if (currentStep === 0) {
+        if (isRegistrationChoice) {
           btnBack.style.display = 'none';
         } else {
           btnBack.style.display = 'block';
         }
+
+        modalFooter.style.display = isRegistrationChoice ? 'none' : 'flex';
+        progressBar.style.display = isRegistrationChoice ? 'none' : 'flex';
 
         // btnNext text content is handled by checkValidation()
 
@@ -863,7 +1136,7 @@ class FaustApplyModal extends HTMLElement {
           adjustModalHeight(prevHeight);
         }
         
-        const firstInput = modalBody.querySelector('input, select');
+        const firstInput = modalBody.querySelector('input, select, button') || (googleRegistrationPending ? btnNext : null);
         if (firstInput) {
           firstInput.focus();
         }
@@ -874,12 +1147,17 @@ class FaustApplyModal extends HTMLElement {
     }
 
     function navigateNext() {
-      const current = applicationSteps[currentStep];
+      const current = getCurrentApplicationStep();
       if (!current.validate(formData)) return;
 
       cancelPendingBackHeightAdjustment();
 
-      if (currentStep === 0) {
+      if (googleRegistrationPending) {
+        submitForm();
+        return;
+      }
+
+      if (currentStep === 1) {
         window.confirmedCompany = formData.company || '';
         window.dispatchEvent(new CustomEvent('faust-company-confirmed', { detail: window.confirmedCompany }));
       }
@@ -893,6 +1171,13 @@ class FaustApplyModal extends HTMLElement {
     }
 
     function navigateBack() {
+      if (googleRegistrationPending) {
+        googleRegistrationPending = false;
+        currentStep = 0;
+        renderStep(false, true);
+        return;
+      }
+
       if (currentStep > 0) {
         const container = document.querySelector('.apply-modal-container');
         if (container && pendingBackHeight === null) {
@@ -1293,6 +1578,7 @@ class FaustApplyModal extends HTMLElement {
 
     function showSuccessScreen() {
       const container = document.querySelector('.apply-modal-container');
+      document.querySelector('.apply-modal')?.classList.remove('is-registration-choice');
       const prevHeight = container ? container.offsetHeight : 0;
 
       const renderContent = () => {
@@ -1555,23 +1841,25 @@ class FaustApplyModal extends HTMLElement {
 
       const renderContent = () => {
         msgModalBody.innerHTML = `
-          <div class="apply-message-form" style="display: flex; flex-direction: column; gap: 20px; padding: 10px 0; text-align: left;">
-            <p style="color: rgba(255, 255, 255, 0.6); font-size: 14px; line-height: 1.5; margin: 0; text-align: center;">Envíanos tu consulta y le responderemos a través del medio de contacto proporcionado.</p>
+          <div class="apply-message-form">
+            <p class="message-form-intro">Envíanos tu consulta y te responderemos a través del medio de contacto proporcionado.</p>
             
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <label for="message-input-name" style="font-size: 13px; font-weight: 600; color: #fff;">Nombre</label>
-              <input type="text" id="message-input-name" class="apply-input" placeholder="Nombre completo" style="width: 100%; box-sizing: border-box;" ${!nameIsEditable ? 'readonly' : ''} value="${savedName.replace(/"/g, '&quot;')}">
-            </div>
+            <div class="message-form-grid">
+              <div class="message-form-field">
+                <label for="message-input-name" class="message-form-label">Nombre</label>
+                <input type="text" id="message-input-name" class="apply-input" placeholder="Nombre completo" ${!nameIsEditable ? 'readonly' : ''} value="${savedName.replace(/"/g, '&quot;')}">
+              </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <label for="message-input-contact" style="font-size: 13px; font-weight: 600; color: #fff;">Medio de contacto</label>
-              <input type="text" id="message-input-contact" class="apply-input" placeholder="Correo, teléfono o sitio web" style="width: 100%; box-sizing: border-box;" ${!contactIsEditable ? 'readonly' : ''} value="${extractedContact.replace(/"/g, '&quot;')}">
-              <div id="message-contact-error" style="color: #ff4a4a; font-size: 13px; margin-top: 4px; display: none;">Por favor, ingrese un medio de contacto válido.</div>
-            </div>
+              <div class="message-form-field">
+                <label for="message-input-contact" class="message-form-label">Medio de contacto</label>
+                <input type="text" id="message-input-contact" class="apply-input" placeholder="Correo, teléfono o sitio web" ${!contactIsEditable ? 'readonly' : ''} value="${extractedContact.replace(/"/g, '&quot;')}">
+                <div id="message-contact-error" class="message-contact-error">Por favor, ingrese un medio de contacto válido.</div>
+              </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <label for="message-input-text" style="font-size: 13px; font-weight: 600; color: #fff;">Mensaje</label>
-              <textarea id="message-input-text" class="apply-input" rows="4" placeholder="Escribe tu mensaje aquí..." style="width: 100%; box-sizing: border-box; resize: none; height: 120px;">${savedMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+              <div class="message-form-field message-form-field--message">
+                <label for="message-input-text" class="message-form-label">Mensaje</label>
+                <textarea id="message-input-text" class="apply-input" rows="4" placeholder="Escribe tu mensaje aquí...">${savedMessage.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+              </div>
             </div>
           </div>
         `;
@@ -1774,6 +2062,7 @@ class FaustApplyModal extends HTMLElement {
       formData.contact = '';
       formData.date = '';
       currentStep = 0;
+      googleRegistrationPending = false;
       hasQualifierProgress = false;
       renderedProgressStep = null;
       clearFormDraft();
@@ -1787,7 +2076,7 @@ class FaustApplyModal extends HTMLElement {
       ensureIpDetected();
       const isOpening = !overlay.classList.contains('is-open');
       overlay.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
+      lockApplyPageScroll();
       
       const container = document.querySelector('.apply-modal-container');
       if (container) {
@@ -1812,7 +2101,7 @@ class FaustApplyModal extends HTMLElement {
 
     window.closeApplyModal = function(skipReload = false) {
       overlay.classList.remove('is-open');
-      document.body.style.overflow = '';
+      unlockApplyPageScroll();
       modalBody.style.opacity = '';
       cancelPendingBackHeightAdjustment();
       if (window._needsReloadOnClose && !skipReload) {

@@ -727,7 +727,11 @@
     basePath = src.substring(0, src.lastIndexOf('/') + 1);
   }
 
-  const componentCacheVersion = 'bottom-blur-layer-opacity-20260811';
+  // Public OAuth client ID for Google Identity Services. A client ID is public;
+  // never place a client secret in front-end code.
+  window.FAUST_GOOGLE_CLIENT_ID = window.FAUST_GOOGLE_CLIENT_ID || '915389366502-n3f5tik83bjbgk8ma3ht93oq0o658oi2.apps.googleusercontent.com';
+
+  const componentCacheVersion = 'navbar-mobile-contact-20260825';
   const withComponentVersion = (src) => `${src}?v=${componentCacheVersion}`;
   const componentScripts = [
     { src: withComponentVersion('Components/consent.js'), always: true },

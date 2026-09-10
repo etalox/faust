@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090a" />
+    <title>Brucolastic — Miniaturas</title>
+    <style>
+      @font-face {
+        font-family: "BDO Grotesk";
+        src: url("../../../assets/Fonts/BDOGrotesk-Regular.ttf") format("truetype");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "BDO Grotesk";
+        src: url("../../../assets/Fonts/BDOGrotesk-Medium.ttf") format("truetype");
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: dark;
+        background: #08090a;
+        color: #f2f2f2;
+        font-family: "BDO Grotesk", Arial, sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        padding-bottom: 108px;
+        background: #08090a;
+      }
+
+      .gallery {
+        width: min(100%, 1440px);
+        margin: 0 auto;
+        padding: clamp(72px, 10vw, 152px) clamp(24px, 7vw, 112px) clamp(96px, 12vw, 184px);
+      }
+
+      .gallery__intro {
+        margin: 0 0 clamp(48px, 7vw, 96px);
+        text-align: center;
+      }
+
+      .gallery__eyebrow {
+        margin: 0;
+        color: rgba(242, 242, 242, .48);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      .gallery__title {
+        margin: 14px 0 0;
+        font-size: clamp(32px, 4.2vw, 58px);
+        font-weight: 400;
+        letter-spacing: -.045em;
+        line-height: 1;
+      }
+
+      .gallery__latest {
+        width: min(100%, 820px);
+        margin: 0 auto clamp(64px, 9vw, 132px);
+      }
+
+      .gallery__grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: clamp(18px, 2.3vw, 34px);
+        align-items: start;
+      }
+
+      .gallery__grid > :only-child { grid-column: 2; }
+
+      .thumbnail {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        border-radius: 18px;
+        background: #111214;
+        color: inherit;
+        isolation: isolate;
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity .45s ease, transform .65s cubic-bezier(.16, 1, .3, 1);
+      }
+
+      .thumbnail--latest { border-radius: 22px; }
+      .thumbnail.is-loaded { opacity: 1; transform: translateY(0); }
+
+      .thumbnail__image {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        transform: scale(1.001);
+        transition: transform .75s cubic-bezier(.16, 1, .3, 1), filter .5s ease;
+      }
+
+      .thumbnail__veil {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 0, 0, .5);
+        opacity: 0;
+        transition: opacity .35s ease;
+      }
+
+      .thumbnail__action {
+        padding: 15px 22px;
+        border-radius: 999px;
+        color: #181818;
+        background: #f2f2f2;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1;
+        opacity: 0;
+        transform: translateY(9px) scale(.96);
+        transition: opacity .3s ease, transform .45s cubic-bezier(.16, 1, .3, 1);
+      }
+
+      .thumbnail:hover .thumbnail__image,
+      .thumbnail:focus-visible .thumbnail__image { transform: scale(1.045); filter: brightness(.78); }
+
+      .thumbnail:hover .thumbnail__veil,
+      .thumbnail:focus-visible .thumbnail__veil { opacity: 1; }
+
+      .thumbnail:hover .thumbnail__action,
+      .thumbnail:focus-visible .thumbnail__action { opacity: 1; transform: translateY(0) scale(1); }
+
+      .thumbnail:focus-visible {
+        outline: 2px solid #f2f2f2;
+        outline-offset: 5px;
+      }
+
+      .gallery__empty {
+        margin: 0;
+        color: rgba(242, 242, 242, .52);
+        text-align: center;
+      }
+
+      .creator-bar {
+        position: fixed;
+        right: 18px;
+        bottom: max(18px, env(safe-area-inset-bottom));
+        left: 18px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: min(640px, calc(100% - 36px));
+        margin: auto;
+        padding: 8px;
+        border: 1px solid rgba(255, 255, 255, .14);
+        border-radius: 999px;
+        background: rgba(20, 21, 24, .7);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, .32);
+        -webkit-backdrop-filter: blur(20px) saturate(1.25);
+        backdrop-filter: blur(20px) saturate(1.25);
+      }
+
+      .creator-bar__input {
+        min-width: 0;
+        flex: 1;
+        padding: 12px 16px;
+        border: 0;
+        outline: 0;
+        color: #f2f2f2;
+        background: transparent;
+        font: inherit;
+      }
+
+      .creator-bar__input::placeholder { color: rgba(242, 242, 242, .48); }
+      .creator-bar__button { min-height: 42px; padding: 0 19px; border: 0; border-radius: 999px; color: #181818; background: #f2f2f2; font: inherit; font-weight: 500; cursor: pointer; }
+      .creator-bar__button:disabled { cursor: wait; opacity: .7; }
+      .creator-status { position: fixed; left: 50%; bottom: 88px; z-index: 11; width: max-content; max-width: calc(100% - 32px); margin: 0; transform: translateX(-50%); color: rgba(242,242,242,.78); font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+      .creator-status.is-visible { opacity: 1; }
+
+      @media (max-width: 520px) {
+        .creator-bar { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); left: 12px; width: calc(100% - 24px); }
+        .creator-bar__input { padding-left: 12px; }
+      }
+
+
+      @media (max-width: 720px) {
+        .gallery__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .gallery__grid > :only-child { grid-column: auto; }
+        .thumbnail { border-radius: 13px; }
+        .thumbnail--latest { border-radius: 16px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="gallery">
+      <header class="gallery__intro">
+        <p class="gallery__eyebrow">Brucolastic</p>
+        <h1 class="gallery__title">Miniaturas</h1>
+      </header>
+      <section class="gallery__latest" id="latest" aria-label="Miniatura más reciente">
+        <!-- thumbnails:generated:latest:start -->
+        <a class="thumbnail thumbnail--latest is-loaded" href="/assets/Thumbnails/Thumbnail_78294.png" download="Thumbnail_78294.png" data-thumbnail-file="Thumbnail_78294.png" aria-label="Descargar Thumbnail_78294.png">
+          <img class="thumbnail__image" src="/assets/Thumbnails/Thumbnail_78294.png" alt="Thumbnail_78294.png" decoding="async">
+          <span class="thumbnail__veil" aria-hidden="true"><span class="thumbnail__action">Descargar</span></span>
+        </a>
+        <!-- thumbnails:generated:latest:end -->
+      </section>
+      <section class="gallery__grid" id="gallery-grid" aria-label="Galería de miniaturas">
+        <!-- thumbnails:generated:grid:start -->
+        <a class="thumbnail is-loaded" href="/assets/Thumbnails/Thumbnail_82194.png" download="Thumbnail_82194.png" data-thumbnail-file="Thumbnail_82194.png" aria-label="Descargar Thumbnail_82194.png">
+          <img class="thumbnail__image" src="/assets/Thumbnails/Thumbnail_82194.png" alt="Thumbnail_82194.png" decoding="async">
+          <span class="thumbnail__veil" aria-hidden="true"><span class="thumbnail__action">Descargar</span></span>
+        </a>
+        <a class="thumbnail is-loaded" href="/assets/Thumbnails/Thumbnail_82941.jpeg" download="Thumbnail_82941.jpeg" data-thumbnail-file="Thumbnail_82941.jpeg" aria-label="Descargar Thumbnail_82941.jpeg">
+          <img class="thumbnail__image" src="/assets/Thumbnails/Thumbnail_82941.jpeg" alt="Thumbnail_82941.jpeg" decoding="async">
+          <span class="thumbnail__veil" aria-hidden="true"><span class="thumbnail__action">Descargar</span></span>
+        </a>
+        <a class="thumbnail is-loaded" href="/assets/Thumbnails/Thumbnail(12)%20(7).png" download="Thumbnail(12) (7).png" data-thumbnail-file="Thumbnail(12) (7).png" aria-label="Descargar Thumbnail(12) (7).png">
+          <img class="thumbnail__image" src="/assets/Thumbnails/Thumbnail(12)%20(7).png" alt="Thumbnail(12) (7).png" decoding="async">
+          <span class="thumbnail__veil" aria-hidden="true"><span class="thumbnail__action">Descargar</span></span>
+        </a>
+        <!-- thumbnails:generated:grid:end -->
+      </section>
+    </main>
+
+    <form class="creator-bar" id="creator-form">
+      <input class="creator-bar__input" id="creator-prompt" maxlength="1200" required autocomplete="off" placeholder="Describir miniatura" aria-label="Describir miniatura">
+      <button class="creator-bar__button" type="submit">Crear</button>
+    </form>
+    <p class="creator-status" id="creator-status" role="status"></p>
+
+    <script src="/assets/nano-banana-config.js"></script>
+    <script src="/assets/Thumbnails/brucolastic-manifest.js"></script>
+    <script>
+      // Respaldo estático para producción. En local se descubre la carpeta en tiempo real.
+      const publishedThumbnails = Array.isArray(window.BRUCOLASTIC_THUMBNAILS)
+        ? window.BRUCOLASTIC_THUMBNAILS
+        : [];
+
+      const imagePath = "/assets/Thumbnails/";
+      const latest = document.querySelector("#latest");
+      const grid = document.querySelector("#gallery-grid");
+
+      function createThumbnail(item, isLatest) {
+        const link = document.createElement("a");
+        const filename = item.file.replace(/\.[^.]+$/, "");
+        link.className = `thumbnail${isLatest ? " thumbnail--latest" : ""}`;
+        link.href = `${imagePath}${encodeURIComponent(item.file)}`;
+        link.download = item.file;
+        link.dataset.thumbnailFile = item.file;
+        link.setAttribute("aria-label", `Descargar ${filename}`);
+
+        const image = document.createElement("img");
+        image.className = "thumbnail__image";
+        image.alt = "";
+        image.decoding = "async";
+
+        const veil = document.createElement("span");
+        veil.className = "thumbnail__veil";
+        veil.setAttribute("aria-hidden", "true");
+        veil.innerHTML = '<span class="thumbnail__action">Descargar</span>';
+
+        link.append(image, veil);
+
+        const preload = new Image();
+        preload.decoding = "async";
+        preload.onload = async () => {
+          try { await preload.decode(); } catch (_) { /* La carga ya terminó. */ }
+          image.src = preload.src;
+          image.alt = filename;
+          requestAnimationFrame(() => link.classList.add("is-loaded"));
+        };
+        preload.src = link.href;
+
+        return link;
+      }
+
+      async function discoverLocalThumbnails() {
+        try {
+          const directory = await fetch(imagePath, { cache: "no-store" });
+          if (!directory.ok) return [];
+
+          const document = new DOMParser().parseFromString(await directory.text(), "text/html");
+          const filenames = [...document.querySelectorAll("a[href]")]
+            .map((link) => decodeURIComponent(link.getAttribute("href").split("?")[0].split("/").pop()))
+            .filter((file) => /\.(avif|gif|jpe?g|png|webp)$/i.test(file));
+          const uniqueFilenames = [...new Set(filenames)];
+
+          return Promise.all(uniqueFilenames.map(async (file) => {
+            const response = await fetch(`${imagePath}${encodeURIComponent(file)}`, { method: "HEAD", cache: "no-store" });
+            return { file, modified: Date.parse(response.headers.get("last-modified")) || 0 };
+          }));
+        } catch (_) {
+          return [];
+        }
+      }
+
+      function renderGallery(thumbnails) {
+        latest.replaceChildren();
+        grid.replaceChildren();
+        const ordered = [...thumbnails].sort((a, b) => b.modified - a.modified);
+
+        if (!ordered.length) {
+          grid.innerHTML = '<p class="gallery__empty">No hay miniaturas disponibles.</p>';
+          return;
+        }
+
+        latest.append(createThumbnail(ordered[0], true));
+        ordered.slice(1).forEach((item) => grid.append(createThumbnail(item, false)));
+      }
+
+    </script>
+    <script>
+      (() => {
+        const config = window.NANO_BANANA_CONFIG || {};
+        const form = document.querySelector('#creator-form');
+        const prompt = document.querySelector('#creator-prompt');
+        const button = form.querySelector('button');
+        const status = document.querySelector('#creator-status');
+        let turnstileToken = '';
+
+        function showStatus(message) {
+          status.textContent = message;
+          status.classList.toggle('is-visible', Boolean(message));
+        }
+
+        if (!config.turnstileSiteKey) {
+          form.hidden = true;
+          return;
+        }
+
+        const captcha = document.createElement('script');
+        captcha.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+        captcha.async = true;
+        const captchaAnchor = document.createElement('div');
+        captchaAnchor.style.cssText = 'position:fixed;left:-9999px;top:-9999px;';
+        document.body.append(captchaAnchor);
+        captcha.onload = () => window.turnstile.render(captchaAnchor, {
+          sitekey: config.turnstileSiteKey,
+          size: 'invisible',
+          callback: (token) => { turnstileToken = token; form.requestSubmit(); },
+          'error-callback': () => showStatus('No se pudo verificar la solicitud.')
+        });
+        document.head.append(captcha);
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (!turnstileToken) { window.turnstile?.execute(); return; }
+          button.disabled = true;
+          showStatus('Creando…');
+          try {
+            const response = await fetch(config.apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: prompt.value, turnstileToken }) });
+            const payload = await response.json();
+            if (!response.ok) throw new Error(payload.error || 'No se pudo crear la miniatura.');
+            const link = document.createElement('a');
+            link.href = `data:${payload.mimeType};base64,${payload.image}`;
+            link.download = `Thumbnail_${Date.now()}.png`;
+            link.click();
+            showStatus('Lista.');
+          } catch (error) { showStatus(error.message); }
+          finally { turnstileToken = ''; button.disabled = false; window.turnstile?.reset(); }
+        });
+      })();
+    </script>
+  </body>
+</html>

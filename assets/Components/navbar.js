@@ -581,6 +581,7 @@ class FaustNavbar extends HTMLElement {
         .nav-links a + a::before { content: ''; position: absolute; left: -10px; top: 50%; width: 1px; height: 20px; background: rgba(255, 255, 255, 0.10); transform: translateY(-50%); pointer-events: none; }
         .nav.nav-contacto-hidden #nav-contacto { display: none; }
         .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
+        .nav-mobile-contact { display: none; }
 
         /* Global layout overrides to ensure sticky/fixed navbar behaves correctly on all pages */
         html {
@@ -595,6 +596,17 @@ class FaustNavbar extends HTMLElement {
 
         @media (max-width: 980px) {
           .nav { position: fixed; top: 0; left: 0; right: 0; }
+        }
+
+        @media (max-width: 430px) {
+          #nav-contacto,
+          .nav-apply-action {
+            display: none !important;
+          }
+
+          .nav-mobile-contact {
+            display: inline-flex;
+          }
         }
 
         .nav .logo-lockup {
@@ -899,7 +911,8 @@ class FaustNavbar extends HTMLElement {
           <div class="nav-right">
             <a id="nav-contacto" href="${startHref}#contacto" style="user-select: none !important;">Contacto</a>
             ${navLangHtml}
-            <a class="${aplicarBtnClass}" ${applyAction ? `data-action="${applyAction}"` : ''} href="${applyHref}">
+            <a class="btn btn-secondary btn-nav nav-mobile-contact" href="${startHref}#contacto">Contacto</a>
+            <a class="${aplicarBtnClass} nav-apply-action" ${applyAction ? `data-action="${applyAction}"` : ''} href="${applyHref}">
               ${applyLabel}
               <img class="${arrowClass}" src="${rootPrefix}assets/Icons/button_arrow.svg" alt="">
             </a>

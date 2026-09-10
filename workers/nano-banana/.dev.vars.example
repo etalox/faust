@@ -1,0 +1,4 @@
+# Solo para wrangler dev. Nunca subas un archivo .dev.vars con secretos.
+GEMINI_API_KEY=
+TURNSTILE_SECRET_KEY=
+VISITOR_COOKIE_SECRET=
