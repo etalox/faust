@@ -18,7 +18,7 @@
   "vars": {
     "ALLOWED_ORIGIN": "https://faust.mx",
     "TURNSTILE_HOSTNAME": "faust.mx",
-    "NANO_BANANA_MODEL": "gemini-2.5-flash-image",
+    "NANO_BANANA_MODEL": "gemini-3.1-flash-image",
     "REFERENCE_IMAGE_URL": "https://faust.mx/storage/thumbnails/Reference.png"
   }
 }
