@@ -78,6 +78,17 @@ function imagePart(data, mimeType) {
   return { inline_data: { mime_type: mimeType, data } };
 }
 
+function fromBase64(data) {
+  const binary = atob(data);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
+function imageExtension(mimeType) {
+  return ({ 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/png': 'png' })[mimeType] || 'png';
+}
+
 async function fixedReferencePart(env) {
   const response = await fetch(env.REFERENCE_IMAGE_URL);
   if (!response.ok) throw new Error('No se pudo cargar la referencia visual.');
@@ -107,7 +118,26 @@ export class RateLimiter {
 
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
     if (request.method === 'OPTIONS') return new Response(null, { headers: corsHeaders(request, env) });
+    if (request.method === 'GET' && url.pathname === '/api/nano-banana/images') {
+      const listing = await env.THUMBNAILS.list({ prefix: 'generated/', limit: 100 });
+      const images = listing.objects.sort((a, b) => b.key.localeCompare(a.key)).map((object) => ({
+        url: `${url.origin}/api/nano-banana/images/${object.key}`,
+        created: object.uploaded
+      }));
+      return json(request, env, { images });
+    }
+    if (request.method === 'GET' && url.pathname.startsWith('/api/nano-banana/images/')) {
+      const key = decodeURIComponent(url.pathname.slice('/api/nano-banana/images/'.length));
+      const object = await env.THUMBNAILS.get(key);
+      if (!object) return json(request, env, { error: 'Imagen no encontrada.' }, 404);
+      return new Response(object.body, { headers: {
+        'Content-Type': object.httpMetadata?.contentType || 'image/png',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+        ...corsHeaders(request, env)
+      } });
+    }
     if (request.method !== 'POST') return json(request, env, { error: 'Método no permitido.' }, 405);
     if (request.headers.get('Origin') !== env.ALLOWED_ORIGIN) return json(request, env, { error: 'Origen no autorizado.' }, 403);
 
@@ -151,7 +181,10 @@ export default {
         .find((candidate) => candidate.inlineData?.data || candidate.inline_data?.data);
       const image = part?.inlineData || part?.inline_data;
       if (!image?.data) return json(request, env, { error: 'La generación no devolvió una imagen.' }, 502);
-      const output = json(request, env, { image: image.data, mimeType: image.mimeType || image.mime_type || 'image/png' });
+      const mimeType = image.mimeType || image.mime_type || 'image/png';
+      const key = `generated/${Date.now()}-${crypto.randomUUID()}.${imageExtension(mimeType)}`;
+      await env.THUMBNAILS.put(key, fromBase64(image.data), { httpMetadata: { contentType: mimeType } });
+      const output = json(request, env, { url: `${url.origin}/api/nano-banana/images/${key}` });
       if (visitor.cookie) output.headers.set('Set-Cookie', visitor.cookie);
       return output;
     } catch (error) {
