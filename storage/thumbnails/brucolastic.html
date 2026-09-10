@@ -332,11 +332,30 @@
         const button = form.querySelector('button');
         const status = document.querySelector('#creator-status');
         let turnstileToken = '';
+        let turnstileWidgetId = null;
 
         function showStatus(message) {
           status.textContent = message;
           status.classList.toggle('is-visible', Boolean(message));
         }
+
+        function addGeneratedThumbnail(url) {
+          const card = document.createElement('a');
+          card.className = 'thumbnail thumbnail--latest';
+          card.href = url;
+          card.download = 'thumbnail.png';
+          card.setAttribute('aria-label', 'Descargar miniatura');
+          card.innerHTML = `<img class="thumbnail__image" src="${url}" alt="Miniatura generada"><span class="thumbnail__veil" aria-hidden="true"><span class="thumbnail__action">Descargar</span></span>`;
+          card.querySelector('img').addEventListener('load', () => card.classList.add('is-loaded'), { once: true });
+          const previous = document.querySelector('#latest').firstElementChild;
+          if (previous) document.querySelector('#gallery-grid').prepend(previous);
+          document.querySelector('#latest').replaceChildren(card);
+        }
+
+        fetch(`${config.apiUrl}/images`)
+          .then((response) => response.ok ? response.json() : { images: [] })
+          .then(({ images }) => { if (images?.[0]?.url) addGeneratedThumbnail(images[0].url); })
+          .catch(() => {});
 
         if (!config.turnstileSiteKey) {
           form.hidden = true;
@@ -349,30 +368,37 @@
         const captchaAnchor = document.createElement('div');
         captchaAnchor.style.cssText = 'position:fixed;left:-9999px;top:-9999px;';
         document.body.append(captchaAnchor);
-        captcha.onload = () => window.turnstile.render(captchaAnchor, {
+        captcha.onload = () => {
+          turnstileWidgetId = window.turnstile.render(captchaAnchor, {
           sitekey: config.turnstileSiteKey,
           size: 'invisible',
           callback: (token) => { turnstileToken = token; form.requestSubmit(); },
-          'error-callback': () => showStatus('No se pudo verificar la solicitud.')
-        });
+          'error-callback': () => { button.disabled = false; showStatus('No se pudo verificar la solicitud.'); },
+          'expired-callback': () => { turnstileToken = ''; button.disabled = false; }
+          });
+        };
+        captcha.onerror = () => showStatus('No se pudo cargar la verificación.');
         document.head.append(captcha);
 
         form.addEventListener('submit', async (event) => {
           event.preventDefault();
-          if (!turnstileToken) { window.turnstile?.execute(); return; }
+          if (!turnstileToken) {
+            if (turnstileWidgetId === null) { showStatus('Preparando verificación…'); return; }
+            button.disabled = true;
+            showStatus('Verificando…');
+            window.turnstile.execute(turnstileWidgetId);
+            return;
+          }
           button.disabled = true;
           showStatus('Creando…');
           try {
             const response = await fetch(config.apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: prompt.value, turnstileToken }) });
             const payload = await response.json();
             if (!response.ok) throw new Error(payload.error || 'No se pudo crear la miniatura.');
-            const link = document.createElement('a');
-            link.href = `data:${payload.mimeType};base64,${payload.image}`;
-            link.download = `Thumbnail_${Date.now()}.png`;
-            link.click();
+            addGeneratedThumbnail(payload.url);
             showStatus('Lista.');
           } catch (error) { showStatus(error.message); }
-          finally { turnstileToken = ''; button.disabled = false; window.turnstile?.reset(); }
+          finally { turnstileToken = ''; button.disabled = false; window.turnstile?.reset(turnstileWidgetId); }
         });
       })();
     </script>
