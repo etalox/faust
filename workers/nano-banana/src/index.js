@@ -165,13 +165,13 @@ export default {
         { text: `${THUMBNAIL_DIRECTION}\n\nCreative direction from the visitor: ${input.prompt.trim()}` },
         await fixedReferencePart(env)
       ];
-      const model = env.NANO_BANANA_MODEL || 'gemini-2.5-flash-image';
+      const model = env.NANO_BANANA_MODEL || 'gemini-3.1-flash-image';
       const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${model}:generateContent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
         body: JSON.stringify({
           contents: [{ parts }],
-          generationConfig: { responseFormat: { image: { aspectRatio: '16:9' } } }
+          generationConfig: { responseFormat: { image: { aspectRatio: 'ASPECT_RATIO_SIXTEEN_BY_NINE' } } }
         })
       });
       const result = await response.json();
