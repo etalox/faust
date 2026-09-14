@@ -25,10 +25,11 @@
     body[data-page="nosotros"] main > .location { display:grid; }
     body[data-page="nosotros"] main > .client-trust { display:block; }
     body[data-page="trabajos"] main > .facilities { display:block; }
+    body[data-page="equipos"] main > .equipment { display:block; }
     body[data-page]:not([data-page="inicio"]) main { padding-top:90px; padding-bottom:160px; }
     body[data-page="servicios"] .services { margin-top:0; }
     body[data-page="servicios"] .services::before { display:none; }
-    body[data-page="nosotros"] .company, body[data-page="trabajos"] .facilities { padding-top:90px; }
+    body[data-page="nosotros"] .company, body[data-page="trabajos"] .facilities, body[data-page="equipos"] .equipment { padding-top:90px; }
     html.fatisa-loading, html.fatisa-loading body { overflow:hidden; }
     .fatisa-loader { position:fixed; z-index:100; inset:0; display:grid; place-items:center; overflow:hidden; background:#080808; opacity:1; transition:opacity .5s cubic-bezier(.16,1,.3,1), visibility 0s linear .5s; }
     .fatisa-loader[hidden] { display:none !important; }
@@ -261,6 +262,22 @@
     .client-logo { display:grid; flex:0 1 clamp(108px, 10.5vw, 154px); height:52px; place-items:center; }
     .client-logo img { display:block; width:100%; height:48px; object-fit:contain; opacity:0; transition:opacity .35s ease; }
     .client-logo.is-loaded img { opacity:1; }
+
+    .equipment { padding-top:150px; }
+    .equipment-header { display:grid; grid-template-columns:minmax(0, 1fr) minmax(320px, .72fr); gap:80px; align-items:end; padding-bottom:64px; border-bottom:1px solid rgba(24,24,24,.2); }
+    .equipment-header h1 { max-width:780px; font:400 clamp(52px, 5.3vw, 84px)/.9 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.065em; }
+    .equipment-header p { max-width:440px; color:rgba(24,24,24,.68); font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
+    .equipment-groups { display:flex; flex-direction:column; }
+    .equipment-group { display:grid; grid-template-columns:minmax(210px, .34fr) minmax(0, 1fr); gap:56px; padding:54px 0 62px; border-bottom:1px solid rgba(24,24,24,.18); }
+    .equipment-group-head { display:flex; flex-direction:column; justify-content:space-between; gap:20px; }
+    .equipment-group-index { color:var(--red); font:500 13px/1 "BDO Grotesk", Arial, sans-serif; }
+    .equipment-group h2 { max-width:250px; font:400 32px/.96 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.05em; }
+    .equipment-list { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:1px; background:rgba(24,24,24,.16); border:1px solid rgba(24,24,24,.16); }
+    .equipment-card { min-height:158px; padding:22px 24px 24px; background:var(--paper); }
+    .equipment-card-number { display:block; margin-bottom:30px; color:var(--red); font:500 12px/1 "BDO Grotesk", Arial, sans-serif; }
+    .equipment-card h3 { max-width:280px; font:400 21px/1.02 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.04em; }
+    .equipment-card p { margin-top:20px; color:rgba(24,24,24,.64); font:400 13px/18px "BDO Grotesk", Arial, sans-serif; }
+    .equipment-card strong { color:var(--ink); font-weight:500; }
     .company-principles li + li { padding-left:28px; border-left:1px solid rgba(240,240,240,.24); }
     .company-principles span { display:block; margin-bottom:13px; color:var(--red); font:500 12px/1 "BDO Grotesk", Arial, sans-serif; }
     .company-principles p { max-width:280px; margin:0; font:400 18px/22px "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:normal; }
@@ -452,6 +469,14 @@
       .service-system-offerings li { padding:9px 0; font-size:12px; }
       .service-system-detail p { margin-bottom:18px; font-size:12px; line-height:18px; }
       .solutions, .company { padding-top:140px; }
+      .equipment { padding-top:120px; }
+      .equipment-header { gap:56px; padding-bottom:52px; }
+      .equipment-header h1 { font-size:clamp(46px, 4.5vw, 68px); }
+      .equipment-group { grid-template-columns:minmax(180px, .31fr) minmax(0, 1fr); gap:42px; padding-block:46px 52px; }
+      .equipment-group h2 { font-size:28px; }
+      .equipment-card { min-height:142px; padding:20px; }
+      .equipment-card-number { margin-bottom:26px; }
+      .equipment-card h3 { font-size:19px; }
       .workflow { padding:38px 42px 0; }
       .solutions-header, .workflow-header { grid-template-columns:minmax(0, 1fr) 400px; }
       .solution-card { min-height:238px; padding:24px; }
@@ -585,6 +610,12 @@
       .service-system-visual { right:48px; }
       .service-system-name { font-size:29px; }
       .solutions, .company { padding-top:130px; }
+      .equipment { padding-top:110px; }
+      .equipment-header { grid-template-columns:1fr; gap:26px; padding-bottom:46px; }
+      .equipment-header h1 { max-width:720px; font-size:54px; }
+      .equipment-group { grid-template-columns:170px minmax(0, 1fr); gap:30px; padding-block:42px; }
+      .equipment-group h2 { font-size:26px; }
+      .equipment-card { min-height:138px; padding:18px; }
       .workflow { margin-top:130px; padding:34px 36px 0; }
       .solutions-header, .workflow-header { grid-template-columns:1fr; gap:24px; }
       .solutions-grid { grid-template-columns:1fr; column-gap:0; row-gap:var(--solutions-gap); }
@@ -615,6 +646,7 @@
       html, body, main { width:100%; max-width:100%; overflow-x:clip; }
       body[data-page]:not([data-page="inicio"]) main { padding-top:70px; padding-bottom:calc(120px + env(safe-area-inset-bottom)); }
       body[data-page="nosotros"] .company, body[data-page="trabajos"] .facilities { padding-top:70px; }
+      body[data-page="equipos"] .equipment { padding-top:70px; }
       .site-header { height:70px; }
       .header-inner { width:100%; grid-template-columns:1fr auto; padding-inline:20px; }
       .site-header.is-scrolled .header-inner { width:100%; padding-inline:20px; }
@@ -681,6 +713,18 @@
       .services-kicker, .section-kicker { margin-bottom:16px; font-size:14px; }
       .solutions-header .section-kicker, .workflow-header .section-kicker { margin-bottom:16px; font-size:14px; }
       .solutions, .company { padding-top:100px; }
+      .equipment { padding-top:70px; }
+      .equipment-header { grid-template-columns:1fr; gap:20px; padding-bottom:38px; }
+      .equipment-header h1 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:40px; font-weight:500; line-height:42px; letter-spacing:-1.6px; text-transform:uppercase; }
+      .equipment-header p { max-width:100%; font-size:14px; line-height:20px; }
+      .equipment-group { display:block; padding:38px 0 42px; }
+      .equipment-group-head { display:flex; flex-direction:row; align-items:baseline; justify-content:space-between; margin-bottom:22px; }
+      .equipment-group h2 { max-width:none; font-family:"BDO Grotesk", Arial, sans-serif; font-size:22px; font-weight:500; line-height:25px; letter-spacing:-.88px; text-transform:uppercase; }
+      .equipment-list { grid-template-columns:1fr; }
+      .equipment-card { min-height:0; padding:18px 16px 20px; }
+      .equipment-card-number { margin-bottom:22px; }
+      .equipment-card h3 { max-width:none; font-size:21px; }
+      .equipment-card p { margin-top:16px; font-size:13px; line-height:19px; }
       body[data-page="nosotros"] main > .location { display:block; padding-top:100px; }
       .location-copy h2 { max-width:100%; font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
       .location-copy address { margin-top:26px; font-size:16px; line-height:24px; }
@@ -770,13 +814,13 @@
     <div class="header-inner">
       <a class="brand" href="index.html" aria-label="Fatisa, inicio"><img src="assets/vector-10.svg" alt=""><span>Fatisa<sup>®</sup></span></a>
       <nav class="site-nav" aria-label="Navegación principal">
-        <a href="index.html" data-page-link="inicio">Inicio</a><a href="servicios.html" data-page-link="servicios">Servicios</a><a href="trabajos-realizados.html" data-page-link="trabajos">Trabajos Realizados</a><a href="nosotros.html" data-page-link="nosotros">Nosotros</a>
+        <a href="index.html" data-page-link="inicio">Inicio</a><a href="servicios.html" data-page-link="servicios">Servicios</a><a href="equipos.html" data-page-link="equipos">Equipos</a><a href="trabajos-realizados.html" data-page-link="trabajos">Trabajos Realizados</a><a href="nosotros.html" data-page-link="nosotros">Nosotros</a>
       </nav>
       <a class="button button--red menu-toggle" href="#contacto" data-quote-trigger aria-label="Abrir menú" aria-controls="mobile-navigation" aria-expanded="false"><span>Contacto</span><svg class="menu-icon" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="50" height="50" fill="#FF0000"/><path d="M13.75 29.3749H36.25V26.8753H13.75V29.3749ZM13.75 20.6251V23.1253H36.25V20.6251H13.75Z" fill="white"/><path d="M51 -1H42V0L50 8H51V-1Z" fill="#F0F0F0"/></svg></a>
     </div>
   </header>
   <nav class="mobile-nav" id="mobile-navigation" aria-label="Navegación móvil" aria-hidden="true">
-    <a href="index.html" data-page-link="inicio">Inicio</a><a href="servicios.html" data-page-link="servicios">Servicios</a><a href="trabajos-realizados.html" data-page-link="trabajos">Trabajos Realizados</a><a href="nosotros.html" data-page-link="nosotros">Nosotros</a><a href="#contacto" data-quote-trigger>Contacto</a>
+    <a href="index.html" data-page-link="inicio">Inicio</a><a href="servicios.html" data-page-link="servicios">Servicios</a><a href="equipos.html" data-page-link="equipos">Equipos</a><a href="trabajos-realizados.html" data-page-link="trabajos">Trabajos Realizados</a><a href="nosotros.html" data-page-link="nosotros">Nosotros</a><a href="#contacto" data-quote-trigger>Contacto</a>
   </nav>
 
   <dialog class="quote-dialog" id="quote-dialog" aria-labelledby="quote-title">
@@ -1149,6 +1193,63 @@
       <div class="location-map">
         <div class="location-map-canvas" id="fatisa-location-map" aria-label="Mapa de ubicación de FATISA en Monterrey"></div>
         <a class="location-map-link" href="https://maps.app.goo.gl/4Rq86PVarDpfGKye6" target="_blank" rel="noopener" data-en="Open in Google Maps">Abrir en Google Maps</a>
+      </div>
+    </section>
+
+    <section class="equipment page-wrap" id="equipos">
+      <header class="equipment-header">
+        <div><p class="section-kicker">Infraestructura</p><h1>Equipos y capacidades</h1></div>
+        <p>Maquinaria CNC, equipos de medición y procesos de acabado para resolver desde componentes de precisión hasta piezas y herramentales de gran formato.</p>
+      </header>
+      <div class="equipment-groups">
+        <section class="equipment-group">
+          <header class="equipment-group-head"><span class="equipment-group-index">01</span><h2>Torneado</h2></header>
+          <div class="equipment-list">
+            <article class="equipment-card"><span class="equipment-card-number">01</span><h3>Torno CNC Haas SL20</h3><p><strong>Ejes:</strong> X / Z<br><strong>Capacidad:</strong> 10&quot; Ø × 20&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">02</span><h3>Torno CNC Hwacheon Hi-Eco 31A</h3><p><strong>Ejes:</strong> X / Z<br><strong>Capacidad:</strong> 15&quot; Ø × 23&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">03</span><h3>Torno CNC Willis 32120ENC</h3><p><strong>Uso:</strong> torneado de gran formato<br><strong>Ejes:</strong> X / Z<br><strong>Capacidad:</strong> 32&quot; Ø × 3 m</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">04</span><h3>Torno convencional Precise con lector digital</h3><p><strong>Ejes:</strong> X / Z<br><strong>Capacidad:</strong> 14&quot; × 40&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">05</span><h3>Torno convencional Precise CQ6280B/2000</h3><p><strong>Ejes:</strong> X / Z<br><strong>Capacidad:</strong> 31.5&quot; × 80&quot;</p></article>
+          </div>
+        </section>
+
+        <section class="equipment-group">
+          <header class="equipment-group-head"><span class="equipment-group-index">02</span><h2>Fresado y centros de maquinado</h2></header>
+          <div class="equipment-list">
+            <article class="equipment-card"><span class="equipment-card-number">06</span><h3>Centro de maquinado vertical Okuma Cadet-Mate</h3><p><strong>Ejes:</strong> X / Y / Z<br><strong>Capacidad:</strong> 40&quot; × 20&quot; × 20&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">07</span><h3>Centro de maquinado vertical Haas VF3</h3><p><strong>Ejes:</strong> X / Y / Z<br><strong>Capacidad:</strong> 40&quot; × 20&quot; × 20&quot; · 4.º eje</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">08</span><h3>Centro de maquinado vertical Fadal VMC 8030</h3><p><strong>Ejes:</strong> X / Y / Z<br><strong>Capacidad:</strong> 80&quot; × 30&quot; × 30&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">09</span><h3>Centro de maquinado vertical Haas VF8</h3><p><strong>Ejes:</strong> X / Y / Z<br><strong>Capacidad:</strong> 64&quot; × 40&quot; × 30&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">10</span><h3>Centro de maquinado vertical Haas VF7</h3><p><strong>Ejes:</strong> X / Y / Z<br><strong>Capacidad:</strong> 84&quot; × 32&quot; × 30&quot; · 4.º eje</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">11</span><h3>Centro de maquinado tipo puente AWEA LP-3021</h3><p><strong>Ejes:</strong> X / Y / Z<br><strong>Capacidad:</strong> 3 m × 2 m × 0.80 m<br><strong>Carga de mesa:</strong> hasta 10,000 kg</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">12</span><h3>Centro de maquinado puente Mighty Viper Pro 2150AG CNC</h3><p><strong>Ejes:</strong> X / Y / Z<br><strong>Capacidad:</strong> 81&quot; × 61&quot; × 31&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">13</span><h3>Fresadora convencional Precise con lector digital</h3><p><strong>Capacidad:</strong> 10&quot; × 54&quot;</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">14</span><h3>Mandriladora horizontal CNC 4.3 Ikegai NB-11T</h3><p><strong>Ejes:</strong> X / Y / Z + W (husillo)<br><strong>Capacidad:</strong> 47.2&quot; × 39.3&quot; × 13.7&quot;</p></article>
+          </div>
+        </section>
+
+        <section class="equipment-group">
+          <header class="equipment-group-head"><span class="equipment-group-index">03</span><h2>Rectificado y acabado</h2></header>
+          <div class="equipment-list">
+            <article class="equipment-card"><span class="equipment-card-number">15</span><h3>Rectificadora plana Grand Rapids</h3><p><strong>Capacidad:</strong> 14&quot; × 48&quot; RI</p></article>
+          </div>
+        </section>
+
+        <section class="equipment-group">
+          <header class="equipment-group-head"><span class="equipment-group-index">04</span><h2>Medición e ingeniería inversa</h2></header>
+          <div class="equipment-list">
+            <article class="equipment-card"><span class="equipment-card-number">16</span><h3>Trimos V5</h3><p><strong>Capacidad:</strong> reportes dimensionales</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">17</span><h3>Escáner de mano SIMSCAN 42</h3><p><strong>Capacidad:</strong> hasta 3 metros</p></article>
+          </div>
+        </section>
+
+        <section class="equipment-group">
+          <header class="equipment-group-head"><span class="equipment-group-index">05</span><h2>Soldadura</h2></header>
+          <div class="equipment-list">
+            <article class="equipment-card"><span class="equipment-card-number">18</span><h3>Equipo de soldadura de precisión TIG 375</h3><p><strong>Capacidad:</strong> 200 AC/DC</p></article>
+            <article class="equipment-card"><span class="equipment-card-number">19</span><h3>Soldadora Lincoln Electric Aspect 375</h3></article>
+          </div>
+        </section>
       </div>
     </section>
 
