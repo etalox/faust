@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fatisa-static-v1';
+const CACHE_NAME = 'fatisa-static-v2';
 const CACHEABLE_DESTINATIONS = new Set(['font', 'image', 'script', 'style']);
 
 self.addEventListener('install', (event) => {
