@@ -1,14 +1,18 @@
 <!doctype html>
-<html lang="es-MX">
+<html lang="es-MX" translate="no" class="notranslate">
 <head>
   <meta charset="utf-8">
+  <meta name="google" content="notranslate">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="preload" href="../assets/Fonts/BDOGrotesk-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="../assets/Fonts/BDOGrotesk-Medium.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="../assets/Fonts/PPNeueMontreal-Regular.otf" as="font" type="font/otf" crossorigin>
   <title>Trabajos Realizados | Fatisa</title>
   <style>html,body{margin:0;background:#f0f0f0}</style>
 </head>
 <body>
   <script>
-    fetch('index.html', { cache:'no-cache' }).then((response) => response.text()).then((source) => {
+    fetch('index.html', { cache:'force-cache' }).then((response) => response.text()).then((source) => {
       document.open();
       document.write(source.replace(/<body\b[^>]*>/i, '<body data-page="trabajos">'));
       document.close();

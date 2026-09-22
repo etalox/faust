@@ -1,10 +1,14 @@
 <!doctype html>
-<html lang="es-MX">
+<html lang="es-MX" translate="no" class="notranslate">
 <head>
   <meta charset="utf-8">
+  <meta name="google" content="notranslate">
   <meta id="fatisa-viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <script>(() => { const viewport = document.getElementById('fatisa-viewport'), nativeViewport = 'width=device-width, initial-scale=1, viewport-fit=cover', iphoneViewport = 'width=390, viewport-fit=cover'; let frame = null, applying = false; const refresh = () => { applying = true; viewport.content = nativeViewport; requestAnimationFrame(() => { viewport.content = window.innerWidth <= 390 ? iphoneViewport : nativeViewport; requestAnimationFrame(() => { applying = false; }); }); }; const schedule = () => { if (applying || frame !== null) return; frame = requestAnimationFrame(() => { frame = null; refresh(); }); }; refresh(); window.addEventListener('resize', schedule, { passive:true }); })();</script>
   <link rel="icon" type="image/png" href="assets/tab_icon.png">
+  <link rel="preload" href="../assets/Fonts/BDOGrotesk-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="../assets/Fonts/BDOGrotesk-Medium.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="../assets/Fonts/PPNeueMontreal-Regular.otf" as="font" type="font/otf" crossorigin>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
   <script>/* Loader temporalmente desactivado. */</script>
   <title>Fatisa</title>
@@ -1346,10 +1350,11 @@
 
     <script>
       (() => {
-        const track = document.querySelector('body[data-page="trabajos"] .gallery-track');
+        const track = document.querySelector('.facilities .gallery-track');
         if (!track) return;
 
         const files = Array.from({ length: 25 }, (_, index) => `${String(index + 1).padStart(2, '0')}.jpeg`);
+        const dimensions = [[1280,960],[1280,960],[1280,960],[1600,900],[960,1280],[1448,1086],[1280,960],[960,1280],[960,1280],[1280,720],[899,850],[1179,1491],[1280,960],[1448,1086],[1280,960],[960,1280],[1280,960],[960,1280],[899,1599],[960,1280],[1280,720],[1280,705],[1280,720],[1584,672],[1599,899]];
         const figures = files.map((file, index) => {
           const figure = document.createElement('figure');
           figure.className = 'facility';
@@ -1358,6 +1363,8 @@
           const image = document.createElement('img');
           image.src = `assets/trabajos/${file}`;
           image.alt = `Trabajo realizado FATISA ${String(index + 1).padStart(2, '0')}`;
+          image.width = dimensions[index][0];
+          image.height = dimensions[index][1];
           image.loading = 'lazy';
           image.decoding = 'async';
 
@@ -1394,7 +1401,7 @@
 
     <script>
       (() => {
-        const track = document.querySelector('body[data-page="trabajos"] .gallery-track');
+        const track = document.querySelector('.facilities .gallery-track');
         if (!track) return;
         const figures = [...track.querySelectorAll('.facility')];
         const reveal = (figure, delay = 0) => {
@@ -1448,7 +1455,7 @@
   <script>
     (() => {
       const loader = document.querySelector('[data-fatisa-loader]');
-      if (!loader) return;
+      if (!loader || loader.hidden) return;
 
       const waitForImages = Promise.all([...document.images].map((image) => {
         if (image.complete) return Promise.resolve();
@@ -1478,7 +1485,7 @@
       const languageSwitch = document.querySelector('.language-switch');
       if (!header) return;
       const compactHeaderScrollY = 24;
-      const page = document.body.dataset.page || 'inicio';
+      let page = document.body.dataset.page || 'inicio';
       const links = [...document.querySelectorAll('.site-nav a[data-page-link]')];
       const updateHeader = () => {
         const isCompact = window.scrollY > compactHeaderScrollY;
@@ -1492,8 +1499,20 @@
         else link.removeAttribute('aria-current');
       });
       setCurrent();
-      const titles = { inicio:'Fatisa', servicios:'Servicios | Fatisa', nosotros:'Nosotros | Fatisa', trabajos:'Trabajos Realizados | Fatisa' };
-      if (titles[page]) document.title = titles[page];
+      const titles = { inicio:'Fatisa', servicios:'Servicios | Fatisa', equipos:'Equipos | Fatisa', nosotros:'Nosotros | Fatisa', trabajos:'Trabajos Realizados | Fatisa' };
+      const englishTitles = { inicio:'FATISA', servicios:'Services | FATISA', equipos:'Equipment | FATISA', nosotros:'About Us | FATISA', trabajos:'Completed Work | FATISA' };
+      const updateTitle = () => {
+        const activeTitles = document.documentElement.lang === 'en' ? englishTitles : titles;
+        if (activeTitles[page]) document.title = activeTitles[page];
+      };
+      updateTitle();
+      window.fatisaSetPage = (nextPage) => {
+        page = nextPage;
+        document.body.dataset.page = nextPage;
+        setCurrent();
+        updateTitle();
+        updateHeader();
+      };
       updateHeader();
       window.addEventListener('scroll', updateHeader, { passive:true });
       window.addEventListener('resize', updateHeader);
@@ -2026,7 +2045,7 @@
         element.dataset.es = element.textContent;
       });
 
-      const languageMotionSelector = [
+      const languageLayoutSelector = [
         '.site-header .brand', '.site-nav a', '.site-header .menu-toggle',
         '.hero-copy > .brand', '.hero h1', '.hero .intro', '.hero-page-links a',
         '.services-head', '.service-system', '.solutions-header', '.solution-card',
@@ -2038,32 +2057,52 @@
         '.quote-consent', '.quote-actions'
       ].join(',');
 
+      const languageTextSelector = [
+        '.site-nav a', '.menu-toggle > span', '.hero h1', '.hero .intro',
+        '.hero-page-link-label', '.hero-page-link-summary', '.services-kicker',
+        '.section-title', '.services-intro', '.service-system-name',
+        '.service-system-summary', '.service-system-offerings li',
+        '.service-system-detail p', '.service-system-detail .text-link',
+        '.solutions-header p', '.solution-card h3', '.solution-card p',
+        '.workflow-header p', '.workflow-step h3', '.workflow-step p',
+        '.workflow-note p', '.shipping-copy h2', '.shipping-copy p',
+        '.collaboration-cta', '.collaboration-card-label', '.route-labels',
+        '.collaboration-points li', '.company-statement h2', '.company-context p',
+        '.company-principles li > span', '.company-principles li > p',
+        '.client-trust-copy h2', '.location-copy .section-kicker', '.location-copy h2',
+        '.location-copy address', '.equipment-header .section-kicker',
+        '.equipment-header h1', '.equipment-header p', '.equipment-group-head h2',
+        '.equipment-card h3', '.equipment-card p', '.facilities > .section-kicker',
+        '.facilities > .section-title', '.cta h2', '.cta p', '.site-footer-label',
+        '.quote-heading p', '.quote-heading h2', '.quote-field label',
+        '.quote-file-note', '.quote-consent span'
+      ].join(',');
+
+      const hasTranslatableText = (element) => {
+        if (element.matches('[data-en]') || element.querySelector('[data-en]')) return true;
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          const text = node.nodeValue.trim();
+          if (!text) continue;
+          if (document.documentElement.lang !== 'en' && english[text]) return true;
+          const originalSpanish = spanishTextNodes.get(node);
+          if (document.documentElement.lang === 'en' && originalSpanish && originalSpanish !== node.nodeValue) return true;
+        }
+        return false;
+      };
+
       const interpolateLanguageLayout = (update) => {
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const targets = [...document.querySelectorAll(languageMotionSelector)].filter((element) => element.getClientRects().length);
-        const before = new Map(targets.map((element) => [element, {
-          rect:element.getBoundingClientRect(),
-          text:element.textContent
-        }]));
+        const layoutTargets = [...document.querySelectorAll(languageLayoutSelector)].filter((element) => element.getClientRects().length);
+        const textTargets = [...document.querySelectorAll(languageTextSelector)].filter((element) => element.getClientRects().length && hasTranslatableText(element));
+        const before = new Map(layoutTargets.map((element) => [element, element.getBoundingClientRect()]));
+        const textBefore = new Map(textTargets.map((element) => [element, element.textContent]));
         if (reducedMotion) {
           update();
           return;
         }
 
-        const hasTranslatableText = (element) => {
-          if (element.matches('[data-en]') || element.querySelector('[data-en]')) return true;
-          const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-          while (walker.nextNode()) {
-            const node = walker.currentNode;
-            const text = node.nodeValue.trim();
-            if (!text) continue;
-            if (document.documentElement.lang !== 'en' && english[text]) return true;
-            const originalSpanish = spanishTextNodes.get(node);
-            if (document.documentElement.lang === 'en' && originalSpanish && originalSpanish !== node.nodeValue) return true;
-          }
-          return false;
-        };
-        const textTargets = targets.filter(hasTranslatableText);
         const exitAnimations = textTargets.map((element) => element.animate([
           { opacity:1 },
           { opacity:.6 }
@@ -2075,27 +2114,31 @@
           update();
 
           requestAnimationFrame(() => {
-            targets.forEach((element) => {
-              const previous = before.get(element);
-              const first = previous?.rect;
+            layoutTargets.forEach((element) => {
+              const first = before.get(element);
               const last = element.getBoundingClientRect();
               if (!first || !last.width || !last.height) return;
               const translateX = first.left - last.left;
               const translateY = first.top - last.top;
               const scaleX = first.width / last.width;
               const scaleY = first.height / last.height;
-              const textChanged = previous.text !== element.textContent;
               const layoutChanged = Math.abs(translateX) >= .5 || Math.abs(translateY) >= .5 || Math.abs(scaleX - 1) >= .01 || Math.abs(scaleY - 1) >= .01;
-              if (!layoutChanged && !textChanged) {
+              if (!layoutChanged) return;
+              element.animate([
+                { transformOrigin:'top left', transform:`translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})` },
+                { transformOrigin:'top left', transform:'translate(0, 0) scale(1, 1)' }
+              ], { duration:800, easing:'cubic-bezier(.16, 1, .3, 1)' });
+            });
+
+            textTargets.forEach((element) => {
+              if (textBefore.get(element) === element.textContent) {
                 element.style.removeProperty('opacity');
                 return;
               }
-
-              const startOpacity = textChanged ? .6 : 1;
-              const animation = element.animate([
-                { opacity:startOpacity, transformOrigin:'top left', transform:`translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})` },
-                { opacity:1, transformOrigin:'top left', transform:'translate(0, 0) scale(1, 1)' }
-              ], { duration:800, easing:'cubic-bezier(.16, 1, .3, 1)' });
+              const animation = element.animate([{ opacity:.6 }, { opacity:1 }], {
+                duration:800,
+                easing:'cubic-bezier(.16, 1, .3, 1)'
+              });
               animation.onfinish = () => element.style.removeProperty('opacity');
             });
           });
@@ -2231,7 +2274,7 @@
       const dialog = document.querySelector('#gallery-lightbox');
       const viewer = dialog?.querySelector('[data-gallery-lightbox-image]');
       const closeButton = dialog?.querySelector('[data-gallery-lightbox-close]');
-      const figures = [...document.querySelectorAll('body[data-page="trabajos"] .facility')];
+      const figures = [...document.querySelectorAll('.facilities .facility')];
       if (!dialog || !viewer || !closeButton || !figures.length) return;
 
       const close = () => {
@@ -2287,7 +2330,6 @@
   </script>
   <script>
     (() => {
-      if (document.body.dataset.page !== 'nosotros') return;
       const section = document.querySelector('[data-client-trust]');
       if (!section) return;
       const logos = [...section.querySelectorAll('img[data-src]')];
@@ -2312,12 +2354,12 @@
   <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
   <script>
     (() => {
-      if (document.body.dataset.page !== 'nosotros') return;
       const container = document.querySelector('#fatisa-location-map');
-      if (!container || !window.maplibregl) return;
-
-      const coordinates = [-100.2825668, 25.6959597];
-      const map = new maplibregl.Map({
+      const initializeMap = () => {
+        if (!container || !window.maplibregl || container.dataset.mapInitialized) return;
+        container.dataset.mapInitialized = 'true';
+        const coordinates = [-100.2825668, 25.6959597];
+        const map = new maplibregl.Map({
         container,
         style:{
           version:8,
@@ -2337,9 +2379,9 @@
         bearing:0,
         attributionControl:false,
         renderWorldCopies:false
-      });
+        });
 
-      map.once('load', () => {
+        map.once('load', () => {
         const marker = document.createElement('button');
         marker.type = 'button';
         marker.className = 'fatisa-map-marker';
@@ -2348,8 +2390,68 @@
         marker.addEventListener('click', () => window.open('https://maps.app.goo.gl/4Rq86PVarDpfGKye6', '_blank', 'noopener'));
         new maplibregl.Marker({ element:marker, anchor:'bottom' }).setLngLat(coordinates).addTo(map);
         map.addControl(new maplibregl.NavigationControl({ showCompass:false }), 'top-right');
+        });
+      };
+      window.fatisaInitializeMap = initializeMap;
+      if (document.body.dataset.page === 'nosotros') initializeMap();
+    })();
+  </script>
+  <script>
+    (() => {
+      const routes = {
+        'index.html':'inicio',
+        'servicios.html':'servicios',
+        'equipos.html':'equipos',
+        'trabajos-realizados.html':'trabajos',
+        'nosotros.html':'nosotros'
+      };
+      const pageFromUrl = (url) => routes[url.pathname.split('/').pop() || 'index.html'];
+      const navigate = (nextPage, url, push = true) => {
+        if (!nextPage) return;
+        if (push) history.pushState({ fatisaPage:nextPage }, '', url.pathname + url.search + url.hash);
+        document.querySelector('.mobile-nav')?.classList.remove('is-open');
+        document.querySelector('.menu-toggle')?.setAttribute('aria-expanded', 'false');
+        window.fatisaSetPage?.(nextPage);
+        window.scrollTo({ top:0, left:0, behavior:'auto' });
+        const main = document.querySelector('main');
+        if (main && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          main.getAnimations().forEach((animation) => animation.cancel());
+          main.animate([
+            { opacity:0, transform:'translateY(18px)' },
+            { opacity:1, transform:'translateY(0)' }
+          ], { duration:520, easing:'cubic-bezier(.16, 1, .3, 1)', fill:'both' });
+        }
+        requestAnimationFrame(() => {
+          if (nextPage === 'nosotros') window.fatisaInitializeMap?.();
+          window.dispatchEvent(new CustomEvent('fatisa:pagechange', { detail:{ page:nextPage } }));
+        });
+      };
+
+      document.addEventListener('click', (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const link = event.target.closest('a[href]');
+        if (!link || link.target || link.hasAttribute('download')) return;
+        if (link.hasAttribute('data-quote-trigger') || link.getAttribute('href')?.startsWith('#')) return;
+        const url = new URL(link.href, location.href);
+        if (url.origin !== location.origin) return;
+        const nextPage = pageFromUrl(url);
+        if (!nextPage) return;
+        event.preventDefault();
+        navigate(nextPage, url);
+      });
+
+      window.addEventListener('popstate', () => {
+        const url = new URL(location.href);
+        navigate(pageFromUrl(url), url, false);
       });
     })();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      }, { once:true });
+    }
   </script>
 </body>
 </html>
