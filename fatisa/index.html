@@ -140,14 +140,16 @@
     .site-nav a::after { content:""; position:absolute; right:0; bottom:2px; left:0; height:1px; background:var(--red); transform:scaleX(0); transform-origin:right center; transition:transform .28s cubic-bezier(.16,1,.3,1); }
     .site-nav a.is-current::after { transform:scaleX(1); transform-origin:left center; }
     .site-header .brand img { transform-origin:center; will-change:transform; }
-    .site-header .brand { font-size:28px; line-height:27px; }
-    .site-header .brand img { width:28px; height:27px; }
+    .site-header .brand { gap:9px; font-size:28px; line-height:27px; }
+    .site-header .brand img { width:40px; height:38px; }
     .site-header.is-scrolled .header-inner { width:min(1600px, calc(100% - var(--gutter) - var(--gutter))); padding-inline:20px; }
     .site-header.is-scrolled .header-inner::before { inset:0; background:rgba(255,255,255,.9); backdrop-filter:blur(20px); }
     .mobile-nav { display:none; }
 
     .hero { position:relative; width:100%; max-width:100%; height:100vh; height:100dvh; min-height:680px; overflow:hidden; background:radial-gradient(ellipse 620px 160px at 50% 0, #f0f0f0 25%, #dddfe2 100%); }
     .hero-copy { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; width:min(1274px, calc(100% - 80px)); margin-inline:auto; padding-top:300px; text-align:center; }
+    .hero-copy > .brand, .company-hero > .brand, .shipping-copy > .brand { gap:8px; font-size:30px; line-height:29px; }
+    .hero-copy > .brand img, .company-hero > .brand img, .shipping-copy > .brand img { width:30px; height:29px; }
     .hero-copy .brand { margin-bottom:50px; }
     .hero-text { display:flex; flex-direction:column; gap:25px; width:100%; }
     .hero h1 { font-size:64px; font-weight:400; line-height:64px; letter-spacing:-2.56px; }
@@ -238,13 +240,15 @@
     .solution-card:nth-child(2) { --solution-art-width:66%; }
     .solution-card:nth-child(3) { --solution-art-width:98%; }
     .company { padding-top:180px; }
-    .company-layout { display:flex; min-height:520px; padding:46px 52px 0; overflow:hidden; flex-direction:column; background:var(--ink); color:var(--paper); clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
+    .company-hero { display:flex; flex-direction:column; align-items:center; padding:34px 0 84px; text-align:center; }
+    .company-hero .brand { margin:0; }
+    .company-layout { overflow:hidden; padding:0 52px; background:var(--ink); color:var(--paper); clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
     .company-label { margin:0; color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
-    .company-statement { max-width:1060px; margin-top:54px; }
+    .company-statement { max-width:1060px; margin-top:50px; }
     .company-statement h2 { margin:0; font:400 clamp(48px, 4.75vw, 72px)/.94 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.058em; }
-    .company-context { max-width:510px; margin-top:30px; }
-.company-context p { margin:0; color:var(--paper); font:400 20px/28px "BDO Grotesk", Arial, sans-serif; }
-    .company-principles { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); margin:auto 0 0; padding:0; border-top:1px solid rgba(240,240,240,.24); list-style:none; }
+    .company-context { max-width:720px; margin-top:30px; }
+    .company-context p { margin:0; color:var(--ink); font:400 20px/28px "BDO Grotesk", Arial, sans-serif; }
+    .company-principles { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); margin:0; padding:0; border-top:1px solid rgba(240,240,240,.24); list-style:none; }
     .company-principles li { min-width:0; padding:22px 28px 26px 0; }
     .location { display:grid; grid-template-columns:minmax(0, .72fr) minmax(420px, 1.28fr); gap:64px; align-items:stretch; padding-top:140px; }
     .location-copy { display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; padding:8px 0; }
@@ -263,7 +267,7 @@
     .location-map-link:hover { background:#303030; box-shadow:0 6px 16px rgba(24,24,24,.16); }
     .client-trust { margin-top:140px; padding:0; }
     .client-trust[hidden] { display:none !important; }
-    .client-trust-copy h2 { max-width:700px; margin:0; font:400 clamp(42px, 4vw, 60px)/.94 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.058em; }
+    .client-trust-copy h2 { max-width:760px; margin:0; font:400 48px/1 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-1.92px; }
     .client-logo-grid { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:42px 52px; margin-top:48px; padding:42px 0; border-top:1px solid rgba(24,24,24,.16); border-bottom:1px solid rgba(24,24,24,.16); }
     .client-logo { display:grid; flex:0 1 clamp(108px, 10.5vw, 154px); height:52px; place-items:center; }
     .client-logo img { display:block; width:100%; height:48px; object-fit:contain; opacity:0; transition:opacity .35s ease; }
@@ -294,9 +298,9 @@
     @media (min-width:1200px) {
       .company-layout { min-height:0; }
       .company-statement { margin-top:36px; }
-      .company-statement h2 { font-size:48px; line-height:1; letter-spacing:-1.92px; }
+      .company-statement h2 { font-size:64px; line-height:.94; letter-spacing:-.058em; }
       .company-context { margin-top:28px; }
-      .company-principles { margin-top:72px; }
+      .company-principles { margin:0; }
     }
     .workflow { box-sizing:border-box; margin-top:180px; padding:46px 52px 0; overflow:hidden; background:var(--ink); color:var(--paper); clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
     .workflow-header { display:grid; grid-template-columns:minmax(0, 1fr) minmax(340px, 500px); gap:40px; align-items:end; }
@@ -495,7 +499,7 @@
       .solution-card { min-height:238px; padding:24px; }
       .solution-card h3 { font-size:27px; letter-spacing:-1.08px; }
       .solution-card p { font-size:12px; line-height:18px; }
-      .company-layout { min-height:440px; padding:38px 42px 0; }
+      .company-layout { min-height:0; padding:0 42px; }
       .company-statement { margin-top:42px; }
       .company-principles li { padding:18px 22px 22px 0; }
       .company-principles li + li { padding-left:22px; }
@@ -505,7 +509,7 @@
       .location-map { min-height:330px; }
       .location-copy h2 { font-size:48px; }
       .client-trust { margin-top:120px; }
-      .client-trust-copy h2 { font-size:50px; }
+      .client-trust-copy h2 { font-size:40px; letter-spacing:-1.6px; }
       .client-logo-grid { gap:36px 42px; margin-top:42px; padding:36px 0; }
       .client-logo { flex-basis:clamp(100px, 11vw, 136px); height:48px; }
       .client-logo img { height:44px; }
@@ -635,10 +639,10 @@
       .solution-card { --solution-art-width:70%; min-height:270px; }
       .solution-card:nth-child(2) { --solution-art-width:58%; }
       .solution-card:nth-child(3) { --solution-art-width:86%; }
-      .company-layout { min-height:0; padding:34px 36px 0; }
+      .company-layout { min-height:0; padding:0 36px; }
       .company-statement { max-width:780px; margin-top:38px; }
       .company-context { max-width:420px; }
-      .company-principles { margin-top:52px; }
+      .company-principles { margin-top:0; }
       .location { grid-template-columns:1fr; gap:36px; padding-top:110px; }
       .location-copy { display:block; padding:0; }
       .location-copy h2 { max-width:620px; font-size:42px; }
@@ -666,7 +670,7 @@
       .site-header.is-scrolled .header-inner::before { inset:0; background:rgba(240,240,240,.9); backdrop-filter:blur(20px); }
       .site-nav { display:none; }
       .site-header .brand { font-size:26px; line-height:25px; }
-      .site-header .brand img { width:26px; height:25px; }
+      .site-header .brand img { width:36px; height:34px; }
       .site-header .button { min-height:50px; padding-inline:24px; }
       .site-header .button { width:119px; }
       .site-header .button.menu-toggle { width:50px; padding:0; }
@@ -680,6 +684,8 @@
       section[id] { scroll-margin-top:70px; }
       .hero { width:100%; min-width:0; min-height:0; height:var(--mobile-hero-height, 100svh); height:var(--mobile-hero-height, 100dvh); }
       .hero-copy { position:absolute; top:177px; left:20px; width:calc(100% - 40px); margin:0; padding:0; }
+      .hero-copy > .brand, .company-hero > .brand, .shipping-copy > .brand { gap:7px; font-size:28px; line-height:27px; }
+      .hero-copy > .brand img, .company-hero > .brand img, .shipping-copy > .brand img { width:28px; height:27px; }
       .hero-copy .brand { margin-bottom:40px; }
       .hero h1 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
       .desktop-break { display:none; }
@@ -764,7 +770,8 @@
       .solution-card-art { display:contents; }
       .solution-card-art img { position:absolute; top:auto; right:24px; bottom:24px; left:24px; width:calc(100% - 48px); height:46%; padding:12px; object-fit:contain; object-position:center; }
       .solution-card:nth-child(3) .solution-card-art img { right:48px; left:48px; width:calc(100% - 96px); }
-      .company-layout { display:flex; min-height:0; padding:24px 24px 0; }
+      .company-hero { padding:20px 0 40px; }
+      .company-layout { display:flex; min-height:0; padding:0 24px; }
       .company-statement { margin-top:42px; }
       .company-statement h2 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:36px; font-weight:500; line-height:39px; letter-spacing:-1.44px; text-transform:uppercase; }
       .company-context { max-width:none; margin-top:24px; padding:0 0 38px; }
@@ -1176,12 +1183,14 @@
     </section>
 
     <section class="company page-wrap" id="empresa">
-      <div class="company-layout">
-        <p class="company-label">Nosotros</p>
+      <div class="company-hero">
+        <div class="brand"><img src="assets/vector-4.svg" alt=""><span>Fatisa<sup>®</sup></span></div>
         <div class="company-statement">
           <h2 class="section-title">Más de 35 años convirtiendo precisión en confianza.</h2>
         </div>
         <div class="company-context"><p>Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico y ofrecemos soluciones integrales de manufactura para la industria</p></div>
+      </div>
+      <div class="company-layout">
         <ul class="company-principles">
           <li><span>Especialización</span><p>Herramentales, moldes de inyección y termoformado, modelos industriales y maquinado CNC general.</p></li>
           <li><span>Equipo y capacidad</span><p>Programadores, modelistas y maquinaria moderna para abordar requerimientos técnicos diversos.</p></li>
