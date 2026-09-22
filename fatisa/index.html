@@ -405,15 +405,16 @@
     /* Trabajos Realizados: retícula editorial de alturas naturales. */
     body[data-page="trabajos"] .facilities { width:calc(100% - (var(--gutter) * 2)); max-width:1440px; margin-inline:auto; }
     body[data-page="trabajos"] .gallery-rail { width:100%; margin-right:0; overflow:visible; touch-action:auto; cursor:default; }
-    body[data-page="trabajos"] .gallery-track { display:block; width:100%; columns:3 300px; column-gap:28px; transform:none !important; will-change:auto; }
-    body[data-page="trabajos"] .facility { display:block; width:100%; height:auto; margin:0 0 28px; break-inside:avoid; opacity:0; transform:translateY(12px); transition:opacity .62s cubic-bezier(.16,1,.3,1), transform .72s cubic-bezier(.16,1,.3,1); }
+    body[data-page="trabajos"] .gallery-track { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); align-items:start; gap:28px; width:100%; transform:none !important; will-change:auto; }
+    body[data-page="trabajos"] .gallery-column { display:grid; align-content:start; gap:28px; min-width:0; }
+    body[data-page="trabajos"] .facility { display:block; width:100%; height:auto; margin:0; break-inside:avoid; opacity:0; transform:translateY(12px); transition:opacity .62s cubic-bezier(.16,1,.3,1), transform .72s cubic-bezier(.16,1,.3,1); }
     body[data-page="trabajos"] .facility { cursor:zoom-in; }
     body[data-page="trabajos"] .facility:focus-visible { outline:2px solid #ff0000; outline-offset:4px; }
     body[data-page="trabajos"] .facility.is-revealed { opacity:1; transform:none; }
     body[data-page="trabajos"] .facility img { width:100%; height:auto; object-fit:initial; transform:scale(1); }
     @media (min-width:701px) and (max-width:1199px) {
-      body[data-page="trabajos"] .gallery-track { columns:2 300px; column-gap:24px; }
-      body[data-page="trabajos"] .facility { margin-bottom:24px; }
+      body[data-page="trabajos"] .gallery-track { grid-template-columns:repeat(2, minmax(0, 1fr)); gap:24px; }
+      body[data-page="trabajos"] .gallery-column { gap:24px; }
     }
     @media (prefers-reduced-motion:reduce) {
       body[data-page="trabajos"] .facility { opacity:1; transform:none; transition:none; }
@@ -837,8 +838,9 @@
       .facility { flex-basis:360px; height:250px; }
       .facility img { transform:scale(1); }
       body[data-page="trabajos"] .gallery-rail { width:100%; margin-right:0; touch-action:auto; }
-      body[data-page="trabajos"] .gallery-track { display:block; width:100%; columns:1; column-gap:0; transform:none !important; will-change:auto; }
-      body[data-page="trabajos"] .facility { width:100%; height:auto; margin:0 0 14px; break-inside:avoid; }
+      body[data-page="trabajos"] .gallery-track { display:grid; grid-template-columns:1fr; gap:14px; width:100%; transform:none !important; will-change:auto; }
+      body[data-page="trabajos"] .gallery-column { gap:14px; }
+      body[data-page="trabajos"] .facility { width:100%; height:auto; margin:0; break-inside:avoid; }
       body[data-page="trabajos"] .facility img { width:100%; height:auto; object-fit:initial; }
       .cta { padding:100px 20px calc(150px + env(safe-area-inset-bottom)); text-align:center; }
       .cta .brand { margin-bottom:40px; }
@@ -1330,15 +1332,49 @@
 
     <script>
       (() => {
-        const track = document.querySelector('.gallery-track');
-        if (!track || track.querySelector('[src*="9.37.14%20AM%20(1).jpeg"]')) return;
-        const figure = document.createElement('figure');
-        figure.className = 'facility';
-        const image = document.createElement('img');
-        image.src = 'assets/trabajos/WhatsApp%20Image%202026-08-14%20at%209.37.14%20AM%20(1).jpeg';
-        image.alt = 'Trabajo realizado FATISA 25';
-        figure.append(image);
-        track.append(figure);
+        const track = document.querySelector('body[data-page="trabajos"] .gallery-track');
+        if (!track) return;
+
+        const files = Array.from({ length: 25 }, (_, index) => `${String(index + 1).padStart(2, '0')}.jpeg`);
+        const figures = files.map((file, index) => {
+          const figure = document.createElement('figure');
+          figure.className = 'facility';
+          figure.dataset.galleryOrder = String(index);
+
+          const image = document.createElement('img');
+          image.src = `assets/trabajos/${file}`;
+          image.alt = `Trabajo realizado FATISA ${String(index + 1).padStart(2, '0')}`;
+          image.loading = 'lazy';
+          image.decoding = 'async';
+
+          figure.append(image);
+          return figure;
+        });
+
+        const columnCount = () => {
+          if (window.matchMedia('(min-width: 1200px)').matches) return 3;
+          if (window.matchMedia('(min-width: 701px)').matches) return 2;
+          return 1;
+        };
+
+        let activeColumnCount = 0;
+        const arrangeColumns = () => {
+          const nextColumnCount = columnCount();
+          if (nextColumnCount === activeColumnCount) return;
+          activeColumnCount = nextColumnCount;
+
+          const columns = Array.from({ length: nextColumnCount }, () => {
+            const column = document.createElement('div');
+            column.className = 'gallery-column';
+            return column;
+          });
+
+          figures.forEach((figure, index) => columns[index % nextColumnCount].append(figure));
+          track.replaceChildren(...columns);
+        };
+
+        arrangeColumns();
+        window.addEventListener('resize', arrangeColumns, { passive:true });
       })();
     </script>
 
