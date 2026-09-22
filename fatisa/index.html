@@ -31,7 +31,7 @@
     body[data-page="nosotros"] .location { order:4; }
     body[data-page="trabajos"] main > .facilities { display:block; }
     body[data-page="equipos"] main > .equipment { display:block; }
-    body[data-page]:not([data-page="inicio"]) main { padding-top:90px; padding-bottom:160px; }
+    body[data-page]:not([data-page="inicio"]) main { padding-top:112px; padding-bottom:160px; }
     body[data-page="servicios"] .services { margin-top:0; }
     body[data-page="servicios"] .services::before { display:none; }
     body[data-page="nosotros"] .company, body[data-page="trabajos"] .facilities, body[data-page="equipos"] .equipment { padding-top:90px; }
@@ -144,6 +144,14 @@
     .site-header .brand img { width:40px; height:38px; }
     .site-header.is-scrolled .header-inner { width:min(1600px, calc(100% - var(--gutter) - var(--gutter))); padding-inline:20px; }
     .site-header.is-scrolled .header-inner::before { inset:0; background:rgba(255,255,255,.9); backdrop-filter:blur(20px); }
+    .language-switch { position:fixed; z-index:9; top:calc(clamp(76px, 1.944444vw + 52.666667px, 90px) + 12px); left:50%; display:inline-flex; align-items:center; gap:2px; padding:3px; overflow:hidden; border:1px solid rgba(24,24,24,.16); background:rgba(240,240,240,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transform:translateX(-50%); transition:transform .42s cubic-bezier(.16,1,.3,1), opacity .24s ease, visibility 0s; }
+    .language-switch::before { content:""; position:absolute; z-index:0; top:3px; bottom:3px; left:3px; width:92px; background:#fff; transform:translateX(0); transition:transform .38s cubic-bezier(.16,1,.3,1); }
+    .language-switch[data-active-language="en"]::before { transform:translateX(94px); }
+    .language-switch.is-hidden { pointer-events:none; opacity:0; visibility:hidden; transform:translate(-50%, -46px); transition:transform .42s cubic-bezier(.16,1,.3,1), opacity .2s ease, visibility 0s linear .42s; }
+    .language-switch button { position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; width:92px; min-height:32px; padding:0; border:0; background:transparent; color:rgba(24,24,24,.56); font:500 12px/1 "BDO Grotesk", Arial, sans-serif; cursor:pointer; transition:color .2s ease; }
+    .language-switch button[aria-pressed="true"] { color:var(--ink); }
+    .language-switch img { display:block; width:18px; height:18px; border-radius:50%; object-fit:cover; transition:transform .38s cubic-bezier(.16,1,.3,1); }
+    .language-switch button[aria-pressed="true"] img { transform:scale(1.12); }
     .mobile-nav { display:none; }
 
     .hero { position:relative; width:100%; max-width:100%; height:100vh; height:100dvh; min-height:680px; overflow:hidden; background:radial-gradient(ellipse 620px 160px at 50% 0, #f0f0f0 25%, #dddfe2 100%); }
@@ -275,13 +283,13 @@
 
     .equipment { padding-top:150px; }
     .equipment-header { display:grid; grid-template-columns:minmax(0, 1fr) minmax(320px, .72fr); gap:80px; align-items:end; padding-bottom:64px; border-bottom:1px solid rgba(24,24,24,.2); }
-    .equipment-header h1 { max-width:780px; font:400 clamp(52px, 5.3vw, 84px)/.9 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.065em; }
+    .equipment-header h1 { max-width:780px; font:400 48px/1 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-1.92px; }
     .equipment-header p { max-width:440px; color:rgba(24,24,24,.68); font:400 16px/24px "BDO Grotesk", Arial, sans-serif; }
     .equipment-groups { display:flex; flex-direction:column; }
     .equipment-group { display:grid; grid-template-columns:minmax(210px, .34fr) minmax(0, 1fr); gap:56px; padding:54px 0 62px; border-bottom:1px solid rgba(24,24,24,.18); }
     .equipment-group-head { position:sticky; top:clamp(100px, 7vw, 120px); align-self:start; display:flex; flex-direction:column; justify-content:flex-start; gap:20px; padding-top:33px; }
     .equipment-group-index { position:absolute; top:0; left:0; color:var(--red); font:500 13px/1 "BDO Grotesk", Arial, sans-serif; }
-    .equipment-group h2 { max-width:270px; font:400 38px/.96 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.05em; }
+    .equipment-group h2 { max-width:300px; font:400 44px/.96 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.05em; }
     .equipment-list { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:0; }
     .equipment-card { position:relative; min-height:158px; padding:22px 39% 24px 24px; overflow:hidden; background:var(--paper); border-bottom:1px solid rgba(24,24,24,.16); transition:background-color .3s ease; }
     .equipment-card:nth-child(-n + 2) { border-top:1px solid rgba(24,24,24,.16); }
@@ -504,9 +512,9 @@
       .solutions, .company { padding-top:140px; }
       .equipment { padding-top:120px; }
       .equipment-header { gap:56px; padding-bottom:52px; }
-      .equipment-header h1 { font-size:clamp(46px, 4.5vw, 68px); }
+      .equipment-header h1 { font-size:40px; line-height:1; letter-spacing:-1.6px; }
       .equipment-group { grid-template-columns:minmax(180px, .31fr) minmax(0, 1fr); gap:42px; padding-block:46px 52px; }
-      .equipment-group h2 { font-size:32px; }
+      .equipment-group h2 { font-size:36px; }
       .equipment-card { min-height:142px; padding:20px 38% 20px 20px; }
       .equipment-card-number { margin-bottom:26px; }
       .equipment-card h3 { font-size:19px; }
@@ -645,9 +653,9 @@
       .solutions, .company { padding-top:130px; }
       .equipment { padding-top:110px; }
       .equipment-header { grid-template-columns:1fr; gap:26px; padding-bottom:46px; }
-      .equipment-header h1 { max-width:720px; font-size:54px; }
+      .equipment-header h1 { max-width:720px; font-size:42px; line-height:46px; letter-spacing:-1.68px; }
       .equipment-group { grid-template-columns:170px minmax(0, 1fr); gap:30px; padding-block:42px; }
-      .equipment-group h2 { font-size:30px; }
+      .equipment-group h2 { font-size:34px; }
       .equipment-card { min-height:138px; padding:18px 38% 18px 18px; }
       .workflow { margin-top:130px; padding:34px 36px 0; }
       .solutions-header, .workflow-header { grid-template-columns:1fr; gap:24px; }
@@ -684,6 +692,7 @@
       .header-inner { width:100%; grid-template-columns:1fr auto; padding-inline:20px; }
       .site-header.is-scrolled .header-inner { width:100%; padding-inline:20px; }
       .site-header.is-scrolled .header-inner::before { inset:0; background:rgba(240,240,240,.9); backdrop-filter:blur(20px); }
+      .language-switch { display:none; }
       .site-nav { display:none; }
       .site-header .brand { font-size:26px; line-height:25px; }
       .site-header .brand img { width:36px; height:34px; }
@@ -750,7 +759,7 @@
       .solutions, .company { padding-top:100px; }
       .equipment { padding-top:70px; }
       .equipment-header { grid-template-columns:1fr; gap:20px; padding-bottom:38px; }
-      .equipment-header h1 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:40px; font-weight:500; line-height:42px; letter-spacing:-1.6px; text-transform:uppercase; }
+      .equipment-header h1 { font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
       .equipment-header p { max-width:100%; font-size:14px; line-height:20px; }
       .equipment-group { display:block; padding:38px 0 42px; }
       .equipment-group-head { position:static; display:flex; flex-direction:row; align-items:baseline; justify-content:space-between; margin-bottom:22px; padding-top:0; }
@@ -873,6 +882,10 @@
       <a class="button button--red menu-toggle" href="#contacto" data-quote-trigger aria-label="Abrir menú" aria-controls="mobile-navigation" aria-expanded="false"><span>Contacto</span><svg class="menu-icon" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="50" height="50" fill="#FF0000"/><path d="M13.75 29.3749H36.25V26.8753H13.75V29.3749ZM13.75 20.6251V23.1253H36.25V20.6251H13.75Z" fill="white"/><path d="M51 -1H42V0L50 8H51V-1Z" fill="#F0F0F0"/></svg></a>
     </div>
   </header>
+  <div class="language-switch" role="group" aria-label="Selector de idioma" data-active-language="es">
+    <button type="button" data-language="es" aria-pressed="true"><img src="assets/figma-14.png" alt="">Español</button>
+    <button type="button" data-language="en" aria-pressed="false"><img src="assets/figma-10.png" alt="">English</button>
+  </div>
   <nav class="mobile-nav" id="mobile-navigation" aria-label="Navegación móvil" aria-hidden="true">
     <a href="index.html" data-page-link="inicio">Inicio</a><a href="servicios.html" data-page-link="servicios">Servicios</a><a href="equipos.html" data-page-link="equipos">Equipos</a><a href="trabajos-realizados.html" data-page-link="trabajos">Trabajos Realizados</a><a href="nosotros.html" data-page-link="nosotros">Nosotros</a><a href="#contacto" data-quote-trigger>Contacto</a>
   </nav>
@@ -1461,10 +1474,16 @@
   <script>
     (() => {
       const header = document.querySelector('.site-header');
+      const languageSwitch = document.querySelector('.language-switch');
       if (!header) return;
+      const compactHeaderScrollY = 24;
       const page = document.body.dataset.page || 'inicio';
       const links = [...document.querySelectorAll('.site-nav a[data-page-link]')];
-      const updateHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+      const updateHeader = () => {
+        const isCompact = window.scrollY > compactHeaderScrollY;
+        header.classList.toggle('is-scrolled', isCompact);
+        languageSwitch?.classList.toggle('is-hidden', isCompact);
+      };
       const setCurrent = () => links.forEach((link) => {
         const current = link.dataset.pageLink === page;
         link.classList.toggle('is-current', current);
@@ -1974,7 +1993,112 @@
         'Colaboramos con clientes en Estados Unidos mediante comunicación directa, desarrollo técnico y fabricación especializada desde México.':'We collaborate with clients in the United States through direct communication, technical development, and specialized manufacturing from Mexico.',
         '¿Tienes una pieza, una muestra o un plano? Convirtámoslo en una solución fabricable.':'Do you have a part, physical sample, or drawing? Let’s turn it into a manufacturable solution.',
         'Compártenos los requerimientos disponibles de tu proyecto para preparar una cotización técnica acorde a tu necesidad.':'Share the available requirements for your project so we can prepare a technical quote tailored to your needs.',
-        'Solicitar cotización':'Request a Quote', 'Solicitar una cotización':'Request a Quote'
+        'Solicitar cotización':'Request a Quote', 'Solicitar una cotización':'Request a Quote',
+        'De Ingeniería a Fabricación de Alta Precisión,':'From Engineering to High-Precision Manufacturing,', 'Todo en un solo lugar.':'All in One Place.',
+        'Equipos':'Equipment', 'Infraestructura':'Infrastructure', 'Equipos y capacidades':'Equipment and capabilities',
+        'Maquinaria CNC, equipos de medición y procesos de acabado para resolver desde componentes de precisión hasta piezas y herramentales de gran formato.':'CNC machinery, measuring equipment, and finishing processes for everything from precision components to large-format parts and tooling.',
+        'Torneado':'Turning', 'Fresado y centros de maquinado':'Milling and machining centers', 'Rectificado y acabado':'Grinding and finishing', 'Medición e ingeniería inversa':'Measurement and reverse engineering',
+        'Ejes:':'Axes:', 'Capacidad:':'Capacity:', 'Uso:':'Use:', 'Carga de mesa:':'Table load:', 'torneado de gran formato':'large-format turning', 'reportes dimensionales':'dimensional reports', 'hasta 3 metros':'up to 3 meters',
+        'Torno CNC Haas SL20':'Haas SL20 CNC lathe', 'Torno CNC Hwacheon Hi-Eco 31A':'Hwacheon Hi-Eco 31A CNC lathe', 'Torno CNC Willis 32120ENC':'Willis 32120ENC CNC lathe', 'Torno convencional Precise con lector digital':'Precise conventional lathe with digital readout', 'Torno convencional Precise CQ6280B/2000':'Precise CQ6280B/2000 conventional lathe',
+        'Centro de maquinado vertical Okuma Cadet-Mate':'Okuma Cadet-Mate vertical machining center', 'Centro de maquinado vertical Haas VF3':'Haas VF3 vertical machining center', 'Centro de maquinado vertical Fadal VMC 8030':'Fadal VMC 8030 vertical machining center', 'Centro de maquinado vertical Haas VF8':'Haas VF8 vertical machining center', 'Centro de maquinado vertical Haas VF7':'Haas VF7 vertical machining center',
+        'Centro de maquinado tipo puente AWEA LP-3021':'AWEA LP-3021 gantry machining center', 'Centro de maquinado puente Mighty Viper Pro 2150AG CNC':'Mighty Viper Pro 2150AG CNC gantry machining center',
+        'Fresadora convencional Precise con lector digital':'Precise conventional milling machine with digital readout', 'Mandriladora horizontal CNC 4.3 Ikegai NB-11T':'Ikegai NB-11T 4.3 CNC horizontal boring mill',
+        'Rectificadora plana Grand Rapids':'Grand Rapids surface grinder', 'Escáner de mano SIMSCAN 42':'SIMSCAN 42 handheld scanner', 'Equipo de soldadura de precisión TIG 375':'TIG 375 precision welding unit', 'Soldadora Lincoln Electric Aspect 375':'Lincoln Electric Aspect 375 welder',
+        '· 4.º eje':'· 4th axis', '(husillo)':'(spindle)'
+      };
+
+      const languageButtons = [...document.querySelectorAll('[data-language]')];
+      const setActiveLanguage = (language) => {
+        document.querySelector('.language-switch')?.setAttribute('data-active-language', language);
+        languageButtons.forEach((button) => {
+          button.setAttribute('aria-pressed', String(button.dataset.language === language));
+        });
+      };
+
+      const spanishTextNodes = new Map();
+      const spanishTextWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      while (spanishTextWalker.nextNode()) {
+        const node = spanishTextWalker.currentNode;
+        if (!node.parentElement?.closest('script, style')) spanishTextNodes.set(node, node.nodeValue);
+      }
+      document.querySelectorAll('[data-en]').forEach((element) => {
+        element.dataset.es = element.textContent;
+      });
+
+      const languageMotionSelector = [
+        '.site-header .brand', '.site-nav a', '.site-header .menu-toggle',
+        '.hero-copy > .brand', '.hero h1', '.hero .intro', '.hero-page-links a',
+        '.services-head', '.service-system', '.solutions-header', '.solution-card',
+        '.workflow-header', '.workflow-step', '.shipping-shell', '.company-hero',
+        '.company-layout', '.client-trust-copy', '.location-copy',
+        '.equipment-header', '.equipment-group-head', '.equipment-card',
+        '.facilities > .section-kicker', '.facilities > .section-title',
+        '.cta', '.site-footer-item', '.quote-heading', '.quote-field',
+        '.quote-consent', '.quote-actions'
+      ].join(',');
+
+      const interpolateLanguageLayout = (update) => {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = [...document.querySelectorAll(languageMotionSelector)].filter((element) => element.getClientRects().length);
+        const before = new Map(targets.map((element) => [element, {
+          rect:element.getBoundingClientRect(),
+          text:element.textContent
+        }]));
+        if (reducedMotion) {
+          update();
+          return;
+        }
+
+        const hasTranslatableText = (element) => {
+          if (element.matches('[data-en]') || element.querySelector('[data-en]')) return true;
+          const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            const text = node.nodeValue.trim();
+            if (!text) continue;
+            if (document.documentElement.lang !== 'en' && english[text]) return true;
+            const originalSpanish = spanishTextNodes.get(node);
+            if (document.documentElement.lang === 'en' && originalSpanish && originalSpanish !== node.nodeValue) return true;
+          }
+          return false;
+        };
+        const textTargets = targets.filter(hasTranslatableText);
+        const exitAnimations = textTargets.map((element) => element.animate([
+          { opacity:1 },
+          { opacity:.6 }
+        ], { duration:120, easing:'ease-out', fill:'forwards' }));
+
+        window.setTimeout(() => {
+          textTargets.forEach((element) => element.style.opacity = '.6');
+          exitAnimations.forEach((animation) => animation.cancel());
+          update();
+
+          requestAnimationFrame(() => {
+            targets.forEach((element) => {
+              const previous = before.get(element);
+              const first = previous?.rect;
+              const last = element.getBoundingClientRect();
+              if (!first || !last.width || !last.height) return;
+              const translateX = first.left - last.left;
+              const translateY = first.top - last.top;
+              const scaleX = first.width / last.width;
+              const scaleY = first.height / last.height;
+              const textChanged = previous.text !== element.textContent;
+              const layoutChanged = Math.abs(translateX) >= .5 || Math.abs(translateY) >= .5 || Math.abs(scaleX - 1) >= .01 || Math.abs(scaleY - 1) >= .01;
+              if (!layoutChanged && !textChanged) {
+                element.style.removeProperty('opacity');
+                return;
+              }
+
+              const startOpacity = textChanged ? .6 : 1;
+              const animation = element.animate([
+                { opacity:startOpacity, transformOrigin:'top left', transform:`translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})` },
+                { opacity:1, transformOrigin:'top left', transform:'translate(0, 0) scale(1, 1)' }
+              ], { duration:800, easing:'cubic-bezier(.16, 1, .3, 1)' });
+              animation.onfinish = () => element.style.removeProperty('opacity');
+            });
+          });
+        }, 120);
       };
 
       const applyEnglish = () => {
@@ -1994,14 +2118,78 @@
           if (english[source]) node.nodeValue = node.nodeValue.replace(source, english[source]);
         });
         document.querySelector('.site-nav')?.setAttribute('aria-label', 'Main navigation');
+        document.querySelector('.mobile-nav')?.setAttribute('aria-label', 'Main navigation');
+        document.querySelector('.language-switch')?.setAttribute('aria-label', 'Language selector');
         document.querySelector('.hero-page-links')?.setAttribute('aria-label', 'Main sections');
         document.querySelector('.site-footer')?.setAttribute('aria-label', 'Contact details');
         document.querySelector('.menu-toggle')?.setAttribute('aria-label', 'Open menu');
+        document.querySelector('.site-header .brand')?.setAttribute('aria-label', 'FATISA, home');
+        document.querySelector('[data-quote-close]')?.setAttribute('aria-label', 'Close form');
         document.querySelector('#gallery-lightbox')?.setAttribute('aria-label', 'Expanded work image');
         document.querySelector('#fatisa-location-map')?.setAttribute('aria-label', 'FATISA location in Monterrey');
         document.querySelector('.hero-art')?.setAttribute('alt', 'Fatisa precision tooling');
         document.querySelector('.collaboration-map')?.setAttribute('alt', 'Collaboration map between Mexico and the United States');
+        document.querySelectorAll('.equipment-card').forEach((card) => {
+          const image = card.querySelector('.equipment-card-image');
+          const title = card.querySelector('h3')?.textContent;
+          if (image && title) image.alt = title;
+        });
+        document.querySelectorAll('body[data-page="trabajos"] .facility img').forEach((image, index) => {
+          image.alt = `Completed FATISA work ${String(index + 1).padStart(2, '0')}`;
+        });
+        const englishTitles = { inicio:'FATISA', servicios:'Services | FATISA', equipos:'Equipment | FATISA', trabajos:'Completed Work | FATISA', nosotros:'About Us | FATISA' };
+        if (englishTitles[document.body.dataset.page]) document.title = englishTitles[document.body.dataset.page];
+        setActiveLanguage('en');
       };
+
+      const applySpanish = () => {
+        document.documentElement.lang = 'es-MX';
+        document.querySelectorAll('[data-en][data-es]').forEach((element) => {
+          element.textContent = element.dataset.es;
+        });
+        spanishTextNodes.forEach((text, node) => {
+          if (node.isConnected) node.nodeValue = text;
+        });
+        document.querySelector('.site-nav')?.setAttribute('aria-label', 'Navegación principal');
+        document.querySelector('.mobile-nav')?.setAttribute('aria-label', 'Navegación móvil');
+        document.querySelector('.language-switch')?.setAttribute('aria-label', 'Selector de idioma');
+        document.querySelector('.hero-page-links')?.setAttribute('aria-label', 'Secciones principales');
+        document.querySelector('.site-footer')?.setAttribute('aria-label', 'Datos de contacto');
+        document.querySelector('.menu-toggle')?.setAttribute('aria-label', 'Abrir menú');
+        document.querySelector('.site-header .brand')?.setAttribute('aria-label', 'Fatisa, inicio');
+        document.querySelector('[data-quote-close]')?.setAttribute('aria-label', 'Cerrar formulario');
+        document.querySelector('#gallery-lightbox')?.setAttribute('aria-label', 'Vista ampliada de trabajo realizado');
+        document.querySelector('#fatisa-location-map')?.setAttribute('aria-label', 'Mapa de ubicación de FATISA en Monterrey');
+        document.querySelector('.hero-art')?.setAttribute('alt', 'Herramental de precisión Fatisa');
+        document.querySelector('.collaboration-map')?.setAttribute('alt', 'Mapa de colaboración entre México y Estados Unidos');
+        document.querySelectorAll('.equipment-card').forEach((card) => {
+          const image = card.querySelector('.equipment-card-image');
+          const title = card.querySelector('h3')?.textContent;
+          if (image && title) image.alt = title;
+        });
+        document.querySelectorAll('body[data-page="trabajos"] .facility img').forEach((image, index) => {
+          image.alt = `Trabajo realizado FATISA ${String(index + 1).padStart(2, '0')}`;
+        });
+        const spanishTitles = { inicio:'Fatisa', servicios:'Servicios | Fatisa', equipos:'Equipos | Fatisa', trabajos:'Trabajos Realizados | Fatisa', nosotros:'Nosotros | Fatisa' };
+        if (spanishTitles[document.body.dataset.page]) document.title = spanishTitles[document.body.dataset.page];
+        setActiveLanguage('es');
+      };
+
+      languageButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const language = button.dataset.language;
+          try { localStorage.setItem('fatisa-language', language); } catch (_) {}
+          if (language === 'en' && document.documentElement.lang !== 'en') {
+            interpolateLanguageLayout(applyEnglish);
+            return;
+          }
+          if (language === 'es' && document.documentElement.lang === 'en') {
+            interpolateLanguageLayout(applySpanish);
+            return;
+          }
+          setActiveLanguage(language);
+        });
+      });
 
       const detectCountry = async () => {
         const cachedCountry = sessionStorage.getItem('fatisa-country');
@@ -2021,9 +2209,20 @@
         }
       };
 
-      detectCountry().then((country) => {
-        if (country && country !== 'MX') applyEnglish();
-      });
+      let preferredLanguage = '';
+      try { preferredLanguage = localStorage.getItem('fatisa-language') || ''; } catch (_) {}
+
+      if (preferredLanguage === 'en') {
+        applyEnglish();
+      } else if (preferredLanguage === 'es') {
+        setActiveLanguage('es');
+      } else {
+        detectCountry().then((country) => {
+          let storedLanguage = '';
+          try { storedLanguage = localStorage.getItem('fatisa-language') || ''; } catch (_) {}
+          if (!storedLanguage && country && country !== 'MX') applyEnglish();
+        });
+      }
     })();
   </script>
   <script>
@@ -2143,7 +2342,7 @@
         const marker = document.createElement('button');
         marker.type = 'button';
         marker.className = 'fatisa-map-marker';
-        marker.setAttribute('aria-label', 'Abrir ubicación de FATISA en Google Maps');
+        marker.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Open FATISA location in Google Maps' : 'Abrir ubicación de FATISA en Google Maps');
         marker.innerHTML = '<img src="assets/vector-4.svg" alt="" aria-hidden="true">';
         marker.addEventListener('click', () => window.open('https://maps.app.goo.gl/4Rq86PVarDpfGKye6', '_blank', 'noopener'));
         new maplibregl.Marker({ element:marker, anchor:'bottom' }).setLngLat(coordinates).addTo(map);
