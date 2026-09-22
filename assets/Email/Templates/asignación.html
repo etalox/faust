@@ -8,17 +8,31 @@
   <!-- Clientes compatibles cargarán Urbanist; Outlook clásico usará el fallback incluido. -->
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600&amp;display=swap" rel="stylesheet" type="text/css">
   <style type="text/css">
-    @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600&amp;display=swap');
-    body, table, td, div, a { font-family:'Urbanist', Arial, Helvetica, sans-serif !important; }
+    @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600&display=swap');
+    @font-face { font-family:'Urbanist Email'; font-style:normal; font-weight:400; font-display:swap; src:url('https://fonts.gstatic.com/s/urbanist/v18/L0xjDF02iFML4hGCyOCpRdycFsGxSrqDyx4fFg.ttf') format('truetype'); }
+    @font-face { font-family:'Urbanist Email'; font-style:normal; font-weight:500; font-display:swap; src:url('https://fonts.gstatic.com/s/urbanist/v18/L0xjDF02iFML4hGCyOCpRdycFsGxSrqD-R4fFg.ttf') format('truetype'); }
+    @font-face { font-family:'Urbanist Email'; font-style:normal; font-weight:600; font-display:swap; src:url('https://fonts.gstatic.com/s/urbanist/v18/L0xjDF02iFML4hGCyOCpRdycFsGxSrqDFRkfFg.ttf') format('truetype'); }
+    body, table, td, div, a { font-family:'Urbanist Email', 'Urbanist', Arial, Helvetica, sans-serif !important; font-weight:500; }
     .email-text-primary { color:#141414; }
     .email-text-secondary { color:#7a7a7a; }
-    .email-text-body { color:#393939; font-size:12px; line-height:17px; }
-    .email-text-label { color:#7a7a7a; font-size:12px; line-height:15px; }
+    .email-text-body { color:#393939; font-size:14px; line-height:17px; }
+    .email-text-label { color:#7a7a7a; font-size:14px; line-height:15px; }
     .email-text-value { color:#141414; font-size:14px; line-height:20px; }
     .email-text-display { color:#000000; font-size:32px; line-height:45px; }
     .email-text-footnote { color:#7a7a7a; font-size:10px; line-height:14px; }
     .email-link { color:#141414; text-decoration:underline; }
     a:hover { color:#0000ff !important; }
+    .email-button:hover { background:#0000ff !important; color:#ffffff !important; }
+    .project-meta { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+    .project-meta__item { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:6px; }
+    .project-meta__label { display:inline-flex; align-items:center; gap:4px; }
+    .project-detail-copy { width:100%; min-width:320px; max-width:360px; }
+    .project-timeline { width:100%; min-width:240px; max-width:360px; }
+    @media screen and (max-width:480px) {
+      .project-detail-row, .project-detail-row > tbody, .project-detail-row > tbody > tr, .project-detail-row > tbody > tr > td { display:block !important; width:100% !important; min-width:0 !important; max-width:none !important; box-sizing:border-box !important; }
+      .project-detail-label { padding:0 0 20px !important; }
+      .project-timeline { padding-top:0 !important; }
+    }
     @media screen and (max-width:480px) {
       .email-outer-padding { padding-right:16px !important; padding-left:16px !important; }
     }
@@ -34,7 +48,7 @@
       <tr><td style="padding:0 0 40px;"><!-- Reemplazar: logo, proporción 137 × 32. --><img src="https://faust.mx/assets/Email/logo_top.png?text=FaustPartners™" width="137" height="32" alt="Faust" border="0" style="display:block; width:137px; height:32px; border:0; outline:none;"></td></tr>
       <tr><td style="color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:48px; font-weight:500; line-height:48px;">Proyecto Asignado — Página de Aterrizaje para Mercado Libre</td></tr>
       <tr><td style="padding:40px 0 0;"><table role="presentation" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;"><tr>
-        <td valign="middle" style="padding:0 20px 0 0; font-family:Arial,Helvetica,sans-serif;"><div style="color:#7a7a7a; font-size:12px; line-height:17px;">Participantes</div><div style="color:#141414; font-size:12px; line-height:17px;">Juan, Vanina, David y 2+</div></td>
+        <td valign="middle" style="padding:0 20px 0 0; font-family:Arial,Helvetica,sans-serif;"><div style="color:#7a7a7a; font-size:14px; line-height:17px;">Participantes</div><div style="padding-top:10px; color:#141414; font-size:14px; line-height:17px;">Juan, Vanina, David y 2+</div></td>
         <td valign="middle" style="font-size:0; line-height:0; white-space:nowrap;"><!-- Reemplazar: avatares; se muestran a 40 × 40. -->
           <img src="https://placehold.co/40x40/png?text=1" width="40" height="40" alt="Participante 1" border="0" style="display:inline-block; width:40px; height:40px; border:0; border-radius:20px; vertical-align:middle;">
           <img src="https://placehold.co/40x40/png?text=2" width="40" height="40" alt="Participante 2" border="0" style="display:inline-block; width:40px; height:40px; border:0; border-radius:20px; vertical-align:middle; margin-left:-8px;">
@@ -44,42 +58,50 @@
         </td></tr></table></td></tr>
       <tr><td height="100" style="height:100px; line-height:100px; font-size:0;">&nbsp;</td></tr>
       <tr><td style="color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:20px; font-weight:500; line-height:24px;">Detalles</td></tr>
-      <tr><td height="40" style="height:40px; line-height:40px; font-size:0;">&nbsp;</td></tr>
-      <tr><td><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr><td width="130" valign="top" style="width:130px; padding:0 20px 0 0; color:#7a7a7a; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:20px;">Objetivo</td><td valign="top" style="color:#393939; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:17px;">El objetivo de este proyecto es construir una Landing Page que ayude a convertir a los usuarios de Mercado Libre reduciendo fricciones y mejorando la navegación.</td></tr></table></td></tr>
-      <tr><td height="50" style="height:50px; line-height:50px; font-size:0;">&nbsp;</td></tr>
+      <tr><td height="80" style="height:80px; line-height:80px; font-size:0;">&nbsp;</td></tr>
+      <tr><td><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="project-detail-row" style="width:100%; border-collapse:collapse;"><tr><td width="80" valign="top" class="project-detail-label" style="width:80px; padding:0 50px 0 0; color:#7a7a7a; font-family:Arial,Helvetica,sans-serif; font-size:16px; line-height:20px;">Objetivo</td><td valign="top" class="project-detail-copy" style="width:100%; min-width:320px; max-width:360px; color:#393939; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:17px;">El objetivo de este proyecto es construir una Landing Page que ayude a convertir a los usuarios de Mercado Libre reduciendo fricciones y mejorando la navegación.</td></tr></table></td></tr>
+      <tr><td height="80" style="height:80px; line-height:80px; font-size:0;">&nbsp;</td></tr>
       <tr><td><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr>
-        <td width="50%" valign="top" title="[Texto informativo sobre la carga]" style="width:50%; font-family:Arial,Helvetica,sans-serif; cursor:pointer;"><div style="color:#000; font-size:32px; line-height:45px;">20/30</div><div style="color:#7a7a7a; font-size:12px; line-height:15px;">Carga <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="[Texto informativo sobre la carga]" border="0" style="display:inline-block; width:10px; height:10px; border:0; vertical-align:middle;"></div></td>
-        <td width="50%" valign="top" title="[Texto informativo sobre el ingreso total]" style="width:50%; font-family:Arial,Helvetica,sans-serif; cursor:pointer;"><div style="color:#000; font-size:32px; line-height:45px;">$20,000.00</div><div style="color:#7a7a7a; font-size:12px; line-height:15px;">Ingreso Total (MXN)<sup style="font-size:9px; line-height:0;">1</sup> <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="[Texto informativo sobre el ingreso total]" border="0" style="display:inline-block; width:10px; height:10px; border:0; vertical-align:middle;"></div></td>
+        <td width="50%" valign="top" title="Requiere tu atención por 20 días, de un total de 30 días naturales para completarlo." style="width:50%; font-family:Arial,Helvetica,sans-serif; cursor:pointer;"><div style="color:#000; font-size:32px; line-height:45px;">20/30</div><div style="padding-top:8px; color:#7a7a7a; font-size:14px; line-height:15px;">Carga <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="X/Y. El lado derecho (X) indica el total de días que dura el proyecto. El lado izquierdo (X) indica los días de trabajo estimados." border="0" style="display:inline-block; width:10px; height:10px; border:0; vertical-align:middle;"></div></td>
+        <td width="50%" valign="top" title="[Texto informativo sobre el ingreso total]" style="width:50%; font-family:Arial,Helvetica,sans-serif; cursor:pointer;"><div style="color:#000; font-size:32px; line-height:45px;">$20,000.00</div><div style="padding-top:8px; color:#7a7a7a; font-size:14px; line-height:15px;">Ingreso Total (MXN)<sup style="font-size:9px; line-height:0;">1</sup> <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="[Texto informativo sobre el ingreso total]" border="0" style="display:inline-block; width:10px; height:10px; border:0; vertical-align:middle;"></div></td>
       </tr></table></td></tr>
-      <tr><td height="50" style="height:50px; line-height:50px; font-size:0;">&nbsp;</td></tr>
-      <tr><td><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr>
-        <td width="130" valign="top" style="width:130px; padding:0 20px 0 0; color:#7a7a7a; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:20px;">Periodo</td>
-        <td valign="top"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr>
-          <td align="center" style="width:55px; color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:20px;">1 Nov<br><span style="color:#7a7a7a; font-size:12px; line-height:15px;">Inicio</span></td>
-          <td style="padding:0 10px; font-size:0; line-height:0;"><!-- Reemplazar: línea de tiempo, proporción 225 × 10. --><img src="https://faust.mx/assets/Email/timeline.png" width="225" height="10" alt="Periodo del proyecto" border="0" style="display:block; width:100%; max-width:225px; height:10px; border:0;"></td>
-          <td align="center" style="width:55px; color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:20px;">30 Nov<br><span style="color:#7a7a7a; font-size:12px; line-height:15px;">Fin</span></td>
+      <tr><td height="80" style="height:80px; line-height:80px; font-size:0;">&nbsp;</td></tr>
+      <tr><td><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="project-detail-row" style="width:100%; border-collapse:collapse;"><tr>
+        <td width="80" valign="top" class="project-detail-label" style="width:80px; padding:0 50px 0 0; color:#7a7a7a; font-family:Arial,Helvetica,sans-serif; font-size:16px; line-height:20px;">Periodo</td>
+        <td valign="top" class="project-timeline" style="width:100%; min-width:240px; max-width:360px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr>
+          <td align="left" style="width:55px; color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:20px;">1 Nov<br><span style="display:inline-block; padding-top:0px; color:#7a7a7a; font-size:14px; line-height:15px;">Inicio</span></td>
+          <td style="padding:0 10px; font-size:0; line-height:0;"><!-- Línea de tiempo: ocupa todo el ancho disponible con altura fija de 10 px. --><img src="https://faust.mx/assets/Email/timeline.png" width="100%" height="10" alt="Periodo del proyecto" border="0" style="display:block; width:100%; height:10px; border:0;"></td>
+          <td align="right" style="width:55px; color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:20px;">30 Nov<br><span style="display:inline-block; padding-top:0px; color:#7a7a7a; font-size:14px; line-height:15px;">Fin</span></td>
         </tr></table></td></tr></table></td></tr>
-      <tr><td height="50" style="height:50px; line-height:50px; font-size:0;">&nbsp;</td></tr>
-      <tr><td><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr>
-        <td valign="top" title="[Texto informativo sobre el Sprint ID]" style="width:25%; padding-right:10px; font-family:Arial,Helvetica,sans-serif; cursor:pointer;"><div style="color:#141414; font-size:14px; line-height:20px;">ML-A001</div><div style="color:#7a7a7a; font-size:12px; line-height:15px;">Sprint ID <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="[Texto informativo sobre el Sprint ID]" border="0" style="display:inline-block; width:10px; height:10px; border:0; vertical-align:middle;"></div></td>
-        <td valign="top" style="width:25%; padding-right:10px; font-family:Arial,Helvetica,sans-serif;"><div style="color:#141414; font-size:14px; line-height:20px;">Mercado Libre</div><div style="color:#7a7a7a; font-size:12px; line-height:15px;">Cliente</div></td>
-        <td valign="top" style="width:25%; padding-right:10px; font-family:Arial,Helvetica,sans-serif;"><div style="color:#141414; font-size:14px; line-height:20px;">UX/UI</div><div style="color:#7a7a7a; font-size:12px; line-height:15px;">Rol Asignado</div></td>
-        <td valign="top" title="[Texto informativo sobre la liquidez]" style="width:25%; font-family:Arial,Helvetica,sans-serif; cursor:pointer;"><div style="color:#141414; font-size:14px; line-height:20px;">5%</div><div style="color:#7a7a7a; font-size:12px; line-height:15px;">Liquidez<sup style="font-size:9px; line-height:0;">2</sup> <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="[Texto informativo sobre la liquidez]" border="0" style="display:inline-block; width:10px; height:10px; border:0; vertical-align:middle;"></div></td>
-      </tr></table></td></tr>
+      <tr><td height="80" style="height:80px; line-height:80px; font-size:0;">&nbsp;</td></tr>
+      <tr><td>
+        <!--[if mso]><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr><td valign="top" style="font-family:Arial,Helvetica,sans-serif;"><div style="color:#141414; font-size:14px; line-height:20px;">ML-A001</div><div style="padding-top:14px; color:#7a7a7a; font-size:14px; line-height:15px;">Sprint ID</div></td><td align="center" valign="top" style="font-family:Arial,Helvetica,sans-serif;"><div style="color:#141414; font-size:14px; line-height:20px;">Mercado Libre</div><div style="padding-top:14px; color:#7a7a7a; font-size:14px; line-height:15px;">Cliente</div></td><td align="center" valign="top" style="font-family:Arial,Helvetica,sans-serif;"><div style="color:#141414; font-size:14px; line-height:20px;">UX/UI</div><div style="padding-top:14px; color:#7a7a7a; font-size:14px; line-height:15px;">Rol Asignado</div></td><td align="right" valign="top" style="font-family:Arial,Helvetica,sans-serif;"><div style="color:#141414; font-size:14px; line-height:20px;">5%</div><div style="padding-top:14px; color:#7a7a7a; font-size:14px; line-height:15px;">Liquidez<sup style="font-size:9px; line-height:0;">2</sup></div></td></tr></table><![endif]-->
+        <!--[if !mso]><!--><div class="project-meta" style="width:100%;">
+          <div class="project-meta__item" title="[Texto informativo sobre el Sprint ID]" style="cursor:pointer;"><div style="color:#141414; font-size:14px; line-height:20px;">ML-A001</div><div class="project-meta__label" style="color:#7a7a7a; font-size:14px; line-height:15px;">Sprint ID <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="[Texto informativo sobre el Sprint ID]" border="0" style="display:block; width:10px; height:10px; border:0;"></div></div>
+          <div class="project-meta__item"><div style="color:#141414; font-size:14px; line-height:20px;">Mercado Libre</div><div style="color:#7a7a7a; font-size:14px; line-height:15px;">Cliente</div></div>
+          <div class="project-meta__item"><div style="color:#141414; font-size:14px; line-height:20px;">UX/UI</div><div style="color:#7a7a7a; font-size:14px; line-height:15px;">Rol Asignado</div></div>
+          <div class="project-meta__item" title="[Texto informativo sobre la liquidez]" style="cursor:pointer;"><div style="color:#141414; font-size:14px; line-height:20px;">5%</div><div class="project-meta__label" style="color:#7a7a7a; font-size:14px; line-height:15px;">Liquidez<sup style="font-size:9px; line-height:0;">2</sup> <img src="https://faust.mx/assets/Email/info.png" width="10" height="10" alt="[Texto informativo sobre la liquidez]" border="0" style="display:block; width:10px; height:10px; border:0;"></div></div>
+        </div><!--<![endif]-->
+      </td></tr>
       <tr><td height="80" style="height:80px; line-height:80px; font-size:0;">&nbsp;</td></tr>
       <tr><td align="center"><!-- Reemplazar: avatar de confirmación, proporción 80 × 80. --><img src="https://placehold.co/80x80/png?text=Avatar" width="80" height="80" alt="" border="0" style="display:block; width:80px; height:80px; border:0; border-radius:40px;"></td></tr>
       <tr><td height="24" style="height:24px; line-height:24px; font-size:0;">&nbsp;</td></tr>
-      <tr><td align="center" style="color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:600; line-height:17px;">¿Todo listo para unirte?</td></tr>
+      <tr><td align="center" style="color:#141414; font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:600; line-height:17px;">¿Estarás disponible?</td></tr>
       <tr><td height="14" style="height:14px; line-height:14px; font-size:0;">&nbsp;</td></tr>
-      <tr><td align="center" style="padding:0 140px; color:#7a7a7a; font-family:Arial,Helvetica,sans-serif; font-size:12px; line-height:14px;">Confirma si estarás disponible para participar en este proyecto.</td></tr>
+      <tr><td align="center" style="padding:0 140px; color:#7a7a7a; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:14px;">Confirma si estarás disponible para participar en este proyecto.</td></tr>
       <tr><td height="24" style="height:24px; line-height:24px; font-size:0;">&nbsp;</td></tr>
-      <tr><td align="center"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://example.com/confirmar" style="height:40px;v-text-anchor:middle;width:104px;" arcsize="50%" strokecolor="#141414" fillcolor="#141414"><w:anchorlock/><center style="color:#fff;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;">Confirmar</center></v:roundrect><![endif]--><!--[if !mso]><!--><a href="https://example.com/confirmar" target="_blank" style="display:inline-block; padding:12px 20px; background:#141414; border-radius:20px; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:600; line-height:16px; text-decoration:none;">Confirmar</a><!--<![endif]--></td></tr>
+      <tr><td align="center"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://example.com/confirmar" style="height:40px;v-text-anchor:middle;width:104px;" arcsize="50%" strokecolor="#141414" fillcolor="#141414"><w:anchorlock/><center style="color:#fff;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;">Confirmar</center></v:roundrect><![endif]--><!--[if !mso]><!--><a href="https://example.com/confirmar" target="_blank" class="email-button" style="display:inline-block; padding:14px 20px; background:#141414; border-radius:99px; color:#fff; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:500; line-height:16px; text-decoration:none;">Confirmar</a><!--<![endif]--></td></tr>
       <tr><td height="100" style="height:100px; line-height:100px; font-size:0;">&nbsp;</td></tr>
       <tr><td align="center" style="color:#7a7a7a; font-family:Arial,Helvetica,sans-serif; font-size:10px; line-height:14px;">1. El monto señalado no constituye una promesa de pago. IVA no incluido.<br>2. Porcentaje de los ingresos mensuales generados por el proyecto correspondiente.<br>Visite <a href="https://faust.mx/legal/colaboradores/t%C3%A9rminos-y-condiciones" target="_blank" style="color:#7a7a7a; text-decoration:underline;">faust.mx/legal/colaboradores/términos-y-condiciones</a> para consultar los Términos y Condiciones aplicables a los Colaboradores de la Expert Network.</td></tr>
       <tr><td height="50" style="height:50px; line-height:50px; font-size:0;">&nbsp;</td></tr>
       <tr><td><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%; border-collapse:collapse;"><tr>
-        <td valign="middle"><!-- Reemplazar: logo oscuro, proporción 110 × 12. --><img src="https://faust.mx/assets/Email/logo_bottom.png?text=FaustPartners™" width="110" height="12" alt="Faust" border="0" style="display:block; width:110px; height:12px; border:0;"></td>
-        <td align="right" valign="middle" style="font-family:Arial,Helvetica,sans-serif; font-size:10px; line-height:14px;"><a href="https://example.com/ayuda" target="_blank" style="color:#141414; text-decoration:underline;">Ayuda</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://example.com/legal" target="_blank" style="color:#141414; text-decoration:underline;">Legal</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://example.com/faust-os" target="_blank" style="color:#141414; text-decoration:underline;">Faust OS</a></td>
+        <td width="110" valign="middle" style="width:110px;"><!-- Logo oscuro: ancho fijo, altura proporcional. --><img src="https://faust.mx/assets/Email/logo_bottom.png?text=FaustPartners™" width="110" alt="Faust" border="0" style="display:block; width:110px; height:auto; border:0;"></td>
+        <td width="106" style="width:106px; font-size:0; line-height:0;">&nbsp;</td>
+        <td valign="middle" style="font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:500; line-height:14px; white-space:nowrap;"><a href="https://example.com/ayuda" target="_blank" style="color:#141414; font-weight:500; text-decoration:underline;">Ayuda</a></td>
+        <td width="106" style="width:106px; font-size:0; line-height:0;">&nbsp;</td>
+        <td valign="middle" style="font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:500; line-height:14px; white-space:nowrap;"><a href="https://example.com/legal" target="_blank" style="color:#141414; font-weight:500; text-decoration:underline;">Legal</a></td>
+        <td width="106" style="width:106px; font-size:0; line-height:0;">&nbsp;</td>
+        <td valign="middle" align="right" style="font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:500; line-height:14px; white-space:nowrap;"><a href="https://example.com/faust-os" target="_blank" style="color:#141414; font-weight:500; text-decoration:underline;">Faust OS</a></td>
       </tr></table></td></tr>
     </table>
     <!--[if mso]></td></tr></table><![endif]-->
