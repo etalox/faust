@@ -76,12 +76,18 @@
     .quote-close { position:absolute; top:20px; right:20px; display:grid; place-items:center; width:40px; height:40px; padding:0; border:0; border-radius:50%; background:var(--ink); color:#fff; cursor:pointer; }
     .quote-close::before, .quote-close::after { content:""; position:absolute; width:14px; height:1px; background:currentColor; transform:rotate(45deg); }
     .quote-close::after { transform:rotate(-45deg); }
-    .gallery-lightbox { position:fixed; z-index:90; inset:0; width:100vw; min-width:100vw; max-width:none; height:100dvh; min-height:100dvh; max-height:none; margin:0; padding:max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); border:0; overflow:hidden; background:transparent; }
+    .gallery-lightbox { position:fixed; z-index:90; inset:0; width:100vw; min-width:100vw; max-width:none; height:100dvh; min-height:100dvh; max-height:none; margin:0; padding:max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) 112px max(24px, env(safe-area-inset-left)); border:0; overflow:hidden; background:transparent; }
     .gallery-lightbox:not([open]) { display:none; }
     .gallery-lightbox[open] { display:grid; grid-template-columns:minmax(0, 1fr); grid-template-rows:minmax(0, 1fr); place-items:center; }
     .gallery-lightbox::backdrop { background:rgba(8,8,8,.96); }
     .gallery-lightbox:focus, .gallery-lightbox:focus-visible { outline:0; }
     .gallery-lightbox img { display:block; width:100%; height:100%; min-width:0; min-height:0; max-width:none; max-height:none; object-fit:contain; object-position:center; }
+    .gallery-lightbox-thumbs { position:absolute; z-index:2; bottom:24px; left:50%; display:flex; width:min(760px, calc(100% - 48px)); gap:8px; padding:0; overflow-x:auto; scrollbar-width:none; transform:translateX(-50%); }
+    .gallery-lightbox-thumbs::-webkit-scrollbar { display:none; }
+    .gallery-lightbox-thumb { flex:0 0 72px; width:72px; height:54px; padding:0; border:0; background:transparent; cursor:pointer; opacity:.58; overflow:hidden; transition:opacity .2s ease; }
+    .gallery-lightbox-thumb.is-active { opacity:1; }
+    .gallery-lightbox-thumb:focus, .gallery-lightbox-thumb:focus-visible { outline:1px solid rgba(255,255,255,.82); outline-offset:2px; }
+    .gallery-lightbox-thumb img { width:100%; height:100%; min-width:0; min-height:0; max-width:none; max-height:none; object-fit:cover; object-position:center; }
     .gallery-lightbox-close-mobile { display:none; }
     html.has-gallery-lightbox, body.has-gallery-lightbox { overflow:hidden; overscroll-behavior:none; }
     .quote-heading { max-width:590px; padding-right:40px; }
@@ -883,7 +889,9 @@
       .site-footer-item:last-child { border-bottom:1px solid rgba(24,24,24,.14); }
       .site-footer-label { margin:0 8px 0 0; }
       .gallery-lightbox-close-mobile { position:fixed; z-index:1; bottom:20px; left:50%; display:inline-flex; width:min(400px, calc(100% - 40px)); height:69px; padding:0; transform:translateX(-50%); align-items:center; justify-content:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); border:0; background:rgba(24,24,24,.96); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:#fff; font:500 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; cursor:pointer; }
-      .gallery-lightbox { padding-bottom:calc(113px + env(safe-area-inset-bottom)); }
+      .gallery-lightbox { padding-bottom:calc(170px + env(safe-area-inset-bottom)); }
+      .gallery-lightbox-thumbs { bottom:calc(105px + env(safe-area-inset-bottom)); width:calc(100% - 40px); gap:6px; }
+      .gallery-lightbox-thumb { flex-basis:54px; width:54px; height:42px; }
 
     }
     @media (min-width:701px) {
@@ -937,6 +945,7 @@
 
   <dialog class="gallery-lightbox" id="gallery-lightbox" aria-label="Vista ampliada de trabajo realizado">
     <img data-gallery-lightbox-image alt="">
+    <div class="gallery-lightbox-thumbs" data-gallery-lightbox-thumbs aria-label="Navegación de imágenes"></div>
     <button class="gallery-lightbox-close-mobile" type="button" data-gallery-lightbox-close data-en="Close">Cerrar</button>
   </dialog>
 
@@ -2331,11 +2340,14 @@
       const dialog = document.querySelector('#gallery-lightbox');
       const viewer = dialog?.querySelector('[data-gallery-lightbox-image]');
       const closeButton = dialog?.querySelector('[data-gallery-lightbox-close]');
-      const figures = [...document.querySelectorAll('.facilities .facility')];
-      if (!dialog || !viewer || !closeButton || !figures.length) return;
+      const thumbnails = dialog?.querySelector('[data-gallery-lightbox-thumbs]');
+      const figures = [...document.querySelectorAll('.facilities .facility')]
+        .sort((first, second) => Number(first.dataset.galleryOrder) - Number(second.dataset.galleryOrder));
+      if (!dialog || !viewer || !closeButton || !thumbnails || !figures.length) return;
 
       let savedScrollY = 0;
       let historyEntryActive = false;
+      const thumbnailButtons = new Map();
       const lockPageScroll = () => {
         savedScrollY = window.scrollY;
         document.documentElement.classList.add('has-gallery-lightbox');
@@ -2366,11 +2378,18 @@
         }
         closeDialog();
       };
-      const open = (figure, { syncHistory = true } = {}) => {
-        const source = figure.querySelector('img');
-        if (!source) return;
+      const showFigure = (figure) => {
+        const source = figure?.querySelector('img');
+        if (!source) return false;
         viewer.src = source.currentSrc || source.src;
         viewer.alt = source.alt || '';
+        dialog.dataset.galleryIndex = figure.dataset.galleryOrder;
+        thumbnailButtons.forEach((button, index) => button.classList.toggle('is-active', index === Number(figure.dataset.galleryOrder)));
+        thumbnailButtons.get(Number(figure.dataset.galleryOrder))?.scrollIntoView({ block:'nearest', inline:'center', behavior:'smooth' });
+        return true;
+      };
+      const open = (figure, { syncHistory = true } = {}) => {
+        if (!showFigure(figure)) return;
         lockPageScroll();
         dialog.showModal();
         if (syncHistory) {
@@ -2381,6 +2400,18 @@
           }, '', location.href);
         }
         historyEntryActive = true;
+      };
+      const move = (direction) => {
+        const currentIndex = Number(dialog.dataset.galleryIndex);
+        const nextIndex = Math.max(0, Math.min(figures.length - 1, currentIndex + direction));
+        if (!Number.isInteger(currentIndex) || nextIndex === currentIndex) return;
+        const nextFigure = figures.find((figure) => Number(figure.dataset.galleryOrder) === nextIndex);
+        if (!showFigure(nextFigure)) return;
+        history.replaceState({
+          ...(history.state || {}),
+          fatisaLightbox:true,
+          fatisaLightboxIndex:nextIndex
+        }, '', location.href);
       };
 
       figures.forEach((figure) => {
@@ -2395,6 +2426,27 @@
           open(figure);
         });
       });
+      figures.forEach((figure, index) => {
+        const source = figure.querySelector('img');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'gallery-lightbox-thumb';
+        button.setAttribute('aria-label', `Ver imagen ${index + 1}`);
+        const image = document.createElement('img');
+        image.src = source?.currentSrc || source?.src || '';
+        image.alt = '';
+        button.append(image);
+        button.addEventListener('click', () => {
+          if (!showFigure(figure)) return;
+          history.replaceState({
+            ...(history.state || {}),
+            fatisaLightbox:true,
+            fatisaLightboxIndex:index
+          }, '', location.href);
+        });
+        thumbnailButtons.set(index, button);
+        thumbnails.append(button);
+      });
       closeButton.addEventListener('click', close);
       dialog.addEventListener('click', (event) => {
         if (event.target === dialog) close();
@@ -2403,9 +2455,15 @@
         event.preventDefault();
         close();
       });
+      document.addEventListener('keydown', (event) => {
+        if (!dialog.open || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+        event.preventDefault();
+        move(event.key === 'ArrowLeft' ? -1 : 1);
+      });
       dialog.addEventListener('close', () => {
         unlockPageScroll();
         viewer.removeAttribute('src');
+        delete dialog.dataset.galleryIndex;
       });
       window.addEventListener('popstate', (event) => {
         if (document.body.dataset.page !== 'trabajos') return;
@@ -2415,6 +2473,7 @@
           event.stopImmediatePropagation();
           const figure = figures.find((item) => Number(item.dataset.galleryOrder) === index);
           if (figure && !dialog.open) open(figure, { syncHistory:false });
+          else if (figure) showFigure(figure);
           return;
         }
         if (!dialog.open) return;
