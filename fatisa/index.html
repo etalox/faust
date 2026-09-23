@@ -1358,7 +1358,7 @@
         image.className = 'equipment-card-image';
         image.src = card.dataset.equipmentImage;
         image.alt = card.querySelector('h3')?.textContent || '';
-        image.loading = 'lazy';
+        image.loading = 'eager';
         image.decoding = 'async';
         card.append(image);
       });
@@ -2520,12 +2520,10 @@
   <script>
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').then((registration) => registration.update()).catch(() => {});
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          registrations.forEach((registration) => registration.unregister());
+        }).catch(() => {});
       }, { once:true });
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data?.type !== 'fatisa-shell-updated') return;
-        window.location.reload();
-      });
     }
   </script>
   <script>
