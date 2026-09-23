@@ -12,7 +12,7 @@
 </head>
 <body>
   <script>
-    fetch('index.html', { cache:'default' }).then((response) => response.text()).then((source) => {
+    fetch('index.html', { cache:'no-cache' }).then((response) => response.text()).then((source) => {
       document.open();
       document.write(source.replace(/<body\b[^>]*>/i, '<body data-page="servicios">'));
       document.close();
