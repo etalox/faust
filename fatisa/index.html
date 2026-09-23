@@ -2520,8 +2520,12 @@
   <script>
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
+        navigator.serviceWorker.register('sw.js').then((registration) => registration.update()).catch(() => {});
       }, { once:true });
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type !== 'fatisa-shell-updated') return;
+        window.location.reload();
+      });
     }
   </script>
   <script>
