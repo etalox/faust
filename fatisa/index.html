@@ -76,10 +76,11 @@
     .quote-close { position:absolute; top:20px; right:20px; display:grid; place-items:center; width:40px; height:40px; padding:0; border:0; border-radius:50%; background:var(--ink); color:#fff; cursor:pointer; }
     .quote-close::before, .quote-close::after { content:""; position:absolute; width:14px; height:1px; background:currentColor; transform:rotate(45deg); }
     .quote-close::after { transform:rotate(-45deg); }
-    .gallery-lightbox { position:fixed; z-index:90; inset:0; width:100vw; max-width:none; height:100dvh; margin:0; padding:max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); border:0; overflow:hidden; background:rgba(8,8,8,.96); }
+    .gallery-lightbox { position:fixed; z-index:90; inset:0; width:100vw; min-width:100vw; max-width:none; height:100dvh; min-height:100dvh; max-height:none; margin:0; padding:max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); border:0; overflow:hidden; background:transparent; }
     .gallery-lightbox:not([open]) { display:none; }
     .gallery-lightbox[open] { display:grid; grid-template-columns:minmax(0, 1fr); grid-template-rows:minmax(0, 1fr); place-items:center; }
     .gallery-lightbox::backdrop { background:rgba(8,8,8,.96); }
+    .gallery-lightbox:focus, .gallery-lightbox:focus-visible { outline:0; }
     .gallery-lightbox img { display:block; width:100%; height:100%; min-width:0; min-height:0; max-width:none; max-height:none; object-fit:contain; object-position:center; }
     .gallery-lightbox-close-mobile { display:none; }
     html.has-gallery-lightbox, body.has-gallery-lightbox { overflow:hidden; overscroll-behavior:none; }
@@ -2333,10 +2334,8 @@
       const figures = [...document.querySelectorAll('.facilities .facility')];
       if (!dialog || !viewer || !closeButton || !figures.length) return;
 
-      const close = () => {
-        if (dialog.open) dialog.close();
-      };
       let savedScrollY = 0;
+      let historyEntryActive = false;
       const lockPageScroll = () => {
         savedScrollY = window.scrollY;
         document.documentElement.classList.add('has-gallery-lightbox');
@@ -2346,20 +2345,42 @@
         document.body.style.width = '100%';
       };
       const unlockPageScroll = () => {
+        const root = document.documentElement;
+        const previousScrollBehavior = root.style.scrollBehavior;
+        root.style.scrollBehavior = 'auto';
         document.documentElement.classList.remove('has-gallery-lightbox');
         document.body.classList.remove('has-gallery-lightbox');
         document.body.style.removeProperty('position');
         document.body.style.removeProperty('top');
         document.body.style.removeProperty('width');
-        window.scrollTo(0, savedScrollY);
+        window.scrollTo({ top:savedScrollY, left:0, behavior:'auto' });
+        requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
       };
-      const open = (figure) => {
+      const closeDialog = () => {
+        if (dialog.open) dialog.close();
+      };
+      const close = () => {
+        if (historyEntryActive) {
+          history.back();
+          return;
+        }
+        closeDialog();
+      };
+      const open = (figure, { syncHistory = true } = {}) => {
         const source = figure.querySelector('img');
         if (!source) return;
         viewer.src = source.currentSrc || source.src;
         viewer.alt = source.alt || '';
         lockPageScroll();
         dialog.showModal();
+        if (syncHistory) {
+          history.pushState({
+            ...(history.state || {}),
+            fatisaLightbox:true,
+            fatisaLightboxIndex:Number(figure.dataset.galleryOrder)
+          }, '', location.href);
+        }
+        historyEntryActive = true;
       };
 
       figures.forEach((figure) => {
@@ -2378,9 +2399,29 @@
       dialog.addEventListener('click', (event) => {
         if (event.target === dialog) close();
       });
+      dialog.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        close();
+      });
       dialog.addEventListener('close', () => {
         unlockPageScroll();
         viewer.removeAttribute('src');
+      });
+      window.addEventListener('popstate', (event) => {
+        if (document.body.dataset.page !== 'trabajos') return;
+        const index = event.state?.fatisaLightboxIndex;
+        if (event.state?.fatisaLightbox && Number.isInteger(index)) {
+          event.fatisaLightboxHandled = true;
+          event.stopImmediatePropagation();
+          const figure = figures.find((item) => Number(item.dataset.galleryOrder) === index);
+          if (figure && !dialog.open) open(figure, { syncHistory:false });
+          return;
+        }
+        if (!dialog.open) return;
+        event.fatisaLightboxHandled = true;
+        event.stopImmediatePropagation();
+        historyEntryActive = false;
+        closeDialog();
       });
     })();
   </script>
@@ -2535,7 +2576,8 @@
         navigate(nextPage, url);
       });
 
-      window.addEventListener('popstate', () => {
+      window.addEventListener('popstate', (event) => {
+        if (event.fatisaLightboxHandled) return;
         const url = new URL(location.href);
         navigate(pageFromUrl(url), url, false);
       });
