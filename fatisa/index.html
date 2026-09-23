@@ -290,7 +290,8 @@
     .client-trust { margin-top:140px; padding:0; }
     .client-trust[hidden] { display:none !important; }
     .client-trust-copy h2 { max-width:760px; margin:0; font:400 48px/1 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-1.92px; }
-    .client-logo-grid { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:42px 52px; margin-top:48px; padding:42px 0; border-top:1px solid rgba(24,24,24,.16); border-bottom:1px solid rgba(24,24,24,.16); }
+    .client-logo-grid { --client-logo-row-gap:52px; display:flex; flex-direction:column; gap:42px; margin-top:48px; padding:42px 0; border-top:1px solid rgba(24,24,24,.16); border-bottom:1px solid rgba(24,24,24,.16); }
+    .client-logo-row { display:flex; align-items:center; justify-content:space-between; gap:var(--client-logo-row-gap); min-width:0; }
     .client-logo { display:grid; flex:0 1 clamp(108px, 10.5vw, 154px); height:52px; place-items:center; }
     .client-logo img { display:block; width:100%; height:48px; object-fit:contain; opacity:0; transition:opacity .35s ease; }
     .client-logo.is-loaded img { opacity:1; }
@@ -548,7 +549,8 @@
       .location-copy h2 { font-size:48px; }
       .client-trust { margin-top:120px; }
       .client-trust-copy h2 { font-size:40px; letter-spacing:-1.6px; }
-      .client-logo-grid { gap:36px 42px; margin-top:42px; padding:36px 0; }
+      .client-logo-grid { gap:36px; margin-top:42px; padding:36px 0; }
+      .client-logo-grid { --client-logo-row-gap:42px; }
       .client-logo { flex-basis:clamp(100px, 11vw, 136px); height:48px; }
       .client-logo img { height:44px; }
       .workflow-step { grid-template-columns:44px minmax(210px, .7fr) minmax(0, 1fr); gap:22px; padding:24px 0; }
@@ -796,8 +798,9 @@
       .location-map-link { right:16px; bottom:16px; }
       body[data-page="nosotros"] main > .client-trust { display:block; margin-top:100px; padding:0; }
       .client-trust-copy h2 { max-width:100%; font-family:"BDO Grotesk", Arial, sans-serif; font-size:32px; font-weight:500; line-height:36px; letter-spacing:-1.28px; text-transform:uppercase; }
-      .client-logo-grid { justify-content:space-between; gap:30px 20px; margin-top:32px; padding:30px 0; }
-      .client-logo { flex:0 1 calc(50% - 10px); height:42px; }
+      .client-logo-grid { gap:30px; margin-top:32px; padding:30px 0; }
+      .client-logo-row { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:30px 20px; }
+      .client-logo { width:100%; flex:0 1 auto; height:42px; }
       .client-logo img { height:38px; }
       .workflow { margin-top:100px; padding:24px 24px 40px; clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
       .solutions-header, .workflow-header { display:block; }
@@ -2361,23 +2364,62 @@
     (() => {
       const section = document.querySelector('[data-client-trust]');
       if (!section) return;
+      const grid = section.querySelector('.client-logo-grid');
       const logos = [...section.querySelectorAll('img[data-src]')];
+      const mobileQuery = window.matchMedia('(max-width: 700px)');
+      let distributionFrame = 0;
+      const distribute = () => {
+        if (!grid) return;
+        const cards = [...grid.querySelectorAll('.client-logo')];
+        if (!cards.length) return;
+
+        const sampleWidth = cards[0].getBoundingClientRect().width || 108;
+        const rowGap = Number.parseFloat(getComputedStyle(grid).getPropertyValue('--client-logo-row-gap')) || 0;
+        const columns = mobileQuery.matches
+          ? 2
+          : Math.max(1, Math.floor((grid.clientWidth + rowGap) / (sampleWidth + rowGap)));
+        const rowCount = Math.max(1, Math.ceil(cards.length / columns));
+        const baseCount = Math.floor(cards.length / rowCount);
+        const extraCards = cards.length % rowCount;
+        const rows = Array.from({ length:rowCount }, () => {
+          const row = document.createElement('div');
+          row.className = 'client-logo-row';
+          return row;
+        });
+
+        let cursor = 0;
+        rows.forEach((row, index) => {
+          const count = baseCount + (index < extraCards ? 1 : 0);
+          cards.slice(cursor, cursor + count).forEach((card) => row.append(card));
+          cursor += count;
+        });
+        grid.replaceChildren(...rows);
+      };
+      const scheduleDistribution = () => {
+        cancelAnimationFrame(distributionFrame);
+        distributionFrame = requestAnimationFrame(distribute);
+      };
       const reveal = (image) => {
         const card = image.closest('.client-logo');
         if (!card || card.dataset.clientLogoState) return;
         card.dataset.clientLogoState = 'loaded';
         card.classList.add('is-loaded');
+        scheduleDistribution();
         section.hidden = false;
       };
       const remove = (image) => {
         const card = image.closest('.client-logo');
         if (card) card.remove();
+        scheduleDistribution();
       };
+      scheduleDistribution();
       logos.forEach((image) => {
         image.addEventListener('load', () => reveal(image), { once:true });
         image.addEventListener('error', () => remove(image), { once:true });
         image.src = image.dataset.src;
       });
+      new ResizeObserver(scheduleDistribution).observe(grid);
+      mobileQuery.addEventListener('change', scheduleDistribution);
     })();
   </script>
   <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
