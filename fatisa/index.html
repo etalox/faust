@@ -438,10 +438,10 @@
     .site-footer-item a, .site-footer-item address { min-width:0; color:var(--ink); font:400 13px/1.35 "BDO Grotesk", Arial, sans-serif; font-style:normal; text-decoration:none; white-space:nowrap; }
     .site-footer-item a { width:max-content; max-width:100%; border-bottom:1px solid transparent; transition:border-color .2s ease, color .2s ease; }
     .site-footer-item a:hover { border-color:currentColor; }
-    body.is-next-page-preview main { transform:translate3d(0, var(--next-page-offset, 0px), 0); will-change:transform; }
+    body.is-next-page-preview main { position:relative; top:var(--next-page-offset, 0px); will-change:top; }
     html.is-next-page-scroll-locked { overflow-y:scroll; scroll-behavior:auto !important; }
     html.is-next-page-scroll-locked::before { content:""; display:block; height:var(--next-page-document-height); pointer-events:none; }
-    body.is-next-page-scroll-locked { position:fixed !important; top:var(--next-page-lock-offset, 0px) !important; right:0; left:0; width:100%; }
+    body.is-next-page-scroll-locked { position:fixed !important; top:var(--next-page-lock-offset, 0px) !important; right:0; left:0; width:var(--next-page-body-width, 100%); height:var(--next-page-body-height, auto); }
     .next-page-strip { position:absolute; z-index:2; right:0; bottom:100%; left:0; display:flex; height:var(--next-page-reveal, 0px); align-items:center; justify-content:center; gap:10px; overflow:hidden; background:var(--red); color:#fff; pointer-events:none; }
     .next-page-strip.is-visible { min-height:0; }
     .next-page-strip span, .next-page-strip svg { opacity:0; transform:translateY(6px); transition:opacity .2s ease, transform .28s cubic-bezier(.16,1,.3,1); }
@@ -1620,6 +1620,7 @@
         languageSwitch.classList.toggle('is-hero-context', inHero);
       };
       const updateHeader = () => {
+        if (document.documentElement.classList.contains('is-next-page-scroll-locked')) return;
         const isCompact = window.scrollY > compactHeaderScrollY;
         header.classList.toggle('is-scrolled', isCompact);
         languageSwitch?.classList.toggle('is-hidden', page !== 'inicio' && isCompact);
@@ -1790,6 +1791,7 @@
       };
       const updateParallax = () => {
         ticking = false;
+        if (document.documentElement.classList.contains('is-next-page-scroll-locked')) return;
         const isMobile = window.matchMedia('(max-width: 700px)').matches;
         const progress = Math.max(0, Math.min(window.scrollY, hero.offsetHeight));
         const parallax = Math.min(progress * (isMobile ? 0.13 : 0.12), isMobile ? 76 : 72);
@@ -3302,8 +3304,11 @@
       let lockedScrollTop = 0;
       let unlockFrame = 0;
       let navigating = false;
-      const maximumReveal = 96;
-      const contentRevealThreshold = 52;
+  const maximumReveal = 56;
+  const contentRevealThreshold = 26;
+  const navigationRevealThreshold = maximumReveal * .9;
+  const collapseDuration = 200;
+  const navigationDelay = 200;
       const nextPage = () => sequence[sequence.indexOf(currentPage) + 1] || '';
       const pageLabel = (page) => document.querySelector(`.site-nav [data-page-link="${page}"]`)?.textContent.trim() || page;
       const setReveal = (value) => {
@@ -3312,15 +3317,18 @@
         if (reveal > 0 && !wasVisible) {
           window.cancelAnimationFrame(unlockFrame);
           lockedScrollTop = window.scrollY;
+          const bodyBounds = document.body.getBoundingClientRect();
           document.documentElement.style.setProperty('--next-page-document-height', `${document.documentElement.scrollHeight}px`);
           document.documentElement.style.setProperty('--next-page-lock-offset', `${-lockedScrollTop}px`);
+          document.documentElement.style.setProperty('--next-page-body-width', `${bodyBounds.width}px`);
+          document.documentElement.style.setProperty('--next-page-body-height', `${document.body.offsetHeight}px`);
           document.documentElement.classList.add('is-next-page-scroll-locked');
           document.body.classList.add('is-next-page-scroll-locked');
         }
         strip.style.setProperty('--next-page-reveal', `${reveal}px`);
         document.documentElement.style.setProperty('--next-page-offset', `${-reveal}px`);
         if (pageContent) {
-          pageContent.style.setProperty('transform', `translate3d(0, ${-reveal}px, 0)`, 'important');
+          pageContent.style.setProperty('top', `${-reveal}px`, 'important');
         }
         strip.classList.toggle('is-visible', reveal > 0);
         strip.classList.toggle('is-ready', reveal >= contentRevealThreshold);
@@ -3332,6 +3340,8 @@
             document.documentElement.classList.remove('is-next-page-scroll-locked');
             document.documentElement.style.removeProperty('--next-page-document-height');
             document.documentElement.style.removeProperty('--next-page-lock-offset');
+            document.documentElement.style.removeProperty('--next-page-body-width');
+            document.documentElement.style.removeProperty('--next-page-body-height');
           });
         }
       };
@@ -3344,13 +3354,13 @@
         window.clearTimeout(releaseTimer);
         cancelCollapse();
         setReveal(0);
-        pageContent?.style.removeProperty('transform');
+        pageContent?.style.removeProperty('top');
       };
       const collapse = () => {
         if (!reveal) return;
         const revealAtRelease = reveal;
         const startedAt = performance.now();
-        const duration = 420;
+    const duration = collapseDuration;
         const step = (now) => {
           const progress = Math.min(1, (now - startedAt) / duration);
           const easedProgress = 1 - Math.pow(1 - progress, 3);
@@ -3358,7 +3368,7 @@
           if (progress < 1) collapseFrame = window.requestAnimationFrame(step);
           else {
             overscroll = 0;
-            pageContent?.style.removeProperty('transform');
+            pageContent?.style.removeProperty('top');
           }
         };
         collapseFrame = window.requestAnimationFrame(step);
@@ -3372,7 +3382,7 @@
       };
       const go = () => {
         const next = nextPage();
-        if (navigating || !next || reveal < maximumReveal) return;
+    if (navigating || !next || reveal < navigationRevealThreshold) return;
         navigating = true;
         const link = document.querySelector(`.site-nav [data-page-link="${next}"]`);
         hide();
@@ -3383,9 +3393,9 @@
       const scheduleRelease = () => {
         window.clearTimeout(releaseTimer);
         releaseTimer = window.setTimeout(() => {
-          if (reveal >= maximumReveal) go();
-          else collapse();
-        }, reveal >= maximumReveal ? 420 : 1100);
+      if (reveal >= navigationRevealThreshold) go();
+      else collapse();
+    }, reveal >= navigationRevealThreshold ? navigationDelay : 1100);
       };
       const consumeBarScroll = (event, delta) => {
         if (reveal <= 0 || currentPage === 'nosotros') return false;
@@ -3400,7 +3410,7 @@
         if (reveal > 0) scheduleRelease();
         else {
           overscroll = 0;
-          pageContent?.style.removeProperty('transform');
+          pageContent?.style.removeProperty('top');
         }
         return true;
       };
