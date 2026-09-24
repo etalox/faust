@@ -1,11 +1,10 @@
 <!doctype html>
-<html lang="es-MX" translate="no" class="notranslate">
+<html lang="es-MX">
 <head>
   <meta charset="utf-8">
-  <meta name="google" content="notranslate">
   <meta id="fatisa-viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <script>(() => { const viewport = document.getElementById('fatisa-viewport'), nativeViewport = 'width=device-width, initial-scale=1, viewport-fit=cover', iphoneViewport = 'width=390, viewport-fit=cover'; let frame = null, applying = false; const refresh = () => { applying = true; viewport.content = nativeViewport; requestAnimationFrame(() => { viewport.content = window.innerWidth <= 390 ? iphoneViewport : nativeViewport; requestAnimationFrame(() => { applying = false; }); }); }; const schedule = () => { if (applying || frame !== null) return; frame = requestAnimationFrame(() => { frame = null; refresh(); }); }; refresh(); window.addEventListener('resize', schedule, { passive:true }); })();</script>
-  <script>document.documentElement.classList.add('fatisa-hero-pending');</script>
+  <script>window.FATISA_USE_GOOGLE_TRANSLATE = true; window.FATISA_DIRECT_TEXT_TRANSLATION = true; document.documentElement.classList.add('fatisa-hero-pending');</script>
   <link rel="icon" type="image/png" href="assets/tab_icon.png">
   <link rel="preload" href="../assets/Fonts/BDOGrotesk-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="../assets/Fonts/BDOGrotesk-Medium.ttf" as="font" type="font/ttf" crossorigin>
@@ -97,6 +96,29 @@
     .gallery-lightbox-close::after { transform:rotate(-45deg); }
     .gallery-lightbox-close-mobile { display:none; }
     html.has-gallery-lightbox, body.has-gallery-lightbox { overflow:hidden; overscroll-behavior:none; }
+    /* Google Translate se controla desde el selector propio; se oculta toda su interfaz inyectada. */
+    #google_translate_element, #google_translate_element *, .goog-te-gadget, .goog-te-gadget *, .goog-te-banner-frame, .goog-te-banner, .goog-te-balloon-frame, .goog-te-menu-frame, .goog-te-menu2, .goog-te-gadget-icon, .goog-te-gadget-simple, .VIpgJd-ZVi9od-ORHb, .VIpgJd-ZVi9od-ORHb-OEVmcd, .VIpgJd-ZVi9od-aZ2wEe-wOHMyf, .VIpgJd-yAWNEb-L7lbkb { display:none !important; visibility:hidden !important; }
+    iframe.goog-te-banner-frame, #goog-gt-tt, .goog-gt-tt, .goog-tooltip, .goog-tooltip:hover { display:none !important; visibility:hidden !important; }
+    .goog-text-highlight, .goog-text-highlight:hover { background:transparent !important; box-shadow:none !important; }
+    html { margin-top:0 !important; }
+    body { top:0 !important; margin-top:0 !important; }
+    /* El contenido sólo se revela cuando Google terminó de reemplazar el texto. */
+    body.is-google-translating .site-nav a, body.is-google-translating .menu-toggle > span,
+    body.is-google-translating .hero h1, body.is-google-translating .hero .intro,
+    body.is-google-translating .section-title, body.is-google-translating .services-intro,
+    body.is-google-translating .service-system-name, body.is-google-translating .service-system-summary,
+    body.is-google-translating .service-system-offerings li, body.is-google-translating .service-system-detail p,
+    body.is-google-translating .solutions-header p, body.is-google-translating .solution-card h3,
+    body.is-google-translating .solution-card p, body.is-google-translating .workflow-header p,
+    body.is-google-translating .workflow-step h3, body.is-google-translating .workflow-step p,
+    body.is-google-translating .shipping-copy h2, body.is-google-translating .shipping-copy p,
+    body.is-google-translating .company-statement h2, body.is-google-translating .company-context p,
+    body.is-google-translating .company-principles li > span, body.is-google-translating .company-principles li > p,
+    body.is-google-translating .client-trust-copy h2, body.is-google-translating .location-copy h2,
+    body.is-google-translating .equipment-header h1, body.is-google-translating .equipment-header p,
+    body.is-google-translating .equipment-group-head h2, body.is-google-translating .equipment-card h3,
+    body.is-google-translating .equipment-card p, body.is-google-translating .facilities > .section-title,
+    body.is-google-translating .cta h2, body.is-google-translating .cta p { opacity:.6; }
     .quote-heading { max-width:590px; padding-right:40px; }
     .quote-kicker { margin-bottom:16px; color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
     .quote-heading h2 { font:400 clamp(34px, 4vw, 52px)/.98 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.055em; }
@@ -1277,7 +1299,22 @@
       <div class="company-hero">
         <div class="brand"><img src="assets/colored_logo.svg" alt=""><span>Fatisa<sup>™</sup></span></div>
         <div class="company-statement">
-          <h2 class="section-title" data-company-years>Más de 35 años convirtiendo precisión en confianza.</h2>
+          <h2 class="section-title" data-company-years></h2>
+          <script>
+            (() => {
+              const startYear = 1988;
+              window.fatisaUpdateCompanyYears = () => {
+                const years = Math.max(0, new Date().getFullYear() - startYear);
+                const isEnglish = document.documentElement.lang === 'en';
+                document.querySelectorAll('[data-company-years]').forEach((heading) => {
+                  heading.textContent = isEnglish
+                    ? `More than ${years} years of experience and capability.`
+                    : `Más de ${years} años de experiencia y capacidad.`;
+                });
+              };
+              window.fatisaUpdateCompanyYears();
+            })();
+          </script>
         </div>
         <div class="company-context"><p>Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico. Desarrollamos soluciones integrales de manufactura para la industria, desde ingeniería y diseño hasta fabricación de piezas, herramentales y componentes especializados.</p></div>
       </div>
@@ -1525,21 +1562,6 @@
   </footer>
   <a class="mobile-quote" href="#contacto" data-quote-trigger>Solicitar una cotización</a>
   <script src="../OS/metallic-loader.js"></script>
-  <script>
-    (() => {
-      const startYear = 1988;
-      window.fatisaUpdateCompanyYears = () => {
-        const years = Math.max(0, new Date().getFullYear() - startYear);
-        const isEnglish = document.documentElement.lang === 'en';
-        document.querySelectorAll('[data-company-years]').forEach((heading) => {
-          heading.textContent = isEnglish
-            ? `More than ${years} years turning precision into trust.`
-            : `Más de ${years} años convirtiendo precisión en confianza.`;
-        });
-      };
-      window.fatisaUpdateCompanyYears();
-    })();
-  </script>
   <script>
     (() => {
       const loader = document.querySelector('[data-fatisa-loader]');
@@ -2045,6 +2067,9 @@
     })();
 
     (() => {
+      // La traducción local queda como respaldo de desarrollo. En producción,
+      // usamos el mismo widget oficial controlado que FaustPartners.
+      if (window.FATISA_USE_GOOGLE_TRANSLATE !== true) {
       const english = {
         'Inicio':'Home', 'Servicios':'Services', 'Nosotros':'About Us', 'Trabajos Realizados':'Completed Work',
         'Contacto':'Contact', 'Abrir menú':'Open menu', 'Explorar Servicios':'Explore Services', 'Conócenos':'Get to Know Us',
@@ -2084,7 +2109,6 @@
         'Soldadura TIG':'TIG welding', 'Soldadura de precisión':'Precision welding', 'Fabricación especializada':'Specialized fabrication', 'Servicios especializados para fabricar y recuperar componentes industriales.':'Specialized services to manufacture and restore industrial components.',
         'Acabados':'Finishing', 'Reemplazo de componentes':'Component replacement', 'Reparaciones':'Repairs', 'Resistencias':'Heating elements', 'Acabados, reemplazo de componentes, reparaciones y resistencias para moldes.':'Finishing, component replacement, repairs, and heating elements for molds.',
         'Mantenimiento de Moldes':'Mold Maintenance', 'Mantenimiento para extender la vida útil y continuidad operativa de sus moldes.':'Maintenance to extend the useful life and operational continuity of your molds.',
-        'Más de 35 años convirtiendo precisión en confianza.':'More than 35 years turning precision into trust.',
         'Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico y ofrecemos soluciones integrales de manufactura para la industria':'We are a Mexican company with experience in the metalworking sector since 1988, offering comprehensive manufacturing solutions for industry.',
         'Especialización':'Specialization', 'Equipo y capacidad':'Team and capability', 'Forma de trabajar':'How we work',
         'Herramentales, moldes de inyección y termoformado, modelos industriales y maquinado CNC general.':'Tooling, injection and thermoforming molds, industrial patterns, and general CNC machining.',
@@ -2321,11 +2345,75 @@
         setActiveLanguage('es');
       };
 
+      // Google sólo se usa como proveedor de texto. Nunca recibe control del DOM:
+      // guardamos su respuesta por sesión y la aplicamos con la misma transición
+      // reversible que utiliza el sitio para el cambio local de idioma.
+      const googleTextCacheKey = 'fatisa-google-text-cache-v1';
+      const googleAttemptKey = 'fatisa-google-text-translation-attempted-v1';
+      let googleTextCache = {};
+      let googleTranslationPromise = null;
+      let googleTranslationAttempted = false;
+      try { googleTextCache = JSON.parse(sessionStorage.getItem(googleTextCacheKey) || '{}') || {}; } catch (_) {}
+      try { googleTranslationAttempted = sessionStorage.getItem(googleAttemptKey) === '1'; } catch (_) {}
+
+      const translateWithGoogle = async (text) => {
+        const endpoint = new URL('https://translate.googleapis.com/translate_a/single');
+        endpoint.searchParams.set('client', 'gtx');
+        endpoint.searchParams.set('sl', 'es');
+        endpoint.searchParams.set('tl', 'en');
+        endpoint.searchParams.set('dt', 't');
+        endpoint.searchParams.set('q', text);
+        const response = await fetch(endpoint, { credentials:'omit', cache:'force-cache' });
+        if (!response.ok) throw new Error(`Google Translate ${response.status}`);
+        const payload = await response.json();
+        const translated = Array.isArray(payload?.[0]) ? payload[0].map((part) => part?.[0] || '').join('') : '';
+        if (!translated) throw new Error('Google Translate returned no text');
+        return translated;
+      };
+
+      const ensureGoogleTranslations = () => {
+        if (googleTranslationPromise) return googleTranslationPromise;
+        if (googleTranslationAttempted) return Promise.resolve();
+        const sources = [...new Set([...spanishTextNodes.values()]
+          .map((value) => value.trim())
+          .filter((value) => value && /\p{L}/u.test(value) && !english[value] && !googleTextCache[value]))];
+        if (!sources.length) return Promise.resolve();
+
+        googleTranslationAttempted = true;
+        try { sessionStorage.setItem(googleAttemptKey, '1'); } catch (_) {}
+        googleTranslationPromise = (async () => {
+          let cursor = 0;
+          let requestsBlocked = false;
+          const worker = async () => {
+            while (!requestsBlocked && cursor < sources.length) {
+              const source = sources[cursor++];
+              try {
+                googleTextCache[source] = await translateWithGoogle(source);
+              } catch (_) {
+                // Una respuesta temporalmente limitada no invalida las traducciones
+                // locales ya disponibles ni provoca nuevos intentos al alternar idioma.
+                requestsBlocked = true;
+              }
+            }
+          };
+          await Promise.all(Array.from({ length:3 }, worker));
+          Object.assign(english, googleTextCache);
+          try { sessionStorage.setItem(googleTextCacheKey, JSON.stringify(googleTextCache)); } catch (_) {}
+        })().finally(() => { googleTranslationPromise = null; });
+        return googleTranslationPromise;
+      };
+
       languageButtons.forEach((button) => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async () => {
           const language = button.dataset.language;
+          const requestId = (window.fatisaLanguageRequestId || 0) + 1;
+          window.fatisaLanguageRequestId = requestId;
           try { localStorage.setItem('fatisa-language', language); } catch (_) {}
           if (language === 'en' && document.documentElement.lang !== 'en') {
+            button.setAttribute('aria-busy', 'true');
+            await ensureGoogleTranslations();
+            button.removeAttribute('aria-busy');
+            if (requestId !== window.fatisaLanguageRequestId) return;
             interpolateLanguageLayout(applyEnglish);
             return;
           }
@@ -2359,16 +2447,488 @@
       try { preferredLanguage = localStorage.getItem('fatisa-language') || ''; } catch (_) {}
 
       if (preferredLanguage === 'en') {
-        applyEnglish();
+        ensureGoogleTranslations().finally(applyEnglish);
       } else if (preferredLanguage === 'es') {
         setActiveLanguage('es');
       } else {
         detectCountry().then((country) => {
           let storedLanguage = '';
           try { storedLanguage = localStorage.getItem('fatisa-language') || ''; } catch (_) {}
-          if (!storedLanguage && country && country !== 'MX') applyEnglish();
+          if (!storedLanguage && country && country !== 'MX') ensureGoogleTranslations().finally(applyEnglish);
         });
       }
+      }
+    })();
+  </script>
+  <script>
+    window.FATISA_USE_GOOGLE_TRANSLATE = true;
+
+    (() => {
+      if (window.FATISA_DIRECT_TEXT_TRANSLATION) {
+        const cacheKey = 'fatisa-google-translate-cache-v2';
+        const cacheLifetime = 24 * 60 * 60 * 1000;
+        const textNodes = new Map();
+        const languageButtons = [...document.querySelectorAll('[data-language]')];
+        const textSelector = [
+          '.site-nav a', '.mobile-nav a', '.menu-toggle > span', '.hero h1', '.hero .intro',
+          '.hero-page-link-label', '.hero-page-link-summary', '.services-kicker', '.section-title',
+          '.services-intro', '.service-system-name', '.service-system-summary',
+          '.service-system-offerings li', '.service-system-detail p', '.service-system-detail .text-link',
+          '.solutions-header p', '.solution-card h3', '.solution-card p', '.workflow-header p',
+          '.workflow-step h3', '.workflow-step p', '.workflow-note p', '.shipping-copy h2',
+          '.shipping-copy p', '.collaboration-cta', '.collaboration-card-label', '.route-labels',
+          '.collaboration-points li', '.company-statement h2', '.company-context p',
+          '.company-principles li > span', '.company-principles li > p', '.client-trust-copy h2',
+          '.location-copy .section-kicker', '.location-copy h2', '.location-copy address',
+          '.equipment-header .section-kicker', '.equipment-header h1', '.equipment-header p',
+          '.equipment-group-head h2', '.equipment-card h3', '.equipment-card p',
+          '.facilities > .section-kicker', '.facilities > .section-title', '.cta h2', '.cta p',
+          '.site-footer-label', '.quote-heading p', '.quote-heading h2', '.quote-field label',
+          '.quote-file-note', '.quote-consent span'
+        ].join(',');
+        const layoutSelector = [
+          '.site-header .brand', '.site-nav a', '.mobile-nav a', '.site-header .menu-toggle',
+          '.hero-copy > .brand', '.hero h1', '.hero .intro', '.hero-page-links a', '.services-head',
+          '.service-system', '.solutions-header', '.solution-card', '.workflow-header', '.workflow-step',
+          '.shipping-shell', '.company-hero', '.company-layout', '.client-trust-copy', '.location-copy',
+          '.equipment-header', '.equipment-group-head', '.equipment-card', '.facilities > .section-kicker',
+          '.facilities > .section-title', '.cta', '.site-footer-item', '.quote-heading', '.quote-field',
+          '.quote-consent', '.quote-actions'
+        ].join(',');
+
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          const text = node.nodeValue.trim();
+          if (text && /\p{L}/u.test(text) && !node.parentElement?.closest('script, style, svg, [translate="no"]')) {
+            textNodes.set(node, node.nodeValue);
+          }
+        }
+
+        let cache = { createdAt:0, translations:{} };
+        let translationPromise = null;
+        let pendingLanguageRequest = 0;
+        try {
+          const stored = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+          if (stored && typeof stored.createdAt === 'number' && stored.translations && typeof stored.translations === 'object') cache = stored;
+        } catch (_) {}
+
+        const cacheIsFresh = () => Date.now() - cache.createdAt < cacheLifetime;
+        const storeCache = () => {
+          try { localStorage.setItem(cacheKey, JSON.stringify(cache)); } catch (_) {}
+        };
+        const visibleTextTargets = () => [...document.querySelectorAll(textSelector)].filter((element) => element.getClientRects().length);
+        const captureLayout = () => new Map([...document.querySelectorAll(layoutSelector)]
+          .filter((element) => element.getClientRects().length)
+          .map((element) => [element, element.getBoundingClientRect()]));
+
+        const animateUpdate = (update) => {
+          const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          const layouts = captureLayout();
+          const textTargets = visibleTextTargets();
+          if (reducedMotion) { update(); return; }
+          textTargets.forEach((element) => { element.style.opacity = '.6'; });
+          update();
+          requestAnimationFrame(() => {
+            [...document.querySelectorAll(layoutSelector)].filter((element) => element.getClientRects().length).forEach((element) => {
+              const first = layouts.get(element);
+              const last = element.getBoundingClientRect();
+              if (!first || !last.width || !last.height) return;
+              const x = first.left - last.left;
+              const y = first.top - last.top;
+              const sx = first.width / last.width;
+              const sy = first.height / last.height;
+              if (Math.abs(x) < .5 && Math.abs(y) < .5 && Math.abs(sx - 1) < .01 && Math.abs(sy - 1) < .01) return;
+              element.animate([
+                { transformOrigin:'top left', transform:`translate(${x}px, ${y}px) scale(${sx}, ${sy})` },
+                { transformOrigin:'top left', transform:'translate(0, 0) scale(1, 1)' }
+              ], { duration:800, easing:'cubic-bezier(.16, 1, .3, 1)' });
+            });
+            visibleTextTargets().forEach((element) => {
+              const animation = element.animate([{ opacity:.6 }, { opacity:1 }], { duration:800, easing:'cubic-bezier(.16, 1, .3, 1)' });
+              animation.onfinish = () => element.style.removeProperty('opacity');
+            });
+          });
+        };
+
+        const requestGoogleText = async (text) => {
+          const url = new URL('https://translate.googleapis.com/translate_a/single');
+          url.search = new URLSearchParams({ client:'gtx', sl:'es', tl:'en', dt:'t', q:text }).toString();
+          const response = await fetch(url, { credentials:'omit', cache:'no-store' });
+          if (!response.ok) throw new Error(`Google Translate ${response.status}`);
+          const payload = await response.json();
+          const translated = Array.isArray(payload?.[0]) ? payload[0].map((item) => item?.[0] || '').join('') : '';
+          if (!translated) throw new Error('Empty translation');
+          return translated;
+        };
+
+        const ensureTranslations = () => {
+          if (cacheIsFresh()) return Promise.resolve(cache.translations);
+          if (translationPromise) return translationPromise;
+          const sources = [...new Set([...textNodes.values()].map((value) => value.trim()))];
+          translationPromise = (async () => {
+            const translations = {};
+            let cursor = 0;
+            let blocked = false;
+            const worker = async () => {
+              while (!blocked && cursor < sources.length) {
+                const source = sources[cursor++];
+                try { translations[source] = await requestGoogleText(source); }
+                catch (_) { blocked = true; }
+              }
+            };
+            await Promise.all(Array.from({ length:3 }, worker));
+            cache = { createdAt:Date.now(), translations };
+            storeCache();
+            return translations;
+          })().finally(() => { translationPromise = null; });
+          return translationPromise;
+        };
+
+        const setSwitch = (language) => {
+          document.documentElement.lang = language === 'en' ? 'en' : 'es-MX';
+          document.querySelector('.language-switch')?.setAttribute('data-active-language', language);
+          languageButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
+        };
+        const applySpanish = () => {
+          textNodes.forEach((original, node) => { if (node.isConnected) node.nodeValue = original; });
+          setSwitch('es');
+        };
+        const applyEnglish = () => {
+          textNodes.forEach((original, node) => {
+            if (!node.isConnected) return;
+            const source = original.trim();
+            const translated = cache.translations[source];
+            if (translated) node.nodeValue = original.replace(source, translated);
+          });
+          setSwitch('en');
+        };
+
+        const selectLanguage = async (language, animate = true) => {
+          const requestId = ++pendingLanguageRequest;
+          try { localStorage.setItem('fatisa-language', language); } catch (_) {}
+          if (language === 'es') {
+            if (requestId === pendingLanguageRequest) animate ? animateUpdate(applySpanish) : applySpanish();
+            return;
+          }
+          languageButtons.find((button) => button.dataset.language === 'en')?.setAttribute('aria-busy', 'true');
+          await ensureTranslations();
+          languageButtons.find((button) => button.dataset.language === 'en')?.removeAttribute('aria-busy');
+          if (requestId === pendingLanguageRequest) animate ? animateUpdate(applyEnglish) : applyEnglish();
+        };
+
+        languageButtons.forEach((button) => button.addEventListener('click', (event) => {
+          event.preventDefault();
+          selectLanguage(button.dataset.language, true);
+        }));
+
+        let preferred = '';
+        try { preferred = localStorage.getItem('fatisa-language') || ''; } catch (_) {}
+        if (preferred === 'en') selectLanguage('en', false);
+        else if (preferred === 'es') setSwitch('es');
+        else {
+          const detectCountry = async () => {
+            try {
+              const cached = sessionStorage.getItem('fatisa-country');
+              if (cached) return cached;
+              const controller = new AbortController();
+              const timeout = window.setTimeout(() => controller.abort(), 1800);
+              const response = await fetch('https://ipapi.co/json/', { signal:controller.signal });
+              const data = await response.json();
+              window.clearTimeout(timeout);
+              const country = typeof data.country_code === 'string' ? data.country_code.toUpperCase() : '';
+              if (country) sessionStorage.setItem('fatisa-country', country);
+              return country;
+            } catch (_) { return ''; }
+          };
+          setSwitch('es');
+          detectCountry().then((country) => { if (country && country !== 'MX') selectLanguage('en', false); });
+        }
+        return;
+      }
+      const sourceLanguage = 'es';
+      const storageKey = 'fatisa-language';
+      const translationTextSelector = [
+        '.site-nav a', '.mobile-nav a', '.menu-toggle > span', '.hero h1', '.hero .intro',
+        '.hero-page-link-label', '.hero-page-link-summary', '.services-kicker',
+        '.section-title', '.services-intro', '.service-system-name',
+        '.service-system-summary', '.service-system-offerings li',
+        '.service-system-detail p', '.service-system-detail .text-link',
+        '.solutions-header p', '.solution-card h3', '.solution-card p',
+        '.workflow-header p', '.workflow-step h3', '.workflow-step p',
+        '.workflow-note p', '.shipping-copy h2', '.shipping-copy p',
+        '.collaboration-cta', '.collaboration-card-label', '.route-labels',
+        '.collaboration-points li', '.company-statement h2', '.company-context p',
+        '.company-principles li > span', '.company-principles li > p',
+        '.client-trust-copy h2', '.location-copy .section-kicker', '.location-copy h2',
+        '.location-copy address', '.equipment-header .section-kicker',
+        '.equipment-header h1', '.equipment-header p', '.equipment-group-head h2',
+        '.equipment-card h3', '.equipment-card p', '.facilities > .section-kicker',
+        '.facilities > .section-title', '.cta h2', '.cta p', '.site-footer-label',
+        '.quote-heading p', '.quote-heading h2', '.quote-field label',
+        '.quote-file-note', '.quote-consent span'
+      ].join(',');
+      const translationLayoutSelector = [
+        '.site-header .brand', '.site-nav a', '.mobile-nav a', '.site-header .menu-toggle',
+        '.hero-copy > .brand', '.hero h1', '.hero .intro', '.hero-page-links a',
+        '.services-head', '.service-system', '.solutions-header', '.solution-card',
+        '.workflow-header', '.workflow-step', '.shipping-shell', '.company-hero',
+        '.company-layout', '.client-trust-copy', '.location-copy',
+        '.equipment-header', '.equipment-group-head', '.equipment-card',
+        '.facilities > .section-kicker', '.facilities > .section-title',
+        '.cta', '.site-footer-item', '.quote-heading', '.quote-field',
+        '.quote-consent', '.quote-actions'
+      ].join(',');
+      const languageButtons = [...document.querySelectorAll('[data-language]')];
+      let widgetReady = false;
+      let settleTimer = 0;
+      let settleStartedAt = 0;
+      let translationObserved = false;
+      let activeLanguage = 'es';
+      let initialLanguage = 'es';
+      let translationLayoutBefore = new Map();
+      const sessionCacheKey = `fatisa-google-translation:${location.pathname}`;
+      const languageCache = { es:null, en:null };
+
+      const setSwitchState = (language) => {
+        document.documentElement.lang = language === 'en' ? 'en' : 'es-MX';
+        document.querySelector('.language-switch')?.setAttribute('data-active-language', language);
+        languageButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
+      };
+
+      const setGoogleCookie = (language) => {
+        const value = `/${sourceLanguage}/${language}`;
+        const host = window.location.hostname;
+        document.cookie = `googtrans=${value}; path=/; SameSite=Lax`;
+        if (host && host.includes('.')) {
+          document.cookie = `googtrans=${value}; path=/; domain=${host}; SameSite=Lax`;
+          document.cookie = `googtrans=${value}; path=/; domain=.${host}; SameSite=Lax`;
+        }
+      };
+
+      const clearGoogleCookie = () => {
+        const host = window.location.hostname;
+        const expire = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax';
+        document.cookie = `googtrans=; ${expire}`;
+        if (host && host.includes('.')) {
+          document.cookie = `googtrans=; ${expire}; domain=${host}`;
+          document.cookie = `googtrans=; ${expire}; domain=.${host}`;
+        }
+      };
+
+      const setTranslationAvailability = (language) => {
+        // No se marca el documento completo como `notranslate`: Google debe poder
+        // indexar también la navegación y los textos de todas las secciones.
+        document.querySelectorAll('meta[data-fatisa-google-notranslate]').forEach((meta) => meta.remove());
+        document.documentElement.removeAttribute('translate');
+        document.documentElement.classList.remove('notranslate');
+        document.body?.removeAttribute('translate');
+        document.body?.classList.remove('notranslate');
+      };
+
+      const translationTargets = () => [...document.querySelectorAll(translationTextSelector)];
+
+      const captureTranslationLayout = () => {
+        translationLayoutBefore = new Map(
+          [...document.querySelectorAll(translationLayoutSelector)]
+            .filter((element) => element.getClientRects().length)
+            .map((element) => [element, element.getBoundingClientRect()])
+        );
+      };
+
+      const cacheLanguage = (language) => {
+        const snapshot = translationTargets().map((element) => element.innerHTML);
+        if (!snapshot.length) return;
+        languageCache[language] = snapshot;
+        try { sessionStorage.setItem(sessionCacheKey, JSON.stringify(languageCache)); } catch (_) {}
+      };
+
+      const restoreLanguageCache = (language) => {
+        const snapshot = languageCache[language];
+        const targets = translationTargets();
+        if (!snapshot || snapshot.length !== targets.length) return false;
+        targets.forEach((element, index) => { element.innerHTML = snapshot[index]; });
+        return true;
+      };
+
+      try {
+        const cached = JSON.parse(sessionStorage.getItem(sessionCacheKey) || 'null');
+        if (cached && Array.isArray(cached.es) && Array.isArray(cached.en)) {
+          languageCache.es = cached.es;
+          languageCache.en = cached.en;
+        }
+      } catch (_) {}
+
+      const revealTranslatedText = () => {
+        document.body?.classList.remove('is-google-translating');
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const layoutTargets = [...document.querySelectorAll(translationLayoutSelector)]
+          .filter((element) => element.getClientRects().length);
+        const visibleTextTargets = translationTargets().filter((element) => element.getClientRects().length);
+        layoutTargets.forEach((element) => {
+          const first = translationLayoutBefore.get(element);
+          const last = element.getBoundingClientRect();
+          if (!first || !last.width || !last.height) return;
+          const translateX = first.left - last.left;
+          const translateY = first.top - last.top;
+          const scaleX = first.width / last.width;
+          const scaleY = first.height / last.height;
+          if (Math.abs(translateX) < .5 && Math.abs(translateY) < .5 && Math.abs(scaleX - 1) < .01 && Math.abs(scaleY - 1) < .01) return;
+          element.animate([
+            { transformOrigin:'top left', transform:`translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})` },
+            { transformOrigin:'top left', transform:'translate(0, 0) scale(1, 1)' }
+          ], { duration:800, easing:'cubic-bezier(.16, 1, .3, 1)' });
+        });
+        visibleTextTargets.forEach((element) => {
+          const animation = element.animate([{ opacity:.6 }, { opacity:1 }], {
+            duration:800,
+            easing:'cubic-bezier(.16, 1, .3, 1)'
+          });
+          animation.onfinish = () => element.style.removeProperty('opacity');
+        });
+      };
+
+      const waitForTranslationToSettle = () => {
+        window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(() => {
+          cacheLanguage('en');
+          revealTranslatedText();
+        }, 240);
+      };
+
+      const bodyObserver = new MutationObserver((records) => {
+        if (!document.body?.classList.contains('is-google-translating')) return;
+        if (records.some((record) => record.type === 'characterData' || record.addedNodes.length || record.removedNodes.length)) {
+          translationObserved = true;
+          waitForTranslationToSettle();
+        }
+      });
+      bodyObserver.observe(document.body, { childList:true, subtree:true, characterData:true });
+
+      const syncGoogleCombo = (language) => {
+        const combo = document.querySelector('.goog-te-combo');
+        if (!combo) return false;
+        const value = language === 'en' ? 'en' : '';
+        if (combo.value !== value) {
+          combo.value = value;
+          combo.dispatchEvent(new Event('change', { bubbles:true }));
+        }
+        return true;
+      };
+
+      const applyLanguage = (language, { persist = true, animate = true } = {}) => {
+        const next = language === 'en' ? 'en' : 'es';
+        if (persist) {
+          try { localStorage.setItem(storageKey, next); } catch (_) {}
+        }
+
+        // Una vez traducido, se restaura el HTML ya resuelto de esta sesión en vez
+        // de volver a disparar otra solicitud de traducción a Google.
+        if (next !== activeLanguage) captureTranslationLayout();
+
+        if (next !== activeLanguage && restoreLanguageCache(next)) {
+          setTranslationAvailability(next);
+          if (next === 'en') setGoogleCookie('en'); else clearGoogleCookie();
+          setSwitchState(next);
+          activeLanguage = next;
+          if (animate && next === 'en') {
+            document.body?.classList.add('is-google-translating');
+            requestAnimationFrame(revealTranslatedText);
+          } else {
+            document.body?.classList.remove('is-google-translating');
+          }
+          return;
+        }
+
+        if (next === activeLanguage && !(next === 'en' && widgetReady && !languageCache.en)) {
+          setSwitchState(next);
+          return;
+        }
+
+        if (next === 'en' && !languageCache.es) cacheLanguage('es');
+        setSwitchState(next);
+        setTranslationAvailability(next);
+        if (next === 'en') setGoogleCookie('en'); else clearGoogleCookie();
+        activeLanguage = next;
+
+        if (animate && next === 'en') {
+          document.body?.classList.add('is-google-translating');
+          settleStartedAt = performance.now();
+          translationObserved = false;
+          window.setTimeout(() => {
+            if (!translationObserved && document.body?.classList.contains('is-google-translating')) revealTranslatedText();
+          }, 5000);
+        } else {
+          document.body?.classList.remove('is-google-translating');
+        }
+
+        if (syncGoogleCombo(next)) return;
+        const retry = window.setInterval(() => {
+          if (syncGoogleCombo(next)) window.clearInterval(retry);
+        }, 60);
+        window.setTimeout(() => window.clearInterval(retry), 5000);
+      };
+
+      const getInitialLanguage = async () => {
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (stored === 'en' || stored === 'es') return stored;
+        } catch (_) {}
+        try {
+          const cachedCountry = sessionStorage.getItem('fatisa-country');
+          if (cachedCountry) return cachedCountry === 'MX' ? 'es' : 'en';
+          const controller = new AbortController();
+          const timeout = window.setTimeout(() => controller.abort(), 1800);
+          const response = await fetch('https://ipapi.co/json/', { signal:controller.signal });
+          const data = await response.json();
+          window.clearTimeout(timeout);
+          const country = typeof data.country_code === 'string' ? data.country_code.toUpperCase() : '';
+          if (country) sessionStorage.setItem('fatisa-country', country);
+          return country && country !== 'MX' ? 'en' : 'es';
+        } catch (_) {
+          return 'es';
+        }
+      };
+
+      window.fatisaGoogleTranslateElementInit = () => {
+        const mount = document.querySelector('#google_translate_element');
+        if (!mount || !window.google?.translate?.TranslateElement) return;
+        new window.google.translate.TranslateElement({
+          pageLanguage:sourceLanguage,
+          includedLanguages:'en',
+          autoDisplay:false,
+          layout:window.google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, mount.id);
+        widgetReady = true;
+        let selected = initialLanguage;
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (stored === 'en' || stored === 'es') selected = stored;
+        } catch (_) {}
+        applyLanguage(selected, { persist:false, animate:false });
+      };
+
+      const mount = document.createElement('div');
+      mount.id = 'google_translate_element';
+      mount.className = 'notranslate';
+      mount.setAttribute('translate', 'no');
+      mount.setAttribute('aria-hidden', 'true');
+      document.body.append(mount);
+
+      languageButtons.forEach((button) => button.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        applyLanguage(button.dataset.language, { animate:true });
+      }, true));
+
+      getInitialLanguage().then((language) => {
+        initialLanguage = language;
+        applyLanguage(language, { persist:false, animate:false });
+      });
+      const script = document.createElement('script');
+      script.src = 'https://translate.google.com/translate_a/element.js?cb=fatisaGoogleTranslateElementInit';
+      script.async = true;
+      document.head.append(script);
     })();
   </script>
   <script>
