@@ -439,9 +439,9 @@
     .site-footer-item a { width:max-content; max-width:100%; border-bottom:1px solid transparent; transition:border-color .2s ease, color .2s ease; }
     .site-footer-item a:hover { border-color:currentColor; }
     body.is-next-page-preview main { position:relative; top:var(--next-page-offset, 0px); will-change:top; }
-    html.is-next-page-scroll-locked { overflow-y:scroll; scroll-behavior:auto !important; }
+    html.is-next-page-scroll-locked { scroll-behavior:auto !important; overscroll-behavior-y:none; }
     html.is-next-page-scroll-locked::before { content:""; display:block; height:var(--next-page-document-height); pointer-events:none; }
-    body.is-next-page-scroll-locked { position:fixed !important; top:var(--next-page-lock-offset, 0px) !important; right:0; left:0; width:var(--next-page-body-width, 100%); height:var(--next-page-body-height, auto); }
+    body.is-next-page-scroll-locked { position:fixed !important; top:var(--next-page-lock-offset, 0px) !important; right:0; left:0; width:100%; }
     .next-page-strip { position:absolute; z-index:2; right:0; bottom:100%; left:0; display:flex; height:var(--next-page-reveal, 0px); align-items:center; justify-content:center; gap:10px; overflow:hidden; background:var(--red); color:#fff; pointer-events:none; }
     .next-page-strip.is-visible { min-height:0; }
     .next-page-strip span, .next-page-strip svg { opacity:0; transform:translateY(6px); transition:opacity .2s ease, transform .28s cubic-bezier(.16,1,.3,1); }
@@ -3306,9 +3306,9 @@
       let navigating = false;
   const maximumReveal = 56;
   const contentRevealThreshold = 26;
-  const navigationRevealThreshold = maximumReveal * .9;
-  const collapseDuration = 200;
-  const navigationDelay = 200;
+      const navigationRevealThreshold = maximumReveal * .9;
+      const collapseDuration = 200;
+      const navigationDelay = 200;
       const nextPage = () => sequence[sequence.indexOf(currentPage) + 1] || '';
       const pageLabel = (page) => document.querySelector(`.site-nav [data-page-link="${page}"]`)?.textContent.trim() || page;
       const setReveal = (value) => {
@@ -3317,11 +3317,8 @@
         if (reveal > 0 && !wasVisible) {
           window.cancelAnimationFrame(unlockFrame);
           lockedScrollTop = window.scrollY;
-          const bodyBounds = document.body.getBoundingClientRect();
           document.documentElement.style.setProperty('--next-page-document-height', `${document.documentElement.scrollHeight}px`);
           document.documentElement.style.setProperty('--next-page-lock-offset', `${-lockedScrollTop}px`);
-          document.documentElement.style.setProperty('--next-page-body-width', `${bodyBounds.width}px`);
-          document.documentElement.style.setProperty('--next-page-body-height', `${document.body.offsetHeight}px`);
           document.documentElement.classList.add('is-next-page-scroll-locked');
           document.body.classList.add('is-next-page-scroll-locked');
         }
@@ -3340,8 +3337,6 @@
             document.documentElement.classList.remove('is-next-page-scroll-locked');
             document.documentElement.style.removeProperty('--next-page-document-height');
             document.documentElement.style.removeProperty('--next-page-lock-offset');
-            document.documentElement.style.removeProperty('--next-page-body-width');
-            document.documentElement.style.removeProperty('--next-page-body-height');
           });
         }
       };
