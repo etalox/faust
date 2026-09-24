@@ -38,9 +38,13 @@
     body[data-page="nosotros"] main > .client-trust { display:block; }
     body[data-page="nosotros"] main { display:flex; flex-direction:column; }
     body[data-page="nosotros"] .company { order:1; }
-    body[data-page="nosotros"] .client-trust { order:2; }
-    body[data-page="nosotros"] .shipping { order:3; }
+    body[data-page="nosotros"] .shipping { order:2; }
+    body[data-page="nosotros"] .client-trust { order:3; }
     body[data-page="nosotros"] .location { order:4; }
+    @media (min-width:701px) {
+      body[data-page="nosotros"] .shipping { padding-bottom:96px; }
+      body[data-page="nosotros"] .client-trust { margin-top:32px; }
+    }
     body[data-page="trabajos"] main > .facilities { display:block; }
     body[data-page="equipos"] main > .equipment { display:block; }
     body[data-page]:not([data-page="inicio"]) main { padding-top:112px; padding-bottom:160px; }
@@ -1275,7 +1279,7 @@
         <div class="company-statement">
           <h2 class="section-title" data-company-years>Más de 35 años convirtiendo precisión en confianza.</h2>
         </div>
-        <div class="company-context"><p>Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico y ofrecemos soluciones integrales de manufactura para la industria</p></div>
+        <div class="company-context"><p>Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico. Desarrollamos soluciones integrales de manufactura para la industria, desde ingeniería y diseño hasta fabricación de piezas, herramentales y componentes especializados.</p></div>
       </div>
       <div class="company-layout">
         <ul class="company-principles">
