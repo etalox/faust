@@ -2,18 +2,18 @@
 window.BRUCOLASTIC_THUMBNAILS = [
   {
     "file": "Thumbnail_82941.jpeg",
-    "modified": 1790215277051
+    "modified": 1790215983359
   },
   {
     "file": "Thumbnail_82194.png",
-    "modified": 1790215277040
+    "modified": 1790215983348
   },
   {
     "file": "Thumbnail_78295.png",
-    "modified": 1790215277038
+    "modified": 1790215983345
   },
   {
     "file": "Thumbnail(12) (7).png",
-    "modified": 1790215277036
+    "modified": 1790215983343
   }
 ];

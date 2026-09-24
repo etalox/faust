@@ -2466,7 +2466,7 @@
     (() => {
       if (window.FATISA_DIRECT_TEXT_TRANSLATION) {
         const cacheKey = 'fatisa-google-translate-cache-v2';
-        const cacheLifetime = 24 * 60 * 60 * 1000;
+        const cacheLifetime = 3 * 60 * 60 * 1000;
         const textNodes = new Map();
         const languageButtons = [...document.querySelectorAll('[data-language]')];
         const textSelector = [
@@ -2487,7 +2487,7 @@
           '.quote-file-note', '.quote-consent span'
         ].join(',');
         const layoutSelector = [
-          '.site-header .brand', '.site-nav a', '.mobile-nav a', '.site-header .menu-toggle',
+          '.site-nav a', '.mobile-nav a', '.site-header .menu-toggle',
           '.hero-copy > .brand', '.hero h1', '.hero .intro', '.hero-page-links a', '.services-head',
           '.service-system', '.solutions-header', '.solution-card', '.workflow-header', '.workflow-step',
           '.shipping-shell', '.company-hero', '.company-layout', '.client-trust-copy', '.location-copy',
@@ -2529,7 +2529,7 @@
           if (reducedMotion) { update(); return; }
           textTargets.forEach((element) => { element.style.opacity = '.6'; });
           update();
-          requestAnimationFrame(() => {
+          (() => {
             [...document.querySelectorAll(layoutSelector)].filter((element) => element.getClientRects().length).forEach((element) => {
               const first = layouts.get(element);
               const last = element.getBoundingClientRect();
@@ -2548,7 +2548,7 @@
               const animation = element.animate([{ opacity:.6 }, { opacity:1 }], { duration:800, easing:'cubic-bezier(.16, 1, .3, 1)' });
               animation.onfinish = () => element.style.removeProperty('opacity');
             });
-          });
+          })();
         };
 
         const requestGoogleText = async (text) => {
@@ -2585,10 +2585,13 @@
           return translationPromise;
         };
 
-        const setSwitch = (language) => {
-          document.documentElement.lang = language === 'en' ? 'en' : 'es-MX';
+        const setSwitchVisualState = (language) => {
           document.querySelector('.language-switch')?.setAttribute('data-active-language', language);
           languageButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.language === language)));
+        };
+        const setSwitch = (language) => {
+          document.documentElement.lang = language === 'en' ? 'en' : 'es-MX';
+          setSwitchVisualState(language);
         };
         const applySpanish = () => {
           textNodes.forEach((original, node) => { if (node.isConnected) node.nodeValue = original; });
@@ -2607,11 +2610,18 @@
         const selectLanguage = async (language, animate = true) => {
           const requestId = ++pendingLanguageRequest;
           try { localStorage.setItem('fatisa-language', language); } catch (_) {}
+          // Feedback inmediato: la respuesta visual no espera al cache ni a la red.
+          setSwitchVisualState(language);
           if (language === 'es') {
             if (requestId === pendingLanguageRequest) animate ? animateUpdate(applySpanish) : applySpanish();
             return;
           }
           languageButtons.find((button) => button.dataset.language === 'en')?.setAttribute('aria-busy', 'true');
+          if (cacheIsFresh()) {
+            languageButtons.find((button) => button.dataset.language === 'en')?.removeAttribute('aria-busy');
+            if (requestId === pendingLanguageRequest) animate ? animateUpdate(applyEnglish) : applyEnglish();
+            return;
+          }
           await ensureTranslations();
           languageButtons.find((button) => button.dataset.language === 'en')?.removeAttribute('aria-busy');
           if (requestId === pendingLanguageRequest) animate ? animateUpdate(applyEnglish) : applyEnglish();
