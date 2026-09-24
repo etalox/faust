@@ -194,12 +194,20 @@
     .site-header.is-scrolled .header-inner { width:min(1600px, calc(100% - var(--gutter) - var(--gutter))); padding-inline:20px; }
     .site-header.is-scrolled .header-inner::before { inset:0; background:rgba(255,255,255,.9); backdrop-filter:blur(20px); }
     .language-switch { position:fixed; z-index:9; top:calc(clamp(76px, 1.944444vw + 52.666667px, 90px) + 12px); left:50%; display:inline-flex; align-items:center; gap:2px; padding:3px; overflow:hidden; border:1px solid rgba(24,24,24,.16); background:rgba(240,240,240,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transform:translateX(-50%); transition:transform .42s cubic-bezier(.16,1,.3,1), opacity .24s ease, visibility 0s; }
-    .language-switch::before { content:""; position:absolute; z-index:0; top:3px; bottom:3px; left:3px; width:92px; background:#fff; transform:translateX(0); transition:transform .38s cubic-bezier(.16,1,.3,1); }
-    .language-switch[data-active-language="en"]::before { transform:translateX(94px); }
+    .language-switch::before { content:""; position:absolute; z-index:0; top:3px; bottom:3px; left:3px; width:104px; background:#fff; transform:translateX(0); transition:transform .38s cubic-bezier(.16,1,.3,1); }
+    .language-switch[data-active-language="en"]::before { transform:translateX(106px); }
     .language-switch.is-hidden { pointer-events:none; opacity:0; visibility:hidden; transform:translate(-50%, -46px); transition:transform .42s cubic-bezier(.16,1,.3,1), opacity .2s ease, visibility 0s linear .42s; }
-    .language-switch button { position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; width:92px; min-height:32px; padding:0; border:0; background:transparent; color:rgba(24,24,24,.56); font:500 12px/1 "BDO Grotesk", Arial, sans-serif; cursor:pointer; transition:color .2s ease; }
+    .language-switch button { position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; width:104px; min-height:32px; padding:0; border:0; background:transparent; color:rgba(24,24,24,.56); font:500 12px/1 "BDO Grotesk", Arial, sans-serif; cursor:pointer; transition:color .2s ease; }
+    .language-switch button[data-language="en"]::after { content:""; position:absolute; right:6px; bottom:1px; left:6px; height:1px; transform:scaleX(0); transform-origin:left center; background:var(--red); opacity:0; }
+    .language-switch button[data-language="en"].is-language-loading::after { opacity:1; animation:language-translation-progress 7s cubic-bezier(.18,.88,.32,1) forwards; }
+    .language-switch button[data-language="en"].is-language-loaded::after { opacity:1; transform:scaleX(1); transition:transform .2s ease-out, opacity .16s ease .24s; }
+    @keyframes language-translation-progress { 0% { transform:scaleX(0); } 52% { transform:scaleX(.72); } 82% { transform:scaleX(.87); } 100% { transform:scaleX(.94); } }
     .language-switch button[aria-pressed="true"] { color:var(--ink); }
-    .language-switch img { display:block; width:18px; height:18px; border-radius:50%; object-fit:cover; transition:transform .38s cubic-bezier(.16,1,.3,1); }
+    .language-flag { position:relative; display:block; flex:0 0 18px; width:18px; height:18px; }
+    .language-switch img { display:block; width:18px; height:18px; border-radius:50%; object-fit:cover; transition:transform .38s cubic-bezier(.16,1,.3,1), filter .22s ease, opacity .22s ease; }
+    .language-download-icon { position:absolute; z-index:2; inset:0; width:18px; height:18px; opacity:0; pointer-events:none; transform:scale(.72); transition:opacity .18s ease, transform .22s cubic-bezier(.16,1,.3,1); }
+    .language-switch button[data-language="en"].is-language-loading .language-download-icon { opacity:1; transform:scale(1); }
+    .language-switch button[data-language="en"].is-language-loading img { filter:grayscale(1); opacity:.52; }
     .language-switch button[aria-pressed="true"] img { transform:scale(1.12); }
     .hero-language-slot { display:none; }
     .mobile-nav { display:none; }
@@ -414,16 +422,34 @@
     .collaboration-points { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; margin:30px 0 0; padding:20px 0 0; border-top:1px solid rgba(24,24,24,.16); list-style:none; }
     .collaboration-points li { color:rgba(24,24,24,.68); font:500 12px/16px "BDO Grotesk", Arial, sans-serif; }
     .mobile-quote { display:none; }
-    .site-footer { width:100%; border-top:1px solid rgba(24,24,24,.16); background:#fff; color:var(--ink); }
-    .site-footer-inner { display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, .75fr) minmax(0, 1fr); width:min(1600px, calc(100% - (var(--gutter) * 2))); margin:auto; }
-    .site-footer-item { display:flex; flex-direction:row; align-items:center; min-height:54px; padding:9px 20px; border-left:1px solid rgba(24,24,24,.14); }
+    .site-footer { position:relative; width:100%; overflow:visible; border-top:1px solid rgba(24,24,24,.16); background:#fff; color:var(--ink); }
+    .site-footer-inner { position:relative; display:grid; grid-template-columns:max-content minmax(80px, 1fr) max-content minmax(80px, 1fr) max-content; width:min(1620px, calc(100% - (var(--gutter) * 2))); margin:auto; }
+    .site-footer-inner::before, .site-footer-inner::after { content:""; grid-row:1; align-self:stretch; justify-self:center; width:1px; background:rgba(24,24,24,.14); }
+    .site-footer-inner::before { grid-column:2; }
+    .site-footer-inner::after { grid-column:4; }
+    .site-footer-item { display:flex; flex-direction:row; align-items:center; min-height:54px; padding:9px 0; }
     .site-footer-item--emails { gap:14px; }
     .site-footer-item--emails .site-footer-label { margin-right:0; }
-    .site-footer-item:first-child { border-left:0; }
+    .site-footer-item:first-child { grid-column:1; }
+    .site-footer-item:nth-child(2) { grid-column:3; justify-content:center; }
+    .site-footer-item:last-child { grid-column:5; }
+    .site-footer-item:last-child { justify-content:flex-end; text-align:right; }
     .site-footer-label { flex:0 0 auto; margin:0 9px 0 0; color:var(--red); font:500 11px/1 "BDO Grotesk", Arial, sans-serif; letter-spacing:.04em; text-transform:uppercase; }
     .site-footer-item a, .site-footer-item address { min-width:0; color:var(--ink); font:400 13px/1.35 "BDO Grotesk", Arial, sans-serif; font-style:normal; text-decoration:none; white-space:nowrap; }
     .site-footer-item a { width:max-content; max-width:100%; border-bottom:1px solid transparent; transition:border-color .2s ease, color .2s ease; }
     .site-footer-item a:hover { border-color:currentColor; }
+    body.is-next-page-preview main { transform:translate3d(0, var(--next-page-offset, 0px), 0); will-change:transform; }
+    html.is-next-page-scroll-locked { overflow-y:scroll; scroll-behavior:auto !important; }
+    html.is-next-page-scroll-locked::before { content:""; display:block; height:var(--next-page-document-height); pointer-events:none; }
+    body.is-next-page-scroll-locked { position:fixed !important; top:var(--next-page-lock-offset, 0px) !important; right:0; left:0; width:100%; }
+    .next-page-strip { position:absolute; z-index:2; right:0; bottom:100%; left:0; display:flex; height:var(--next-page-reveal, 0px); align-items:center; justify-content:center; gap:10px; overflow:hidden; background:var(--red); color:#fff; pointer-events:none; }
+    .next-page-strip.is-visible { min-height:0; }
+    .next-page-strip span, .next-page-strip svg { opacity:0; transform:translateY(6px); transition:opacity .2s ease, transform .28s cubic-bezier(.16,1,.3,1); }
+    .next-page-strip.is-ready span, .next-page-strip.is-ready svg { opacity:1; transform:translateY(0); }
+    .next-page-strip span { font:500 13px/1 "BDO Grotesk", Arial, sans-serif; }
+    .next-page-strip svg { width:16px; height:16px; }
+    .next-page-strip.is-ready svg { animation:next-page-arrow 1.15s cubic-bezier(.16,1,.3,1) infinite alternate; }
+    @keyframes next-page-arrow { from { transform:translateY(-2px); } to { transform:translateY(2px); } }
 
     @keyframes route-marker-travel {
       0% { transform:translateX(var(--route-start)); filter:blur(2px); opacity:0; }
@@ -913,10 +939,12 @@
       .cta-actions { gap:16px; flex-wrap:wrap; }
       .mobile-quote { position:fixed; z-index:20; bottom:20px; left:50%; display:inline-flex; width:min(400px, calc(100% - 40px)); height:69px; transform:translateX(-50%); align-items:center; justify-content:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); background:rgba(24,24,24,.96); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:#fff; font:500 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; text-decoration:none; }
       .site-footer-inner { display:block; width:calc(100% - 40px); padding:20px 0 calc(100px + env(safe-area-inset-bottom)); }
-      .site-footer-item { min-height:0; padding:10px 0; border-top:1px solid rgba(24,24,24,.14); border-left:0; }
+      .site-footer-inner::before, .site-footer-inner::after { display:none; }
+      .site-footer-item { min-height:0; padding:10px 0; border-left:0; }
+      .site-footer-item:nth-child(2), .site-footer-item:last-child { justify-content:flex-start; text-align:left; }
+      .next-page-strip { min-height:0; }
       .site-footer-item--emails { flex-wrap:wrap; column-gap:12px; row-gap:5px; }
       .site-footer-item--emails .site-footer-label { flex-basis:100%; }
-      .site-footer-item:last-child { border-bottom:1px solid rgba(24,24,24,.14); }
       .site-footer-label { margin:0 8px 0 0; }
       .gallery-lightbox-close-mobile { position:fixed; z-index:1; bottom:20px; left:50%; display:inline-flex; width:min(400px, calc(100% - 40px)); height:69px; padding:0; transform:translateX(-50%); align-items:center; justify-content:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); border:0; background:rgba(24,24,24,.96); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:#fff; font:500 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; cursor:pointer; }
       .gallery-lightbox-close { display:none; }
@@ -991,8 +1019,8 @@
           <p class="intro intro--mobile">Modelos industriales, moldes de inyección, termoformado, y vidrio, o cualquier trabajo de maquinado CNC en general.</p>
         </div>
         <div class="hero-language-slot" data-hero-language-slot><div class="language-switch" role="group" aria-label="Selector de idioma" data-active-language="es">
-          <button type="button" data-language="es" aria-pressed="true"><img src="assets/figma-14.png" alt="">Español</button>
-          <button type="button" data-language="en" aria-pressed="false"><img src="assets/figma-10.png" alt="">English</button>
+          <button type="button" data-language="es" aria-pressed="true"><span class="language-flag"><img src="assets/figma-14.png" alt=""></span>Español</button>
+          <button type="button" data-language="en" aria-pressed="false"><span class="language-flag"><img src="assets/figma-10.png" alt=""><svg class="language-download-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" fill="#FF0000"/><path d="M9 4.5V10.25M9 10.25L6.8 8.05M9 10.25L11.2 8.05M5.25 13H12.75" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>English</button>
         </div></div>
         <nav class="hero-page-links" aria-label="Secciones principales">
           <a href="servicios.html"><span class="hero-page-link-index">01</span><span class="hero-page-link-content"><span class="hero-page-link-label">Servicios</span><span class="hero-page-link-summary" data-en="Engineering and manufacturing">Ingeniería y manufactura</span></span><span class="hero-page-link-arrow" aria-hidden="true">↗</span></a>
@@ -1299,24 +1327,9 @@
       <div class="company-hero">
         <div class="brand"><img src="assets/colored_logo.svg" alt=""><span>Fatisa<sup>™</sup></span></div>
         <div class="company-statement">
-          <h2 class="section-title" data-company-years></h2>
-          <script>
-            (() => {
-              const startYear = 1988;
-              window.fatisaUpdateCompanyYears = () => {
-                const years = Math.max(0, new Date().getFullYear() - startYear);
-                const isEnglish = document.documentElement.lang === 'en';
-                document.querySelectorAll('[data-company-years]').forEach((heading) => {
-                  heading.textContent = isEnglish
-                    ? `More than ${years} years of experience and capability.`
-                    : `Más de ${years} años de experiencia y capacidad.`;
-                });
-              };
-              window.fatisaUpdateCompanyYears();
-            })();
-          </script>
+          <h2 class="section-title">Experiencia y capacidad desde 1988.</h2>
         </div>
-        <div class="company-context"><p>Somos una empresa mexicana que desde 1988 tiene experiencia en el sector metal-mecánico. Desarrollamos soluciones integrales de manufactura para la industria, desde ingeniería y diseño hasta fabricación de piezas, herramentales y componentes especializados.</p></div>
+        <div class="company-context"><p>Somos una empresa mexicana del sector metal-mecánico. Desarrollamos soluciones integrales de manufactura para la industria, desde ingeniería y diseño hasta fabricación de piezas, herramentales y componentes especializados.</p></div>
       </div>
       <div class="company-layout">
         <ul class="company-principles">
@@ -2307,7 +2320,6 @@
         });
         const englishTitles = { inicio:'FATISA', servicios:'Services | FATISA', equipos:'Equipment | FATISA', trabajos:'Completed Work | FATISA', nosotros:'About Us | FATISA' };
         if (englishTitles[document.body.dataset.page]) document.title = englishTitles[document.body.dataset.page];
-        window.fatisaUpdateCompanyYears?.();
         setActiveLanguage('en');
       };
 
@@ -2341,7 +2353,6 @@
         });
         const spanishTitles = { inicio:'Fatisa', servicios:'Servicios | Fatisa', equipos:'Equipos | Fatisa', trabajos:'Trabajos Realizados | Fatisa', nosotros:'Nosotros | Fatisa' };
         if (spanishTitles[document.body.dataset.page]) document.title = spanishTitles[document.body.dataset.page];
-        window.fatisaUpdateCompanyYears?.();
         setActiveLanguage('es');
       };
 
@@ -2469,6 +2480,7 @@
         const cacheLifetime = 3 * 60 * 60 * 1000;
         const textNodes = new Map();
         const languageButtons = [...document.querySelectorAll('[data-language]')];
+        const englishButton = languageButtons.find((button) => button.dataset.language === 'en');
         const textSelector = [
           '.site-nav a', '.mobile-nav a', '.menu-toggle > span', '.hero h1', '.hero .intro',
           '.hero-page-link-label', '.hero-page-link-summary', '.services-kicker', '.section-title',
@@ -2566,6 +2578,8 @@
           if (cacheIsFresh()) return Promise.resolve(cache.translations);
           if (translationPromise) return translationPromise;
           const sources = [...new Set([...textNodes.values()].map((value) => value.trim()))];
+          englishButton?.classList.remove('is-language-loaded');
+          englishButton?.classList.add('is-language-loading');
           translationPromise = (async () => {
             const translations = {};
             let cursor = 0;
@@ -2581,7 +2595,12 @@
             cache = { createdAt:Date.now(), translations };
             storeCache();
             return translations;
-          })().finally(() => { translationPromise = null; });
+          })().finally(() => {
+            translationPromise = null;
+            englishButton?.classList.remove('is-language-loading');
+            englishButton?.classList.add('is-language-loaded');
+            window.setTimeout(() => englishButton?.classList.remove('is-language-loaded'), 420);
+          });
           return translationPromise;
         };
 
@@ -2631,9 +2650,10 @@
           event.preventDefault();
           selectLanguage(button.dataset.language, true);
         }));
-
         let preferred = '';
         try { preferred = localStorage.getItem('fatisa-language') || ''; } catch (_) {}
+        // Precache desde el primer render; no depende de la intención de hover.
+        ensureTranslations();
         if (preferred === 'en') selectLanguage('en', false);
         else if (preferred === 'es') setSwitch('es');
         else {
@@ -3259,6 +3279,165 @@
         if (event.fatisaLightboxHandled) return;
         const url = new URL(location.href);
         navigate(pageFromUrl(url), url, false);
+      });
+    })();
+  </script>
+  <script>
+    (() => {
+      const sequence = ['inicio', 'servicios', 'equipos', 'trabajos', 'nosotros'];
+      const strip = document.createElement('div');
+      strip.className = 'next-page-strip';
+      strip.setAttribute('aria-live', 'polite');
+      strip.innerHTML = '<span data-next-page-label></span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5V12.5M8 12.5L4.5 9M8 12.5L11.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const footer = document.querySelector('.site-footer');
+      if (footer) footer.prepend(strip); else document.body.append(strip);
+
+      const label = strip.querySelector('[data-next-page-label]');
+      const pageContent = document.querySelector('main');
+      let currentPage = document.body.dataset.page || 'inicio';
+      let overscroll = 0;
+      let reveal = 0;
+      let releaseTimer = 0;
+      let collapseFrame = 0;
+      let lockedScrollTop = 0;
+      let unlockFrame = 0;
+      let navigating = false;
+      const maximumReveal = 96;
+      const contentRevealThreshold = 52;
+      const nextPage = () => sequence[sequence.indexOf(currentPage) + 1] || '';
+      const pageLabel = (page) => document.querySelector(`.site-nav [data-page-link="${page}"]`)?.textContent.trim() || page;
+      const setReveal = (value) => {
+        const wasVisible = reveal > 0;
+        reveal = Math.max(0, Math.min(maximumReveal, value));
+        if (reveal > 0 && !wasVisible) {
+          window.cancelAnimationFrame(unlockFrame);
+          lockedScrollTop = window.scrollY;
+          document.documentElement.style.setProperty('--next-page-document-height', `${document.documentElement.scrollHeight}px`);
+          document.documentElement.style.setProperty('--next-page-lock-offset', `${-lockedScrollTop}px`);
+          document.documentElement.classList.add('is-next-page-scroll-locked');
+          document.body.classList.add('is-next-page-scroll-locked');
+        }
+        strip.style.setProperty('--next-page-reveal', `${reveal}px`);
+        document.documentElement.style.setProperty('--next-page-offset', `${-reveal}px`);
+        if (pageContent) {
+          pageContent.style.setProperty('transform', `translate3d(0, ${-reveal}px, 0)`, 'important');
+        }
+        strip.classList.toggle('is-visible', reveal > 0);
+        strip.classList.toggle('is-ready', reveal >= contentRevealThreshold);
+        document.body.classList.toggle('is-next-page-preview', reveal > 0);
+        if (!reveal && wasVisible) {
+          window.scrollTo({ top:lockedScrollTop, behavior:'auto' });
+          unlockFrame = window.requestAnimationFrame(() => {
+            document.body.classList.remove('is-next-page-scroll-locked');
+            document.documentElement.classList.remove('is-next-page-scroll-locked');
+            document.documentElement.style.removeProperty('--next-page-document-height');
+            document.documentElement.style.removeProperty('--next-page-lock-offset');
+          });
+        }
+      };
+      const cancelCollapse = () => {
+        window.cancelAnimationFrame(collapseFrame);
+        overscroll = reveal / .48;
+      };
+      const hide = () => {
+        overscroll = 0;
+        window.clearTimeout(releaseTimer);
+        cancelCollapse();
+        setReveal(0);
+        pageContent?.style.removeProperty('transform');
+      };
+      const collapse = () => {
+        if (!reveal) return;
+        const revealAtRelease = reveal;
+        const startedAt = performance.now();
+        const duration = 420;
+        const step = (now) => {
+          const progress = Math.min(1, (now - startedAt) / duration);
+          const easedProgress = 1 - Math.pow(1 - progress, 3);
+          setReveal(revealAtRelease * (1 - easedProgress));
+          if (progress < 1) collapseFrame = window.requestAnimationFrame(step);
+          else {
+            overscroll = 0;
+            pageContent?.style.removeProperty('transform');
+          }
+        };
+        collapseFrame = window.requestAnimationFrame(step);
+      };
+      const show = () => {
+        const next = nextPage();
+        if (!next || currentPage === 'nosotros') return false;
+        const verb = document.documentElement.lang === 'en' ? 'Go to' : 'Navegar a';
+        label.textContent = `${verb} ${pageLabel(next)}`;
+        return true;
+      };
+      const go = () => {
+        const next = nextPage();
+        if (navigating || !next || reveal < maximumReveal) return;
+        navigating = true;
+        const link = document.querySelector(`.site-nav [data-page-link="${next}"]`);
+        hide();
+        if (link) link.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, button:0 }));
+        window.setTimeout(() => { navigating = false; }, 600);
+      };
+      const atBottom = () => window.scrollY >= Math.max(0, document.documentElement.scrollHeight - window.innerHeight) - 2;
+      const scheduleRelease = () => {
+        window.clearTimeout(releaseTimer);
+        releaseTimer = window.setTimeout(() => {
+          if (reveal >= maximumReveal) go();
+          else collapse();
+        }, reveal >= maximumReveal ? 420 : 1100);
+      };
+      const consumeBarScroll = (event, delta) => {
+        if (reveal <= 0 || currentPage === 'nosotros') return false;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+        event.returnValue = false;
+        window.clearTimeout(releaseTimer);
+        cancelCollapse();
+        overscroll = Math.max(0, overscroll + delta);
+        setReveal(overscroll * .48);
+        if (reveal > 0) scheduleRelease();
+        else {
+          overscroll = 0;
+          pageContent?.style.removeProperty('transform');
+        }
+        return true;
+      };
+
+      window.addEventListener('wheel', (event) => {
+        if (consumeBarScroll(event, event.deltaY)) return;
+        if (event.deltaY <= 0 || (!(atBottom() || reveal > 0)) || currentPage === 'nosotros') {
+          return;
+        }
+        cancelCollapse();
+        overscroll += event.deltaY;
+        if (overscroll <= 0 || !show()) return;
+        event.preventDefault();
+        setReveal(overscroll * .48);
+        scheduleRelease();
+      }, { passive:false, capture:true });
+
+      let touchStartY = 0;
+      window.addEventListener('touchstart', (event) => { touchStartY = event.touches[0]?.clientY || 0; }, { passive:true });
+      window.addEventListener('touchmove', (event) => {
+        const y = event.touches[0]?.clientY || 0;
+        const delta = touchStartY - y;
+        touchStartY = y;
+        if (consumeBarScroll(event, delta)) return;
+        if (delta <= 0 || (!(atBottom() || reveal > 0)) || currentPage === 'nosotros') return;
+        cancelCollapse();
+        overscroll += delta;
+        if (overscroll > 0 && show()) {
+          event.preventDefault();
+          setReveal(overscroll * .48);
+        }
+      }, { passive:false, capture:true });
+      window.addEventListener('touchend', () => { if (strip.classList.contains('is-visible')) scheduleRelease(); }, { passive:true });
+
+      window.addEventListener('fatisa:pagechange', (event) => {
+        currentPage = event.detail?.page || document.body.dataset.page || 'inicio';
+        hide();
       });
     })();
   </script>
