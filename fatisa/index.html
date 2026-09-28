@@ -5,7 +5,7 @@
   <meta id="fatisa-viewport" name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <script>(() => { const viewport = document.getElementById('fatisa-viewport'), nativeViewport = 'width=device-width, initial-scale=1, viewport-fit=cover', iphoneViewport = 'width=390, viewport-fit=cover'; let frame = null, applying = false; const refresh = () => { applying = true; viewport.content = nativeViewport; requestAnimationFrame(() => { viewport.content = window.innerWidth <= 390 ? iphoneViewport : nativeViewport; requestAnimationFrame(() => { applying = false; }); }); }; const schedule = () => { if (applying || frame !== null) return; frame = requestAnimationFrame(() => { frame = null; refresh(); }); }; refresh(); window.addEventListener('resize', schedule, { passive:true }); })();</script>
   <script>window.FATISA_USE_GOOGLE_TRANSLATE = true; window.FATISA_DIRECT_TEXT_TRANSLATION = true; document.documentElement.classList.add('fatisa-hero-pending');</script>
-  <link rel="icon" type="image/png" href="assets/tab_icon.png">
+  <link rel="icon" type="image/svg+xml" href="assets/tab_icon.svg">
   <link rel="preload" href="../assets/Fonts/BDOGrotesk-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="../assets/Fonts/BDOGrotesk-Medium.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="../assets/Fonts/PPNeueMontreal-Regular.otf" as="font" type="font/otf" crossorigin>
@@ -18,7 +18,7 @@
     @font-face { font-family:"BDO Grotesk"; src:url("../assets/Fonts/BDOGrotesk-DemiBold.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
     @font-face { font-family:"PP Neue Montreal"; src:url("../assets/Fonts/PPNeueMontreal-Regular.otf") format("opentype"); font-weight:400; font-style:normal; font-display:swap; }
 
-    :root { --ink:#181818; --paper:#f0f0f0; --red:#ff0000; --gutter:160px; }
+    :root { --ink:#181818; --paper:#f0f0f0; --red:#002beb; --gutter:160px; }
     * { box-sizing:border-box; }
     html { width:100%; max-width:100%; overflow-x:clip; scroll-behavior:smooth; }
     body { width:100%; max-width:100%; margin:0; overflow-x:clip; background:var(--paper); color:var(--ink); font-family:"PP Neue Montreal", "Helvetica Neue", Helvetica, Arial, sans-serif; }
@@ -175,6 +175,10 @@
     .button--dark, .button--red { clip-path:polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%); }
     .button--dark { color:#fff; background:var(--ink); }
     .button--red { color:#fff; background:var(--red); }
+    .menu-toggle .menu-icon rect { fill:var(--red); }
+    .menu-toggle .menu-icon path:last-child { fill:var(--paper); }
+    .language-download-icon circle, .route-marker rect { fill:var(--red) !important; }
+    .route-line stop[offset="0.5"] { stop-color:var(--red) !important; }
     .text-link { position:relative; display:inline-block; font:500 16px/1 "BDO Grotesk", Arial, sans-serif; text-decoration:none; }
     .text-link::after { content:""; position:absolute; right:0; bottom:-3px; left:0; height:1px; background:currentColor; transform-origin:right center; transition:transform .28s cubic-bezier(.16,1,.3,1); }
 
@@ -270,7 +274,7 @@
     .service-system-toggle::before, .service-system-toggle::after { content:""; position:absolute; top:50%; left:50%; width:8px; height:1px; background:var(--ink); transform:translate(-50%, -50%); }
     .service-system-toggle::after { transform:translate(-50%, -50%) rotate(90deg); transition:transform .25s ease; }
     .service-system:hover .service-system-index, .service-system.is-active .service-system-index { color:var(--red); }
-    .service-system.is-active .service-system-index { display:inline-grid; width:32px; height:32px; padding:0; place-items:center; color:var(--red); background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M.5.5H24.5L31.5 7.5V31.5H.5Z' fill='none' stroke='%23ff0000'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+    .service-system.is-active .service-system-index { display:inline-grid; width:32px; height:32px; padding:0; place-items:center; color:var(--red); background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M.5.5H24.5L31.5 7.5V31.5H.5Z' fill='none' stroke='%23002beb'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
     .service-system.is-active .service-system-toggle { border-color:var(--ink); background:var(--ink); transform:rotate(180deg); }
     .service-system.is-active .service-system-toggle::before, .service-system.is-active .service-system-toggle::after { background:#fff; }
     .service-system.is-active .service-system-toggle::after { transform:translate(-50%, -50%); }
@@ -308,6 +312,7 @@
     .company-hero .brand { margin:0; }
     .company-layout { overflow:hidden; padding:0 52px; background:var(--ink); color:var(--paper); clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%); }
     .company-label { margin:0; color:var(--red); font:500 14px/1 "BDO Grotesk", Arial, sans-serif; }
+    .company-layout .company-label, .company-layout .company-principles span, .workflow .workflow-step span { color:#fff; }
     .company-statement { max-width:1060px; margin-top:50px; }
     .company-statement h2 { margin:0; font:400 clamp(48px, 4.75vw, 72px)/.94 "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif; letter-spacing:-.058em; }
     .company-context { max-width:720px; margin-top:30px; }
@@ -423,7 +428,7 @@
     .collaboration-points li { color:rgba(24,24,24,.68); font:500 12px/16px "BDO Grotesk", Arial, sans-serif; }
     .mobile-quote { display:none; }
     .mobile-contact-actions { display:contents; }
-    .whatsapp-button { position:fixed; z-index:21; right:max(var(--gutter), calc((100vw - 1620px) / 2)); bottom:calc(24px + var(--whatsapp-footer-offset, 0px) + var(--next-page-reveal, 0px)); display:grid; width:54px; height:54px; place-items:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); background:#25d366; color:#fff; transition:background-color .2s ease, box-shadow .24s cubic-bezier(.16,1,.3,1); }
+    .whatsapp-button { position:fixed; z-index:21; right:max(var(--gutter), calc((100vw - 1620px) / 2)); bottom:calc(24px + var(--whatsapp-footer-offset, 0px) + var(--next-page-reveal, 0px)); display:grid; width:54px; height:54px; place-items:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); background:#202020; color:#fff; transition:background-color .2s ease, box-shadow .24s cubic-bezier(.16,1,.3,1); }
     .whatsapp-button svg { width:25px; height:25px; fill:currentColor; }
     .whatsapp-button:focus-visible { outline:2px solid var(--ink); outline-offset:3px; }
     .site-footer { position:relative; width:100%; overflow:visible; border-top:1px solid rgba(24,24,24,.16); background:#fff; color:var(--ink); }
@@ -434,6 +439,8 @@
     .site-footer-item { display:flex; flex-direction:row; align-items:center; min-height:54px; padding:9px 0; }
     .site-footer-item--emails { gap:14px; }
     .site-footer-item--emails .site-footer-label { margin-right:0; }
+    .site-footer-item--phones { gap:12px; }
+    .site-footer-item--phones .site-footer-label { margin-right:0; }
     .site-footer-item:first-child { grid-column:1; }
     .site-footer-item:nth-child(2) { grid-column:3; justify-content:center; }
     .site-footer-item:last-child { grid-column:5; }
@@ -498,7 +505,7 @@
     body[data-page="trabajos"] .gallery-column { display:grid; align-content:start; gap:28px; min-width:0; }
     body[data-page="trabajos"] .facility { display:block; width:100%; height:auto; margin:0; break-inside:avoid; opacity:0; transform:translateY(12px); transition:opacity .62s cubic-bezier(.16,1,.3,1), transform .72s cubic-bezier(.16,1,.3,1); }
     body[data-page="trabajos"] .facility { cursor:zoom-in; }
-    body[data-page="trabajos"] .facility:focus-visible { outline:2px solid #ff0000; outline-offset:4px; }
+    body[data-page="trabajos"] .facility:focus-visible { outline:2px solid var(--red); outline-offset:4px; }
     body[data-page="trabajos"] .facility.is-revealed { opacity:1; transform:none; }
     body[data-page="trabajos"] .facility img { width:100%; height:auto; object-fit:initial; transform:scale(1); }
     body[data-page="trabajos"] .facility > img:not(.facility-full-image).is-low-res-hidden { opacity:0; }
@@ -529,7 +536,7 @@
       .button:hover { box-shadow:0 6px 16px rgba(24,24,24,.14); }
       .button:active { box-shadow:none; }
       .button--dark:hover { background:#303030; }
-      .button--red:hover { background:#e62d00; }
+      .button--red:hover { background:#0024cb; }
       .workflow-note .button:hover { background:#fff; color:var(--ink); box-shadow:0 8px 20px rgba(0,0,0,.24); }
       .text-link:hover::after { transform:scaleX(0); }
       .site-nav a:hover::after { transform:scaleX(1); transform-origin:left center; }
@@ -547,7 +554,7 @@
       .facility:hover img { transform:scale(1); }
       .route-confirm:hover { background:#303030; box-shadow:0 6px 16px rgba(24,24,24,.16); }
       .mobile-quote:hover { transform:translateX(-50%); background:#303030; box-shadow:0 8px 18px rgba(24,24,24,.18); }
-      .whatsapp-button:hover { background:#1eaa55; box-shadow:0 8px 18px rgba(24,24,24,.18); }
+      .whatsapp-button:hover { background:#303030; box-shadow:0 8px 18px rgba(24,24,24,.18); }
     }
 
     @media (min-width:1200px) and (prefers-reduced-motion:no-preference) {
@@ -916,7 +923,7 @@
       .collaboration-points { gap:10px; margin-top:24px; padding-top:16px; }
       .collaboration-points li { font-size:11px; line-height:14px; }
       .map-panel { width:calc(100% - 40px); height:282px; margin-top:50px; }
-      .map-panel::before { content:""; position:absolute; z-index:0; top:64px; left:50%; width:480px; height:218px; transform:translateX(-50%); background:#ff0000; -webkit-mask:url("assets/vector-6.svg") center / 100% 100% no-repeat; mask:url("assets/vector-6.svg") center / 100% 100% no-repeat; }
+      .map-panel::before { content:""; position:absolute; z-index:0; top:64px; left:50%; width:480px; height:218px; transform:translateX(-50%); background:var(--red); -webkit-mask:url("assets/vector-6.svg") center / 100% 100% no-repeat; mask:url("assets/vector-6.svg") center / 100% 100% no-repeat; }
       .map-panel > img { display:none; }
       .route-card { z-index:1; }
       .route-card { width:100%; height:171px; padding:40px 50px; }
@@ -955,6 +962,8 @@
       .next-page-strip { min-height:0; }
       .site-footer-item--emails { flex-wrap:wrap; column-gap:12px; row-gap:5px; }
       .site-footer-item--emails .site-footer-label { flex-basis:100%; }
+      .site-footer-item--phones { flex-wrap:wrap; column-gap:12px; row-gap:5px; }
+      .site-footer-item--phones .site-footer-label { flex-basis:100%; }
       .site-footer-label { margin:0 8px 0 0; }
       .gallery-lightbox-close-mobile { position:fixed; z-index:1; bottom:20px; left:50%; display:inline-flex; width:min(400px, calc(100% - 40px)); height:69px; padding:0; transform:translateX(-50%); align-items:center; justify-content:center; overflow:hidden; clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); border:0; background:rgba(24,24,24,.96); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:#fff; font:500 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; cursor:pointer; }
       .gallery-lightbox-close { display:none; }
@@ -978,11 +987,11 @@
   </div>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="index.html" aria-label="Fatisa, inicio"><img src="assets/vector-10.svg" alt=""><span>Fatisa<sup>™</sup></span></a>
+      <a class="brand" href="index.html" aria-label="Fatisa, inicio"><img src="assets/colored_logo.svg" alt=""><span>Fatisa<sup>™</sup></span></a>
       <nav class="site-nav" aria-label="Navegación principal">
         <a href="index.html" data-page-link="inicio">Inicio</a><a href="servicios.html" data-page-link="servicios">Servicios</a><a href="equipos.html" data-page-link="equipos">Equipos</a><a href="trabajos-realizados.html" data-page-link="trabajos">Trabajos Realizados</a><a href="nosotros.html" data-page-link="nosotros">Nosotros</a>
       </nav>
-      <a class="button button--red menu-toggle" href="#contacto" data-quote-trigger aria-label="Abrir menú" aria-controls="mobile-navigation" aria-expanded="false"><span>Contacto</span><svg class="menu-icon" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="50" height="50" fill="#FF0000"/><path d="M13.75 29.3749H36.25V26.8753H13.75V29.3749ZM13.75 20.6251V23.1253H36.25V20.6251H13.75Z" fill="white"/><path d="M51 -1H42V0L50 8H51V-1Z" fill="#F0F0F0"/></svg></a>
+      <a class="button button--red menu-toggle" href="#contacto" data-quote-trigger aria-label="Abrir menú" aria-controls="mobile-navigation" aria-expanded="false"><span>Contacto</span><svg class="menu-icon" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="50" height="50" fill="#24347F"/><path d="M13.75 29.3749H36.25V26.8753H13.75V29.3749ZM13.75 20.6251V23.1253H36.25V20.6251H13.75Z" fill="white"/><path d="M51 -1H42V0L50 8H51V-1Z" fill="#F2F2F3"/></svg></a>
     </div>
   </header>
   <div data-language-switch-anchor></div>
@@ -1030,7 +1039,7 @@
         </div>
         <div class="hero-language-slot" data-hero-language-slot><div class="language-switch" role="group" aria-label="Selector de idioma" data-active-language="es">
           <button type="button" data-language="es" aria-pressed="true"><span class="language-flag"><img src="assets/figma-14.png" alt=""></span>Español</button>
-          <button type="button" data-language="en" aria-pressed="false"><span class="language-flag"><img src="assets/figma-10.png" alt=""><svg class="language-download-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" fill="#FF0000"/><path d="M9 4.5V10.25M9 10.25L6.8 8.05M9 10.25L11.2 8.05M5.25 13H12.75" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>English</button>
+          <button type="button" data-language="en" aria-pressed="false"><span class="language-flag"><img src="assets/figma-10.png" alt=""><svg class="language-download-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" fill="#B7252A"/><path d="M9 4.5V10.25M9 10.25L6.8 8.05M9 10.25L11.2 8.05M5.25 13H12.75" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>English</button>
         </div></div>
         <nav class="hero-page-links" aria-label="Secciones principales">
           <a href="servicios.html"><span class="hero-page-link-index">01</span><span class="hero-page-link-content"><span class="hero-page-link-label">Servicios</span><span class="hero-page-link-summary" data-en="Engineering and manufacturing">Ingeniería y manufactura</span></span><span class="hero-page-link-arrow" aria-hidden="true">↗</span></a>
@@ -1318,9 +1327,9 @@
           <p class="collaboration-card-label" data-en="Direct collaboration">Colaboración directa</p>
             <div class="route">
               <div class="route-origin"><img src="assets/vector-12.svg" alt="Fatisa"><img src="assets/figma-14.png" alt="Bandera de México"></div>
-              <svg class="route-line" width="206" height="10" viewBox="0 0 206 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 5H206" stroke="url(#route-gradient)" stroke-opacity="0.6" stroke-width="10" stroke-dasharray="1.4 1.4"/><defs><linearGradient id="route-gradient" x1="206" y1="5" x2="0" y2="4.99999" gradientUnits="userSpaceOnUse"><stop stop-color="white"/><stop offset="0.5" stop-color="#FF0000"/><stop offset="1" stop-color="white"/></linearGradient></defs></svg>
+              <svg class="route-line" width="206" height="10" viewBox="0 0 206 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 5H206" stroke="url(#route-gradient)" stroke-opacity="0.6" stroke-width="10" stroke-dasharray="1.4 1.4"/><defs><linearGradient id="route-gradient" x1="206" y1="5" x2="0" y2="4.99999" gradientUnits="userSpaceOnUse"><stop stop-color="white"/><stop offset="0.5" stop-color="#B7252A"/><stop offset="1" stop-color="white"/></linearGradient></defs></svg>
               <img src="assets/figma-10.png" alt="Bandera de Estados Unidos">
-              <svg class="route-marker" aria-hidden="true" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="24" fill="#FF0000"/><path d="M20.5473 26.4629L17.0214 31.7518C16.918 31.9069 16.744 32 16.5577 32C16.1773 32 15.9087 31.6273 16.029 31.2665L17.703 26.2446C17.8516 25.7987 17.9274 25.3318 17.9274 24.8618V24.1382C17.9274 23.6682 17.8516 23.2013 17.703 22.7554L16.029 17.7335C15.9087 17.3727 16.1773 17 16.5577 17C16.744 17 16.918 17.0931 17.0214 17.2482L20.5473 22.5371C20.9349 23.1184 21.1417 23.8014 21.1417 24.5C21.1417 25.1986 20.9349 25.8816 20.5473 26.4629Z" fill="white"/><path d="M25.7616 26.4629L22.2356 31.7518C22.1323 31.9069 21.9583 32 21.7719 32C21.3916 32 21.123 31.6273 21.2433 31.2665L22.9172 26.2446C23.0658 25.7987 23.1416 25.3318 23.1416 24.8618V24.1382C23.1416 23.6682 23.0658 23.2013 22.9172 22.7554L21.2433 17.7335C21.123 17.3727 21.3916 17 21.7719 17C21.9583 17 22.1323 17.0931 22.2356 17.2482L25.7616 22.5371C26.1491 23.1184 26.3559 23.8014 26.3559 24.5C26.3559 25.1986 26.1491 25.8816 25.7616 26.4629Z" fill="white"/><path d="M30.9758 26.4629L27.4499 31.7518C27.3465 31.9069 27.1725 32 26.9862 32C26.6058 32 26.3372 31.6273 26.4575 31.2665L28.1315 26.2446C28.2801 25.7987 28.3558 25.3318 28.3558 24.8618V24.1382C28.3558 23.6682 28.2801 23.2013 28.1315 22.7554L26.4575 17.7335C26.3372 17.3727 26.6058 17 26.9862 17C27.1725 17 27.3465 17.0931 27.4499 17.2482L30.9758 22.5371C31.3633 23.1184 31.5701 23.8014 31.5701 24.5C31.5701 25.1986 31.3633 25.8816 30.9758 26.4629Z" fill="white"/></svg>
+              <svg class="route-marker" aria-hidden="true" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="24" fill="#B7252A"/><path d="M20.5473 26.4629L17.0214 31.7518C16.918 31.9069 16.744 32 16.5577 32C16.1773 32 15.9087 31.6273 16.029 31.2665L17.703 26.2446C17.8516 25.7987 17.9274 25.3318 17.9274 24.8618V24.1382C17.9274 23.6682 17.8516 23.2013 17.703 22.7554L16.029 17.7335C15.9087 17.3727 16.1773 17 16.5577 17C16.744 17 16.918 17.0931 17.0214 17.2482L20.5473 22.5371C20.9349 23.1184 21.1417 23.8014 21.1417 24.5C21.1417 25.1986 20.9349 25.8816 20.5473 26.4629Z" fill="white"/><path d="M25.7616 26.4629L22.2356 31.7518C22.1323 31.9069 21.9583 32 21.7719 32C21.3916 32 21.123 31.6273 21.2433 31.2665L22.9172 26.2446C23.0658 25.7987 23.1416 25.3318 23.1416 24.8618V24.1382C23.1416 23.6682 23.0658 23.2013 22.9172 22.7554L21.2433 17.7335C21.123 17.3727 21.3916 17 21.7719 17C21.9583 17 22.1323 17.0931 22.2356 17.2482L25.7616 22.5371C26.1491 23.1184 26.3559 23.8014 26.3559 24.5C26.3559 25.1986 26.1491 25.8816 25.7616 26.4629Z" fill="white"/><path d="M30.9758 26.4629L27.4499 31.7518C27.3465 31.9069 27.1725 32 26.9862 32C26.6058 32 26.3372 31.6273 26.4575 31.2665L28.1315 26.2446C28.2801 25.7987 28.3558 25.3318 28.3558 24.8618V24.1382C28.3558 23.6682 28.2801 23.2013 28.1315 22.7554L26.4575 17.7335C26.3372 17.3727 26.6058 17 26.9862 17C27.1725 17 27.3465 17.0931 27.4499 17.2482L30.9758 22.5371C31.3633 23.1184 31.5701 23.8014 31.5701 24.5C31.5701 25.1986 31.3633 25.8816 30.9758 26.4629Z" fill="white"/></svg>
             </div>
             <div class="route-labels"><span>Monterrey, MX.</span><span><strong data-en="United States">Estados Unidos</strong></span></div>
             <ul class="collaboration-points">
@@ -1579,7 +1588,7 @@
   <footer class="site-footer" aria-label="Datos de contacto">
     <div class="site-footer-inner">
       <div class="site-footer-item site-footer-item--emails"><span class="site-footer-label" data-en="Email">Correo</span><a href="mailto:ventas@fatisa.com.mx">ventas@fatisa.com.mx</a><a href="mailto:administracion@fatisa.com.mx">administracion@fatisa.com.mx</a></div>
-      <div class="site-footer-item"><span class="site-footer-label" data-en="Phone">Teléfono</span><a href="tel:+528134782203">+52 81 3478 2203</a></div>
+      <div class="site-footer-item site-footer-item--phones"><span class="site-footer-label" data-en="Phones">Teléfonos</span><a href="tel:+528134782203">+52 81 3478 2203</a><a href="tel:+528183546374">+52 81 8354 6374</a><a href="tel:+528183557812">+52 81 8355 7812</a></div>
       <div class="site-footer-item"><span class="site-footer-label" data-en="Address">Dirección</span><address>Peral 2430, Moderna, Monterrey, N.L.</address></div>
     </div>
   </footer>
