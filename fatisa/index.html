@@ -245,6 +245,7 @@
     .copyright, .powered { position:absolute; z-index:1; bottom:40px; font:12px/1.2 Arial, sans-serif; color:rgba(24,24,24,.62); }
     .copyright { left:var(--gutter); }
     .powered { left:50%; display:flex; align-items:center; gap:6px; transform:translateX(-50%); text-decoration:none; transition:color .2s ease; }
+    .powered[hidden] { display:none !important; }
     .powered:hover { color:var(--ink); }
     .powered img { width:17px; height:10px; }
 
