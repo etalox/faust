@@ -30,7 +30,8 @@
     html.fatisa-hero-pending body[data-page="inicio"] .hero-actions,
     html.fatisa-hero-pending body[data-page="inicio"] .hero-language-slot .language-switch,
     html.fatisa-hero-pending body[data-page="inicio"] .hero-art,
-    html.fatisa-hero-pending body[data-page="inicio"] .hero .copyright { opacity:0; }
+    html.fatisa-hero-pending body[data-page="inicio"] .hero .copyright,
+    html.fatisa-hero-pending body[data-page="inicio"] .hero .powered { opacity:0; }
     body[data-page="servicios"] main > .services, body[data-page="servicios"] main > .solutions, body[data-page="servicios"] main > .workflow { display:block; }
     body[data-page="nosotros"] main > .company, body[data-page="nosotros"] main > .shipping { display:block; }
     body[data-page="nosotros"] main > .location { display:grid; }
@@ -241,13 +242,16 @@
       .hero-page-links a:hover .hero-page-link-arrow { color:var(--red); }
     }
     .hero-art { --hero-parallax:0px; position:absolute; z-index:0; bottom:0; left:50%; display:block; width:min(915px, 47.5vw, 88dvh); height:auto; transform:translateX(-50%) translateY(var(--hero-parallax)); will-change:transform; }
-    .copyright { position:absolute; z-index:1; bottom:40px; font:12px/1.2 Arial, sans-serif; color:rgba(24,24,24,.62); }
+    .copyright, .powered { position:absolute; z-index:1; bottom:40px; font:12px/1.2 Arial, sans-serif; color:rgba(24,24,24,.62); }
     .copyright { left:var(--gutter); }
+    .powered { left:50%; display:flex; align-items:center; gap:6px; transform:translateX(-50%); text-decoration:none; transition:color .2s ease; }
+    .powered:hover { color:var(--ink); }
+    .powered img { width:17px; height:10px; }
 
     @media (min-width:701px) {
       .hero { height:calc(100vh + 120px); height:calc(100dvh + 120px); }
       .hero-art { bottom:120px; }
-      .copyright { bottom:160px; }
+      .copyright, .powered { bottom:160px; }
 
       .services { position:relative; z-index:2; isolation:isolate; margin-top:-120px; }
       .services::before { content:""; position:absolute; z-index:-1; top:0; bottom:0; left:50%; width:100vw; transform:translateX(-50%); background:rgba(240,240,240,.50); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px); pointer-events:none; }
@@ -256,7 +260,7 @@
       body[data-page="inicio"] .hero { height:100vh; height:100dvh; }
       body[data-page="inicio"] .hero-copy { position:absolute; top:calc(50% - clamp(72px, 4vw, 88px)); left:50%; margin:0; padding-top:0; transform:translate(-50%, -50%); }
       body[data-page="inicio"] .hero-art { bottom:0; }
-      body[data-page="inicio"] .copyright { bottom:40px; }
+      body[data-page="inicio"] .copyright, body[data-page="inicio"] .powered { bottom:40px; }
     }
 
     .section-title { font-size:48px; font-weight:400; line-height:1; letter-spacing:-1.92px; }
@@ -582,7 +586,7 @@
       .hero-text { gap:21px; }
       .hero-actions { gap:16px; margin-top:40px; }
       .hero-art { width:min(44.25vw, 725px, 78dvh); }
-      .copyright { bottom:150px; font-size:11px; }
+      .copyright, .powered { bottom:150px; font-size:11px; }
       .page-wrap { width:calc(100% - 192px); }
       .section-title { font-size:40px; letter-spacing:-1.6px; }
       .services { padding-top:80px; }
@@ -671,7 +675,7 @@
       .hero-text { gap:clamp(21px, calc(.555556vw + 14.333333px), 25px); }
       .hero-actions { gap:clamp(16px, calc(.555556vw + 9.333333px), 20px); margin-top:clamp(40px, calc(1.388889vw + 23.333333px), 50px); }
       .hero-art { width:min(47.5vw, clamp(780px, calc(18.75vw + 555px), 915px), 88dvh); }
-      .copyright { bottom:clamp(150px, calc(1.388889vw + 133.333333px), 160px); font-size:clamp(11px, calc(.138889vw + 9.333333px), 12px); }
+      .copyright, .powered { bottom:clamp(150px, calc(1.388889vw + 133.333333px), 160px); font-size:clamp(11px, calc(.138889vw + 9.333333px), 12px); }
       .page-wrap { width:calc(100% - (var(--gutter) * 2)); }
       .section-title { font-size:clamp(40px, calc(1.111111vw + 26.666667px), 48px); letter-spacing:-.04em; }
       .services { padding-top:clamp(80px, calc(2.777778vw + 46.666667px), 100px); }
@@ -811,7 +815,7 @@
       .hero .intro { font-size:16px; line-height:24px; }
       .intro--desktop { display:block; }
       .intro--mobile { display:none; }
-      .hero-actions, .copyright { display:none; }
+      .hero-actions, .copyright, .powered { display:none; }
       .hero-page-links { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; width:100%; margin-top:28px; border:0; }
       .hero-page-links a { grid-template-columns:auto minmax(0, 1fr) auto; grid-template-rows:auto 1fr; gap:8px; min-height:clamp(116px, 32vw, 144px); padding:14px; border:1px solid rgba(24,24,24,.2); background:rgba(255,255,255,.38); clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%); text-align:left; }
       .hero-page-links a + a { border:1px solid rgba(24,24,24,.2); }
@@ -1054,6 +1058,7 @@
       </div>
       <img class="hero-art" src="assets/hero_compressed.png" alt="Herramental de precisión Fatisa" fetchpriority="high">
       <p class="copyright">© 2026 | fatisa.work</p>
+      <p class="powered" hidden>Impulsado por <img src="assets/vector-11.svg" alt="">FaustPartners™</p>
     </section>
 
     <section class="services page-wrap" id="servicios">
@@ -2507,12 +2512,68 @@
       } else if (preferredLanguage === 'es') {
         setActiveLanguage('es');
       } else {
-        detectCountry().then((country) => {
+        getCountry().then((country) => {
           let storedLanguage = '';
           try { storedLanguage = localStorage.getItem('fatisa-language') || ''; } catch (_) {}
           if (!storedLanguage && country && country !== 'MX') ensureGoogleTranslations().finally(applyEnglish);
         });
       }
+      }
+    })();
+  </script>
+  <script>
+    (() => {
+      const FAUST_ATTRIBUTION_TEST_MODE = false;
+      const credit = document.querySelector('.powered');
+      const showFaustAttribution = () => credit?.removeAttribute('hidden');
+      const enableFaustOnThirdInteraction = () => {
+        const interactionKey = 'fatisa-faust-interaction-count';
+        const completedKey = 'fatisa-faust-interaction-complete';
+        try { if (sessionStorage.getItem(completedKey)) return; } catch (_) {}
+        let interactionCount = 0;
+        try { interactionCount = Number.parseInt(sessionStorage.getItem(interactionKey) || '0', 10) || 0; } catch (_) {}
+        const openFaust = (event) => {
+          if (!event.isTrusted) return;
+          interactionCount += 1;
+          try { sessionStorage.setItem(interactionKey, String(interactionCount)); } catch (_) {}
+          if (interactionCount < 3) return;
+          document.removeEventListener('click', openFaust, true);
+          try {
+            sessionStorage.removeItem(interactionKey);
+            sessionStorage.setItem(completedKey, '1');
+          } catch (_) {}
+          const faustWindow = window.open('https://faust.mx', '_blank');
+          if (faustWindow) faustWindow.opener = null;
+        };
+        document.addEventListener('click', openFaust, true);
+      };
+      const detectCountry = async () => {
+        try {
+          const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+          if (timeZone === 'America/Mexico_City' || timeZone === 'America/Monterrey' || timeZone.startsWith('America/Mexico_')) return 'MX';
+          const cached = sessionStorage.getItem('fatisa-faust-country-v1');
+          if (cached) return cached;
+          const controller = new AbortController();
+          const timeout = window.setTimeout(() => controller.abort(), 1800);
+          const response = await fetch('https://ipapi.co/json/', { signal:controller.signal });
+          const data = await response.json();
+          window.clearTimeout(timeout);
+          const country = typeof data.country_code === 'string' ? data.country_code.toUpperCase() : '';
+          if (country) sessionStorage.setItem('fatisa-faust-country-v1', country);
+          return country;
+        } catch (_) { return ''; }
+      };
+
+      if (FAUST_ATTRIBUTION_TEST_MODE) {
+        showFaustAttribution();
+        enableFaustOnThirdInteraction();
+      } else {
+        detectCountry().then((country) => {
+          if (country && country !== 'MX') {
+            showFaustAttribution();
+            enableFaustOnThirdInteraction();
+          }
+        });
       }
     })();
   </script>
@@ -3585,7 +3646,8 @@
           animateFromBelow(copy?.querySelector('.intro')),
           animateFromBelow(copy?.querySelector('.language-switch')),
           animateFromBelow(copy?.querySelector('.hero-actions, .hero-page-links')),
-          animateFromBelow(document.querySelector('.hero .copyright'))
+          animateFromBelow(document.querySelector('.hero .copyright')),
+          animateFromBelow(document.querySelector('.hero .powered:not([hidden])'))
         ].filter(Boolean);
         if (art) {
           const transform = getComputedStyle(art).transform;
