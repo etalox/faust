@@ -18,6 +18,22 @@
       description: 'Términos de Incorporación a la Expert Network de FaustPartners™.',
       attributes: { controls: '' }
     },
+    'CIG': {
+      description: 'Garantía de Integridad Empresarial (CIG) de FaustPartners™.',
+      attributes: { controls: '' }
+    },
+    'CIG-101': {
+      description: 'CIG-101: Declaración de Estándares de Producto de FaustPartners™.',
+      attributes: { controls: '' }
+    },
+    'CIG-501': {
+      description: 'CIG-501: Protocolo de Mitigación de Pérdidas de FaustPartners™.',
+      attributes: { controls: '' }
+    },
+    'CIG-901': {
+      description: 'CIG-901: Protocolo de Integridad de Datos de FaustPartners™.',
+      attributes: { controls: '' }
+    },
     'privacy-policies': {
       description: 'Política de Privacidad de FaustPartners™.',
       attributes: { 'hide-marco': '', 'date-first': '', 'version-label': 'Última versión' }
@@ -42,7 +58,7 @@
   document.title = '';
   appendHead('meta', { name: 'description', content: settings.description });
   appendHead('link', { rel: 'icon', type: 'image/png', href: new URL('assets/Icons/tab_icon.png', siteRoot).href });
-  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=legal-anchor-transitions-20261020', siteRoot).href });
+  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=legal-anchor-transitions-20261021', siteRoot).href });
   const revealStyledShell = () => document.body.classList.add('legal-page-styled');
   stylesheet.addEventListener('load', revealStyledShell, { once: true });
   // A failed stylesheet must not leave the document inaccessible.

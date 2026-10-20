@@ -1,0 +1,15 @@
+---
+Versión: v1.0
+Emisión: 20 de octubre de 2026
+Marco: Integridad de Datos
+Marca: FaustPartners™
+---
+# CIG-901: Protocolo de Integridad de Datos
+
+## Objeto
+
+El presente CIG-901 establece las medidas de control aplicables a la confidencialidad de la información y a la integridad de servidores, sistemas, credenciales, bases de datos y demás infraestructura digital a la que Faust o sus colaboradores autorizados tengan acceso con motivo de los servicios.
+
+Antes de habilitar acceso privilegiado o administrativo a infraestructura especialmente sensible, Faust procurará verificar razonablemente la identidad y ubicación declarada de la persona autorizada, asignar accesos individuales y registrar las autorizaciones, privilegios, actividades y revocaciones que resulten razonablemente necesarios conforme al riesgo. Las medidas específicas dependerán de los entornos, permisos, herramientas y controles proporcionados o autorizados por el Cliente.
+
+Este protocolo no garantiza la ausencia absoluta de incidentes, vulnerabilidades, accesos no autorizados, pérdidas o interrupciones, ni convierte a Faust en garante de la infraestructura, decisiones de seguridad o controles que correspondan al Cliente o a terceros.
