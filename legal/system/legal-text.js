@@ -86,7 +86,7 @@ function assignLegalAnchors(article) {
   for (const element of article.querySelectorAll('h2, h3, p, li')) {
     if (element.tagName === 'H2') {
       const number = clauseNumberFromHeading(element);
-      currentClause = number === null ? null : `clausula-${number}`;
+      currentClause = number === null ? null : String(number).replace('-bis', 'bis');
       paragraph = 0;
       section = 0;
       if (currentClause) element.id = currentClause;
@@ -96,12 +96,12 @@ function assignLegalAnchors(article) {
 
     if (element.tagName === 'H3') {
       section += 1;
-      element.id = `${currentClause}-apartado-${section}`;
+      element.id = `${currentClause}.s${section}`;
       continue;
     }
     if (element.tagName === 'P') {
       paragraph += 1;
-      element.id = `${currentClause}-parrafo-${paragraph}`;
+      element.id = `${currentClause}.p${paragraph}`;
       continue;
     }
 
@@ -110,18 +110,18 @@ function assignLegalAnchors(article) {
     if (list.tagName === 'OL' && list.getAttribute('type') !== 'a') {
       const point = listItemNumber(element);
       element.id = parentItem
-        ? `${parentItem.id || currentClause}-punto-${point}`
-        : `${currentClause}-punto-${point}`;
+        ? `${parentItem.id || currentClause}.${point}`
+        : `${currentClause}.${point}`;
     } else if (list.tagName === 'OL' && list.getAttribute('type') === 'a') {
       const letter = String.fromCharCode(97 + listItemNumber(element) - 1);
       element.id = parentItem
-        ? `${parentItem.id || currentClause}-inciso-${letter}`
-        : `${currentClause}-inciso-${letter}`;
+        ? `${parentItem.id || currentClause}.${letter}`
+        : `${currentClause}.${letter}`;
     } else {
       const item = listItemNumber(element);
       element.id = parentItem
-        ? `${parentItem.id || currentClause}-inciso-${item}`
-        : `${currentClause}-inciso-${item}`;
+        ? `${parentItem.id || currentClause}.i${item}`
+        : `${currentClause}.i${item}`;
     }
   }
 }

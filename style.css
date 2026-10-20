@@ -2229,14 +2229,23 @@ faust-legal-document article [id] {
   scroll-margin-top: 160px;
 }
 
-.legal-document__anchor-target {
-  outline: 1px solid rgba(255, 255, 255, .24);
-  outline-offset: 8px;
-  background: rgba(255, 255, 255, .025);
+faust-legal-document article * {
+  transition: color 280ms ease;
 }
 
-.legal-document__anchor-target:focus {
-  outline-color: rgba(255, 255, 255, .4);
+.legal-document__anchor-target {
+  color: #fff;
+  outline: 0;
+}
+
+faust-legal-document article:has(.legal-document__anchor-target),
+faust-legal-document article:has(.legal-document__anchor-target) * {
+  color: #7c7d82;
+}
+
+.legal-document__anchor-target,
+.legal-document__anchor-target * {
+  color: #fff !important;
 }
 
 faust-legal-document article h3,
