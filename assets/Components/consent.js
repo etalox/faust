@@ -434,7 +434,8 @@ try {
 
     const getRootPrefix = () => {
       const path = window.location.pathname.toLowerCase();
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs')) {
+      if (/^\/legal\/[^/]+(?:\/|$)/.test(path)) return '../../';
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs') || path.includes('/legal/') || path.endsWith('/legal')) {
         return '../';
       }
       return './';
@@ -491,13 +492,13 @@ try {
     for (const lang in translations) {
       if (translations[lang].textStandard) {
         translations[lang].textStandard = translations[lang].textStandard
-          .replace(/\.\/privacy\.html/g, rootPrefix + 'privacy.html')
-          .replace(/\.\/terms\.html/g, rootPrefix + 'terms.html');
+          .replace(/\.\/privacy\.html/g, rootPrefix + 'legal/privacy-policies')
+          .replace(/\.\/terms\.html/g, rootPrefix + 'legal/terms-of-use');
       }
       if (translations[lang].textStrict) {
         translations[lang].textStrict = translations[lang].textStrict
-          .replace(/\.\/privacy\.html/g, rootPrefix + 'privacy.html')
-          .replace(/\.\/terms\.html/g, rootPrefix + 'terms.html');
+          .replace(/\.\/privacy\.html/g, rootPrefix + 'legal/privacy-policies')
+          .replace(/\.\/terms\.html/g, rootPrefix + 'legal/terms-of-use');
       }
     }
 

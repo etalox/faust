@@ -734,21 +734,22 @@
   const componentCacheVersion = 'navbar-mobile-contact-20260825';
   const withComponentVersion = (src) => `${src}?v=${componentCacheVersion}`;
   const componentScripts = [
-    { src: withComponentVersion('Components/consent.js'), always: true },
+    { src: 'Components/consent.js?v=legal-path-20261021', always: true },
     // The navbar creates this element during its own render, so register it
     // before the navbar rather than discovering it from the pre-rendered DOM.
-    { src: withComponentVersion('Components/logo-lockup.js'), always: true },
-    { src: withComponentVersion('Components/navbar.js'), always: true },
-    { src: withComponentVersion('Components/footer.js'), always: true },
-    { src: withComponentVersion('Components/buttons.js'), always: true },
+    { src: 'Components/logo-lockup.js?v=nav-logo-always-white-20261020', always: true },
+    { src: 'Components/navbar.js?v=nav-logo-always-white-20261020', always: true },
+    { src: 'Components/footer.js?v=footer-bottom-reduced-margin-20261020', always: true },
+    { src: 'Components/buttons.js?v=legal-path-20261021', always: true },
     { src: withComponentVersion('Components/apply-modal.js'), always: true },
     { src: withComponentVersion('Components/vacancy-card.js'), selector: 'faust-vacancy-card, #vacancies-container' },
-    { src: withComponentVersion('Components/responsive-br.js'), selector: 'h1 br, h2 br, h3 br, h4 br, h5 br, h6 br, p br' },
-    { src: withComponentVersion('Components/flow-canvas.js'), selector: 'faust-flow-canvas' },
-    { src: withComponentVersion('Components/perk-illustrations.js'), selector: 'faust-ecosystem' },
+    { src: withComponentVersion('Components/responsive-br.js'), selector: 'h1 br, h2 br, h3 br, h4 br, h5 br, h6 br, p br, faust-legal-document[src], faust-legal-document[versioned]' },
+    { src: 'Components/flow-canvas.js?v=flow-scroll-unfreeze-1pct-20261020', selector: 'faust-flow-canvas' },
+    { src: 'Components/perk-illustrations.js?v=perk-background-fill-20261020', selector: 'faust-ecosystem' },
     { src: withComponentVersion('Components/mouse-follower.js'), selector: 'faust-ecosystem' },
-    { src: withComponentVersion('Components/ecosystem.js'), selector: 'faust-ecosystem' },
-    { src: withComponentVersion('Components/documentation.js'), selector: 'faust-documentation' }
+    { src: 'Components/ecosystem.js?v=ecosystem-navbar-width-20261020', selector: 'faust-ecosystem' },
+    { src: withComponentVersion('Components/documentation.js'), selector: 'faust-documentation' },
+    { src: '../legal/system/legal-document.js?v=legal-system-20261028', selector: 'faust-legal-document' }
   ];
   const componentLoads = new Map();
 
@@ -886,6 +887,22 @@
       if (doc.documentElement.lang) {
         document.documentElement.lang = doc.documentElement.lang;
       }
+       const legalDocument = doc.documentElement.dataset.legalDocument;
+       let legalDocumentReady = null;
+       if (legalDocument) {
+         document.documentElement.dataset.legalDocument = legalDocument;
+         document.body.classList.add('legal-page-loading');
+         legalDocumentReady = new Promise(resolve => {
+           const timeout = window.setTimeout(resolve, 12000);
+           document.addEventListener('faust-legal-document-ready', () => {
+             window.clearTimeout(timeout);
+             resolve();
+           }, { once: true });
+         });
+       } else {
+         delete document.documentElement.dataset.legalDocument;
+         document.body.classList.remove('legal-page-loading');
+       }
 
       // Synchronize <body> classes (preserving active transitioning and grid/animation states)
       const preservedBodyClasses = [];
@@ -895,6 +912,9 @@
       if (document.body.classList.contains('hide-page-grid')) {
         preservedBodyClasses.push('hide-page-grid');
       }
+       if (legalDocument) {
+         preservedBodyClasses.push('legal-page-loading');
+       }
       document.body.className = doc.body.className;
       preservedBodyClasses.forEach(cls => document.body.classList.add(cls));
       // Swap stylesheet path if it differs (due to directory depth differences)
@@ -949,7 +969,18 @@
       const navbar = document.querySelector('faust-navbar');
       const footer = document.querySelector('faust-footer');
       const applyModal = document.querySelector('faust-apply-modal');
-      const fadeOverlay = document.querySelector('.page-fade-overlay');
+       let fadeOverlay = document.querySelector('.page-fade-overlay');
+       if (legalDocument && !fadeOverlay) {
+         fadeOverlay = document.createElement('div');
+         fadeOverlay.className = 'page-fade-overlay';
+         document.body.prepend(fadeOverlay);
+       }
+       if (legalDocument && fadeOverlay) {
+         fadeOverlay.style.opacity = '1';
+         fadeOverlay.style.pointerEvents = 'auto';
+         fadeOverlay.style.transition = 'none';
+         fadeOverlay.style.zIndex = '19';
+       }
       const bottomPageBlur = document.querySelector('.page-bottom-blur');
 
       // Remove current non-preserved elements
@@ -1025,6 +1056,29 @@
       window.isRunningPageScripts = false;
       window.faustProfileRefresh?.();
 
+      // Legal route shells are intentionally tiny and their loader uses
+      // `defer`. A dynamically inserted deferred script is not consistently
+      // executed by browsers, so mount it explicitly during SPA navigation.
+      if (legalDocument && !document.querySelector('faust-legal-document')) {
+        const legalPageLoader = doc.querySelector('script[src*="legal-page.js"]');
+        const legalPageSrc = legalPageLoader?.getAttribute('src')
+          ? new URL(legalPageLoader.getAttribute('src'), url).href
+          : null;
+        if (!window.faustMountLegalPage && legalPageSrc) {
+          await new Promise((resolve, reject) => {
+            const loader = document.createElement('script');
+            loader.src = legalPageSrc;
+            loader.async = false;
+            loader.onload = resolve;
+            loader.onerror = () => reject(new Error('Unable to load legal page shell'));
+            document.head.appendChild(loader);
+          });
+        }
+        window.faustMountLegalPage?.();
+      }
+
+       if (legalDocumentReady) await legalDocumentReady;
+
       // This class only suppresses the initial reveal while the new page is mounted.
       // Do not let it leak into interactive transitions such as Careers filters.
       setTimeout(() => {
@@ -1046,7 +1100,7 @@
       // let it add 'is-ready' itself once its fetch completes, so the overlay
       // doesn't clear before the content is available (prevents footer flicker).
       // For all other pages, add it immediately as normal.
-      const hasAsyncComponent = document.querySelector('faust-documentation');
+       const hasAsyncComponent = legalDocument || document.querySelector('faust-documentation');
       if (!hasAsyncComponent) {
         document.body.classList.add('is-ready');
       }
@@ -1099,6 +1153,12 @@
     const currentNorm = normalizePath(window.location.pathname);
     const targetNorm  = normalizePath(targetUrl.pathname);
     if (currentNorm === targetNorm) {
+      // Let links change or remove a legal document's version query normally.
+      if (document.querySelector('faust-legal-document[versioned]') &&
+          targetUrl.search !== window.location.search &&
+          (targetUrl.searchParams.has('version') || new URLSearchParams(window.location.search).has('version'))) {
+        return;
+      }
       e.preventDefault(); // same page — block navigation entirely
       return;
     }

@@ -14,7 +14,7 @@
 
       this.innerHTML = `
         <section class="section section-grid-bg${hoverStyleClass}" id="perks">
-          <div class="wrap-narrow">
+          <div class="wrap wrap-narrow ecosystem-wrap">
             <div class="pill reveal-item">${pill}</div>
             <h2 class="section-title reveal-item" style="margin: 0 0 60px 0;">${title}</h2>
             

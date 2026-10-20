@@ -382,7 +382,8 @@ class FaustFooter extends HTMLElement {
   render() {
     const getRootPrefix = () => {
       const path = window.location.pathname.toLowerCase();
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs')) {
+      if (/^\/legal\/[^/]+(?:\/|$)/.test(path)) return '../../';
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs') || path.includes('/legal/') || path.endsWith('/legal')) {
         return '../';
       }
       return './';
@@ -422,6 +423,20 @@ class FaustFooter extends HTMLElement {
         }
         
         footer { border-top: 1px solid var(--line); padding: 80px 0 15px; }
+        @media (min-width: 981px) {
+          /* Align only the footer columns with the legal document body. */
+          faust-footer .footer-grid {
+            width: min(1200px, calc(100vw - 48px));
+            margin-left: 50%;
+            transform: translateX(-50%);
+          }
+          faust-footer .footer-bottom {
+            position: relative;
+            left: 50%;
+            width: calc(100vw - 48px);
+            transform: translateX(-50%);
+          }
+        }
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 120px; }
         .footer-col h4 { margin: 0 0 32px; font-family: "BDO Grotesk", sans-serif; font-weight: 500; font-size: 18px; color: #fff; }
         .footer-col a { display: block; color: #7c7f84; font-size: 16px; text-decoration: none; }
@@ -902,8 +917,8 @@ class FaustFooter extends HTMLElement {
           <div class="footer-bottom">
             <div class="footer-logo" style="color: #fff !important;">© ${new Date().getFullYear()} Faust Partners™</div>
             <div style="display:flex;gap:24px;">
-              <a href="${rootPrefix}privacy.html">Privacidad</a>
-              <a href="${rootPrefix}terms.html">Términos y condiciones</a>
+              <a href="${rootPrefix}legal/privacy-policies">Privacidad</a>
+              <a href="${rootPrefix}legal/terms-of-use">Términos de uso</a>
             </div>
             <div style="display:flex;gap:20px;align-items:center;">
               <a href="#" id="footer-cookie-trigger" style="text-decoration:underline;color:#fff;">Gestionar cookies</a>

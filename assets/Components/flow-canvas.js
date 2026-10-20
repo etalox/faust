@@ -1139,6 +1139,7 @@ class FaustFlowCanvas extends HTMLElement {
   }
 
   clearTimers(preserveAutoCanvasScroll = false) {
+    this.stopScrollDrivenSlowPlayback();
     if (this._seenTimeout) {
       clearTimeout(this._seenTimeout);
       this._seenTimeout = null;
@@ -1153,6 +1154,60 @@ class FaustFlowCanvas extends HTMLElement {
     }
     if (!preserveAutoCanvasScroll) this.stopAutoCanvasScroll();
     this.stopSweepLoop();
+  }
+
+  startScrollDrivenSlowPlayback() {
+    // Only the initial/slow desktop entrance responds to page scroll. Fast
+    // replays and every mobile/tablet path retain their existing timing.
+    if (window.innerWidth <= 980 || this.classList.contains('fast-replay')) return;
+
+    this.stopScrollDrivenSlowPlayback();
+    requestAnimationFrame(() => {
+      if (!this.isConnected || window.innerWidth <= 980 || this.classList.contains('fast-replay')) return;
+
+      const transitions = this.getAnimations({ subtree: true }).filter(animation =>
+        typeof animation.transitionProperty === 'string' && animation.playState !== 'finished'
+      );
+      if (!transitions.length) return;
+
+      let frame = null;
+      const updateRate = () => {
+        frame = null;
+        const rect = this.getBoundingClientRect();
+        const viewportHeight = Math.max(1, window.innerHeight);
+        // 0 begins at the lower edge of the viewport; 1 arrives well before
+        // the full Canvas is visible, so scrolling progressively "unfreezes"
+        // the sequence instead of waiting for complete intersection.
+        const progress = Math.max(0, Math.min(1,
+          (viewportHeight - rect.top) / (viewportHeight * 0.72)
+        ));
+        const easedProgress = 1 - Math.pow(1 - progress, 2);
+        const playbackRate = 0.01 + (0.99 * easedProgress);
+        transitions.forEach(transition => {
+          if (transition.playState !== 'finished') transition.playbackRate = playbackRate;
+        });
+      };
+      const scheduleRateUpdate = () => {
+        if (frame !== null) return;
+        frame = requestAnimationFrame(updateRate);
+      };
+      const stop = () => {
+        if (frame !== null) cancelAnimationFrame(frame);
+        window.removeEventListener('scroll', scheduleRateUpdate);
+        window.removeEventListener('resize', scheduleRateUpdate);
+        if (this._stopScrollDrivenSlowPlayback === stop) this._stopScrollDrivenSlowPlayback = null;
+      };
+
+      this._stopScrollDrivenSlowPlayback = stop;
+      window.addEventListener('scroll', scheduleRateUpdate, { passive: true });
+      window.addEventListener('resize', scheduleRateUpdate, { passive: true });
+      updateRate();
+      Promise.allSettled(transitions.map(transition => transition.finished)).then(stop);
+    });
+  }
+
+  stopScrollDrivenSlowPlayback() {
+    this._stopScrollDrivenSlowPlayback?.();
   }
 
   stopAutoCanvasScroll() {
@@ -1388,6 +1443,7 @@ class FaustFlowCanvas extends HTMLElement {
 
       this.startLabelTracking();
       this.clearTimers();
+      this.startScrollDrivenSlowPlayback();
 
       // Start continuous seen timer (3 seconds of continuous play)
       this._seenTimeout = setTimeout(() => {
