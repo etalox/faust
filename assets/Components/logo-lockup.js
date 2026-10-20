@@ -1,6 +1,7 @@
 const getRootPrefixForLogo = () => {
   const path = window.location.pathname.toLowerCase();
-  if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs')) {
+  if (/^\/legal\/[^/]+(?:\/|$)/.test(path)) return '../../';
+  if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs') || path.includes('/legal/') || path.endsWith('/legal')) {
     return '../';
   }
   return './';
@@ -11,9 +12,7 @@ class FaustLogoLockup extends HTMLElement {
     const rootPrefix = getRootPrefixForLogo();
     const isNav = this.hasAttribute('is-nav');
     const imgId = isNav ? 'id="nav-isotipo"' : '';
-    const path = window.location.pathname.toLowerCase();
-    const isStartOrCareers = path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers');
-    const imgClass = isNav ? `class="nav-logo-icon${isStartOrCareers ? '' : ' is-blue'}"` : '';
+    const imgClass = isNav ? 'class="nav-logo-icon"' : '';
     const spanId = isNav ? 'id="nav-logo-text"' : '';
     const src = this.getAttribute('src') || (rootPrefix + 'assets/Logotypes/Faust Logo.svg');
     

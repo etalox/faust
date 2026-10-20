@@ -408,7 +408,8 @@ class FaustNavbar extends HTMLElement {
 
     const path = window.location.pathname.toLowerCase();
     const getRootPrefix = () => {
-      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs')) {
+      if (/^\/legal\/[^/]+(?:\/|$)/.test(path)) return '../../';
+      if (path.includes('/start/') || path.endsWith('/start') || path.includes('/careers/') || path.endsWith('/careers') || path.includes('/about/') || path.endsWith('/about') || path.includes('/docs/') || path.endsWith('/docs') || path.includes('/legal/') || path.endsWith('/legal')) {
         return '../';
       }
       return './';
@@ -570,15 +571,18 @@ class FaustNavbar extends HTMLElement {
         }
 
         .nav.is-active::before {
-          background: rgba(9, 10, 11, 0.88) !important; 
+          background: rgba(11, 11, 12, 0.80) !important;
           backdrop-filter: blur(20px) !important;
           -webkit-backdrop-filter: blur(20px) !important;
         }
 
         .nav-inner { height: 80px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        @media (min-width: 981px) {
+          faust-navbar .nav-inner { width: calc(100vw - 48px); max-width: none; padding-left: 0; padding-right: 0; }
+        }
         .nav-links { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 18px; color: #7c7f84; font-size: 14px; user-select: none !important; }
         .nav-links a { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 12px 16px; }
-        .nav-links a + a::before { content: ''; position: absolute; left: -10px; top: 50%; width: 1px; height: 20px; background: rgba(255, 255, 255, 0.10); transform: translateY(-50%); pointer-events: none; }
+        .nav-links a + a::before { display: none; }
         .nav.nav-contacto-hidden #nav-contacto { display: none; }
         .nav-right { display: flex; align-items: center; gap: 22px; color: #7c7f84; font-size: 14px; }
         .nav-mobile-contact { display: none; }
@@ -632,7 +636,7 @@ class FaustNavbar extends HTMLElement {
           filter: brightness(0) invert(1);
         }
         .nav-logo-icon.is-blue {
-          filter: none;
+          filter: brightness(0) invert(1);
         }
         img, svg {
           -webkit-user-drag: none !important;
@@ -1000,6 +1004,7 @@ class FaustNavbar extends HTMLElement {
   initLogoObserver() {
     const heroLogo = document.getElementById('hero-logo');
     const ctaLogo = document.querySelector('.cta .FaustLogo');
+    const cigMark = document.querySelector('#cig-901 .cig-mark');
     const perksSection = document.getElementById('perks');
     const vacantesSection = document.getElementById('vacantes');
     
@@ -1008,6 +1013,7 @@ class FaustNavbar extends HTMLElement {
 
     let isHeroIntersecting = false;
     let isCtaIntersecting = false;
+    let isCigIntersecting = false;
     let isPerksIntersecting = false;
     let isVacantesIntersecting = false;
 
@@ -1015,16 +1021,7 @@ class FaustNavbar extends HTMLElement {
       const navIcon = this.querySelector('#nav-isotipo');
       if (!navIcon) return;
       
-      let shouldBeWhite = isHeroIntersecting || isCtaIntersecting;
-      if (isCareers) {
-        shouldBeWhite = isHeroIntersecting || isPerksIntersecting || isVacantesIntersecting;
-      }
-
-      if (shouldBeWhite) {
-        navIcon.classList.remove('is-blue');
-      } else {
-        navIcon.classList.add('is-blue');
-      }
+      navIcon.classList.remove('is-blue');
 
       if (ctaLogo) {
         if (isCtaIntersecting) {
@@ -1058,6 +1055,17 @@ class FaustNavbar extends HTMLElement {
         { threshold: 0, rootMargin: '0px 0px -30% 0px' }
       );
       this._ctaObserver.observe(ctaLogo);
+    }
+
+    if (cigMark) {
+      this._cigObserver = new IntersectionObserver(
+        ([entry]) => {
+          isCigIntersecting = entry.isIntersecting;
+          updateLogoColor();
+        },
+        { threshold: 0, rootMargin: '-80px 0px 0px 0px' }
+      );
+      this._cigObserver.observe(cigMark);
     }
 
     if (isCareers) {
@@ -1160,6 +1168,10 @@ class FaustNavbar extends HTMLElement {
     if (this._ctaObserver) {
       this._ctaObserver.disconnect();
       this._ctaObserver = null;
+    }
+    if (this._cigObserver) {
+      this._cigObserver.disconnect();
+      this._cigObserver = null;
     }
     if (this._perksObserver) {
       this._perksObserver.disconnect();
