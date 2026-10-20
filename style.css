@@ -2225,6 +2225,20 @@ faust-legal-document article p {
   text-box-edge: initial;
 }
 
+faust-legal-document article [id] {
+  scroll-margin-top: 160px;
+}
+
+.legal-document__anchor-target {
+  outline: 1px solid rgba(255, 255, 255, .24);
+  outline-offset: 8px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.legal-document__anchor-target:focus {
+  outline-color: rgba(255, 255, 255, .4);
+}
+
 faust-legal-document article h3,
 faust-legal-document article strong {
   color: #fff;

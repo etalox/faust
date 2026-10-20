@@ -46,6 +46,86 @@ function listInfo(line) {
   return { kind, number, indent: match[1].length / 2, text: match[3] };
 }
 
+// Stable fragment identifiers let a versioned legal document point directly
+// to a clause, paragraph or numbered point. They are semantic rather than
+// positional, so ordinary copy edits do not change a clause's URL.
+function normalizedLegalText(value) {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function clauseNumberFromHeading(heading) {
+  const source = normalizedLegalText(heading.textContent).split('.')[0].trim();
+  const isBis = source.endsWith(' bis');
+  const ordinal = isBis ? source.slice(0, -4).trim() : source;
+  const direct = new Map([
+    ['primera', 1], ['segunda', 2], ['tercera', 3], ['cuarta', 4], ['quinta', 5],
+    ['sexta', 6], ['septima', 7], ['octava', 8], ['novena', 9], ['decima', 10],
+    ['undecima', 11], ['duodecima', 12], ['decima tercera', 13], ['decima cuarta', 14],
+    ['decima quinta', 15], ['decima sexta', 16], ['decima septima', 17],
+    ['decima octava', 18], ['decima novena', 19], ['vigesima', 20]
+  ]);
+  const number = direct.get(ordinal)
+    ?? (ordinal === 'decima primera' ? 11 : null)
+    ?? (ordinal === 'decima segunda' ? 12 : null);
+  if (number !== null) return isBis ? `${number}-bis` : number;
+  return null;
+}
+
+function listItemNumber(item) {
+  const list = item.parentElement;
+  const siblings = [...list.children].filter(child => child.tagName === 'LI');
+  const index = siblings.indexOf(item);
+  return Number(item.getAttribute('value') || (Number(list.getAttribute('start') || 1) + index));
+}
+
+function assignLegalAnchors(article) {
+  let currentClause = null;
+  let paragraph = 0;
+  let section = 0;
+
+  for (const element of article.querySelectorAll('h2, h3, p, li')) {
+    if (element.tagName === 'H2') {
+      const number = clauseNumberFromHeading(element);
+      currentClause = number === null ? null : `clausula-${number}`;
+      paragraph = 0;
+      section = 0;
+      if (currentClause) element.id = currentClause;
+      continue;
+    }
+    if (!currentClause) continue;
+
+    if (element.tagName === 'H3') {
+      section += 1;
+      element.id = `${currentClause}-apartado-${section}`;
+      continue;
+    }
+    if (element.tagName === 'P') {
+      paragraph += 1;
+      element.id = `${currentClause}-parrafo-${paragraph}`;
+      continue;
+    }
+
+    const list = element.parentElement;
+    const parentItem = element.parentElement.closest('li');
+    if (list.tagName === 'OL' && list.getAttribute('type') !== 'a') {
+      const point = listItemNumber(element);
+      element.id = parentItem
+        ? `${parentItem.id || currentClause}-punto-${point}`
+        : `${currentClause}-punto-${point}`;
+    } else if (list.tagName === 'OL' && list.getAttribute('type') === 'a') {
+      const letter = String.fromCharCode(97 + listItemNumber(element) - 1);
+      element.id = parentItem
+        ? `${parentItem.id || currentClause}-inciso-${letter}`
+        : `${currentClause}-inciso-${letter}`;
+    } else {
+      const item = listItemNumber(element);
+      element.id = parentItem
+        ? `${parentItem.id || currentClause}-inciso-${item}`
+        : `${currentClause}-inciso-${item}`;
+    }
+  }
+}
+
 export function parseLegalText(text) {
   const lines = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n');
   if (lines.shift()?.trim() !== '---') throw new Error('Faltan los datos iniciales del documento.');
@@ -188,5 +268,6 @@ export function parseLegalText(text) {
     appendInline(p, joinLines(content));
     (seenHeading ? getBlock() : article).append(p);
   }
+  assignLegalAnchors(article);
   return { header, article, version: metadata['versión'], emission: metadata['emisión'] };
 }

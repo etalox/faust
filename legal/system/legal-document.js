@@ -21,6 +21,8 @@ class FaustLegalDocument extends HTMLElement {
     this.protectDocumentContents();
     this.languageChangeHandler ||= () => this.addTranslationNotice();
     window.addEventListener('faust-language-changed', this.languageChangeHandler);
+    this.hashChangeHandler ||= () => this.activateFragmentTarget();
+    window.addEventListener('hashchange', this.hashChangeHandler);
     const pageTitle = document.head.querySelector('title');
     if (pageTitle && !this.protectedPageTitle) {
       this.protectedPageTitle = {
@@ -71,6 +73,7 @@ class FaustLegalDocument extends HTMLElement {
 
   disconnectedCallback() {
     window.removeEventListener('faust-language-changed', this.languageChangeHandler);
+    window.removeEventListener('hashchange', this.hashChangeHandler);
     window.removeEventListener('keydown', this.printShortcutHandler, true);
     if (this.pdfDownloadUrl) URL.revokeObjectURL(this.pdfDownloadUrl);
     if (this.hashOutsideHandler) document.removeEventListener('click', this.hashOutsideHandler);
@@ -93,6 +96,28 @@ class FaustLegalDocument extends HTMLElement {
     overlay?.style.removeProperty('transition');
     overlay?.style.removeProperty('z-index');
     document.dispatchEvent(new Event('faust-legal-document-ready'));
+  }
+
+  activateFragmentTarget() {
+    const fragment = window.location.hash.slice(1);
+    if (!fragment) return;
+    let id;
+    try {
+      id = decodeURIComponent(fragment);
+    } catch (error) {
+      return;
+    }
+    const target = document.getElementById(id);
+    if (!target || !this.contains(target)) return;
+    this.querySelectorAll('.legal-document__anchor-target').forEach(element => {
+      element.classList.remove('legal-document__anchor-target');
+    });
+    target.classList.add('legal-document__anchor-target');
+    target.setAttribute('tabindex', '-1');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      target.scrollIntoView({ block: 'center' });
+      target.focus({ preventScroll: true });
+    }));
   }
 
   revealHeader() {
@@ -208,6 +233,7 @@ class FaustLegalDocument extends HTMLElement {
       this.addControls();
       this.revealHeader();
       this.completePageLoading();
+      this.activateFragmentTarget();
       const snapshot = this.cloneNode(true);
       this.preparePdf = async () => {
         this.updatePdfHash?.(null, true);
