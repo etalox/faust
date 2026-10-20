@@ -42,7 +42,12 @@
   document.title = '';
   appendHead('meta', { name: 'description', content: settings.description });
   appendHead('link', { rel: 'icon', type: 'image/png', href: new URL('assets/Icons/tab_icon.png', siteRoot).href });
-  appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=legal-actions-full-width-mobile-20261020', siteRoot).href });
+  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=legal-actions-full-width-mobile-20261020', siteRoot).href });
+  const revealStyledShell = () => document.body.classList.add('legal-page-styled');
+  stylesheet.addEventListener('load', revealStyledShell, { once: true });
+  // A failed stylesheet must not leave the document inaccessible.
+  stylesheet.addEventListener('error', revealStyledShell, { once: true });
+  if (stylesheet.sheet) revealStyledShell();
 
   if (!customElements.get('faust-navbar')) {
     const translation = appendHead('script', { src: new URL('assets/translation.js?v=legal-page-shell-20261019', siteRoot).href });
