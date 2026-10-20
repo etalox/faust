@@ -42,7 +42,7 @@
   document.title = '';
   appendHead('meta', { name: 'description', content: settings.description });
   appendHead('link', { rel: 'icon', type: 'image/png', href: new URL('assets/Icons/tab_icon.png', siteRoot).href });
-  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=legal-actions-full-width-mobile-20261020', siteRoot).href });
+  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=legal-anchor-transitions-20261020', siteRoot).href });
   const revealStyledShell = () => document.body.classList.add('legal-page-styled');
   stylesheet.addEventListener('load', revealStyledShell, { once: true });
   // A failed stylesheet must not leave the document inaccessible.
@@ -55,7 +55,7 @@
     const components = appendHead('script', { src: new URL('assets/components.js?v=router-canvas-scroll-20261020', siteRoot).href });
     components.async = false;
   } else if (!customElements.get('faust-legal-document')) {
-    const documentComponent = appendHead('script', { src: new URL('legal/system/legal-document.js?v=legal-system-20261028', siteRoot).href });
+    const documentComponent = appendHead('script', { src: new URL('legal/system/legal-document.js?v=legal-system-20261033', siteRoot).href });
     documentComponent.async = false;
   }
 
@@ -73,6 +73,12 @@
   documentElement.setAttribute('translate', 'no');
   Object.entries(settings.attributes).forEach(([key, value]) => documentElement.setAttribute(key, value));
   documentElement.innerHTML = '<div class="legal-document__loading" role="status"><span class="legal-document__loading-icon" aria-hidden="true"></span><span class="legal-document__loading-label">Cargando documento…</span></div>';
+  document.addEventListener('faust-legal-document-ready', () => {
+    // The router may reset scroll immediately after the component reports it
+    // is ready. Apply the fragment one frame later so internal navigation and
+    // a direct page load end at the same legal point.
+    requestAnimationFrame(() => documentElement.activateFragmentTarget?.());
+  }, { once: true });
   main.append(documentElement);
   const footer = document.createElement('faust-footer');
     document.body.replaceChildren(fade, navbar, main, footer);

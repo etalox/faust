@@ -1093,6 +1093,17 @@
       // Scroll window to top
       window.scrollTo(0, 0);
 
+      // A legal fragment is mounted asynchronously. Re-apply it after the
+      // router's own scroll reset so internal navigation behaves like a
+      // direct reload (for example: #v1.0/6.3).
+      if (legalDocument && window.location.hash) {
+        requestAnimationFrame(() => {
+          window.setTimeout(() => {
+            document.querySelector('faust-legal-document')?.activateFragmentTarget?.();
+          }, 0);
+        });
+      }
+
       // Remove transition state
       document.body.classList.remove('is-transitioning');
 

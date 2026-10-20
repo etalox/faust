@@ -1,6 +1,6 @@
 // Legal content is loaded from each document's versioned text file.
 const legalPdfModuleUrl = new URL('./legal-pdf.js?v=legal-pdf-hash-20261019', document.currentScript.src).href;
-const legalTextModuleUrl = new URL('./legal-text.js?v=legal-header-order-20261019', document.currentScript.src).href;
+const legalTextModuleUrl = new URL('./legal-text.js?v=legal-anchors-20261020', document.currentScript.src).href;
 const legalRootUrl = new URL('../', document.currentScript.src);
 
 // Compare numeric components so v1-10 comes after v1-9, regardless of index order.
@@ -15,13 +15,42 @@ function compareLegalVersionIds(left, right) {
   return left.localeCompare(right);
 }
 
+function normalizeLegalVersionId(value) {
+  if (typeof value !== 'string') return null;
+  const match = /^v(\d+(?:[.-]\d+)+)$/i.exec(value.trim());
+  return match ? `v${match[1].replace(/\./g, '-')}` : null;
+}
+
+// A hash has only one fragment. The compact canonical form therefore keeps
+// the version and optional target together: #v1.0/6.3.
+function parseLegalFragment(hash) {
+  const raw = hash.replace(/^#/, '');
+  let decoded;
+  try {
+    decoded = decodeURIComponent(raw);
+  } catch (error) {
+    return { version: null, target: null };
+  }
+  const match = /^(v\d+(?:[.-]\d+)+)(?:\/(.+))?$/i.exec(decoded);
+  if (match) return { version: normalizeLegalVersionId(match[1]), target: match[2] || null };
+  return { version: null, target: decoded || null };
+}
+
+function versionFragment(id, target = null) {
+  return `${id.replace(/-/g, '.')}${target ? `/${target}` : ''}`;
+}
+
 class FaustLegalDocument extends HTMLElement {
   connectedCallback() {
     // Protect document content individually so the explanatory notice can be translated.
     this.protectDocumentContents();
     this.languageChangeHandler ||= () => this.addTranslationNotice();
     window.addEventListener('faust-language-changed', this.languageChangeHandler);
-    this.hashChangeHandler ||= () => this.activateFragmentTarget();
+    this.hashChangeHandler ||= () => {
+      const { version } = parseLegalFragment(window.location.hash);
+      if (version && version !== this.selectedVersion) this.loadText();
+      else this.activateFragmentTarget();
+    };
     window.addEventListener('hashchange', this.hashChangeHandler);
     const pageTitle = document.head.querySelector('title');
     if (pageTitle && !this.protectedPageTitle) {
@@ -74,6 +103,11 @@ class FaustLegalDocument extends HTMLElement {
   disconnectedCallback() {
     window.removeEventListener('faust-language-changed', this.languageChangeHandler);
     window.removeEventListener('hashchange', this.hashChangeHandler);
+    window.removeEventListener('scroll', this.fragmentScrollHandler);
+    window.removeEventListener('wheel', this.fragmentUserIntentHandler);
+    window.removeEventListener('touchmove', this.fragmentUserIntentHandler);
+    window.removeEventListener('pointerdown', this.fragmentUserIntentHandler);
+    window.removeEventListener('keydown', this.fragmentKeyIntentHandler);
     window.removeEventListener('keydown', this.printShortcutHandler, true);
     if (this.pdfDownloadUrl) URL.revokeObjectURL(this.pdfDownloadUrl);
     if (this.hashOutsideHandler) document.removeEventListener('click', this.hashOutsideHandler);
@@ -99,25 +133,65 @@ class FaustLegalDocument extends HTMLElement {
   }
 
   activateFragmentTarget() {
-    const fragment = window.location.hash.slice(1);
-    if (!fragment) return;
-    let id;
-    try {
-      id = decodeURIComponent(fragment);
-    } catch (error) {
-      return;
-    }
+    const { target: id } = parseLegalFragment(window.location.hash);
+    if (!id) return;
     const target = document.getElementById(id);
     if (!target || !this.contains(target)) return;
-    this.querySelectorAll('.legal-document__anchor-target').forEach(element => {
-      element.classList.remove('legal-document__anchor-target');
-    });
+    this.clearFragmentTarget();
     target.classList.add('legal-document__anchor-target');
     target.setAttribute('tabindex', '-1');
+    target.dataset.legalFragmentFocus = '';
     requestAnimationFrame(() => requestAnimationFrame(() => {
       target.scrollIntoView({ block: 'center' });
       target.focus({ preventScroll: true });
+      requestAnimationFrame(() => {
+        this.fragmentScrollTarget = target;
+        this.fragmentScrollEnabled = true;
+        this.fragmentUserScrollIntent = false;
+        this.fragmentScrollSettlingUntil = performance.now() + 450;
+      });
     }));
+  }
+
+  clearFragmentTarget() {
+    this.fragmentScrollEnabled = false;
+    this.fragmentUserScrollIntent = false;
+    this.fragmentScrollTarget = null;
+    this.fragmentScrollSettlingUntil = 0;
+    this.querySelectorAll('.legal-document__anchor-target').forEach(element => {
+      element.classList.remove('legal-document__anchor-target');
+      if (element.dataset.legalFragmentFocus !== undefined) {
+        element.removeAttribute('data-legal-fragment-focus');
+        element.removeAttribute('tabindex');
+      }
+      if (document.activeElement === element) element.blur();
+    });
+  }
+
+  observeFragmentScroll() {
+    this.fragmentScrollHandler ||= () => {
+      if (!this.fragmentScrollEnabled || !this.fragmentUserScrollIntent || !this.fragmentScrollTarget) return;
+      if (performance.now() < this.fragmentScrollSettlingUntil) {
+        return;
+      }
+      const bounds = this.fragmentScrollTarget.getBoundingClientRect();
+      const upperBound = window.innerHeight * .25;
+      const lowerBound = window.innerHeight * .75;
+      const isEntirelyAboveFocusArea = bounds.bottom <= upperBound;
+      const isEntirelyBelowFocusArea = bounds.top >= lowerBound;
+      if (isEntirelyAboveFocusArea || isEntirelyBelowFocusArea) this.clearFragmentTarget();
+    };
+    this.fragmentUserIntentHandler ||= () => { this.fragmentUserScrollIntent = true; };
+    this.fragmentKeyIntentHandler ||= event => {
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
+        this.fragmentUserScrollIntent = true;
+      }
+    };
+    window.addEventListener('scroll', this.fragmentScrollHandler, { passive: true });
+    window.addEventListener('wheel', this.fragmentUserIntentHandler, { passive: true });
+    window.addEventListener('touchmove', this.fragmentUserIntentHandler, { passive: true });
+    window.addEventListener('pointerdown', this.fragmentUserIntentHandler, { passive: true });
+    window.addEventListener('keydown', this.fragmentKeyIntentHandler);
   }
 
   revealHeader() {
@@ -163,10 +237,16 @@ class FaustLegalDocument extends HTMLElement {
         }
         const requestedVersions = pageUrl.searchParams.getAll('version');
         if (requestedVersions.length > 1) throw new Error('Se indicó más de una versión.');
+        const queryVersion = requestedVersions.length ? normalizeLegalVersionId(requestedVersions[0]) : null;
+        const fragmentVersion = parseLegalFragment(pageUrl.hash).version;
+        if (requestedVersions.length && !queryVersion) throw new Error('La versión solicitada no es válida.');
+        if (queryVersion && fragmentVersion && queryVersion !== fragmentVersion) {
+          throw new Error('La versión solicitada es contradictoria.');
+        }
         const latestVersion = index.versiones.reduce((latest, id) =>
           compareLegalVersionIds(id, latest) > 0 ? id : latest
         );
-        selectedVersion = requestedVersions.length ? requestedVersions[0] : latestVersion;
+        selectedVersion = queryVersion || fragmentVersion || latestVersion;
         if (!index.versiones.includes(selectedVersion)) throw new Error('La versión solicitada no está disponible.');
         source = new URL(selectedVersion + '.txt', folder).href;
         this.availableVersions = index.versiones;
@@ -233,6 +313,7 @@ class FaustLegalDocument extends HTMLElement {
       this.addControls();
       this.revealHeader();
       this.completePageLoading();
+      this.observeFragmentScroll();
       this.activateFragmentTarget();
       const snapshot = this.cloneNode(true);
       this.preparePdf = async () => {
@@ -313,11 +394,12 @@ class FaustLegalDocument extends HTMLElement {
           } else {
             const link = document.createElement('a');
             const url = new URL(window.location.href);
-            url.searchParams.set('version', id);
+            const { target } = parseLegalFragment(url.hash);
+            url.searchParams.delete('version');
+            url.hash = versionFragment(id, target);
             link.href = url.href;
             link.textContent = label;
-            // The site's router treats equal pathnames as the same route.
-            // Let the browser follow this versioned query normally.
+            // Switching a fragment version is handled by hashchange above.
             link.addEventListener('click', event => event.stopPropagation());
             menu.append(link);
           }
