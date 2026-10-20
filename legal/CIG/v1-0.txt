@@ -1,0 +1,27 @@
+---
+Versión: v1.0
+Emisión: 20 de octubre de 2026
+Marco: Compromiso de Integridad Empresarial
+Marca: FaustPartners™
+---
+# Garantía de Integridad Empresarial
+
+## Disposiciones iniciales
+
+Para efectos del presente documento, el “**Contrato de Partnering**” es el instrumento que regula la prestación de servicios entre Faust y el Cliente que lo acepte expresamente.
+
+Las obligaciones, limitaciones y remedios previstos en la presente Garantía de Integridad Empresarial (“**CIG**”) sólo serán exigibles frente al Cliente cuando una versión identificable del Contrato de Partnering, aceptada expresamente por dicho Cliente, establezca de manera inequívoca que se rige también por la CIG e identifique, al menos, su denominación, versión y fecha de emisión aplicables.
+
+La sola publicación, envío, mención o disponibilidad de la CIG no constituye una oferta, garantía, obligación ni compromiso exigible de Faust frente a persona alguna.
+
+## Estructura, vigencia y actualizaciones
+
+La CIG se integra por los módulos CIG-101: Declaración de Estándares de Producto; CIG-501: Protocolo de Mitigación de Pérdidas; y CIG-901: Protocolo de Integridad de Datos. La incorporación válida de la CIG en un Contrato de Partnering comprenderá los módulos que se encuentren vigentes conforme a las presentes reglas.
+
+Cada módulo tendrá una vigencia mínima contada desde su fecha de emisión, siempre que el Contrato de Partnering permanezca vigente: CIG-101 tendrá una vigencia mínima de 6 (seis) meses; CIG-501, de 8 (ocho) meses; y CIG-901, de 24 (veinticuatro) meses. La vigencia mínima no extiende la vigencia del Contrato de Partnering ni mantiene vigente módulo alguno después de la terminación de dicho contrato.
+
+Una vez transcurrida la vigencia mínima de CIG-101, Faust podrá, a su sola discreción y sin requerir aviso individual ni aceptación adicional del Cliente, actualizarlo o sustituirlo mediante la publicación de una versión posterior, con independencia de la fecha en que el Cliente haya aceptado el Contrato de Partnering. La versión posterior surtirá efectos prospectivamente para los Contratos de Partnering vigentes a partir de su fecha de emisión o de la fecha posterior que Faust señale. Los hechos, incumplimientos o reclamaciones ocurridos antes de la entrada en vigor de una versión posterior se regirán por la versión aplicable en la fecha en que hubieren ocurrido. Cualquier actualización de CIG-501 o CIG-901 requerirá aviso al Cliente a través de los canales previstos en el Contrato de Partnering.
+
+Antes de que concluya la vigencia mínima de un módulo, Faust podrá emitir actualizaciones decimales sucesivas de su versión —por ejemplo, de v1.0 a v1.1 y de v1.1 a v1.2— para corregir errores o riesgos importantes, previa notificación al Cliente cuando así corresponda conforme a este documento, o para incorporar cambios ligeros que no alteren sus términos principales. Las actualizaciones decimales no podrán modificar sustancialmente el objeto, alcance, remedios, límites de responsabilidad, vigencia mínima ni obligaciones esenciales de un módulo. Dichas modificaciones requerirán una nueva versión mayor —por ejemplo, de v1.0 a v2.0— y no podrán emitirse antes de que concluya su vigencia mínima.
+
+Faust asegurará internamente el cumplimiento de la CIG mediante los procesos, controles y registros que considere razonablemente necesarios. Salvo obligación legal aplicable o pacto expreso en el Contrato de Partnering, Faust no estará obligado a reportar al Cliente dichos procesos, controles, registros ni sus resultados.

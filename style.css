@@ -1842,6 +1842,16 @@ faust-legal-document {
   padding: 200px 0;
 }
 
+/* Keep the legal hub aligned with the legal document body and footer columns
+   from tablet upward. Use viewport width so a desktop scrollbar cannot create
+   a subtle horizontal offset between the three. */
+@media (min-width: 701px) {
+  faust-legal-document,
+  .legal-hub {
+    width: min(1200px, calc(100vw - 48px));
+  }
+}
+
 .legal-hub__header {
   margin-bottom: 150px;
 }

@@ -1,0 +1,13 @@
+---
+Versión: v1.0
+Emisión: 20 de octubre de 2026
+Marco: Estándares de Producto
+Marca: FaustPartners™
+---
+# CIG-101: Declaración de Estándares de Producto
+
+## Objeto
+
+El presente CIG-101 establece los fundamentos con los que Faust convierte criterios de producto, experiencia y desempeño en parámetros cuantificables y verificables para los productos sobre los cuales presta servicios.
+
+Los parámetros aplicables a cada servicio se determinarán de acuerdo con el producto, objetivo, alcance y datos disponibles, y podrán constar en el Contrato de Partnering, la propuesta aceptada o las comunicaciones operativas autorizadas. Su finalidad es establecer una base objetiva sobre las expectativas mínimas de análisis, priorización, experimentación y medición de Faust, sin constituir una promesa de resultados comerciales, conversión, ingresos o desempeño fuera de los parámetros expresamente acordados.

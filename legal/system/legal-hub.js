@@ -13,9 +13,10 @@
       label: 'Partners',
       documents: [
         { title: 'Contrato de Partnering', href: './partnership-agreement/' },
-        { title: 'CIG-001 | Garantía de Personal Calificado', href: './CIG-001/' },
-        { title: 'CIG-501 | Garantía de Mitigación de Pérdidas', href: './CIG-501/' },
-        { title: 'CIG-901 | Garantía de Defensa de Integridad Empresarial', href: './CIG-901/' },
+        { title: 'Garantía de Integridad Empresarial', href: './CIG/' },
+        { title: 'CIG-101 | Declaración de Estándares de Producto', href: './CIG-101/' },
+        { title: 'CIG-501 | Protocolo de Mitigación de Pérdidas', href: './CIG-501/' },
+        { title: 'CIG-901 | Protocolo de Integridad de Datos', href: './CIG-901/' },
       ]
     },
     {

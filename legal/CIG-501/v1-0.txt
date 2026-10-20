@@ -1,0 +1,13 @@
+---
+Versión: v1.0
+Emisión: 20 de octubre de 2026
+Marco: Mitigación de Pérdidas
+Marca: FaustPartners™
+---
+# CIG-501: Protocolo de Mitigación de Pérdidas
+
+## Objeto
+
+El presente CIG-501 establece los controles y criterios aplicables para identificar, prevenir, contener y mitigar pérdidas operativas razonablemente previsibles relacionadas con los servicios de Faust.
+
+Las medidas aplicables dependerán del alcance autorizado, los activos involucrados, los riesgos identificados y las decisiones operativas del Cliente. Este protocolo no constituye un seguro, promesa de ausencia de pérdidas ni aceptación automática de responsabilidad por hechos atribuibles al Cliente, terceros, plataformas, infraestructura preexistente o eventos fuera del control razonable de Faust.
