@@ -1,0 +1,565 @@
+/* ── Nota de Descargo Legal (Disclaimer) ── */
+.legal-disclaimer {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.legal-disclaimer p {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  color: var(--muted) !important;
+  margin-bottom: 0 !important;
+}
+
+/* Avoid compositor work from illustrated SVGs while their section or tab is hidden. */
+faust-ecosystem:not(.is-in-view) .perk-mobile-visual *,
+faust-ecosystem:not(.is-page-visible) .perk-mobile-visual * {
+  animation-play-state: paused !important;
+}
+
+/* ── Vista Desktop: Ecosistema en Tarjetas de Alto Contraste (Estilo Linear) ── */
+@media (min-width: 981px) {
+
+  /* Ocultar panel de previsualización derecho */
+  .perks-preview-pane {
+    display: none !important;
+  }
+
+
+
+  /* El contenedor pasa a ser una sola columna */
+  .perks-showcase-container {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    margin-top: 40px;
+  }
+
+  .perks-showcase-container.is-hover-locked {
+    height: var(--perk-hover-showcase-height);
+    box-sizing: border-box;
+  }
+
+  /* Fila horizontal con scroll si es necesario (Estilo Grid) */
+  .perks-interactive-list {
+    display: flex !important;
+    flex-direction: row !important;
+    border-top: none !important;
+    gap: 0 !important;
+    overflow-x: visible !important;
+    padding: 24px 0 !important;
+  }
+
+  /* Estilos para el scrollbar en Webkit */
+  .perks-interactive-list::-webkit-scrollbar {
+    height: 6px;
+  }
+  .perks-interactive-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .perks-interactive-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+  }
+  .perks-interactive-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Tarjetas Individuales (Estilo Linear - Sin fondo, sin bordes propios, solo líneas verticales de división) */
+  .perk-interactive-item {
+    flex: 1 1 33.333% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    padding: 0 48px !important; /* Espacio horizontal de las columnas */
+    background-color: var(--bg, #0A0A0C) !important;
+    border: none !important; /* Sin borde de tarjeta */
+    border-radius: 0 !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 1 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    transition: flex 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    --speed-scale: 1.2; /* Fixed scale for premium, fluid, non-disruptive animation speed */
+  }
+
+  /* En hover, la tarjeta elegida gana foco y las demás se atenúan. Esto sólo
+     responde al puntero; no puede activarse por el ciclo automático. */
+  .perks-interactive-list.is-hovering .perk-interactive-item {
+    opacity: 0.45 !important;
+    flex: 0.8 1 0% !important;
+  }
+  .perks-interactive-list .perk-interactive-item.is-hovered {
+    opacity: 1 !important;
+    flex: 1.4 1 0% !important;
+  }
+
+  /* El ancho de una tarjeta cambia al hover, pero su ilustración conserva la
+     altura pre-hover para que el aspect-ratio no empuje la sección completa. */
+  .perks-interactive-list.is-hovering .perk-mobile-visual {
+    height: var(--perk-hover-visual-height) !important;
+    aspect-ratio: auto !important;
+  }
+
+  .perks-interactive-list .perk-interactive-item.is-active {
+    opacity: 1 !important;
+  }
+
+  .perks-interactive-list.is-hovering .perk-interactive-item.is-active:not(.is-hovered) {
+    opacity: 0.45 !important;
+  }
+
+  /* Asegurar que las tarjetas con inline display: none se oculten en desktop (evita conflicto con display: flex !important) */
+  .perk-interactive-item[style*="display: none"] {
+    display: none !important;
+  }
+
+  /* Primera columna alineada a la izquierda */
+  .perk-interactive-item:first-child {
+    padding-left: 0 !important;
+  }
+
+  /* Última columna alineada a la derecha */
+  .perk-interactive-item:last-child {
+    padding-right: 0 !important;
+  }
+
+  /* Líneas divisorias verticales entre columnas */
+  .perk-interactive-item:not(:first-child) {
+    border-left: 1px solid rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Ilustración en la parte superior sin fondo ni borde */
+  .perk-interactive-item .perk-mobile-visual {
+    display: flex !important;
+    order: 2 !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    background: transparent !important; /* Sin fondo */
+    border: none !important; /* Sin borde */
+    border-radius: 12px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 16px !important;
+    margin-bottom: 32px !important;
+  }
+
+
+  /* Número discreto arriba de la ilustración (Estilo Linear: FIG 0.X) */
+  .perk-interactive-item .perk-num {
+    display: block !important;
+    order: 1 !important;
+    position: static !important;
+    margin: 0 0 16px 0 !important;
+    width: auto !important;
+    font-family: monospace !important;
+    letter-spacing: 0.05em !important;
+    color: rgba(255, 255, 255, 0.25) !important;
+    height: 14px;
+    font-size: 0 !important;
+  }
+
+  .perk-interactive-item .perk-num::after {
+    content: "FIG 0." counter(perk-counter) !important;
+    font-size: 11px !important;
+  }
+
+  /* Bloque de Contenido (Título + Descripción) */
+  .perk-interactive-item .perk-item-content {
+    order: 3 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+
+  .perk-interactive-item .perk-item-content h3 {
+    font-size: 24px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .perk-interactive-item .perk-item-content p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    color: #8B8D91 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    padding-bottom: 4px !important;
+  }
+
+  /* Ocultar barra de progreso */
+  .perk-row-progress {
+    display: none !important;
+  }
+
+  /* Forzar ejecución continua de las animaciones SVG en todas las tarjetas */
+  .perk-interactive-item .perk-mobile-visual .revenue-layer {
+    animation: floatLayer calc(3s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    animation-delay: calc(0.5s * var(--speed-scale, 2.5));
+  }
+  .perk-interactive-item .perk-mobile-visual .auto-module {
+    animation: floatCube calc(2.8s * var(--speed-scale, 2.5)) ease-in-out infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(2) > .auto-module {
+    animation: floatCubeAlt calc(2.4s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    animation-delay: calc(0.4s * var(--speed-scale, 2.5));
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(3) > .auto-module {
+    animation: floatCube calc(3s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    animation-delay: calc(1.2s * var(--speed-scale, 2.5));
+  }
+  .perk-interactive-item .perk-mobile-visual .auto-connector {
+    stroke-dasharray: 3 5;
+    animation: flowDash calc(1.6s * var(--speed-scale, 2.5)) linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .dial-left {
+    animation: rotateDialLeft calc(6s * var(--speed-scale, 2.5)) linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .dial-center {
+    animation: rotateDialCenter calc(4s * var(--speed-scale, 2.5)) linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .dial-right {
+    animation: rotateDialRight calc(8s * var(--speed-scale, 2.5)) linear infinite;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso path {
+    animation-duration: calc(3s * var(--speed-scale, 2.5)) !important;
+    animation-iteration-count: infinite !important;
+    animation-timing-function: ease-in-out !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path {
+    animation-delay: calc(-0.54s * var(--speed-scale, 2.5)) !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path {
+    animation-delay: calc(-0.75s * var(--speed-scale, 2.5)) !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path {
+    animation-delay: calc(-0.96s * var(--speed-scale, 2.5)) !important;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(1) {
+    animation-name: growBar3Left;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(2) {
+    animation-name: growBar3Right;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(3) {
+    animation-name: growBar3Top;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(1) {
+    animation-name: growBar2Left;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(2) {
+    animation-name: growBar2Right;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(3) {
+    animation-name: growBar2Top;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(1) {
+    animation-name: growBar1Left;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(2) {
+    animation-name: growBar1Right;
+  }
+  .perk-interactive-item .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(3) {
+    animation-name: growBar1Top;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(1) > .infra-layer {
+    animation: pullStructure calc(2.6s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    --pull-amount: -0.1px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(2) > .infra-layer {
+    animation: pullStructure calc(2.6s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    --pull-amount: -0.5px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(3) > .infra-layer {
+    animation: pullStructure calc(2.6s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    --pull-amount: -1.2px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(4) > .infra-layer {
+    animation: pullStructure calc(2.6s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    --pull-amount: -2.2px;
+  }
+  .perk-interactive-item .perk-mobile-visual g:nth-of-type(5) > .infra-layer {
+    animation: pullStructure calc(2.6s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    --pull-amount: -3.5px;
+  }
+  .perk-interactive-item .perk-mobile-visual .infra-top {
+    animation: pullStructure calc(2.6s * var(--speed-scale, 2.5)) ease-in-out infinite;
+    --pull-amount: -12px;
+  }
+
+  /* Transiciones suaves para los cambios de color/relleno al hacer hover */
+  .perk-interactive-item .perk-mobile-visual {
+    transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  .perk-interactive-item .perk-mobile-visual path,
+  .perk-interactive-item .perk-mobile-visual circle,
+  .perk-interactive-item .perk-mobile-visual line,
+  .perk-interactive-item .perk-mobile-visual ellipse {
+    transition: fill 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke-opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  /* Efecto de hover original: superficie clara con retícula oscura. */
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual {
+    background-color: #f4f4f6 !important;
+    background-image: linear-gradient(
+      90deg,
+      transparent 39px,
+      rgba(8, 9, 10, 0.08) 39px,
+      rgba(8, 9, 10, 0.08) 40px,
+      transparent 40px
+    ) !important;
+    background-size: 80px calc(100% - 64px) !important;
+    background-position: center !important;
+    background-repeat: repeat-x !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    color: #08090a !important;
+    --illustration-fill: #e5e5ea !important;
+  }
+
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .revenue-layer path,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .auto-accent path,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .evidence-accent path,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .infra-top path {
+    fill: #0022ff !important;
+    stroke: #ffffff !important;
+    stroke-opacity: 0.95 !important;
+  }
+
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .auto-accent circle,
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .auto-accent ellipse {
+    stroke: #08090a !important;
+    opacity: 0.35 !important;
+  }
+
+  .perk-interactive-item[data-legacy-hover-colors="true"]:hover .perk-mobile-visual .infra-top ellipse {
+    stroke: #ffffff !important;
+    opacity: 0.8 !important;
+  }
+
+  /* Luz interna compartida con los canvas. Ilumina desde el perímetro sin
+     recolorear las ilustraciones ni cambiar la geometría de las tarjetas. */
+  .perk-interactive-item .perk-mobile-visual {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .perk-interactive-item .perk-mobile-visual > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Optional canvas-inspired hover. Enable with hover-style="canvas" on faust-ecosystem.
+     Removing the attribute restores the existing light hover treatment above. */
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual {
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.02) 50%,
+      rgba(255, 255, 255, 0.03) 100%
+    ) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    --illustration-fill: var(--bg) !important;
+    box-shadow: none !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Same 80px, centered grid rhythm as the default card, with canvas-like line falloff. */
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    right: 0;
+    bottom: 32px;
+    left: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.06) 40%,
+      rgba(255, 255, 255, 0.02)
+    );
+    -webkit-mask-image: linear-gradient(90deg, transparent 39px, #000 39px 40px, transparent 40px);
+    -webkit-mask-size: 80px 100%;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: repeat-x;
+    mask-image: linear-gradient(90deg, transparent 39px, #000 39px 40px, transparent 40px);
+    mask-size: 80px 100%;
+    mask-position: center;
+    mask-repeat: repeat-x;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .perk-technical-svg {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Gray illustration pieces use the same top-to-bottom border falloff as canvas controls. */
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-revenue .revenue-base path {
+    stroke: url(#perk-revenue-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-module:not(.auto-accent) path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-module:not(.auto-accent) ellipse,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-connector {
+    stroke: url(#perk-autonomy-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-evidence .evidence-bar-iso:not(.evidence-accent) path {
+    stroke: url(#perk-evidence-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-highticket .infra-layer path {
+    stroke: url(#perk-infra-outline) !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .revenue-layer,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .auto-accent,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .evidence-accent,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .infra-top {
+    filter: drop-shadow(0 0 14px rgba(0, 34, 255, 0.68));
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .revenue-layer path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .auto-accent path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .evidence-accent path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) .perk-mobile-visual .infra-top path {
+    fill: #0022ff !important;
+    stroke-opacity: 1 !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-revenue .revenue-layer path {
+    stroke: url(#perk-revenue-blue-outline) !important;
+    stroke-width: 1.1px !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-accent path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-autonomy .auto-accent ellipse {
+    stroke: url(#perk-autonomy-blue-outline) !important;
+    stroke-width: 1.1px !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-evidence .evidence-accent path {
+    stroke: url(#perk-evidence-blue-outline) !important;
+    stroke-width: 1.1px !important;
+  }
+
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-highticket .infra-top path,
+  .ecosystem-hover-canvas .perk-interactive-item:is(:hover, .is-hovered) faust-illustration-highticket .infra-top ellipse {
+    stroke: url(#perk-infra-blue-outline) !important;
+    stroke-width: 1.1px !important;
+  }
+
+  /* Aumentar ligeramente el tamaño de las ilustraciones (SVGs) dentro del contenedor cuadrado */
+  .perk-interactive-item .perk-mobile-visual .perk-technical-svg {
+    max-width: 380px !important;
+    max-height: 250px !important;
+  }
+
+  /* Botón "Conocer más" flotante que sigue al puntero en desktop */
+  .perk-mouse-follower,
+  .canvas-mouse-follower {
+    display: block !important;
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    --follower-x: 0px;
+    --follower-y: 0px;
+    pointer-events: none !important;
+    z-index: 99999 !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    color: #ffffff !important;
+    padding: 10px 20px !important;
+    border-radius: 999px !important;
+    font-family: 'BDO Grotesk', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
+    transform: translate3d(var(--follower-x), var(--follower-y), 0) scale(0.4) !important;
+    transform-origin: center center !important;
+    opacity: 0 !important;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.25s ease,
+                color 0.4s ease-in-out,
+                background-color 0.4s ease-in-out !important;
+    white-space: nowrap !important;
+    contain: layout paint style;
+    will-change: auto;
+  }
+  .perk-mouse-follower::before,
+  .canvas-mouse-follower::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 999px !important;
+    padding: 1px !important;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)) !important;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    transition: background 0.4s ease-in-out !important;
+  }
+  .perk-mouse-follower.is-over-light,
+  .canvas-mouse-follower.is-over-light {
+    background-color: rgba(229, 229, 234, 0.8) !important;
+    color: #1d1e22 !important;
+  }
+  .perk-mouse-follower.is-over-light::before,
+  .canvas-mouse-follower.is-over-light::before {
+    background: linear-gradient(to top, rgba(8, 9, 10, 0.06), rgba(8, 9, 10, 0.03)) !important;
+  }
+  .perk-mouse-follower.is-over-light.is-over-blue,
+  .canvas-mouse-follower.is-over-light.is-over-blue {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+  }
+  .perk-mouse-follower.is-over-light.is-over-blue::before,
+  .canvas-mouse-follower.is-over-light.is-over-blue::before {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)) !important;
+  }
+
+  /* Ecosistema ya no usa una superficie clara al hover: su seguidor conserva
+     siempre el chip gris, incluso sobre las ilustraciones. */
+  .perk-mouse-follower.is-over-light,
+  .perk-mouse-follower.is-over-light.is-over-blue {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+  }
+
+  .perk-mouse-follower.is-over-light::before,
+  .perk-mouse-follower.is-over-light.is-over-blue::before {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)) !important;
+  }
+
+  .perk-mouse-follower.is-visible,
+  .canvas-mouse-follower.is-visible {
+    transform: translate3d(var(--follower-x), var(--follower-y), 0) scale(1) !important;
+    opacity: 1 !important;
+    will-change: transform, opacity;
+  }
+}
+

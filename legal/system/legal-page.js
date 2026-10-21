@@ -58,7 +58,7 @@
   document.title = '';
   appendHead('meta', { name: 'description', content: settings.description });
   appendHead('link', { rel: 'icon', type: 'image/png', href: new URL('assets/Icons/tab_icon.png', siteRoot).href });
-  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=legal-anchor-transitions-20261021', siteRoot).href });
+  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=styles-20261020-3', siteRoot).href });
   const revealStyledShell = () => document.body.classList.add('legal-page-styled');
   stylesheet.addEventListener('load', revealStyledShell, { once: true });
   // A failed stylesheet must not leave the document inaccessible.
