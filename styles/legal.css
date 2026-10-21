@@ -1,7 +1,7 @@
 /* Reusable, centered legal-document layout. Content remains plain HTML. */
-/* Legal text is intentionally view-only; navigation and controls remain usable. */
-html.legal-page faust-legal-document,
-body.legal-hub-page .legal-hub {
+/* Only the contractual body is view-only; navigation, metadata and controls
+   remain selectable and fully interactive. */
+html.legal-page faust-legal-document > article {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -449,6 +449,7 @@ faust-legal-document .legal-document__block > * + :is(ol, ul),
 faust-legal-document .legal-document__block > :is(ol, ul) + * { margin-top: var(--legal-list-spacing); }
 .legal-document__block ol[type="a"] { list-style-type: legal-lower-alpha; }
 .legal-document__block ul { list-style-type: '- '; }
+.legal-document__block li::marker { color: #fff; }
 .legal-document__block li + li { margin-top: var(--legal-list-spacing); }
 .legal-document__block .legal-document__list--nested { margin-left: 1.5em; }
 .legal-document__block .legal-document__list--deep { margin-left: 3em; }

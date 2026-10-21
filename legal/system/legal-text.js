@@ -126,7 +126,7 @@ function assignLegalAnchors(article) {
   }
 }
 
-export function parseLegalText(text) {
+export function parseLegalText(text, { groupIntro = false } = {}) {
   const lines = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n');
   if (lines.shift()?.trim() !== '---') throw new Error('Faltan los datos iniciales del documento.');
   const metadata = {};
@@ -198,6 +198,7 @@ export function parseLegalText(text) {
   article.className = 'notranslate';
   article.setAttribute('translate', 'no');
   let block = null;
+  let introductoryBlock = null;
   let seenHeading = false;
   let lastList = null;
   let expectedNumber = 1;
@@ -266,7 +267,21 @@ export function parseLegalText(text) {
     while (i < lines.length && lines[i].trim() && !/^(#{1,3})\s+/.test(lines[i]) && !listInfo(lines[i])) content.push(lines[i++]);
     const p = document.createElement('p');
     appendInline(p, joinLines(content));
-    (seenHeading ? getBlock() : article).append(p);
+    if (seenHeading) {
+      getBlock().append(p);
+    } else if (groupIntro) {
+      // Consecutive introductory paragraphs belong to the same semantic
+      // block. This keeps their reading rhythm consistent with paragraphs
+      // inside a clause while preserving a larger separation before Clause I.
+      if (!introductoryBlock) {
+        introductoryBlock = document.createElement('div');
+        introductoryBlock.className = 'legal-document__block';
+        article.append(introductoryBlock);
+      }
+      introductoryBlock.append(p);
+    } else {
+      article.append(p);
+    }
   }
   assignLegalAnchors(article);
   return { header, article, version: metadata['versión'], emission: metadata['emisión'] };
