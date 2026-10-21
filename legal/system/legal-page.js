@@ -16,7 +16,7 @@
   const documents = {
     'expert-network-terms': {
       description: 'Términos de Incorporación a la Expert Network de FaustPartners™.',
-      attributes: { controls: '' }
+      attributes: { controls: '', 'group-intro': '' }
     },
     'CIG': {
       description: 'Garantía de Integridad Empresarial (CIG) de FaustPartners™.',
@@ -58,7 +58,7 @@
   document.title = '';
   appendHead('meta', { name: 'description', content: settings.description });
   appendHead('link', { rel: 'icon', type: 'image/png', href: new URL('assets/Icons/tab_icon.png', siteRoot).href });
-  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=styles-20261020-4', siteRoot).href });
+  const stylesheet = appendHead('link', { rel: 'stylesheet', href: new URL('style.css?v=styles-20261021-6', siteRoot).href });
   const revealStyledShell = () => document.body.classList.add('legal-page-styled');
   stylesheet.addEventListener('load', revealStyledShell, { once: true });
   // A failed stylesheet must not leave the document inaccessible.
@@ -71,7 +71,7 @@
     const components = appendHead('script', { src: new URL('assets/components.js?v=router-canvas-scroll-20261020', siteRoot).href });
     components.async = false;
   } else if (!customElements.get('faust-legal-document')) {
-    const documentComponent = appendHead('script', { src: new URL('legal/system/legal-document.js?v=legal-system-20261033', siteRoot).href });
+    const documentComponent = appendHead('script', { src: new URL('legal/system/legal-document.js?v=legal-system-20261036', siteRoot).href });
     documentComponent.async = false;
   }
 

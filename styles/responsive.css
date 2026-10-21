@@ -1,0 +1,24 @@
+/* Phone typography normalization: every public text rule set at 17px is
+   rendered at 16px on mobile, while desktop and tablet retain their scale. */
+@media (max-width: 767px) {
+  .hero p,
+  .stat-number-wrap .title,
+  .sub,
+  .cig-description,
+  .faustos-description,
+  .application-qualifier-description {
+    font-size: 16px;
+  }
+
+  .doc-subtitle {
+    font-size: 16px !important;
+  }
+
+  .FrameCardMetrics faust-flow-card > span {
+    font-size: 16px !important;
+  }
+
+  faust-legal-document {
+    --legal-text-size: 16px;
+  }
+}

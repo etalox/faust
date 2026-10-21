@@ -1,6 +1,7 @@
 // Legal content is loaded from each document's versioned text file.
 const legalPdfModuleUrl = new URL('./legal-pdf.js?v=legal-pdf-hash-20261019', document.currentScript.src).href;
-const legalTextModuleUrl = new URL('./legal-text.js?v=legal-anchors-20261020', document.currentScript.src).href;
+const legalArchiveModuleUrl = new URL('./legal-archive.js?v=legal-archive-20261020', document.currentScript.src).href;
+const legalTextModuleUrl = new URL('./legal-text.js?v=legal-anchors-20261021', document.currentScript.src).href;
 const legalRootUrl = new URL('../', document.currentScript.src);
 
 // Compare numeric components so v1-10 comes after v1-9, regardless of index order.
@@ -110,6 +111,7 @@ class FaustLegalDocument extends HTMLElement {
     window.removeEventListener('keydown', this.fragmentKeyIntentHandler);
     window.removeEventListener('keydown', this.printShortcutHandler, true);
     if (this.pdfDownloadUrl) URL.revokeObjectURL(this.pdfDownloadUrl);
+    if (this.archiveDownloadUrl) URL.revokeObjectURL(this.archiveDownloadUrl);
     if (this.hashOutsideHandler) document.removeEventListener('click', this.hashOutsideHandler);
     if (this.hashEscapeHandler) document.removeEventListener('keydown', this.hashEscapeHandler);
     if (!this.protectedPageTitle) return;
@@ -260,7 +262,9 @@ class FaustLegalDocument extends HTMLElement {
       ]);
       if (!response.ok) throw new Error('No se pudo cargar el archivo de texto.');
       const sourceBytes = await response.arrayBuffer();
-      const parsed = parseLegalText(new TextDecoder().decode(sourceBytes));
+      const parsed = parseLegalText(new TextDecoder().decode(sourceBytes), {
+        groupIntro: this.hasAttribute('group-intro')
+      });
       if (selectedVersion && parsed.version.toLowerCase().replace(/\./g, '-') !== selectedVersion) {
         throw new Error('La versión del archivo no coincide con la versión solicitada.');
       }
@@ -335,6 +339,14 @@ class FaustLegalDocument extends HTMLElement {
       this.pdfDataPromise.then(pdfBlob => this.setPdfDownload?.(pdfBlob)).catch(error => {
         this.updatePdfHash?.(null, false);
         console.error('No se pudo generar el PDF legal:', error);
+      });
+      this.archiveDataPromise = this.pdfDataPromise.then(async pdfBlob => {
+        if (!this.pdfHash) throw new Error('No fue posible calcular el SHA-256 del PDF.');
+        const { createLegalArchive } = await import(legalArchiveModuleUrl);
+        return createLegalArchive(pdfBlob, this.getAttribute('pdf-name'), this.pdfHash);
+      });
+      this.archiveDataPromise.then(archiveBlob => this.setArchiveDownload?.(archiveBlob)).catch(error => {
+        console.error('No fue posible preparar el archivo de verificación:', error);
       });
       window.faustInitResponsiveBreaks?.();
     } catch (error) {
@@ -430,59 +442,9 @@ class FaustLegalDocument extends HTMLElement {
     }
 
     if (pdfName) {
-      const hashControl = document.createElement('div');
-      hashControl.className = 'legal-document__hash-control';
-      const hashButton = document.createElement('button');
-      hashButton.type = 'button';
-      hashButton.className = 'btn btn-secondary legal-document__hash-button';
-      hashButton.textContent = 'SHA-256';
-      hashButton.setAttribute('aria-expanded', 'false');
-      hashButton.disabled = true;
-
-      const hashPanel = document.createElement('div');
-      hashPanel.className = 'legal-document__hash-panel';
-      hashPanel.hidden = true;
-      const hashValue = document.createElement('code');
-      hashValue.className = 'legal-document__hash-value';
-      const hashStatus = document.createElement('p');
-      hashStatus.className = 'legal-document__hash-status';
-      hashStatus.setAttribute('role', 'status');
-      hashPanel.append(hashValue, hashStatus);
-      hashControl.append(hashButton, hashPanel);
-      this.updatePdfHash = (value, pending) => {
-        this.pdfHash = value;
-        hashButton.disabled = pending;
-        hashValue.textContent = value || 'No disponible';
-        hashStatus.textContent = value ? '' : 'No fue posible calcular el hash del PDF.';
-      };
-      const closeHashPanel = () => {
-        hashPanel.hidden = true;
-        hashButton.setAttribute('aria-expanded', 'false');
-      };
-      hashButton.addEventListener('click', async () => {
-        hashPanel.hidden = false;
-        hashButton.setAttribute('aria-expanded', 'true');
-        if (!this.pdfHash) return;
-        try {
-          if (!navigator.clipboard?.writeText) throw new Error('Portapapeles no disponible.');
-          await navigator.clipboard.writeText(this.pdfHash);
-          hashStatus.textContent = 'Copiado al portapapeles.';
-        } catch (error) {
-          hashStatus.textContent = 'No se pudo copiar automáticamente. Selecciona y copia el código.';
-        }
-      });
-      this.hashOutsideHandler = event => {
-        if (!hashControl.contains(event.target)) closeHashPanel();
-      };
-      this.hashEscapeHandler = event => {
-        if (event.key === 'Escape' && !hashPanel.hidden) {
-          closeHashPanel();
-          hashButton.focus();
-        }
-      };
-      document.addEventListener('click', this.hashOutsideHandler);
-      document.addEventListener('keydown', this.hashEscapeHandler);
-      actions.append(hashControl);
+      // The hash is packaged alongside the PDF; retain it in memory solely
+      // to build that verification file, without exposing a separate control.
+      this.updatePdfHash = value => { this.pdfHash = value; };
 
       const download = document.createElement('a');
       download.setAttribute('role', 'button');
@@ -512,14 +474,19 @@ class FaustLegalDocument extends HTMLElement {
         indicator.append(icon);
         download.append(indicator);
         try {
-          let pdfBlob;
+          let archiveBlob;
           try {
-            pdfBlob = await this.pdfDataPromise;
+            archiveBlob = await this.archiveDataPromise;
           } catch (error) {
             this.pdfDataPromise = this.preparePdf();
-            pdfBlob = await this.pdfDataPromise;
+            this.archiveDataPromise = this.pdfDataPromise.then(async pdfBlob => {
+              if (!this.pdfHash) throw new Error('No fue posible calcular el SHA-256 del PDF.');
+              const { createLegalArchive } = await import(legalArchiveModuleUrl);
+              return createLegalArchive(pdfBlob, this.getAttribute('pdf-name'), this.pdfHash);
+            });
+            archiveBlob = await this.archiveDataPromise;
           }
-          this.setPdfDownload?.(pdfBlob);
+          this.setArchiveDownload?.(archiveBlob);
           download.click();
         } catch (error) {
           this.updatePdfHash?.(null, false);
@@ -534,8 +501,12 @@ class FaustLegalDocument extends HTMLElement {
       this.setPdfDownload = pdfBlob => {
         if (this.pdfDownloadUrl) URL.revokeObjectURL(this.pdfDownloadUrl);
         this.pdfDownloadUrl = URL.createObjectURL(pdfBlob);
-        download.href = this.pdfDownloadUrl;
-        download.download = pdfName;
+      };
+      this.setArchiveDownload = archiveBlob => {
+        if (this.archiveDownloadUrl) URL.revokeObjectURL(this.archiveDownloadUrl);
+        this.archiveDownloadUrl = URL.createObjectURL(archiveBlob);
+        download.href = this.archiveDownloadUrl;
+        download.download = pdfName.replace(/\.pdf$/i, '') + '.zip';
         download.removeAttribute('aria-disabled');
         download.removeAttribute('tabindex');
       };
@@ -548,7 +519,14 @@ class FaustLegalDocument extends HTMLElement {
         if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"]')) return;
         event.preventDefault();
         event.stopImmediatePropagation();
-        download.click();
+        if (this.pdfDownloadUrl) {
+          const pdfDownload = document.createElement('a');
+          pdfDownload.href = this.pdfDownloadUrl;
+          pdfDownload.download = pdfName;
+          pdfDownload.click();
+        } else {
+          download.click();
+        }
       };
       window.addEventListener('keydown', this.printShortcutHandler, true);
       actions.append(download);
