@@ -417,7 +417,7 @@ class FaustNavbar extends HTMLElement {
     const rootPrefix = getRootPrefix();
     const isStartPage = path.includes('/start/') || path.endsWith('/start');
     const isCareersPage = path.includes('/careers/') || path.endsWith('/careers');
-    const startHref = isStartPage ? '' : `${rootPrefix}start/index.html`;
+    const startHref = isStartPage ? '' : `${rootPrefix}start/`;
     const applyLabel = isCareersPage ? 'Unirme' : 'Aplicar';
     const applyHref = isCareersPage ? '#vacantes' : `${startHref}#aplicar`;
     const applyAction = isCareersPage ? '' : 'apply';

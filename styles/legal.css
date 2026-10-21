@@ -1,4 +1,11 @@
 /* Reusable, centered legal-document layout. Content remains plain HTML. */
+/* Legal text is intentionally view-only; navigation and controls remain usable. */
+html.legal-page faust-legal-document,
+body.legal-hub-page .legal-hub {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 faust-legal-document {
   --legal-text-size: 17px;
   display: block;
