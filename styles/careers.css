@@ -1,0 +1,851 @@
+/* ═══════════════════════════════════════════════
+   SVG LOOP ANIMATIONS — Isometric Illustrations
+   Smooth transforms on inner <g> wrappers only.
+   Outer <g> holds position, inner <g> holds class.
+   ═══════════════════════════════════════════════ */
+
+/* ── Perk 1: Revenue Share — Stacked ascending layers ── */
+/* Each layer floats gently upward at staggered intervals */
+.perk-preview-svg.is-active .revenue-layer,
+.perk-interactive-item.is-active .perk-mobile-visual .revenue-layer {
+  animation: floatLayer 3s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes floatLayer {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* ── Perk 2: Autonomía — Independent floating cubes ── */
+/* Each cube floats independently with unique rhythm */
+.perk-preview-svg.is-active .auto-module,
+.perk-interactive-item.is-active .perk-mobile-visual .auto-module {
+  animation: floatCube 2.8s ease-in-out infinite;
+}
+.perk-preview-svg.is-active g:nth-child(2) > .auto-module,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(2) > .auto-module {
+  animation: floatCubeAlt 2.4s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+.perk-preview-svg.is-active g:nth-child(3) > .auto-module,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-child(3) > .auto-module {
+  animation: floatCube 3s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* Connectors flow with dashes */
+.perk-preview-svg.is-active .auto-connector,
+.perk-interactive-item.is-active .perk-mobile-visual .auto-connector {
+  stroke-dasharray: 3 5;
+  animation: flowDash 1.6s linear infinite;
+}
+
+/* Timeline dials rotate asynchronously (different speeds/directions for independent cycles) */
+.perk-preview-svg.is-active .dial-left,
+.perk-interactive-item.is-active .perk-mobile-visual .dial-left {
+  animation: rotateDialLeft 6s linear infinite;
+}
+.perk-preview-svg.is-active .dial-center,
+.perk-interactive-item.is-active .perk-mobile-visual .dial-center {
+  animation: rotateDialCenter 4s linear infinite;
+}
+.perk-preview-svg.is-active .dial-right,
+.perk-interactive-item.is-active .perk-mobile-visual .dial-right {
+  animation: rotateDialRight 8s linear infinite;
+}
+
+@keyframes rotateDialLeft {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 24; }
+}
+@keyframes rotateDialCenter {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -24; }
+}
+@keyframes rotateDialRight {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 32; }
+}
+
+@keyframes floatCube {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+@keyframes floatCubeAlt {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-5px) translateX(1px); }
+}
+@keyframes flowDash {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -16; }
+}
+
+/* ── Perk 3: Evidencia — Isometric analytical bars ── */
+
+/* Dynamic growing and shrinking animation of isometric bars (synchronized with scan sweep) */
+.perk-preview-svg.is-active .evidence-bar-iso path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso path {
+  animation-duration: 3s !important;
+  animation-iteration-count: infinite !important;
+  animation-timing-function: ease-in-out !important;
+}
+
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path {
+  animation-delay: -0.54s !important;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path {
+  animation-delay: -0.75s !important;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path,
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path {
+  animation-delay: -0.96s !important;
+}
+
+/* Bar 3 (Tall) path animations */
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(1) {
+  animation-name: growBar3Left;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(2),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(2) {
+  animation-name: growBar3Right;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(1) path:nth-child(3),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(1) path:nth-child(3) {
+  animation-name: growBar3Top;
+}
+
+/* Bar 2 (Medium) path animations */
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path:nth-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(1) {
+  animation-name: growBar2Left;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path:nth-child(2),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(2) {
+  animation-name: growBar2Right;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(2) path:nth-child(3),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(2) path:nth-child(3) {
+  animation-name: growBar2Top;
+}
+
+/* Bar 1 (Short) path animations */
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(1),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(1) {
+  animation-name: growBar1Left;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(2),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(2) {
+  animation-name: growBar1Right;
+}
+.perk-preview-svg.is-active .evidence-bar-iso:nth-of-type(3) path:nth-child(3),
+.perk-interactive-item.is-active .perk-mobile-visual .evidence-bar-iso:nth-of-type(3) path:nth-child(3) {
+  animation-name: growBar1Top;
+}
+
+@keyframes growBar1Left {
+  0%, 100% { d: path("M 50.00,102.00 Q 50.00,101.00 50.89,101.45 L 71.11,111.55 Q 72.00,112.00 72.00,113.00 L 72.00,129.00 Q 72.00,130.00 71.11,129.55 L 50.89,119.45 Q 50.00,119.00 50.00,118.00 Z"); }
+  50%      { d: path("M 50.00,90.00 Q 50.00,89.00 50.89,89.45 L 71.11,99.55 Q 72.00,100.00 72.00,101.00 L 72.00,129.00 Q 72.00,130.00 71.11,129.55 L 50.89,119.45 Q 50.00,119.00 50.00,118.00 Z"); }
+}
+@keyframes growBar1Right {
+  0%, 100% { d: path("M 72.00,113.00 Q 72.00,112.00 72.89,111.55 L 93.11,101.45 Q 94.00,101.00 94.00,102.00 L 94.00,118.00 Q 94.00,119.00 93.11,119.45 L 72.89,129.55 Q 72.00,130.00 72.00,129.00 Z"); }
+  50%      { d: path("M 72.00,101.00 Q 72.00,100.00 72.89,99.55 L 93.11,89.45 Q 94.00,89.00 94.00,90.00 L 94.00,118.00 Q 94.00,119.00 93.11,119.45 L 72.89,129.55 Q 72.00,130.00 72.00,129.00 Z"); }
+}
+@keyframes growBar1Top {
+  0%, 100% { d: path("M 71.11,90.45 Q 72.00,90.00 72.89,90.45 L 93.11,100.55 Q 94.00,101.00 93.11,101.45 L 72.89,111.55 Q 72.00,112.00 71.11,111.55 L 50.89,101.45 Q 50.00,101.00 50.89,100.55 Z"); }
+  50%      { d: path("M 71.11,78.45 Q 72.00,78.00 72.89,78.45 L 93.11,88.55 Q 94.00,89.00 93.11,89.45 L 72.89,99.55 Q 72.00,100.00 71.11,99.55 L 50.89,89.45 Q 50.00,89.00 50.89,88.55 Z"); }
+}
+
+@keyframes growBar2Left {
+  0%, 100% { d: path("M 98.00,88.00 Q 98.00,87.00 98.89,87.45 L 119.11,97.55 Q 120.00,98.00 120.00,99.00 L 120.00,129.00 Q 120.00,130.00 119.11,129.55 L 98.89,119.45 Q 98.00,119.00 98.00,118.00 Z"); }
+  50%      { d: path("M 98.00,72.00 Q 98.00,71.00 98.89,71.45 L 119.11,81.55 Q 120.00,82.00 120.00,83.00 L 120.00,129.00 Q 120.00,130.00 119.11,129.55 L 98.89,119.45 Q 98.00,119.00 98.00,118.00 Z"); }
+}
+@keyframes growBar2Right {
+  0%, 100% { d: path("M 120.00,99.00 Q 120.00,98.00 120.89,97.55 L 141.11,87.45 Q 142.00,87.00 142.00,88.00 L 142.00,118.00 Q 142.00,119.00 141.11,119.45 L 120.89,129.55 Q 120.00,130.00 120.00,129.00 Z"); }
+  50%      { d: path("M 120.00,83.00 Q 120.00,82.00 120.89,81.55 L 141.11,71.45 Q 142.00,71.00 142.00,72.00 L 142.00,118.00 Q 142.00,119.00 141.11,119.45 L 120.89,129.55 Q 120.00,130.00 120.00,129.00 Z"); }
+}
+@keyframes growBar2Top {
+  0%, 100% { d: path("M 119.11,76.45 Q 120.00,76.00 120.89,76.45 L 141.11,86.55 Q 142.00,87.00 141.11,87.45 L 120.89,97.55 Q 120.00,98.00 119.11,97.55 L 98.89,87.45 Q 98.00,87.00 98.89,86.55 Z"); }
+  50%      { d: path("M 119.11,60.45 Q 120.00,60.00 120.89,60.45 L 141.11,70.55 Q 142.00,71.00 141.11,71.45 L 120.89,81.55 Q 120.00,82.00 119.11,81.55 L 98.89,71.45 Q 98.00,71.00 98.89,70.55 Z"); }
+}
+
+@keyframes growBar3Left {
+  0%, 100% { d: path("M 146.00,70.00 Q 146.00,69.00 146.89,69.45 L 167.11,79.55 Q 168.00,80.00 168.00,81.00 L 168.00,129.00 Q 168.00,130.00 167.11,129.55 L 146.89,119.45 Q 146.00,119.00 146.00,118.00 Z"); }
+  50%      { d: path("M 146.00,50.00 Q 146.00,49.00 146.89,49.45 L 167.11,59.55 Q 168.00,60.00 168.00,61.00 L 168.00,129.00 Q 168.00,130.00 167.11,129.55 L 146.89,119.45 Q 146.00,119.00 146.00,118.00 Z"); }
+}
+@keyframes growBar3Right {
+  0%, 100% { d: path("M 168.00,81.00 Q 168.00,80.00 168.89,79.55 L 189.11,69.45 Q 190.00,69.00 190.00,70.00 L 190.00,118.00 Q 190.00,119.00 189.11,119.45 L 168.89,129.55 Q 168.00,130.00 168.00,129.00 Z"); }
+  50%      { d: path("M 168.00,61.00 Q 168.00,60.00 168.89,59.55 L 189.11,49.45 Q 190.00,49.00 190.00,50.00 L 190.00,118.00 Q 190.00,119.00 189.11,119.45 L 168.89,129.55 Q 168.00,130.00 168.00,129.00 Z"); }
+}
+@keyframes growBar3Top {
+  0%, 100% { d: path("M 167.11,58.45 Q 168.00,58.00 168.89,58.45 L 189.11,68.55 Q 190.00,69.00 189.11,69.45 L 168.89,79.55 Q 168.00,80.00 167.11,79.55 L 146.89,69.45 Q 146.00,69.00 146.89,68.55 Z"); }
+  50%      { d: path("M 167.11,38.45 Q 168.00,38.00 168.89,38.45 L 189.11,48.55 Q 190.00,49.00 189.11,49.45 L 168.89,59.55 Q 168.00,60.00 167.11,59.55 L 146.89,49.45 Q 146.00,49.00 146.89,48.55 Z"); }
+}
+
+/* ── Perk 4: High-Ticket — Stacked server layers stretching ── */
+/* Each layer stretches proportionally, driven by the top blue piece */
+.perk-preview-svg.is-active g:nth-of-type(1) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(1) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -0.1px;
+}
+.perk-preview-svg.is-active g:nth-of-type(2) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(2) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -0.5px;
+}
+.perk-preview-svg.is-active g:nth-of-type(3) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(3) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -1.2px;
+}
+.perk-preview-svg.is-active g:nth-of-type(4) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(4) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -2.2px;
+}
+.perk-preview-svg.is-active g:nth-of-type(5) > .infra-layer,
+.perk-interactive-item.is-active .perk-mobile-visual g:nth-of-type(5) > .infra-layer {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -3.5px;
+}
+.perk-preview-svg.is-active .infra-top,
+.perk-interactive-item.is-active .perk-mobile-visual .infra-top {
+  animation: pullStructure 2.6s ease-in-out infinite;
+  --pull-amount: -12px;
+}
+
+@keyframes pullStructure {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(var(--pull-amount)); }
+}
+
+/* ── Legacy mobile accent treatment (kept opt-in; scroll activation itself remains active). ── */
+@media (max-width: 980px) {
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .revenue-layer path,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .auto-accent path,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .evidence-accent path,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .infra-top path {
+    fill: #0022ff !important; /* Premium tech blue fill */
+    stroke: #ffffff !important; /* Clean white border */
+    stroke-opacity: 0.95 !important;
+  }
+
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .auto-accent circle,
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .auto-accent ellipse {
+    stroke: #08090a !important;
+    opacity: 0.35 !important;
+  }
+
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual .infra-top ellipse {
+    stroke: #ffffff !important;
+    opacity: 0.8 !important;
+  }
+}
+
+
+
+/* 4. Metodología Timeline (About Nosotros) */
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 70px;
+  position: relative;
+}
+
+.timeline-card {
+  background: rgba(253, 253, 255, 0.015);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+
+.timeline-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.timeline-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(253, 253, 255, 0.025);
+  transform: translateY(-2px);
+}
+
+.timeline-step-number {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+  background: rgba(0, 34, 255, 0.1);
+  border: 1px solid rgba(0, 34, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+}
+
+.timeline-icon-box {
+  width: 48px;
+  height: 48px;
+  color: #8B8D91;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.timeline-card:hover .timeline-icon-box {
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.timeline-card h3 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 12px 0;
+}
+
+.timeline-card p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #8B8D91;
+  margin: 0;
+}
+
+/* 5. Split Layout Legal Pages */
+.legal-split-container {
+  display: flex;
+  gap: 80px;
+  margin-top: 140px;
+  margin-bottom: 80px;
+  position: relative;
+  align-items: flex-start;
+}
+
+.legal-sidebar {
+  width: 250px;
+  position: sticky;
+  top: 120px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 162px; /* Alinea "Capítulos" con el inicio del texto del párrafo, no con el título H1 */
+}
+
+.legal-sidebar h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8B8D91;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.legal-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-left: 1px solid var(--line);
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.legal-toc-item a {
+  display: block;
+  font-size: 14px;
+  color: #8B8D91;
+  padding-left: 16px;
+  border-left: 2px solid transparent;
+  margin-left: -1.5px;
+  transition: color 0.25s ease, border-color 0.25s ease, padding-left 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  line-height: 1.3;
+}
+
+.legal-toc-item.is-active a {
+  color: #fff;
+  border-color: var(--blue);
+  font-weight: 500;
+  padding-left: 22px; /* Smooth slide right when active */
+}
+
+.legal-toc-item a:hover {
+  color: #fff;
+  padding-left: 22px; /* Smooth slide right on hover */
+}
+
+.legal-body-content {
+  flex-grow: 1;
+  max-width: 750px;
+}
+
+.legal-body-content h1 {
+  font-size: 42px !important;
+  font-weight: 500;
+  margin: 0 0 16px 0 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.legal-body-content h2 {
+  font-size: 22px !important;
+  font-weight: 500;
+  margin: 48px 0 16px 0 !important;
+  border-top: 1px solid var(--line);
+  padding-top: 32px;
+  scroll-margin-top: 160px; /* Evita que el navbar tape el título al hacer scroll */
+}
+
+.legal-body-content p,
+.legal-body-content li {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+  margin-bottom: 20px !important;
+}
+
+/* ── Cláusula Legal Container ── */
+.legal-clause {
+  position: relative;
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Efecto de enfoque de cláusulas (dimming) */
+.legal-body-content.has-focused-clause .legal-clause {
+  opacity: 0.35;
+}
+
+.legal-body-content.has-focused-clause .legal-clause.is-focused {
+  opacity: 1;
+}
+
+.legal-body-content.has-focused-clause .legal-clause:hover {
+  opacity: 0.8;
+}
+
+.legal-body-content.has-focused-clause .legal-clause.is-focused:hover {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  /* Ocultar por defecto en desktop y colapsar altura/márgenes/padding para no ocupar espacio */
+  .legal-clause .legal-tldr-box {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    max-height: 0;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-color: transparent;
+    transform: translateY(5px);
+    transition: opacity 0.35s ease,
+                max-height 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                margin 0.35s ease,
+                padding 0.35s ease,
+                border-color 0.35s ease,
+                transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+                visibility 0.35s;
+  }
+
+  /* Mostrar y abrir a la altura de la cabecera (summary) al hacer hover sobre la cláusula */
+  .legal-clause:hover .legal-tldr-box {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    max-height: 60px; /* Altura suficiente para el summary */
+    margin: 20px 0 28px 0;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-color: #e1e3e6;
+    transform: translateY(0);
+  }
+
+  /* Expandir a la altura completa del texto del resumen cuando el cursor entra a la tarjeta */
+  .legal-clause:hover .legal-tldr-box.is-active {
+    max-height: 500px; /* Altura suficiente para el texto completo sin recortes */
+  }
+}
+
+/* Caja de resumen TL;DR (Desplegable, contenedor blanco con texto negro) */
+.legal-tldr-box {
+  background: #ffffff;
+  border: 1px solid #e1e3e6;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 20px 0 28px 0;
+  color: #08090a;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  max-height: 60px; /* Colapsado por defecto en móvil */
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.legal-tldr-box.is-active {
+  max-height: 500px; /* Expandido en móvil / click sin recortes */
+}
+
+.legal-tldr-summary {
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #08090a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+/* Custom interactive indicator (+ / -) */
+.legal-tldr-summary::after {
+  content: "+";
+  font-size: 18px;
+  font-weight: 500;
+  color: #08090a;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.legal-tldr-box.is-active .legal-tldr-summary::after {
+  content: "−"; /* unicode minus sign */
+  transform: rotate(180deg);
+}
+
+.legal-tldr-box p {
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  color: #2b2d31 !important; /* Soft black for readability */
+  margin: 0 !important;
+  padding-top: 0;
+  border-top: 1px solid transparent;
+  opacity: 0;
+  transition: opacity 0.35s ease,
+              padding 0.35s ease,
+              margin 0.35s ease,
+              border-color 0.35s ease;
+}
+
+.legal-tldr-box.is-active p {
+  opacity: 1;
+  margin-top: 12px !important;
+  padding-top: 8px;
+  border-top: 1px solid #f0f1f2;
+}
+
+/* 6. Animaciones CSS para Íconos SVG */
+@keyframes eyeBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  55% { transform: scaleY(0.1); }
+}
+
+.anim-eye-pupil {
+  transition: transform 0.3s ease;
+}
+
+.timeline-card:hover .anim-eye-pupil {
+  transform: translate(1px, -1px);
+}
+
+.timeline-card:hover .anim-eye-lid {
+  animation: eyeBlink 1.5s infinite;
+}
+
+@keyframes bubbleUp {
+  0% { transform: translateY(3px) scale(0.8); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-8px) scale(1.2); opacity: 0; }
+}
+
+.anim-bubble {
+  transform-origin: bottom center;
+}
+
+.timeline-card:hover .anim-bubble-1 {
+  animation: bubbleUp 1.2s infinite ease-in-out;
+}
+
+.timeline-card:hover .anim-bubble-2 {
+  animation: bubbleUp 1.6s infinite ease-in-out 0.4s;
+}
+
+@keyframes growBar {
+  from { transform: scaleY(0.2); }
+  to { transform: scaleY(1); }
+}
+
+.anim-grow-bar {
+  transform-origin: bottom center;
+}
+
+.timeline-card:hover .anim-grow-bar,
+.stat:hover .anim-grow-bar {
+  animation: growBar 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes laserPulse {
+  0%, 100% { stroke-dashoffset: 0; opacity: 0.3; }
+  50% { stroke-dashoffset: -12; opacity: 1; }
+}
+
+.anim-laser-line {
+  stroke-dasharray: 4, 8;
+}
+
+.timeline-card:hover .anim-laser-line,
+.stat:hover .anim-laser-line {
+  animation: laserPulse 1.5s linear infinite;
+}
+
+/* 7. Canvas Traffic Particles (Pulse Overlay) */
+.flow-line-pulse {
+  display: none;
+}
+
+@keyframes flowTraffic {
+  to {
+    stroke-dashoffset: -26;
+  }
+}
+
+/* Responsive adjustments for new classes */
+@media (max-width: 980px) {
+
+  .faq-section {
+    padding: 80px 0;
+  }
+
+  .perks-showcase-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .perks-preview-pane {
+    display: none; /* Hide preview pane on mobile */
+  }
+
+  .perk-interactive-item {
+    flex-direction: column;
+    gap: 12px;
+    padding: 36px 0;
+    opacity: 0.55; /* Higher base opacity for mobile readability */
+    transition: opacity 0.5s ease;
+  }
+
+  .perk-interactive-item.is-active {
+    opacity: 1;
+  }
+
+  .perk-num {
+    margin-top: 0;
+  }
+
+  /* Mobile accordion behavior: keep description always expanded */
+  .perk-interactive-item .perk-item-content p {
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+    margin-top: 18px;
+    transition: none;
+  }
+
+  /* Inline SVG container inside item on mobile: always expanded, transitions color/bg */
+  .perk-mobile-visual {
+    display: flex;
+    width: 100%;
+    height: 180px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    background-color: var(--bg);
+    color: rgba(255, 255, 255, 0.85); /* Default white strokes */
+    --illustration-fill: var(--bg); /* Always match the page background */
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+    transform: scale(1);
+    transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                border-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Synchronized transitions for SVG visual elements to match container speed */
+  .perk-mobile-visual path,
+  .perk-mobile-visual circle,
+  .perk-mobile-visual line,
+  .perk-mobile-visual ellipse {
+    transition: fill 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke-opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Tratamiento visual activo anterior, ahora opt-in. */
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual {
+    background-color: #f4f4f6; /* Premium light gray background */
+    background-image: linear-gradient(
+      90deg,
+      transparent 39px,
+      rgba(8, 9, 10, 0.08) 39px,
+      rgba(8, 9, 10, 0.08) 40px,
+      transparent 40px
+    );
+    background-size: 80px calc(100% - 64px);
+    background-position: center;
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #08090a; /* Dark strokes */
+    --illustration-fill: #e5e5ea; /* Shaded gray fill for 3D visual weight */
+  }
+
+  .perk-interactive-item[data-legacy-active-colors="true"].is-active .perk-mobile-visual svg {
+    filter: contrast(1.15) brightness(0.95); /* Boosts lines contrast and weight */
+  }
+
+  .perk-row-progress {
+    display: none; /* No row progress indicator on mobile */
+  }
+
+  .colspan-2 {
+    grid-column: span 1;
+  }
+
+  .timeline-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .legal-split-container {
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 128px;
+    margin-bottom: 80px;
+  }
+
+  .legal-body-content h1 {
+    font-size: 40px !important;
+    line-height: 1.12 !important;
+    margin-bottom: 14px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .legal-body-content h2 {
+    font-size: 21px !important;
+    line-height: 1.25 !important;
+    margin: 42px 0 12px 0 !important;
+    padding-top: 26px;
+    letter-spacing: 0 !important;
+  }
+
+  .legal-sidebar {
+    width: 100%;
+    position: sticky;
+    top: 80px;
+    z-index: 10;
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+    margin-top: 0; /* Restablece el margen en móviles */
+    gap: 18px;
+    overflow: hidden;
+    background: var(--bg);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .legal-sidebar h3 {
+    flex: 0 0 auto;
+  }
+
+  .legal-toc {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 18px;
+    border-left: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0;
+  }
+
+  .legal-toc::-webkit-scrollbar {
+    display: none;
+  }
+
+  .legal-toc-item {
+    flex: 0 0 auto;
+  }
+
+  .legal-toc-item a {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    padding-left: 0;
+    padding-bottom: 7px;
+    margin-left: 0;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .legal-toc-item.is-active a {
+    border-bottom-color: var(--blue);
+    padding-left: 0;
+  }
+
+  .legal-toc-item a:hover {
+    padding-left: 0;
+  }
+
+  .legal-tldr-box,
+  .legal-disclaimer {
+    display: none;
+  }
+}
+
+@media (max-width: 430px) {
+  .legal-sidebar {
+    display: none;
+  }
+
+  .legal-split-container {
+    gap: 28px;
+    margin-top: 124px;
+  }
+
+  .legal-body-content h1 {
+    font-size: 38px !important;
+    line-height: 1.12 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .legal-body-content h2 {
+    font-size: 20px !important;
+    line-height: 1.25 !important;
+    margin: 34px 0 10px 0 !important;
+    padding-top: 22px;
+    scroll-margin-top: 110px;
+  }
+}
+

@@ -1,0 +1,170 @@
+/* Client-side navigation transitions and animation overrides */
+main {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+body.is-transitioning main {
+  opacity: 0 !important;
+}
+
+/* Disable scroll-reveal animations for internal page transitions */
+body.no-reveal-animations .reveal-item,
+body.no-reveal-animations h1.reveal-item,
+body.no-reveal-animations h2.reveal-item,
+body.no-reveal-animations .headline.reveal-item,
+body.no-reveal-animations h2.lead.reveal-item {
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Also disable navigation header transitions for persistent navbar */
+body.no-reveal-animations .nav .logo-lockup,
+body.no-reveal-animations .nav .nav-links a,
+body.no-reveal-animations .nav .nav-right,
+body.no-reveal-animations .nav,
+body.no-reveal-animations .nav::before {
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Scroll-reveal animations */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1),
+    transform var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+/* Refined cinematic entrance animation for main headers */
+h1.reveal-item,
+h2.reveal-item,
+.headline.reveal-item {
+  transform: translateY(45px) scale(0.98);
+  transition: opacity var(--reveal-duration, 1.4s) cubic-bezier(0.16, 1, 0.3, 1),
+    transform var(--reveal-duration, 1.4s) cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-item.reveal-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+h1.reveal-item.reveal-visible,
+h2.reveal-item.reveal-visible,
+.headline.reveal-item.reveal-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Lead paragraph headers do not scale */
+h2.lead.reveal-item {
+  transform: translateY(35px);
+  transition: opacity var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1),
+    transform var(--reveal-duration, 1.2s) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+h2.lead.reveal-item.reveal-visible {
+  transform: none;
+  will-change: auto;
+}
+
+.responsive-br br {
+  display: inline;
+}
+
+.no-br .responsive-br br {
+  display: none;
+}
+
+.no-br .responsive-br::after {
+  content: " ";
+}
+
+.hero p {
+  margin: 0 0 50px;
+  font-size: 17px;
+}
+
+.logo-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 50px;
+  font-size: 14px;
+  letter-spacing: .28px;
+}
+
+.logo-lockup img {
+  width: 34px;
+  height: 20px;
+}
+
+.supported {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+.supported .label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, .7);
+  line-height: 1.4;
+  letter-spacing: .28px;
+  margin: 0;
+  text-align: center;
+}
+
+.supported .logos {
+  display: flex;
+  height: 24px;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.supported .logos .partner-logo {
+  display: inline-flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.supported .logos img {
+  display: block;
+  width: auto;
+  height: 24px;
+  max-width: 100%;
+  object-fit: contain;
+  /* Los SVG ya están dibujados a blanco 50%; este ajuste los lleva a #FFF al 60% real. */
+  opacity: 1;
+  filter: brightness(1.2);
+  transition: opacity 180ms ease, filter 180ms ease;
+}
+
+.supported .logos .partner-logo--fatisa img {
+  height: 23px;
+}
+
+.supported .logos .partner-logo:hover img,
+.supported .logos .partner-logo:focus-visible img {
+  opacity: 1;
+  filter: brightness(2);
+}
+
+/* Temporalmente ocultamos el control flotante que abre los canvas. */
+.canvas-mouse-follower {
+  display: none !important;
+}
+

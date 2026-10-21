@@ -1,0 +1,387 @@
+
+@property --canvas-vignette-center-shift {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --canvas-embedded-glow-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --canvas-embedded-glow-angle-secondary {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --canvas-embedded-glow-reveal {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 84%;
+}
+
+@property --canvas-embedded-glow-reveal-secondary {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 82%;
+}
+
+@property --canvas-embedded-glow-breath {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --canvas-embedded-glow-breath-secondary {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@font-face {
+  font-family: "BDO Grotesk";
+  src: url("../assets/Fonts/BDOGrotesk-Regular.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "BDO Grotesk";
+  src: url("../assets/Fonts/BDOGrotesk-Medium.ttf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "BDO Grotesk";
+  src: url("../assets/Fonts/BDOGrotesk-DemiBold.ttf");
+  font-weight: 600;
+}
+
+html {
+  --zoom: 80%;
+  --zoom-factor: 0.8;
+  --bg: #0a0a0b;
+  --fg: #f2f2f2;
+  --muted: #4A4B4F;
+  --blue: #0022ff;
+  --line: rgba(255, 255, 255, .07);
+  --chip: rgba(232, 232, 255, .06);
+  --sb-v: 0;
+  --lead-font-size: clamp(32px, 4.2vw, 54px);
+  --canvas-scale: 1;
+  overflow: hidden;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+input,
+textarea,
+select,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  transition: transform 120ms ease-out;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+::selection {
+  background: var(--blue);
+  color: #fff;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, calc(var(--sb-v) * 0.4));
+  margin-top: 80px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, calc(var(--sb-v) * 0.3));
+  border-radius: 2px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, calc(var(--sb-v) * 0.5));
+}
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-nav,
+.canvas-outer,
+.flow-wrapper,
+.Flow,
+.Frame1,
+[data-layer] {
+  user-select: none;
+}
+
+.logo-lockup,
+.LogoContainer,
+.footer-logo,
+.logos {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+}
+
+img,
+svg {
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+.cta .headline,
+.FinancingText3 {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "BDO Grotesk", sans-serif;
+  margin: 0;
+  zoom: var(--zoom);
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh / var(--zoom-factor));
+  transition: margin-right .6s cubic-bezier(.2, 1, .3, 1);
+}
+
+.page-fade-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+body.is-ready .page-fade-overlay {
+  opacity: 0;
+}
+
+/* Legal documents keep the route transition covered until their versioned text
+   has been fetched and mounted, preventing a standalone navbar/footer flash. */
+body.legal-page-loading .page-fade-overlay {
+  opacity: 1;
+  pointer-events: auto;
+  transition: none;
+  z-index: 19;
+}
+
+body.legal-page-loading .page-fade-overlay::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin: -11px;
+  border: 2px solid rgba(255, 255, 255, .1);
+  border-top-color: rgba(255, 255, 255, .65);
+  border-radius: 50%;
+  animation: legal-document-loading-spin 1s linear infinite;
+}
+
+/* Several overlapping backdrop-filter layers create a true progressive blur
+   toward the bottom edge, rather than fading a single uniform blur. */
+.page-bottom-blur {
+  position: fixed;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  z-index: 18;
+  height: clamp(96px, 16vh, 210px);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.page-bottom-blur__layer,
+.page-bottom-blur__fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+body.is-bottom-blur-active .page-bottom-blur__layer,
+body.is-bottom-blur-active .page-bottom-blur__fade {
+  opacity: 1;
+}
+
+.page-bottom-blur__layer {
+  -webkit-backdrop-filter: blur(var(--progressive-blur));
+  backdrop-filter: blur(var(--progressive-blur));
+}
+
+.page-bottom-blur__layer:nth-child(1) {
+  --progressive-blur: 2px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(2) {
+  --progressive-blur: 4px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 8%, #000 48%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 8%, #000 48%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(3) {
+  --progressive-blur: 7px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 22%, #000 62%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 22%, #000 62%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(4) {
+  --progressive-blur: 12px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 38%, #000 74%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 38%, #000 74%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(5) {
+  --progressive-blur: 19px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 55%, #000 86%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 55%, #000 86%, #000 100%);
+}
+
+.page-bottom-blur__layer:nth-child(6) {
+  --progressive-blur: 28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 72%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 72%, #000 100%);
+}
+
+.page-bottom-blur__fade {
+  background: linear-gradient(to bottom, rgba(8, 9, 10, 0) 0%, rgba(8, 9, 10, .02) 50%, rgba(8, 9, 10, .12) 100%);
+}
+
+body.is-footer-near .page-bottom-blur {
+  opacity: 1;
+}
+
+body.is-footer-near .page-bottom-blur__layer,
+body.is-footer-near .page-bottom-blur__fade {
+  opacity: 0;
+}
+
+body.is-bottom-blur-disabled .page-bottom-blur {
+  display: none;
+}
+
+html.legal-page .page-bottom-blur {
+  display: none !important;
+}
+
+@media (max-width: 980px) {
+  .page-bottom-blur {
+    display: none;
+  }
+}
+
+body.pushed-layout {
+  margin-right: 450px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+.lead,
+.sub,
+.pill {
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+.wrap {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0 clamp(4vw, 19.48vw - 151.74px, 160px);
+}
+
+.wrap-narrow {
+  padding: 0 clamp(4vw, 16.26vw - 120.13px, 140px);
+}
+
+/* Shared desktop reading width for the primary public pages. Backgrounds,
+   navigation and footer continue to span independently. */
+@media (min-width: 981px) {
+  main.site-standard-width .wrap:not(.wrap-narrow) {
+    width: min(1200px, calc(100vw - 48px));
+    max-width: 1200px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  main.site-standard-width .wrap.wrap-narrow {
+    width: min(1200px, calc(100vw - 48px));
+    max-width: 1200px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Services uses dedicated containers rather than .wrap. */
+  main.site-standard-width .service-phases-intro,
+  main.site-standard-width .service-phase-list {
+    width: calc(100vw - 48px);
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Elementos de composición ancha: comparten el borde del navbar, mientras
+     sus elementos internos conservan sus propios límites de lectura. */
+  main.site-standard-width .wrap.metrics-wrap,
+  main.site-standard-width .wrap.cig-wrap,
+  main.site-standard-width .wrap.ecosystem-wrap {
+    width: calc(100vw - 48px);
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
